@@ -18,8 +18,13 @@ app.listen(5000, () => {
 
 });
 
-// Route for "/products" to send a response
 
 
 // Debugging line to ensure MONGO_URI is loaded properly (uncomment if needed)
 // console.log(process.env.MONGO_URI);
+app.get("/home", (req, res) => {
+    res.status(200).send("You have everything installed!");
+  });
+ 
+
+
