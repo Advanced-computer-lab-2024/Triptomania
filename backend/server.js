@@ -2,6 +2,8 @@
 import express from 'express';
 import dotenv from 'dotenv';    
 import { connectDB } from './config/db.js';  
+import { addProduct } from './controllers/shared/productController.js';
+import { editProduct } from './controllers/shared/productController.js';
 
 // Load environment variables from .env file
 dotenv.config(); 
@@ -25,6 +27,9 @@ app.listen(5000, () => {
 app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
- 
+
+// app.post("/Admin/Product/addProduct",addProduct);
+// app.put("/Admin/Product/editProduct/:id",editProduct);
 
 
+//app.post("/Admin/Product/addProduct",addProduct);
