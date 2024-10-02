@@ -1,5 +1,6 @@
 import express from 'express';
-import activityController from '../controllers/shared/activityController.js';  // Make sure this path is correct
+import activityController from '../controllers/shared/activityController.js';
+import preferenceTagController from '../controllers/shared/preferenceTagController.js';
 
 const router = express.Router();
 
@@ -9,7 +10,16 @@ router.post('/activities/addCategory', activityController.addCategory);
 router.get('/activities/getCategories', activityController.getCategories);
 // update an activity category
 router.put('/activities/editCategory/:id', activityController.editCategory);
-// delete an actvity category
+// delete an activity category
 router.delete('/activities/deleteCategory/:id', activityController.deleteCategory);
+
+// add a new preference tag
+router.post('/tags/addPreferenceTag', preferenceTagController.addPreferenceTag);
+// get all preference tags
+router.get('/tags/getPreferenceTags', preferenceTagController.getPreferenceTags);
+// update an preference tag
+router.put('/tags/editPreferenceTag/:id', preferenceTagController.editPreferenceTag);
+// delete an preference tag
+router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePreferenceTag);
 
 export default router;
