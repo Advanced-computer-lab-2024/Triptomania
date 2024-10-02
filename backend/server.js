@@ -4,12 +4,14 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';  
 import { addProduct } from './controllers/shared/productController.js';
 import { editProduct } from './controllers/shared/productController.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 // Load environment variables from .env file
 dotenv.config(); 
 
 // Initialize express app
 const app = express();
+// app.use(cors());
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
@@ -29,6 +31,8 @@ app.listen(port, () => {
 app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
+
+app.use('/api/admin', adminRoutes);
 
 // app.post("/Admin/Product/addProduct",addProduct);
 // app.put("/Admin/Product/editProduct/:id",editProduct);
