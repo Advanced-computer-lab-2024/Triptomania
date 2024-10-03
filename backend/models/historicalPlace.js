@@ -2,6 +2,11 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const historicalPlaceSchema = new Schema({
+    Name: {
+        type: String,
+        required: true,
+      },
+   
     Description: {
         type: String,
         required: true,

@@ -5,6 +5,8 @@ import { connectDB } from './config/db.js';
 import { addProduct } from './controllers/shared/productController.js';
 import { editProduct } from './controllers/shared/productController.js';
 import tourismGovernerRoutes from './routes/tourismGovernorRoutes.js';
+import { searchHistoricalPlaceByName } from './controllers/tourist/searchController.js'; // Adjust the import as needed
+
 
 // Load environment variables from .env file
 dotenv.config(); 
@@ -35,4 +37,5 @@ app.get("/home", (req, res) => {
 
 //app.post("/Admin/Product/addProduct",addProduct);
 
-app.use('/api/tourismGoverner', tourismGovernerRoutes);
+//app.use('/api/tourismGoverner', tourismGovernerRoutes);
+app.get('/api/search', searchHistoricalPlaceByName);
