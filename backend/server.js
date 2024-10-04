@@ -39,3 +39,5 @@ app.get("/home", (req, res) => {
 
 //app.use('/api/tourismGoverner', tourismGovernerRoutes);
 app.get('/api/search', searchHistoricalPlaceByName);
+
+app.use('/api/tourismGoverner', tourismGovernerRoutes);
