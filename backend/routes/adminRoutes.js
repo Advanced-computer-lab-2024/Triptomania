@@ -1,6 +1,7 @@
 import express from 'express';
 import activityController from '../controllers/shared/activityController.js';
 import preferenceTagController from '../controllers/shared/preferenceTagController.js';
+import adminController from '../controllers/admin/adminController.js';
 
 const router = express.Router();
 
@@ -21,5 +22,8 @@ router.get('/tags/getPreferenceTags', preferenceTagController.getPreferenceTags)
 router.put('/tags/editPreferenceTag/:id', preferenceTagController.editPreferenceTag);
 // delete an preference tag
 router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePreferenceTag);
+
+// add an admin in the system
+router.post('/addAdmin', adminController.addAdmin);
 
 export default router;
