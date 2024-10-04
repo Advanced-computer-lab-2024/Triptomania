@@ -11,12 +11,7 @@ const itinerarySchema = new Schema({
         type: [String],
         required: true,
     },
-    date:
-    {
-        type: Date,
-        required: true,
-    },
-    locationsVisited:
+    locationsToVisit:
     {
         type: [String],
         required: true,
@@ -69,6 +64,21 @@ const itinerarySchema = new Schema({
     {
         type: Boolean,
         required: true, // Check if booking is made
+    },
+    Start_date:
+    {
+        type: String, // DD/MM/YYYY Date type
+        required: true,
+    },
+    End_date:
+    {
+        type: String, // DD/MM/YYYY Date type
+        required: true,
+    },
+    Tags:
+    {
+        type: [String], // Array of tags for filtering
+        default: [],
     },
 },  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);

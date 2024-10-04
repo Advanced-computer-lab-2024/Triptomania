@@ -1,2 +1,2 @@
 import mongoose from 'mongoose';
-import itineraryModel from '../../models/itinerary';
+import itineraryModel from '../../models/itinerary.js';
