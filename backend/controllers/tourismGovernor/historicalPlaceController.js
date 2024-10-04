@@ -19,6 +19,42 @@ const getHistoricalPlaces = async (req, res) => {
 const addHistoricalPlace = async (req, res) => {
     try {
         const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices } = req.body;
+
+        // Check that parameters are not empty
+        if(!Name || !Description || !Picture || !Location || !Opening_hours || !Closing_hours || !Ticket_prices)
+        {
+            return res.status(400).json({ message: "All required fields must be provided." });
+        }
+
+        // Check that parameters' type is right
+        if(typeof Name !== 'string' || typeof Location !== 'string' )
+        {
+            return res.status(400).json({ message: "Name must be a string"});
+        }
+        if(typeof Description !== 'string')
+        {
+            return res.status(400).json({ message: "Description must be a string"});
+        }
+        if(typeof Picture !== 'string')
+        {
+            return res.status(400).json({ message: "picture file you uploaded isn't supported"});
+        }
+        if(typeof Location !== 'string')
+        {
+            return res.status(400).json({ message: "Location must be a string"});
+        }
+        if(typeof Opening_hours !== 'Date')
+        {
+            return res.status(400).json({ message: "Opening hours must be in the formal of HH:MM:SS"});
+        }
+        if(typeof Closing_hours !== 'Date')
+        {
+            return res.status(400).json({ message: "Clsoing hours must be in the formal of HH:MM:SS"});
+        }
+        if(typeof Ticket_prices !== 'Number')
+        {
+            return res.status(400).json({ message: "Ticket prices must be a number"});
+        }
         const newHistoricalPlace = new historicalPlaceModel({ Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices });
         await newHistoricalPlace.save();
         res.status(201).json({

@@ -20,10 +20,12 @@ const historicalPlaceSchema = new Schema({
         required: true,
     },
     Opening_hours: {
-
+        type: Date,
+        required: true,
     },
     Closing_hours: {
-
+        type: Date,
+        required: true,
     },
     Ticket_prices: {
         type: Number,
