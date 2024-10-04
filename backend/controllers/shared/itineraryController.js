@@ -133,7 +133,7 @@ export const deleteItinerary = async(req, res) =>
         const itineraryBooked =  {bookingMade, _id: id}
 
         // Checks if itinerary is booked
-        if(itineraryBooked)
+        if(itineraryBooked.length !== 0)
         {
             return res.status(400).json({ message: "Itinerary already booked, can not delete"});
         }else

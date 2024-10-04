@@ -62,7 +62,7 @@ const itinerarySchema = new Schema({
     },
     bookingMade:
     {
-        type: Boolean,
+        type: [mongoose.Types.ObjectId],
         required: true, // Check if booking is made
     },
     Start_date:
