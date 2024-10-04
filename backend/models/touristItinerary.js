@@ -1,12 +1,18 @@
 import mongoose from 'mongoose';
+import Activity from './activity';
 const Schema = mongoose.Schema;
 
 
 // Tourist itenerary details
 const touristItinerarySchema = new Schema({
-    Name: 
+    Name:
     {
         type: String,
+        required: true,
+    },
+    activity: 
+    {
+        type: [Activity],
         required: true,
     },
     Location: 
@@ -16,23 +22,18 @@ const touristItinerarySchema = new Schema({
     },
     Start_date:
     {
-        type: Date,
+        type: String, // DD/MM/YYYY Date type
         required: true,
     },
     End_date:
     {
-        type: Date,
+        type: String, // DD/MM/YYYY Date type
         required: true,
     },
     Tags:
     {
         type: [String], // Array of tags for filtering
         default: [],
-    },
-    BookingMade:
-    {
-        type: Boolean,
-        required: true, // Check if booking is made
     },
 }, { timestamps: true });
 
