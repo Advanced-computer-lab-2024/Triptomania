@@ -8,7 +8,7 @@ const itinerarySchema = new Schema({
     },
     activity:
     {
-        type: [Activity],
+        type: [String],
         required: true,
     },
     date:

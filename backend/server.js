@@ -5,7 +5,10 @@ import { connectDB } from './config/db.js';
 import { addProduct } from './controllers/shared/productController.js';
 import { editProduct } from './controllers/shared/productController.js';
 import tourismGovernerRoutes from './routes/tourismGovernorRoutes.js';
-import { searchHistoricalPlaceByName } from './controllers/tourist/searchController.js'; // Adjust the import as needed
+//import { searchHistoricalPlaceByName } from './controllers/tourist/searchController.js'; // Adjust the import as needed
+import touristRoutes from './routes/touristRoutes.js'; // Import tourist routes
+import guestRoutes from './routes/guestRoutes.js'; // Import guest routes (if applicable)
+
 
 
 import adminRoutes from './routes/adminRoutes.js';
@@ -45,6 +48,8 @@ app.use('/api/admin', adminRoutes);
 //app.post("/Admin/Product/addProduct",addProduct);
 
 //app.use('/api/tourismGoverner', tourismGovernerRoutes);
-app.get('/api/search', searchHistoricalPlaceByName);
+//app.get('/api/search', searchHistoricalPlaceByName);
 
 app.use('/api/tourismGoverner', tourismGovernerRoutes);
+app.use('/api/tourist', touristRoutes); // Tourist routes
+app.use('/api/guest', guestRoutes); // Guest routes (if applicable)

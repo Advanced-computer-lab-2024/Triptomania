@@ -30,7 +30,17 @@ const historicalPlaceSchema = new Schema({
     Ticket_prices: {
         type: Number,
         required: true,
+    },
+    Category: {
+        type: String,
+        required: true,
     }
+    ,
+    Tags: {
+        type: [String],
+        required: true,
+    }
+
 }, { timestamps: true });
 
 const HistoricalPlace = mongoose.model('HistoricalPlace', historicalPlaceSchema);
