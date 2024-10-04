@@ -8,7 +8,7 @@ const itinerarySchema = new Schema({
     },
     activity:
     {
-        type: [Activity],
+        type: String,
         required: true,
     },
     locationsToVisit:
@@ -38,7 +38,7 @@ const itinerarySchema = new Schema({
     },
     availableDates:
     {
-        type: [Date],
+        type: [String],
         required: true,
     },
     availableTimes:
