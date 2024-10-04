@@ -27,9 +27,13 @@ const addHistoricalPlace = async (req, res) => {
         }
 
         // Check that parameters' type is right
-        if(typeof Name !== 'string' || typeof Location !== 'string' )
+        if(typeof Name !== 'string')
         {
             return res.status(400).json({ message: "Name must be a string"});
+        }
+        if(typeof Location !== 'string')
+        {
+            return res.status(400).json({ message: "Location must be a string"});
         }
         if(typeof Description !== 'string')
         {
