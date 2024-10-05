@@ -2,12 +2,19 @@
 import express from 'express';
 import dotenv from 'dotenv';    
 import { connectDB } from './config/db.js';  
+
+import sellerRoutes from './routes/sellerRoutes.js';
+import  adminRoutes from './routes/adminRoutes.js';
+import touristRoutes from './routes/touristRoutes.js';
+import advertiserRoutes from './routes/advertiserRoutes.js';
+
 import { addProduct } from './controllers/shared/productController.js';
 import { editProduct } from './controllers/shared/productController.js';
 import tourismGovernerRoutes from './routes/tourismGovernorRoutes.js';
 //import { searchHistoricalPlaceByName } from './controllers/tourist/searchController.js'; // Adjust the import as needed
 import touristRoutes from './routes/touristRoutes.js'; // Import tourist routes
 import guestRoutes from './routes/guestRoutes.js'; // Import guest routes (if applicable)
+
 
 
 
@@ -39,6 +46,12 @@ app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
 
+
+app.use('/api/seller',sellerRoutes);
+app.use('/api/admin',adminRoutes);
+app.use('/api/tourist',touristRoutes);
+app.use('/api/advertiser',advertiserRoutes);
+
 app.use('/api/admin', adminRoutes);
 
 // app.post("/Admin/Product/addProduct",addProduct);
@@ -55,3 +68,4 @@ app.use('/api/tourist', touristRoutes); // Tourist routes
 app.use('/api/guest', guestRoutes); // Guest routes (if applicable)
 
 app.use('/api/advertiser', advertiserRoutes);
+

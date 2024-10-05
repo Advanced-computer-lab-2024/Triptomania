@@ -1,8 +1,17 @@
 import express from 'express';
+import productController from '../controllers/shared/productController.js';
 import activityController from '../controllers/shared/activityController.js';
 import preferenceTagController from '../controllers/shared/preferenceTagController.js';
 
 const router = express.Router();
+
+
+router.post("/product/addProduct",productController.addProduct);
+router.put("/product/editProduct",productController.editProduct);
+router.get("/product/viewProducts",productController.viewProducts);
+router.get("/product/searchProducts",productController.searchProduct);
+router.get("/product/filterProducts",productController.filterProducts);
+router.get("/product/sortProducts",productController.sortProducts);
 
 // add a new activity category
 router.post('/activities/addCategory', activityController.addCategory);
