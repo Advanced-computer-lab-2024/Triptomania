@@ -2,6 +2,7 @@ import express from 'express';
 import activityController from '../controllers/shared/activityController.js';
 import preferenceTagController from '../controllers/shared/preferenceTagController.js';
 import adminController from '../controllers/admin/adminController.js';
+import tourismGovernorController from '../controllers/tourismGovernor/tourismGovernorController.js';
 
 const router = express.Router();
 
@@ -25,5 +26,8 @@ router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePre
 
 // add an admin in the system
 router.post('/addAdmin', adminController.addAdmin);
+
+// add a tourism governer in the system
+router.post('/addTourismGoverner', tourismGovernorController.addTourismGoverner);
 
 export default router;
