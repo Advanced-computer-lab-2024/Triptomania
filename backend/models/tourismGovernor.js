@@ -1,19 +1,39 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 const Schema = mongoose.Schema;
 
-const tourismGovernorSchema = new Schema({
-    GovernerName: {
+const tourismGovernerSchema = new Schema({
+    TourismGovenerName: {
         type: String,
         required: true,
     },
-    GovernerUsername: {
+    TourismGovenerUsername: {
         type: String,
         required: true,
     },
-    GovernerPassword: {
+    TourismGovenerPassword: {
         type: String,
         required: true,
-    },
+    }
 });
 
-tourismGovernorSchema.pre(method, options, fn)
+tourismGovernerSchema.pre('save', async function (next) {
+    const tourismGoverner = this;
+
+    if (!tourismGoverner.isModified('TourismGovenerPassword')) return next();
+
+    try {
+        const saltRounds = 10;
+        tourismGoverner.TourismGovenerPassword = await bcrypt.hash(tourismGoverner.TourismGovenerPassword, saltRounds);
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
+tourismGovernerSchema.methods.comparePassword = async function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.TourismGovenerPassword);
+};
+
+const TourismGoverner = mongoose.model('tourismGoverner', tourismGovernerSchema);
+export default TourismGoverner;
