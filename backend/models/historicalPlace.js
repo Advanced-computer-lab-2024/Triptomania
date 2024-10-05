@@ -13,32 +13,32 @@ const historicalPlaceSchema = new Schema({
       },
     Picture: {
         type: String,
-        required: true,
+        required: true, 
     },
     Location: {
         type: String,
         required: true,
     },
     Opening_hours: {
-        type: Date,
+        type: String,
         required: true,
     },
     Closing_hours: {
-        type: Date,
+        type: String,
         required: true,
     },
     Ticket_prices: {
         type: Number,
         required: true,
     },
-    Category: {
+    Category: {    //check 
         type: String,
         required: true,
     }
     ,
-    Tags: {
+    Tags: {       //check
         type: [String],
-        required: true,
+        required: false,
     }
 
 }, { timestamps: true });

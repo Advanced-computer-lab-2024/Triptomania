@@ -19,14 +19,14 @@ export const filterByTag = async (req, res) => {
 
         // Check if any places were found
         if (historicalPlaces.length === 0) {
-            return res.status(404).json({ message: 'No historical places found for the given tag.',HistoricalPlace });
+            return res.status(404).json({ message: 'No historical places found for the given tag.' });
         }
 
         // Return the filtered results
-        res.status(200).json({ message: "Fetched historical places by tag" });
+        return res.status(200).json({ message: "Fetched historical places by tag", historicalPlaces });
 
     } catch (error) {
         console.error('Error in filterByTag function:', error); // Log the error
-        res.status(500).json({ error: 'Error occurred while filtering historical places by tag.' });
+        return res.status(500).json({ error: 'Error occurred while filtering historical places by tag.' });
     }
 };

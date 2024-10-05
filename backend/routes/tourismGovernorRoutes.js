@@ -1,5 +1,6 @@
 import express from 'express';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
+import { addTagToHistoricalPlace ,addTag,getTag} from '../controllers/tourismGovernor/tourismGovernor.js';
 
 const router = express.Router();
 
@@ -11,5 +12,7 @@ router.post('/addHistoricalPlace', historicalPlaceController.addHistoricalPlace)
 router.put('/editHistoricalPlace/:id', historicalPlaceController.editHistoricalPlace);
 // delete historical place
 router.delete('/deleteHistoricalPlace/:id', historicalPlaceController.deleteHistoricalPlace);
-
+router.put('/addTagToHistoricalPlace/:id', addTagToHistoricalPlace);
+router.post('/addTag',addTag);
+router.get('/getTag',getTag);
 export default router;
