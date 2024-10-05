@@ -3,15 +3,15 @@ import bcrypt from "bcryptjs";
 const Schema = mongoose.Schema;
 
 const tourismGovernerSchema = new Schema({
-    TourismGovenerName: {
+    TourismGovernerName: {
         type: String,
         required: true,
     },
-    TourismGovenerUsername: {
+    TourismGovernerUsername: {
         type: String,
         required: true,
     },
-    TourismGovenerPassword: {
+    TourismGovernerPassword: {
         type: String,
         required: true,
     },
