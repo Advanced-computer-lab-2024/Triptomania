@@ -4,7 +4,7 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
 
  const addProduct = async (req, res) => {
    try {
-      const { Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
+      const {Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
 
       if (!Name || !Description || !Price || !Seller || !Quantity) {
          return res.status(400).json({ message: "All required fields must be provided." });
@@ -109,6 +109,6 @@ export default{
    editProduct,
    viewProducts,
    //searchProduct,
-   //filterProducts,
-   //sortProducts
+   // filterProducts,
+   // sortProducts
 }
