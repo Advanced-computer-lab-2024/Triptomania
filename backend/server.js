@@ -1,7 +1,11 @@
 // Import necessary modules
 import express from 'express';
 import dotenv from 'dotenv';    
-import { connectDB } from './config/db.js';  
+import { connectDB } from './config/db.js';
+import touristRoutes from './routes/touristRoutes.js';
+import tourGuideRoutes from './routes/tourGuideRoutes.js';
+import sellerRoutes from './routes/sellerRoutes.js';
+import advertiserRoutes from './routes/advertiserRoutes.js';
 import { addProduct } from './controllers/shared/productController.js';
 import { editProduct } from './controllers/shared/productController.js';
 
@@ -12,24 +16,25 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+const port = process.env.PORT || 5000;
+
 
 // Listen on port 5000
-app.listen(5000, () => {
+app.listen(port, () => {
     connectDB(); // Connect to MongoDB
-    console.log('Server started at http://localhost:5000');
+    console.log(`Server started at http://localhost:${port}`);
 
 });
 
 
 
 // Debugging line to ensure MONGO_URI is loaded properly (uncomment if needed)
-// console.log(process.env.MONGO_URI);
+ //console.log(process.env.MONGO_URI);
 app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
 
-// app.post("/Admin/Product/addProduct",addProduct);
-// app.put("/Admin/Product/editProduct/:id",editProduct);
-
-
-//app.post("/Admin/Product/addProduct",addProduct);
+app.use("/api/tourist", touristRoutes);
+app.use("/api/tourGuide", tourGuideRoutes);
+app.use("/api/seller", sellerRoutes);
+app.use("/api/advertiser", advertiserRoutes);
