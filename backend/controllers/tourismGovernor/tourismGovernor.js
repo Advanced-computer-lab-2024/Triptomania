@@ -51,3 +51,120 @@ export const addTagToHistoricalPlace = async (req, res) => {
         });
     }
 };
+// Function to add a new tag
+export const addTag = async (req, res) => {
+    try {
+        const { name } = req.body;
+
+        // Check that the name is provided
+        if (!name) {
+            return res.status(400).json({ message: 'Tag name is required.' });
+        }
+
+        // Check if the tag already exists
+        const existingTag = await Tag.findOne({ name });
+        if (existingTag) {
+            return res.status(400).json({ message: 'Tag already exists.' });
+        }
+
+        // Create a new tag
+        const newTag = new Tag({ name });
+        await newTag.save();
+
+        res.status(201).json({
+            status: true,
+            message: 'Tag added successfully!',
+            tag: newTag
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: 'Error adding tag',
+            error: err.message
+        });
+    }
+};
+// Function to get all tags or a specific tag
+export const getTags = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // If an ID is provided, fetch that specific tag
+        if (id) {
+            const tag = await Tag.findById(id);
+            if (!tag) {
+                return res.status(404).json({ message: 'Tag not found' });
+            }
+            return res.status(200).json({ status: true, tag });
+        }
+
+        // Fetch all tags
+        const tags = await Tag.find();
+        res.status(200).json({ status: true, tags });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: 'Error retrieving tags',
+            error: err.message
+        });
+    }
+};
+// Function to update an existing tag
+export const updateTag = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name } = req.body;
+
+        // Check that the name is provided
+        if (!name) {
+            return res.status(400).json({ message: 'Tag name is required.' });
+        }
+
+        // Find the tag by its ID
+        const tag = await Tag.findById(id);
+        if (!tag) {
+            return res.status(404).json({ message: 'Tag not found' });
+        }
+
+        // Update the tag name
+        tag.name = name;
+        await tag.save();
+
+        res.status(200).json({
+            status: true,
+            message: 'Tag updated successfully!',
+            tag
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: 'Error updating tag',
+            error: err.message
+        });
+    }
+};
+    // Function to delete a tag
+export const deleteTag = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the tag by its ID
+        const tag = await Tag.findById(id);
+        if (!tag) {
+            return res.status(404).json({ message: 'Tag not found' });
+        }
+
+        // Delete the tag
+        await tag.remove();
+        res.status(200).json({
+            status: true,
+            message: 'Tag deleted successfully!'
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: 'Error deleting tag',
+            error: err.message
+        });
+    }
+};
