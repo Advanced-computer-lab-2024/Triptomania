@@ -27,6 +27,9 @@ router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePre
 // add an admin in the system
 router.post('/addAdmin', adminController.addAdmin);
 
+// delete an account
+router.delete('/deleteAccount', adminController.deleteAccount);
+
 // add a tourism governer in the system
 router.post('/addTourismGoverner', tourismGovernorController.addTourismGoverner);
 
