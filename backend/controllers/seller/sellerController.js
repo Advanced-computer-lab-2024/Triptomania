@@ -1,12 +1,12 @@
 // Import SellerModel and other modules using ES module syntax
 import SellerModel from '../../models/seller.js';
 import mongoose from 'mongoose';
-import crypto from 'crypto';
+//import crypto from 'crypto';
 
 // Function to hash passwords
-const hashPassword = (password) => {
+/*const hashPassword = (password) => {
   return crypto.createHash('sha256').update(password).digest('hex'); // SHA-256 hash
-};
+};*/
 
 // Create a new seller
 const CreateSeller = async (req, res) => {
@@ -18,7 +18,7 @@ const CreateSeller = async (req, res) => {
       $or: [{ username }, { email }]
     });
 
-    const hashed = hashPassword(password);
+    //const hashed = hashPassword(password);
 
     if (existingSeller) {
       // Return an error if the user already exists
@@ -29,7 +29,7 @@ const CreateSeller = async (req, res) => {
     const seller = await SellerModel.create({
       username,
       email,
-      password: hashed,
+      password,
       mobile,
       description
     });
@@ -58,21 +58,23 @@ const getSeller = async (req, res) => {
 const updateSeller = async (req, res) => {
   try {
     const { username, email, password, mobile, description } = req.body;
-    const hashed = hashPassword(password);
-    const updateData = { username, email, password: hashed, mobile, description };
+    //const hashed = hashPassword(password);
+    const updateData = { username, email, password, mobile, description };
 
     // Check if the email already exists
-    const sellerEmail = await SellerModel.findOne({ email });
-
-    if (sellerEmail) {
-      // Return an error if the email already exists
-      return res.status(400).send({ message: 'Email already exists.' });
+    if (email) {
+      const existingsellerEmail = await SellerModel.findOne({ email });
+      if (existingsellerEmail) {
+        // Return an error if the email already exists
+        return res.status(400).send({ message: 'Email already exists.' });
+      }
+      updateData.email = email; // Add email to update data if it exists
     }
 
     // Update seller data
     const seller = await SellerModel.findOneAndUpdate(
       { username }, // Find by username
-      { $set: updateData }, // Update data
+      updateData , // Update data
       { new: true } // Return the updated document
     );
 

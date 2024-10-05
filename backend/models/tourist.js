@@ -1,26 +1,27 @@
 //const mongoose = require('mongoose');
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const Schema = mongoose.Schema;
 
 const touristSchema = new Schema({
-  UserName: {
+  username: {
     type: String,
     required: true,
   },
-  Email: {
+  email: {
     type: String,
     required: true
   },
-  Password: {
+  password: {
     type: String,
     required: true,
   },
-  MobileNumber: {
+  mobile: {
     type: Number,
     required: true,
   },
-  Nationality: {
+  nationality: {
     type: String,
     required: true,
   },
@@ -28,14 +29,46 @@ const touristSchema = new Schema({
     type: Date,
     required: true,
   },
-  Job_Student: {
+  job_Student: {
     type: String,
     required: true,
-  },Wallet: {
+  },wallet: {
     type: Number,
     required: false,
+  },
+  type: {
+    type: String,
+    default: 'tourist'  // Default value for the type field
   }
 }, { timestamps: true });
+
+touristSchema.pre('save', async function(next){
+  const tourist = this;
+
+  if(!tourist.isModified('password')) return next();
+
+  try{
+    const saltRounds= 10;
+    tourist.password = await bcrypt.hash(tourist.password, saltRounds);
+    next();
+  }catch(error){
+    next(error);
+  }
+});
+
+touristSchema.pre('findOneAndUpdate', async function(next) {
+  const update = this.getUpdate();
+  
+  if (update.password) {
+    try {
+      const saltRounds = 10;
+      update.password = await bcrypt.hash(update.password, saltRounds);
+    } catch (error) {
+      return next(error);
+    }
+  }
+  next();
+});
 
 const Tourist = mongoose.model('Tourist', touristSchema);
 
