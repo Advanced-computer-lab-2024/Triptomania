@@ -27,37 +27,55 @@ const addAdmin = async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 }
-
 const deleteAccount = async (req, res) => {
     try {
-        const {id, type} = req.body;
+        const { id, type } = req.body;
+
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid category ID format." });
+        }
+
+        let deletedAccount;
+
+        // Depending on the type, delete the appropriate account
         switch (type) {
             case "tourist":
-                tourGuideModel.findByIdAndDelete(id);
+                deletedAccount = await touristModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "tourGuide":
-                tourGuideModel.findByIdAndDelete(id);
+                deletedAccount = await tourGuideModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "seller":
-                sellerModel.findByIdAndDelete(id);
+                deletedAccount = await sellerModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "advertiser":
-                advertiserModel.findByIdAndDelete(id);
+                deletedAccount = await advertiserModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "tourismGoverner":
-                tourismGovernerModel.findByIdAndDelete(id);
+                deletedAccount = await tourismGovernerModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "admin":
-                adminModel.findByIdAndDelete(id);
+                deletedAccount = await adminModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             default:
-                res.status(400).json({ message: "Invalid type" });
-                break;
+                return res.status(400).json({ message: "Invalid type" }); // Return after sending response
         }
+
+        // Check if the account was found and deleted
+        if (!deletedAccount) {
+            return res.status(404).json({ message: "Account not found or already deleted" });
+        }
+
+        // If the account was deleted successfully
+        res.status(200).json({ message: "Account deleted successfully" });
     } catch (error) {
+        // In case of any errors during the process
         res.status(500).json({ message: "Something went wrong" });
     }
 }
+
+
 
 export default {
     addAdmin,
