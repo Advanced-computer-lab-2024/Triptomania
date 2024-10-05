@@ -2,8 +2,10 @@
 import express from 'express';
 import dotenv from 'dotenv';    
 import { connectDB } from './config/db.js';  
-import { addProduct } from './controllers/shared/productController.js';
-import { editProduct } from './controllers/shared/productController.js';
+import sellerRoutes from './routes/sellerRoutes.js';
+import  adminRoutes from './routes/adminRoutes.js';
+import touristRoutes from './routes/touristRoutes.js';
+import advertiserRoutes from './routes/advertiserRoutes.js';
 
 // Load environment variables from .env file
 dotenv.config(); 
@@ -28,8 +30,7 @@ app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
 
-// app.post("/Admin/Product/addProduct",addProduct);
-// app.put("/Admin/Product/editProduct/:id",editProduct);
-
-
-//app.post("/Admin/Product/addProduct",addProduct);
+app.use('/api/seller',sellerRoutes);
+app.use('/api/admin',adminRoutes);
+app.use('/api/tourist',touristRoutes);
+app.use('/api/advertiser',advertiserRoutes);

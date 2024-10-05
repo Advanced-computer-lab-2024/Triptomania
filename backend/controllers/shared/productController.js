@@ -2,15 +2,15 @@
 import productModel from '../../models/product.js';
 import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId validation
 
-export const addProduct = async (req, res) => {
+ const addProduct = async (req, res) => {
    try {
-      const { Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
+      const { Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
 
-      if (!Description || !Price || !Seller || !Quantity) {
+      if (!Name || !Description || !Price || !Seller || !Quantity) {
          return res.status(400).json({ message: "All required fields must be provided." });
       }
 
-      if (typeof Description !== 'string' || typeof Seller !== 'string' ) {
+      if (typeof Name !== 'string'||typeof Description !== 'string' || typeof Seller !== 'string' ) {
          return res.status(400).json({ message: "Must be a string" });
       }
       if (typeof Price !== 'number' || Price <= 0) {
@@ -24,6 +24,7 @@ export const addProduct = async (req, res) => {
       }
 
       const newProduct = new productModel({
+         Name,
          Description,
          Price,
          Seller,
@@ -41,11 +42,11 @@ export const addProduct = async (req, res) => {
 };
 
 
-export const editProduct = async (req, res) => {
+ const editProduct = async (req, res) => {
    try {
       // Extract the product ID from the request parameters
       const { id } = req.params;
-      const { Description, Price, Seller, Quantity, Reviews, Ratings } = req.body;
+      const { Name,Description, Price, Seller, Quantity, Reviews, Ratings } = req.body;
 
       // Validate if the id is a valid MongoDB ObjectId
       if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -53,7 +54,7 @@ export const editProduct = async (req, res) => {
       }
 
       // Check if at least one field is provided for update
-      if (!Description && !Price && !Seller && !Quantity && !Reviews && !Ratings) {
+      if (!Name && !Description && !Price && !Seller && !Quantity && !Reviews && !Ratings) {
          return res.status(400).json({ message: "At least one field must be provided for update." });
       }
 
@@ -62,6 +63,7 @@ export const editProduct = async (req, res) => {
          { _id: id }, // search by _id
          {
             $set: {
+               Name: Name !== undefined ? Name : undefined,
                Description: Description !== undefined ? Description : undefined,
                Price: Price !== undefined ? Price : undefined,
                Seller: Seller !== undefined ? Seller : undefined,
@@ -87,5 +89,26 @@ export const editProduct = async (req, res) => {
 };
 
 
+const viewProducts = async (req, res) => {
+   try {
+      // Exclude 'Quantity' field by setting it to 0
+      const products = await productModel.find();
+      res.status(200).json(products);  
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving products', error });
+   }
+};
 
-// No need for module.exports, just export using ES Modules syntax
+
+
+
+
+export default{
+   addProduct,
+   editProduct,
+   viewProducts,
+   //searchProduct,
+   //filterProducts,
+   //sortProducts
+}
