@@ -12,7 +12,7 @@ import guestRoutes from './routes/guestRoutes.js'; // Import guest routes (if ap
 
 
 import adminRoutes from './routes/adminRoutes.js';
-
+import advertiserRoutes from './routes/advertiserRoutes.js'
 // Load environment variables from .env file
 dotenv.config(); 
 
@@ -53,3 +53,5 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/tourismGoverner', tourismGovernerRoutes);
 app.use('/api/tourist', touristRoutes); // Tourist routes
 app.use('/api/guest', guestRoutes); // Guest routes (if applicable)
+
+app.use('/api/advertiser', advertiserRoutes);
