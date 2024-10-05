@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tags - Tourism Governor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        #tagList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #tagList li {
+            background: #fff;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            color: green;
+            border-color: green;
+        }
+
+        .error {
+            color: red;
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Tags</h1>
+    
+    <div id="alert" class="alert"></div>
+
+    <form id="tagForm">
+        <input type="text" id="tagName" placeholder="Tag Name" required>
+        <button type="submit">Add Tag</button>
+    </form>
+
+    <h2>Tags List</h2>
+    <ul id="tagList"></ul>
+
+    <script>
+        const tagForm = document.getElementById('tagForm');
+        const tagList = document.getElementById('tagList');
+        const alertDiv = document.getElementById('alert');
+
+        // Function to show alert messages
+        function showAlert(message, isSuccess) {
+            alertDiv.textContent = message;
+            alertDiv.className = `alert ${isSuccess ? 'success' : 'error'}`;
+            alertDiv.style.display = 'block';
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Function to fetch and display tags
+        async function fetchTags() {
+            try {
+                const response = await fetch('/api/tourismGovernor/tags');
+                const data = await response.json();
+                tagList.innerHTML = '';
+                data.tags.forEach(tag => {
+                    const li = document.createElement('li');
+                    li.textContent = tag.name;
+                    tagList.appendChild(li);
+                });
+            } catch (error) {
+                showAlert('Error fetching tags.', false);
+            }
+        }
+
+        // Event listener for adding a new tag
+        tagForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const tagName = document.getElementById('tagName').value;
+
+            try {
+                const response = await fetch('/api/tourismGovernor/tags', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: tagName })
+                });
+
+                const result = await response.json();
+                showAlert(result.message, result.status); // Show success/error message
+                fetchTags(); // Refresh the tag list
+                tagForm.reset(); // Clear the form
+            } catch (error) {
+                showAlert('Error adding tag.', false);
+            }
+        });
+
+        // Fetch and display tags on page load
+        fetchTags();
+    </script>
+</body>
+</html>

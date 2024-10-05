@@ -168,3 +168,8 @@ export const deleteTag = async (req, res) => {
         });
     }
 };
+export default{
+    addTagToHistoricalPlace,
+    addTag,
+    getTags
+}

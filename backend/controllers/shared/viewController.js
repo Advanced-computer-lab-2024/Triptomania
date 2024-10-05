@@ -31,3 +31,6 @@ export const viewUpcoming = async (req, res) => {
         res.status(500).json({ error: 'Error occurred while fetching upcoming data' });
     }
 };
+export default{
+    viewUpcoming
+}

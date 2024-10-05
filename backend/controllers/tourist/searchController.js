@@ -59,3 +59,6 @@ export const search = async (req, res) => {
         res.status(500).json({ error: 'Error occurred while searching' });
     }
 };
+export default{
+    search
+}

@@ -30,3 +30,6 @@ export const filterByTag = async (req, res) => {
         return res.status(500).json({ error: 'Error occurred while filtering historical places by tag.' });
     }
 };
+export default{
+    filterByTag
+}
