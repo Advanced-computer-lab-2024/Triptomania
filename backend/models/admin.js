@@ -14,6 +14,10 @@ const adminSchema = new Schema({
     AdminPassword: {
         type: String,
         required: true,
+    },
+    type: {
+        type: String,
+        default: 'admin'  // Default value for the type field
     }
 });
 

@@ -14,6 +14,10 @@ const tourismGovernerSchema = new Schema({
     TourismGovenerPassword: {
         type: String,
         required: true,
+    },
+    type: {
+        type: String,
+        default: 'tourismGoverner'  // Default value for the type field
     }
 });
 
