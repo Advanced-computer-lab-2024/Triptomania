@@ -60,5 +60,6 @@ const deleteAccount = async (req, res) => {
 }
 
 export default {
-    addAdmin
+    addAdmin,
+    deleteAccount
 }
