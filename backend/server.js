@@ -8,19 +8,14 @@ import  adminRoutes from './routes/adminRoutes.js';
 import touristRoutes from './routes/touristRoutes.js';
 import advertiserRoutes from './routes/advertiserRoutes.js';
 
-import { addProduct } from './controllers/shared/productController.js';
-import { editProduct } from './controllers/shared/productController.js';
+
 import tourismGovernerRoutes from './routes/tourismGovernorRoutes.js';
-//import { searchHistoricalPlaceByName } from './controllers/tourist/searchController.js'; // Adjust the import as needed
-import touristRoutes from './routes/touristRoutes.js'; // Import tourist routes
+
 import guestRoutes from './routes/guestRoutes.js'; // Import guest routes (if applicable)
 
 
 
 
-import adminRoutes from './routes/adminRoutes.js';
-import advertiserRoutes from './routes/advertiserRoutes.js'
-// Load environment variables from .env file
 dotenv.config(); 
 
 // Initialize express app
