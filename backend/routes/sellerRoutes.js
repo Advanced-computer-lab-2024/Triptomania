@@ -1,9 +1,15 @@
-import express from 'express';
+import sellerController from "../controllers/seller/sellerController.js";
 import productController from '../controllers/shared/productController.js';
+import express from 'express'
 
 
-const router = express.Router();
+const routes = express.Router();
 
+routes.post('/addSeller', sellerController.CreateSeller);
+
+routes.put('/updateSeller', sellerController.updateSeller);
+
+routes.get('/getSeller', sellerController.getSeller);
 
 router.post("/product/addProduct",productController.addProduct);
 router.put("/product/editProduct",productController.editProduct);
