@@ -154,8 +154,7 @@ export const updateTag = async (req, res) => {
                 return res.status(404).json({ message: 'Tag not found' });
             }
     
-            // Delete the tag
-            await tag.remove();
+            await Tag.findByIdAndDelete(id);
             res.status(200).json({
                 status: true,
                 message: 'Tag deleted successfully!'
