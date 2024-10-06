@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import historicalPlaceModel from '../../models/historicalPlace.js';
+import HistoricalPlace from '../../models/historicalPlace.js';
 
 const getHistoricalPlaces = async (req, res) => {
     try {
@@ -15,6 +16,34 @@ const getHistoricalPlaces = async (req, res) => {
         });
     }
 }
+
+const getHistoricalPlace = async (req, res) => {
+    const { id } = req.params;
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({
+          status: false,
+          error: 'Historical place not found'
+        });
+      }
+      const historicalPlace = await historicalPlaceModel.findById(id);
+      if (!historicalPlace) {
+        return res.status(404).json({
+          status: false,
+          error: 'Historical place not found'
+        });
+      }
+      res.status(200).json({
+        status: true,
+        data: historicalPlace
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: false,
+        error: err.message
+      });
+    }
+  };
 
 
 const addHistoricalPlace = async (req, res) => {
@@ -127,6 +156,7 @@ const deleteHistoricalPlace = async (req, res) => {
 
 export default {
     getHistoricalPlaces,
+    getHistoricalPlace,
     addHistoricalPlace,
     editHistoricalPlace,
     deleteHistoricalPlace

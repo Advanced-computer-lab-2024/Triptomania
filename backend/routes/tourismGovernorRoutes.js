@@ -6,6 +6,8 @@ const router = express.Router();
 
 // get all historical places
 router.get('/getHistoricalPlaces', historicalPlaceController.getHistoricalPlaces);
+// get one historical place with id
+router.get('/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
 // add historical place
 router.post('/addHistoricalPlace', historicalPlaceController.addHistoricalPlace);
 // edit historical place
