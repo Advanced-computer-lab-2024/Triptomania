@@ -68,4 +68,4 @@ app.use('/api/tourist', touristRoutes); // Tourist routes
 app.use('/api/guest', guestRoutes); // Guest routes (if applicable)
 
 app.use('/api/advertiser', advertiserRoutes);
-//app.use('/api/tourGuide', tourGuideRoutes);
+app.use('/api/tourGuide', tourGuideRoutes);
