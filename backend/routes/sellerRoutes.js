@@ -3,13 +3,13 @@ import productController from '../controllers/shared/productController.js';
 import express from 'express'
 
 
-const routes = express.Router();
+const router = express.Router();
 
-routes.post('/addSeller', sellerController.CreateSeller);
+router.post('/addSeller', sellerController.CreateSeller);
 
-routes.put('/updateSeller', sellerController.updateSeller);
+router.put('/updateSeller', sellerController.updateSeller);
 
-routes.get('/getSeller', sellerController.getSeller);
+router.get('/getSeller', sellerController.getSeller);
 
 router.post("/product/addProduct",productController.addProduct);
 router.put("/product/editProduct",productController.editProduct);
