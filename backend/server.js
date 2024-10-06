@@ -12,6 +12,7 @@ import advertiserRoutes from './routes/advertiserRoutes.js';
 import tourismGovernerRoutes from './routes/tourismGovernorRoutes.js';
 
 import guestRoutes from './routes/guestRoutes.js'; // Import guest routes (if applicable)
+import tourGuideRoutes from './routes/tourGuideRoutes.js';
 
 
 
