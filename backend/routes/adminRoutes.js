@@ -3,6 +3,7 @@ import activityController from '../controllers/shared/activityController.js';
 import preferenceTagController from '../controllers/shared/preferenceTagController.js';
 import adminController from '../controllers/admin/adminController.js';
 import tourismGovernorController from '../controllers/tourismGovernor/tourismGovernorController.js';
+import productController from '../controllers/shared/productController.js';
 
 const router = express.Router();
 
@@ -32,5 +33,12 @@ router.delete('/deleteAccount', adminController.deleteAccount);
 
 // add a tourism governer in the system
 router.post('/addTourismGoverner', tourismGovernorController.addTourismGoverner);
+
+router.post("/product/addProduct",productController.addProduct);
+router.put("/product/editProduct",productController.editProduct);
+router.get("/product/viewProducts",productController.viewProducts);
+router.get("/product/searchProducts",productController.searchProduct);
+router.get("/product/filterProducts",productController.filterProducts);
+router.get("/product/sortProducts",productController.sortProducts);
 
 export default router;
