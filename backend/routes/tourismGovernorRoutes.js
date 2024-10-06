@@ -17,4 +17,5 @@ router.delete('/deleteHistoricalPlace/:id', historicalPlaceController.deleteHist
 router.put('/addTagToHistoricalPlace/:id', tourismGoverner.addTagToHistoricalPlace);
 router.post('/addTag',tourismGoverner.addTag);
 router.get('/getTags',tourismGoverner.getTags);
+router.delete('/deleteTag/:id',tourismGoverner.deleteTag);
 export default router;

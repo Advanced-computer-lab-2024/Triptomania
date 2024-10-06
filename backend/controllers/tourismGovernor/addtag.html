@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Tags to Historical Places</title>
+    <style>
+        /* Styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Tag to Historical Place</h2>
+        
+        <!-- Historical Places Dropdown -->
+        <div class="form-group">
+            <label for="historicalPlaceSelect">Select Historical Place:</label>
+            <select id="historicalPlaceSelect">
+                <option value="">Loading...</option>
+            </select>
+        </div>
+
+        <!-- Tags Dropdown -->
+        <div class="form-group">
+            <label for="tagSelect">Select Tag:</label>
+            <select id="tagSelect">
+                <option value="">Loading...</option>
+            </select>
+        </div>
+
+        <button id="addTagButton">Add Tag to Historical Place</button>
+
+        <div id="responseMessage" class="response"></div>
+    </div>
+
+    <script>
+        const apiBase = 'http://localhost:5000/api/tourismGoverner';
+
+        // Fetch and populate historical places
+        async function fetchHistoricalPlaces() {
+            try {
+                const response = await fetch(`${apiBase}/getHistoricalPlaces`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+
+                if (response.ok) {
+                    populateHistoricalPlaceDropdown(result.historicalPlaces);
+                } else {
+                    console.error(result.message);
+                    document.getElementById('responseMessage').innerText = result.message;
+                    document.getElementById('responseMessage').className = 'response error';
+                }
+            } catch (error) {
+                console.error('Error fetching historical places:', error);
+                document.getElementById('responseMessage').innerText = 'An error occurred: ' + error.message;
+                document.getElementById('responseMessage').className = 'response error';
+            }
+        }
+
+        // Populate Historical Place dropdown
+        function populateHistoricalPlaceDropdown(places) {
+            const historicalPlaceSelect = document.getElementById('historicalPlaceSelect');
+            historicalPlaceSelect.innerHTML = ''; // Clear existing options
+
+            places.forEach(place => {
+                const option = document.createElement('option');
+                option.value = place._id; // Set the value as the place ID
+                option.textContent = place.Name; // Display place name
+                historicalPlaceSelect.appendChild(option);
+            });
+        }
+
+        // Fetch and populate tags
+        async function fetchTags() {
+            try {
+                const response = await fetch(`${apiBase}/getTags`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    populateTagDropdown(result.tags);
+                } else {
+                    console.error(result.message);
+                    document.getElementById('responseMessage').innerText = result.message;
+                    document.getElementById('responseMessage').className = 'response error';
+                }
+            } catch (error) {
+                console.error('Error fetching tags:', error);
+                document.getElementById('responseMessage').innerText = 'An error occurred: ' + error.message;
+                document.getElementById('responseMessage').className = 'response error';
+            }
+        }
+
+        // Populate Tags dropdown
+        function populateTagDropdown(tags) {
+            const tagSelect = document.getElementById('tagSelect');
+            tagSelect.innerHTML = ''; // Clear existing options
+
+            tags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag._id; // Set the value as the tag ID
+                option.textContent = tag.name; // Display tag name
+                tagSelect.appendChild(option);
+            });
+        }
+
+        // Add Tag to Historical Place
+        document.getElementById('addTagButton').addEventListener('click', async () => {
+            const historicalPlaceId = document.getElementById('historicalPlaceSelect').value;
+            const tagId = document.getElementById('tagSelect').value;
+
+            if (!historicalPlaceId || !tagId) {
+                document.getElementById('responseMessage').innerText = 'Please select both a historical place and a tag.';
+                document.getElementById('responseMessage').className = 'response error';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiBase}/addTagToHistoricalPlace/${historicalPlaceId}`, {
+                    method: 'PUT', // Change to PUT
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ newTagId: tagId }), // Body with the new tag ID
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('responseMessage').innerText = result.message;
+                    document.getElementById('responseMessage').className = 'response success';
+                } else {
+                    document.getElementById('responseMessage').innerText = result.message;
+                    document.getElementById('responseMessage').className = 'response error';
+                }
+            } catch (error) {
+                console.error('Error adding tag:', error);
+                document.getElementById('responseMessage').innerText = 'An error occurred: ' + error.message;
+                document.getElementById('responseMessage').className = 'response error';
+            }
+        });
+
+        // Fetch historical places and tags when the page loads
+        fetchHistoricalPlaces();
+        fetchTags();
+    </script>
+</body>
+</html>
