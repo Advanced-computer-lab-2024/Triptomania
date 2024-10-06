@@ -7,7 +7,7 @@
     <script>
         async function getHistoricalPlaces() {
             try {
-                const response = await fetch('/api/historical-places', { method: 'GET' });
+                const response = await fetch('http://localhost:5000/api/tourismGoverner/getHistoricalPlaces', { method: 'GET' });
                 const data = await response.json();
                 
                 if (data.status) {

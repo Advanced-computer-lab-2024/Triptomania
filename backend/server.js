@@ -69,3 +69,5 @@ app.use('/api/guest', guestRoutes); // Guest routes (if applicable)
 
 app.use('/api/advertiser', advertiserRoutes);
 app.use('/api/tourGuide', tourGuideRoutes);
+
+app.use(express.static('controllers'));
