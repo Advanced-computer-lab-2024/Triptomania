@@ -6,9 +6,9 @@ const router = express.Router();
 
 
 router.post("/activity/addActivivty",advertiserController.addActivity);
-router.put("/activity/editActivivty",advertiserController.editActivity);
+router.put("/activity/editActivivty/:id",advertiserController.editActivity);
 router.get("/activity/viewActivivties",advertiserController.viewActivities);
-router.delete("/activity/deleteActivivty",advertiserController.deleteActvivty);
+router.delete("/activity/deleteActivivty/:id",advertiserController.deleteActvivty);
 
 export default router;
 
