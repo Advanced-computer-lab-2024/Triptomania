@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin: 20px 0;
+        }
+
+        .section h2 {
+            color: #0056b3;
+        }
+
+        .event {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Upcoming Activities, Itineraries, and Historical Places</h1>
+
+    <div class="section">
+        <h2>Upcoming Activities</h2>
+        <div id="activities"></div>
+    </div>
+
+    <div class="section">
+        <h2>Upcoming Itineraries</h2>
+        <div id="itineraries"></div>
+    </div>
+
+    <div class="section">
+        <h2>Historical Places/Museums</h2>
+        <div id="historicalPlaces"></div>
+    </div>
+
+    <div class="loading" id="loading">Loading...</div>
+    <div class="error" id="error"></div>
+</div>
+
+<script>
+    async function fetchUpcomingEvents() {
+        try {
+            const response = await fetch('http://localhost:5000/api/tourist/upcoming');
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok, status: ' + response.status);
+            }
+
+            const data = await response.json();
+            console.log('Data received:', data); // Log received data for debugging
+
+            // Hide loading text
+            document.getElementById('loading').style.display = 'none';
+
+            // Ensure arrays are initialized
+            const activities = data.upcomingActivities || [];
+            const itineraries = data.upcomingItineraries || [];
+            const historicalPlaces = data.historicalPlaces || [];
+
+            // Display activities
+            const activitiesDiv = document.getElementById('activities');
+            if (activities.length === 0) {
+                activitiesDiv.innerHTML = '<p>No upcoming activities found.</p>';
+            } else {
+                activities.forEach(activity => {
+                    const activityElement = document.createElement('div');
+                    activityElement.className = 'event';
+                    activityElement.innerHTML = `
+                        <h3>${activity.name}</h3>
+                        <p>Date: ${new Date(activity.date).toLocaleDateString()}</p>
+                    `;
+                    activitiesDiv.appendChild(activityElement);
+                });
+            }
+
+            // Display itineraries
+            const itinerariesDiv = document.getElementById('itineraries');
+            if (itineraries.length === 0) {
+                itinerariesDiv.innerHTML = '<p>No upcoming itineraries found.</p>';
+            } else {
+                itineraries.forEach(itinerary => {
+                    const itineraryElement = document.createElement('div');
+                    itineraryElement.className = 'event';
+                    itineraryElement.innerHTML = `
+                        <h3>${itinerary.name}</h3>
+                        <p>Date: ${new Date(itinerary.date).toLocaleDateString()}</p>
+                    `;
+                    itinerariesDiv.appendChild(itineraryElement);
+                });
+            }
+
+            // Display historical places
+            const historicalPlacesDiv = document.getElementById('historicalPlaces');
+            if (historicalPlaces.length === 0) {
+                historicalPlacesDiv.innerHTML = '<p>No historical places found.</p>';
+            } else {
+                historicalPlaces.forEach(place => {
+                    const placeElement = document.createElement('div');
+                    placeElement.className = 'event';
+                    placeElement.innerHTML = `
+                        <h3>${place.name}</h3>
+                    `;
+                    historicalPlacesDiv.appendChild(placeElement);
+                });
+            }
+
+        } catch (error) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').innerText = 'An error occurred while fetching results: ' + error.message;
+            console.error('Error fetching upcoming events:', error);
+        }
+    }
+
+    // Call the function to fetch upcoming events
+    fetchUpcomingEvents();
+</script>
+
+</body>
+</html>

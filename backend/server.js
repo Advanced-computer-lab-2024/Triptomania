@@ -2,6 +2,7 @@
 import express from 'express';
 import dotenv from 'dotenv';    
 import { connectDB } from './config/db.js';  
+import cors from 'cors';
 
 import sellerRoutes from './routes/sellerRoutes.js';
 import  adminRoutes from './routes/adminRoutes.js';
@@ -15,16 +16,19 @@ import guestRoutes from './routes/guestRoutes.js'; // Import guest routes (if ap
 import tourGuideRoutes from './routes/tourGuideRoutes.js';
 
 
-
-
 dotenv.config(); 
 
 // Initialize express app
 const app = express();
-// app.use(cors());
+
+// Enable CORS for all routes
+app.use(cors());  // Enable CORS middleware globally for all routes
+
+// Enable express to parse JSON
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
+
 
 
 // Listen on port 5000
@@ -64,4 +68,4 @@ app.use('/api/tourist', touristRoutes); // Tourist routes
 app.use('/api/guest', guestRoutes); // Guest routes (if applicable)
 
 app.use('/api/advertiser', advertiserRoutes);
-app.use('/api/tourGuide', tourGuideRoutes);
+//app.use('/api/tourGuide', tourGuideRoutes);

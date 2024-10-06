@@ -6,7 +6,7 @@ import filterByTag from '../controllers/shared/filterController.js';
 const router = express.Router();
 
 // Search route
-router.get('/search', search.search);
+router.post('/search', search.search);
 router.get('/upcoming', viewUpcoming.viewUpcoming);
 router.get('/filterByTag', filterByTag.filterByTag);
 

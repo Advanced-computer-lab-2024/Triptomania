@@ -144,32 +144,34 @@ export const updateTag = async (req, res) => {
     }
 };
     // Function to delete a tag
-export const deleteTag = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // Find the tag by its ID
-        const tag = await Tag.findById(id);
-        if (!tag) {
-            return res.status(404).json({ message: 'Tag not found' });
+    export const deleteTag = async (req, res) => {
+        try {
+            const { id } = req.params;
+    
+            // Find the tag by its ID
+            const tag = await Tag.findById(id);
+            if (!tag) {
+                return res.status(404).json({ message: 'Tag not found' });
+            }
+    
+            // Delete the tag
+            await tag.remove();
+            res.status(200).json({
+                status: true,
+                message: 'Tag deleted successfully!'
+            });
+        } catch (err) {
+            console.error('Error deleting tag:', err); // Log the error for debugging
+            res.status(500).json({
+                status: false,
+                message: 'Error deleting tag',
+                error: err.message // Send the error message to the client
+            });
         }
-
-        // Delete the tag
-        await tag.remove();
-        res.status(200).json({
-            status: true,
-            message: 'Tag deleted successfully!'
-        });
-    } catch (err) {
-        res.status(500).json({
-            status: false,
-            message: 'Error deleting tag',
-            error: err.message
-        });
-    }
-};
-export default{
+    };
+    export default{
     addTagToHistoricalPlace,
     addTag,
-    getTags
+    getTags,
+    deleteTag
 }
