@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Places</title>
+    <script>
+        async function getHistoricalPlaces() {
+            try {
+                const response = await fetch('/api/historical-places', { method: 'GET' });
+                const data = await response.json();
+                
+                if (data.status) {
+                    const placesList = document.getElementById('placesList');
+                    placesList.innerHTML = '';  // Clear previous results
+
+                    data.historicalPlaces.forEach(place => {
+                        const placeItem = document.createElement('div');
+                        placeItem.className = 'place-item';
+                        placeItem.innerHTML = `
+                            <h3>${place.Name}</h3>
+                            <p>Description: ${place.Description}</p>
+                            <p>Location: ${place.Location}</p>
+                            <p>Opening Hours: ${place.Opening_hours}</p>
+                            <p>Closing Hours: ${place.Closing_hours}</p>
+                            <p>Ticket Prices: ${place.Ticket_prices}</p>
+                            <p>Category: ${place.Category}</p>
+                            <img src="${place.Picture}" alt="${place.Name}" width="200" />
+                        `;
+                        placesList.appendChild(placeItem);
+                    });
+                } else {
+                    alert('Failed to fetch historical places');
+                }
+            } catch (error) {
+                console.error('Error fetching historical places:', error);
+                alert('Error fetching historical places');
+            }
+        }
+
+        async function addHistoricalPlace(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const body = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/api/historical-places', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+
+                if (data.status) {
+                    alert('Historical place added successfully');
+                    event.target.reset();  // Clear the form
+                    getHistoricalPlaces();  // Refresh the places list
+                } else {
+                    alert('Failed to add historical place: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error adding historical place:', error);
+                alert('Error adding historical place');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Historical Places</h1>
+
+    <!-- Button to Fetch Historical Places -->
+    <button id="getHistoricalPlaces" onclick="getHistoricalPlaces()">Get Historical Places</button>
+
+    <!-- Container to Display Historical Places -->
+    <div id="placesList"></div>
+
+    <h2>Add a New Historical Place</h2>
+
+    <!-- Form to Add a New Historical Place -->
+    <form onsubmit="addHistoricalPlace(event)">
+        <label for="Name">Name:</label>
+        <input type="text" id="Name" name="Name" required><br><br>
+
+        <label for="Description">Description:</label>
+        <textarea id="Description" name="Description" required></textarea><br><br>
+
+        <label for="Picture">Picture URL:</label>
+        <input type="text" id="Picture" name="Picture" required><br><br>
+
+        <label for="Location">Location:</label>
+        <input type="text" id="Location" name="Location" required><br><br>
+
+        <label for="Opening_hours">Opening Hours (HH:MM):</label>
+        <input type="text" id="Opening_hours" name="Opening_hours" required><br><br>
+
+        <label for="Closing_hours">Closing Hours (HH:MM):</label>
+        <input type="text" id="Closing_hours" name="Closing_hours" required><br><br>
+
+        <label for="Ticket_prices">Ticket Prices:</label>
+        <input type="number" id="Ticket_prices" name="Ticket_prices" required><br><br>
+
+        <label for="Category">Category:</label>
+        <input type="text" id="Category" name="Category" required><br><br>
+
+        <button type="submit" id="addHistoricalPlace">Add Historical Place</button>
+    </form>
+</body>
+</html>

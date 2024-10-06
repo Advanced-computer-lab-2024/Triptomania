@@ -49,7 +49,7 @@ const addHistoricalPlace = async (req, res) => {
         if (!timeFormat.test(Closing_hours)) {
             return res.status(400).json({ message: "Closing hours must be in the format of HH:MM" });
         }
-        if (typeof Ticket_prices !== 'number') {
+        if (typeof Ticket_prices !== 'integer') {
             return res.status(400).json({ message: "Ticket prices must be a number" });
         }
 
