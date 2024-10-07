@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Fetch product details using the ID
     async function fetchProduct() {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/product/viewProducts/${productId}`);
+            const response = await fetch(`http://localhost:5000/api/seller/product/viewProducts/${productId}`);
             const product = await response.json();
 
             if (product) {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (quantity) updatedProduct.Quantity = quantity;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/product/editProduct/${productId}`, {
+            const response = await fetch(`http://localhost:5000/api/seller/product/editProduct/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

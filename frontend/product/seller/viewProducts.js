@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch all products
     async function fetchProducts() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourist/product/viewProducts'); // View all products API
+            const response = await fetch('http://localhost:5000/api/seller/product/viewProducts'); // View all products API
             const products = await response.json();
             displayProducts(products);
         } catch (error) {
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to search products
     async function searchProducts(query) {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/product/searchProducts?Name=${query}`); // Search API
+            const response = await fetch(`http://localhost:5000/api/seller/product/searchProducts?Name=${query}`); // Search API
             const products = await response.json();
             displayProducts(products);
         } catch (error) {
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function fetchSortedProducts(order) {
         try {
             // Use your sorting API for ratings
-            const response = await fetch(`http://localhost:5000/api/admin/product/sortProducts?order=${order}`);
+            const response = await fetch(`http://localhost:5000/api/seller/product/sortProducts?order=${order}`);
             const products = await response.json();
             displayProducts(products);
         } catch (error) {
