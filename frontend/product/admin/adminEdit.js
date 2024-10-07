@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch all products
     async function fetchProducts() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourist/product/viewProducts'); // View all products API
+            const response = await fetch('http://localhost:5000/api/admin/product/viewProducts'); // View all products API
             const products = await response.json();
             displayProducts(products);
         } catch (error) {
@@ -22,9 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
         productList.innerHTML = ''; // Clear existing products
         products.forEach(product => {
             const productElement = document.createElement('div');
-            productElement.classList.add('product-item'); // Assigning class for styling
+            productElement.classList.add('product-item');
 
-            // Apply inline styles to match your design if CSS isn't applying
             productElement.style.backgroundColor = '#fff';
             productElement.style.border = '2px solid #007BFF';
             productElement.style.padding = '20px';
@@ -44,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             `;
 
-            // Hover effect using JavaScript
             productElement.addEventListener('mouseover', function () {
                 productElement.style.borderColor = '#0056b3';
                 productElement.style.boxShadow = '0 6px 12px rgba(0, 123, 255, 0.2)';
@@ -80,10 +78,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to fetch sorted products using your sorting API
+    // Function to fetch sorted products
     async function fetchSortedProducts(order) {
         try {
-            // Use your sorting API for ratings
             const response = await fetch(`http://localhost:5000/api/admin/product/sortProducts?order=${order}`);
             const products = await response.json();
             displayProducts(products);
@@ -95,14 +92,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener for sorting select
     sortSelect.addEventListener('change', async function () {
         if (sortSelect.value === 'high') {
-            await fetchSortedProducts("high"); // Sort by high to low using descending order
+            await fetchSortedProducts("high");
         } else if (sortSelect.value === 'low') {
-            await fetchSortedProducts("low"); // Sort by low to high using ascending order
+            await fetchSortedProducts("low");
         } else {
-            await fetchProducts(); // If no sorting, fetch all products
+            await fetchProducts();
         }
     });
-    
+
+    // Function to filter products by price
+    async function filterProducts(min, max) {
+        try {
+            const response = await fetch(`http://localhost:5000/api/admin/product/filterProducts?minPrice=${min}&maxPrice=${max}`);
+            const products = await response.json();
+            displayProducts(products);
+        } catch (error) {
+            console.error('Error filtering products:', error);
+        }
+    }
+
+    // Event listener for filter button
+    filterButton.addEventListener('click', function () {
+        const min = parseFloat(minPrice.value) || 0; // Default to 0 if empty
+        const max = parseFloat(maxPrice.value) || Infinity; // Default to Infinity if empty
+        filterProducts(min, max);
+    });
 
     // Initial fetch of all products on page load
     fetchProducts();
