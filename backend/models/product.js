@@ -19,10 +19,10 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
-  // Picture: {
-  //   type: String,
-  //   required: true,
-  // },
+  Picture: {
+    type: String,
+    required: false,
+  },
   Ratings: {
     type: Number,
     required: true,
