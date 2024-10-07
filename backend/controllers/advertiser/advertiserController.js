@@ -119,40 +119,7 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
     
  };
 
- const getMyHistoricalPlaces = async (req, res) => {
-    const { creatorId } = req.params; // Extract creatorId from request parameters
 
-    try {
-        // Validate that creatorId is a number
-        if (isNaN(creatorId)) {
-            return res.status(400).json({
-                status: false,
-                error: 'Invalid creatorId, it must be a number.'
-            });
-        }
-
-        // Find all historical places with the same creatorId
-        const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId });
-
-        // Check if any historical places were found
-        if (!historicalPlaces || historicalPlaces.length === 0) {
-            return res.status(404).json({
-                status: false,
-                error: 'No historical places found for the provided creatorId.'
-            });
-        }
-
-        res.status(200).json({
-            status: true,
-            historicalPlaces: historicalPlaces
-        });
-    } catch (err) {
-        res.status(500).json({
-            status: false,
-            error: err.message
-        });
-    }
-};
 
 const viewMyActivities = async (req, res) => {
    const { creatorId } = req.params; // Extract creatorId from request parameters
