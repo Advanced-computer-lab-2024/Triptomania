@@ -42,7 +42,19 @@ const createAdvertiser = async (req, res) => {
     console.log(error);
   }
 };
+///////////////////////////////////////////////////////////////////
 
+// Get one seller
+
+const getOneAdvertiser = async (req, res) => {
+  try {
+    //const {  username, email, password, mobile, nationality,job_Student } = req.body;
+    const advertiser = await AdvertiserModel.find({username});
+    return res.status(200).send(advertiser);
+  } catch (error) {
+    console.log(error);
+  }
+};
 ///////////////////////////////////////////////////////////////////////
 
 // Get all advertisers
@@ -91,5 +103,4 @@ const updateAdvertiser = async (req, res) => {
   }
 };
 
-// Export all functions using ES module syntax
-export default { createAdvertiser, getAdvertiser, updateAdvertiser };
+export default { createAdvertiser, getAdvertiser, updateAdvertiser,getOneAdvertiser};
