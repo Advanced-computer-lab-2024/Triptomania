@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add, Get, Update, and Delete Tags</title>
+    <title>Add and Get Tags</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -94,26 +94,17 @@
             align-items: center;
         }
 
-        .delete-button, .update-button {
+        .delete-button {
             background-color: #dc3545;
             color: white;
             border: none;
             padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
-        }
-
-        .update-button {
-            background-color: #ffc107;
         }
 
         .delete-button:hover {
             background-color: #c82333;
-        }
-
-        .update-button:hover {
-            background-color: #e0a800;
         }
     </style>
 </head>
@@ -133,12 +124,13 @@
 
     <hr>
 
-    <h2>Get, Update, and Delete Tags</h2>
+    <h2>Get and Delete Tags</h2>
 
     <button id="getTagsButton">Get Tags</button>
 
     <ul id="tagList" class="tag-list"></ul>
 
+    <div id="noTagsMessage" class="response" style="display:none;"></div>
 </div>
 
 <script>
@@ -198,29 +190,27 @@
                 const tagList = document.getElementById('tagList');
                 tagList.innerHTML = '';  // Clear existing tags
 
-                result.tags.forEach(tag => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `ID: ${tag._id}, Name: ${tag.name} 
-                                    <button class="update-button" data-id="${tag._id}" data-name="${tag.name}">Update</button>
-                                    <button class="delete-button" data-id="${tag._id}">Delete</button>`;
-                    tagList.appendChild(li);
-                });
-
-                // Add event listener to each update and delete button
-                document.querySelectorAll('.delete-button').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const tagId = e.target.getAttribute('data-id');
-                        deleteTag(tagId);
+                if (result.tags.length === 0) {
+                    document.getElementById('noTagsMessage').innerText = 'Try to search for another tag, this tag is empty.';
+                    document.getElementById('noTagsMessage').className = 'response error';
+                    document.getElementById('noTagsMessage').style.display = 'block';
+                } else {
+                    document.getElementById('noTagsMessage').style.display = 'none';
+                    result.tags.forEach(tag => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `ID: ${tag._id}, Name: ${tag.name} 
+                                        <button class="delete-button" data-id="${tag._id}">Delete</button>`;
+                        tagList.appendChild(li);
                     });
-                });
 
-                document.querySelectorAll('.update-button').forEach(button => {
-                    button.addEventListener('click', async (e) => {
-                        const tagId = e.target.getAttribute('data-id');
-                        const currentName = e.target.getAttribute('data-name');
-                        updateTag(tagId, currentName);
+                    // Add event listener to each delete button
+                    document.querySelectorAll('.delete-button').forEach(button => {
+                        button.addEventListener('click', async (e) => {
+                            const tagId = e.target.getAttribute('data-id');
+                            deleteTag(tagId);
+                        });
                     });
-                });
+                }
             } else {
                 document.getElementById('responseMessage').innerText = result.message;
                 document.getElementById('responseMessage').className = 'response error';
@@ -256,50 +246,6 @@
             document.getElementById('responseMessage').className = 'response error';
         }
     }
-
-    // Update Tag functionality
-    async function updateTag(tagId, currentName) {
-    const newTagName = prompt('Enter new tag name:', currentName);
-    if (!newTagName) {
-        alert('Tag name cannot be empty!');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${apiBase}/updateTag/${tagId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name: newTagName }),
-        });
-
-        // Log the raw response for debugging
-        const rawResponse = await response.text();
-        console.log('Raw response:', rawResponse);
-
-        // Check if the response is JSON
-        if (response.headers.get('content-type')?.includes('application/json')) {
-            const result = await response.json();
-            
-            if (response.ok) {
-                document.getElementById('responseMessage').innerText = result.message;
-                document.getElementById('responseMessage').className = 'response success';
-                fetchTags(); // Refresh the tags list after update
-            } else {
-                document.getElementById('responseMessage').innerText = result.message;
-                document.getElementById('responseMessage').className = 'response error';
-            }
-        } else {
-            document.getElementById('responseMessage').innerText = 'Server returned an unexpected response';
-            document.getElementById('responseMessage').className = 'response error';
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        alert(`An error occurred: ${error.message}`);
-    }
-}
 </script>
-
 </body>
 </html>
