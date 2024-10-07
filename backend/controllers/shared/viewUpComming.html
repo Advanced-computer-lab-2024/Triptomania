@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upcoming Events</title>
+    <title>Upcoming Events and Itineraries</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -93,12 +93,67 @@
                 padding: 10px;
             }
         }
+
+        /* New Styles for Filters and Sorting */
+        .filter-sort {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f3f3f3;
+            border-radius: 8px;
+        }
+
+        .filter-sort label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .filter-sort input, 
+        .filter-sort select, 
+        .filter-sort button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Upcoming Activities, Itineraries, and Historical Places</h1>
+
+    <div class="filter-sort">
+        <h2>Filter and Sort Itineraries</h2>
+        <h3>Filter Itineraries</h3>
+        <label for="budget">Budget (max):</label>
+        <input type="number" id="budget" placeholder="Enter maximum budget">
+
+        <label for="date">Available From Date:</label>
+        <input type="date" id="date">
+
+        <label for="preferences">Preferences (comma-separated):</label>
+        <input type="text" id="preferences" placeholder="e.g., beaches,family-friendly">
+
+        <label for="language">Language:</label>
+        <input type="text" id="language" placeholder="Enter preferred language">
+
+        <button id="filterBtn">Filter Itineraries</button>
+
+        <h3>Sort Itineraries</h3>
+        <label for="sortBy">Sort By:</label>
+        <select id="sortBy" multiple>
+            <option value="price">Price</option>
+            <option value="duration">Duration</option>
+        </select>
+
+        <label for="order">Order:</label>
+        <select id="order">
+            <option value="low">Low to High</option>
+            <option value="high">High to Low</option>
+        </select>
+
+        <button id="sortBtn">Sort Itineraries</button>
+    </div>
 
     <div class="section">
         <h2>Upcoming Activities</h2>
@@ -233,6 +288,25 @@
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1).replace(/([A-Z])/g, ' $1');
     }
+
+    // Filter and sort functionality
+    document.getElementById('filterBtn').addEventListener('click', () => {
+        const budget = document.getElementById('budget').value;
+        const date = document.getElementById('date').value;
+        const preferences = document.getElementById('preferences').value.split(',').map(p => p.trim());
+        const language = document.getElementById('language').value;
+
+        // Implement your filter logic here, possibly by calling a new API endpoint with these parameters
+        console.log('Filtering itineraries with:', { budget, date, preferences, language });
+    });
+
+    document.getElementById('sortBtn').addEventListener('click', () => {
+        const sortBy = Array.from(document.getElementById('sortBy').selectedOptions).map(option => option.value);
+        const order = document.getElementById('order').value;
+
+        // Implement your sort logic here, possibly by calling a new API endpoint with these parameters
+        console.log('Sorting itineraries by:', { sortBy, order });
+    });
 
     // Call the function to fetch upcoming events
     fetchUpcomingEvents();
