@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Tourist Info</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        input {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Update Tour Guide Information</h2>
+
+    <form id="updateForm">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" readonly>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" >
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" >
+
+        <label for="mobile">Mobile</label>
+        <input type="text" id="mobile" name="mobile" >
+
+        <label for="yearsOfExperience">Years of Experience</label>
+        <input type="number" id="yearsOfExperience" name="yearsOfExperience">
+
+        <label for="previousWork">Previous Work</label>
+        <input type="text" id="previousWork" name="previousWork">
+
+        <button type="submit">Update Tourist Info</button>
+    </form>
+
+    <script>
+        // Hardcode the tourist's data
+        const hardcodedTourist = {
+            username: 'Messi',
+            email: 'messi@gmail.com',
+            mobile: '',
+            yearsOfExperience: '',
+            previousWork: ''
+        };
+
+        // Function to display the hardcoded tourist's data in the form
+        function prefillTouristData() {
+            document.getElementById('username').value = hardcodedTourist.username;
+            document.getElementById('email').value = hardcodedTourist.email;
+            document.getElementById('password').value = ""; // Keep the password field empty
+            document.getElementById('mobile').value = hardcodedTourist.mobile;
+            document.getElementById('yearsOfExperience').value = hardcodedTourist.yearsOfExperience;
+            document.getElementById('previousWork').value = hardcodedTourist.previousWork;
+        }
+
+        // Call the function to pre-fill the form with the hardcoded data
+        prefillTouristData();
+
+        // Function to handle form submission and update tourist info
+        document.getElementById('updateForm').addEventListener('submit', async function (event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const updatedTourist = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                mobile: document.getElementById('mobile').value,
+                yearsOfExperience: document.getElementById('yearsOfExperience').value,
+                previousWork: document.getElementById('previousWork').value,
+            };
+
+            Object.keys(updatedTourist).forEach(key => {
+                if (!updatedTourist[key]) {
+                    delete updatedTourist[key];  // Remove keys with empty or null values
+                }
+            });
+
+            try {
+                console.log('Updated Tourist Data:', updatedTourist);
+
+                const response = await fetch('http://localhost:5000/api/tourGuide/updateTourguide', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedTourist),
+                });
+
+                if (response.ok) {
+                    alert('Tour Guide info updated successfully!');
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error updating tourist info:', error);
+                alert('Failed to update tourist info');
+            }
+        });
+    </script>
+
+</body>
+</html>

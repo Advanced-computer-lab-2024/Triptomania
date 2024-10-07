@@ -1,6 +1,6 @@
 //const mongoose = require('mongoose');
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const Schema = mongoose.Schema;
 
@@ -39,6 +39,9 @@ const touristSchema = new Schema({
   type: {
     type: String,
     default: 'tourist'  // Default value for the type field
+  },
+  underage:{
+    type: Boolean,
   }
 }, { timestamps: true });
 

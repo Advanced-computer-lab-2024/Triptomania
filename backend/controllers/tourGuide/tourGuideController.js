@@ -45,6 +45,20 @@ const getTourGuide = async (req, res) => {
   }
 };
 
+///////////////////////////////////////////////////////////////////
+
+// Get one tourguide
+
+const getOneTourGuide = async (req, res) => {
+  try {
+    //const {  username, email, password, mobile, nationality,job_Student } = req.body;
+    const tourGuide = await TourGuideModel.find({username});
+    return res.status(200).send(tourGuide);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 //////////////////////////////////////////////////////////////
 
 // Update a tour guide
@@ -52,17 +66,25 @@ const updateTourGuide = async (req, res) => {
   try {
     const { username, email, password, mobile, yearsOfExperience, previousWork } = req.body;
     //const hashed = hashPassword(password);
-    const updateData = { username, email, password, mobile, yearsOfExperience, previousWork };
+
 
     // Check if the email already exists
-    if (email) {
-      const existingTourGuideEmail = await TourGuideModel.findOne({ email });
-      if (existingTourGuideEmail) {
-        // Return an error if the email already exists
-        return res.status(400).send({ message: 'Email already exists.' });
+
+      if (email) {
+        const existingTourGuideEmail = await TourGuideModel.findOne({ email, username: { $ne: username } });
+        if (existingTourGuideEmail) {
+          // Return an error if the email already exists
+          return res.status(400).send({ message: 'Email already exists.' });
+        }
       }
-      updateData.email = email; // Add email to update data if it exists
-    }
+
+    const updateData = {  email, password, mobile, yearsOfExperience, previousWork };
+
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined) {
+        delete updateData[key];
+      }
+    });
 
     // Update tour guide data
     const tourg = await TourGuideModel.findOneAndUpdate({ username }, updateData, { new: true }); // Add { new: true } to return the updated document
@@ -78,4 +100,4 @@ const updateTourGuide = async (req, res) => {
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourGuide, getTourGuide, updateTourGuide };
+export default { CreateTourGuide, getTourGuide, updateTourGuide, getOneTourGuide };

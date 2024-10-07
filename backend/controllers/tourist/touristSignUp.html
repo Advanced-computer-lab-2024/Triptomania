@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tourist Signup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .signup-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"], 
+    input[type="date"], 
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="signup-container">
+    <h2>Tourist Signup</h2>
+    <form id="signupForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="mobile">Mobile</label>
+        <input type="number" id="mobile" name="mobile" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="nationality">Nationality</label>
+        <input type="text" id="nationality" name="nationality" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="DOB">Date of Birth</label>
+        <input type="date" id="DOB" name="DOB" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="job_Student">Job/Student</label>
+        <input type="text" id="job_Student" name="job_Student" required>
+      </div>
+
+      <div class="form-group">
+        <label for="wallet">Wallet (optional)</label>
+        <input type="number" id="wallet" name="wallet">
+      </div>
+
+      <!-- Error message container -->
+      <div class="error-message" id="errorMessage"></div>
+
+      <input type="submit" value="Signup">
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Clear previous error messages
+      document.getElementById('errorMessage').textContent = '';
+
+      const formData = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        mobile: document.getElementById('mobile').value,
+        nationality: document.getElementById('nationality').value,
+        DOB: document.getElementById('DOB').value,
+        job_Student: document.getElementById('job_Student').value,
+        wallet: document.getElementById('wallet').value || 0
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/tourist/addTourist', {  // Adjust to your backend route
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert('Signup successful!');
+          // Redirect or perform other actions
+        } else {
+          const errorData = await response.json();
+          // Display backend error in the error message div
+          document.getElementById('errorMessage').textContent = errorData.message || 'Signup failed. Please try again.';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        // Display any general errors in the error message div
+        document.getElementById('errorMessage').textContent = 'An error occurred. Please try again later.';
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -4,12 +4,12 @@ import sellerController from "../controllers/seller/sellerController.js";
 import express from 'express'
 
 
-const routes = express.Router();
+const router = express.Router();
 
-routes.post('/addSeller', sellerController.CreateSeller);
+router.post('/addSeller', sellerController.CreateSeller);
 
-routes.put('/updateSeller', sellerController.updateSeller);
+router.put('/updateSeller', sellerController.updateSeller);
 
-routes.get('/getSeller', sellerController.getSeller);
+router.get('/getSeller', sellerController.getSeller);
 
-export default routes;
+export default router;

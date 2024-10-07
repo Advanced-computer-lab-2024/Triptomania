@@ -6,6 +6,7 @@ import touristRoutes from './routes/touristRoutes.js';
 import tourGuideRoutes from './routes/tourGuideRoutes.js';
 import sellerRoutes from './routes/sellerRoutes.js';
 import advertiserRoutes from './routes/advertiserRoutes.js';
+import cors from 'cors';
 import { addProduct } from './controllers/shared/productController.js';
 import { editProduct } from './controllers/shared/productController.js';
 
@@ -15,6 +16,7 @@ dotenv.config();
 // Initialize express app
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const port = process.env.PORT || 5000;
 
