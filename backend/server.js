@@ -1,6 +1,7 @@
 // Import necessary modules
 import express from 'express';
 import dotenv from 'dotenv';    
+import cors from 'cors';
 import { connectDB } from './config/db.js';
 import touristRoutes from './routes/touristRoutes.js';
 import tourGuideRoutes from './routes/tourGuideRoutes.js';
@@ -14,7 +15,7 @@ dotenv.config();
 
 // Initialize express app
 const app = express();
-// app.use(cors());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('frontend/product/admin'));
