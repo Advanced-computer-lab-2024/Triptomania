@@ -93,13 +93,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener for sorting select
     sortSelect.addEventListener('change', async function () {
         if (sortSelect.value === 'high') {
-            await fetchSortedProducts('high'); // Sort by high to low using your API
+            await fetchSortedProducts("high"); // Sort by high to low using descending order
         } else if (sortSelect.value === 'low') {
-            await fetchSortedProducts('low'); // Sort by low to high using your API
+            await fetchSortedProducts("low"); // Sort by low to high using ascending order
         } else {
             await fetchProducts(); // If no sorting, fetch all products
         }
     });
+    
 
     // Initial fetch of all products on page load
     fetchProducts();
