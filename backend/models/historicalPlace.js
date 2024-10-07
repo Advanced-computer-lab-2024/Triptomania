@@ -41,7 +41,8 @@ const historicalPlaceSchema = new Schema({
     },
     creatorId: 
   {
-    type: Number,
+    type: mongoose.Types.ObjectId,
+    ref: 'tourismgoverners',
     required: true,
   },
 }, { timestamps: true });

@@ -78,13 +78,13 @@ const addHistoricalPlace = async (req, res) => {
         if (!timeFormat.test(Closing_hours)) {
             return res.status(400).json({ message: "Closing hours must be in the format of HH:MM" });
         }
-        if (typeof Ticket_prices !== 'integer' || Ticket_prices <= 0) {
-            return res.status(400).json({ message: "Ticket prices must be a positive number" });
-        }
-        if(typeof creatorId !== 'number')
-        {
-            return res.status(400).json({ message: "ID must be a number."});
-        }
+        // if (typeof Ticket_prices !== 'integer' || Ticket_prices <= 0) {
+        //     return res.status(400).json({ message: "Ticket prices must be a positive number" });
+        // }
+        // if(typeof creatorId !== 'number')
+        // {
+        //     return res.status(400).json({ message: "ID must be a number."});
+        // }
 
         // Create a new historical place
         const newHistoricalPlace = new historicalPlaceModel({ 
@@ -95,7 +95,8 @@ const addHistoricalPlace = async (req, res) => {
             Opening_hours, 
             Closing_hours, 
             Ticket_prices, 
-            Category 
+            Category,
+            creatorId
         });
 
         // Save the historical place to the database
