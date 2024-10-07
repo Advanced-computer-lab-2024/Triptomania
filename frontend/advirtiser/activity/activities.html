@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Activities</h1>
+    </header>
+
+    <section id="activitiesListSection">
+        <h2>All Activities</h2>
+        <div id="activitiesList"></div>
+    </section>
+
+    <!-- Add Activity Button -->
+    <button id="addActivityButton">Add Activity</button>
+
+    <!-- Modal for Adding Activity -->
+    <div id="addActivityModal" style="display:none;">
+        <h2>Add New Activity</h2>
+        <input type="text" id="newActivityName" placeholder="Activity Name" required><br>
+        <input type="text" id="newActivityDescription" placeholder="Description" required><br>
+        <input type="date" id="newActivityDate" required><br>
+        <input type="time" id="newActivityTime" required><br>
+        <input type="text" id="newActivityLocation" placeholder="Location" required><br>
+        <input type="number" id="newActivityPrice" placeholder="Price" required><br>
+        <input type="text" id="newActivityCategory" placeholder="Category" required><br>
+        <input type="text" id="newActivityTags" placeholder="Tags (comma-separated)" required><br>
+        <input type="number" id="newActivitySpecialDiscounts" placeholder="Special Discounts (%)" value="0"><br>
+        <label>
+            Booking Open:
+            <input type="checkbox" id="newActivityIsBookingOpen" checked>
+        </label><br>
+        <button id="submitActivityButton">Submit Activity</button>
+        <button id="closeModalButton">Close</button>
+    </div>
+    <!-- Modal for Editing Activity -->
+   <!-- Modal for Editing Activity -->
+<div id="editActivityModal" style="display:none;">
+    <h2>Edit Activity</h2>
+    <input type="text" id="editActivityName" placeholder="Activity Name" required>
+    <textarea id="editActivityDescription" placeholder="Description" required></textarea>
+    <input type="date" id="editActivityDate" required>
+    <input type="time" id="editActivityTime" required>
+    <input type="text" id="editActivityLocation" placeholder="Location" required>
+    <input type="number" id="editActivityPrice" placeholder="Price" required>
+    <input type="text" id="editActivityCategory" placeholder="Category" required>
+    <input type="text" id="editActivityTags" placeholder="Tags (comma-separated)" required>
+    <input type="number" id="editActivitySpecialDiscounts" placeholder="Special Discounts (%)" required>
+    <label>
+        <input type="checkbox" id="editActivityIsBookingOpen"> Booking Open
+    </label>
+    <button id="submitEditActivityButton">Update Activity</button>
+    <button id="closeEditModalButton">Close</button>
+</div>
+
+
+    <script src="activities.js"></script>
+</body>
+</html>

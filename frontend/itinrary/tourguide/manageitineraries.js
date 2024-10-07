@@ -1,7 +1,7 @@
 // Fetch all itineraries and populate the table
 async function fetchAllItineraries() {
     try {
-        const response = await fetch('http://localhost:5000/api/itineraries/getAllItineraries'); // Change the URL to match your API
+        const response = await fetch('http://localhost:5000/api/tourguide/itinerary'); // Change the URL to match your API
         if (response.ok) {
             const itineraries = await response.json();
             populateItinerariesTable(itineraries);
@@ -54,7 +54,7 @@ async function deleteItinerary(itineraryId) {
     if (!confirmDelete) return;
 
     try {
-        const response = await fetch(`http://localhost:5000/api/admin/itineraries/deleteItinerary/${itineraryId}`, {
+        const response = await fetch(`http://localhost:5000/api/tourguide/itinerary/deleteItinerary/:id${itineraryId}`, {
             method: 'DELETE'
         });
 
@@ -73,7 +73,7 @@ async function deleteItinerary(itineraryId) {
 // Function to fetch itinerary details by its ID
 async function fetchItineraryById(itineraryId) {
     try {
-        const response = await fetch(`http://localhost:5000/api/itineraries/viewItinerary/${itineraryId}`);
+        const response = await fetch(`http://localhost:5000/api/tourguide/itinerary/viewItineraries/${itineraryId}`);
         if (response.ok) {
             const itinerary = await response.json();
             displayItineraryDetails(itinerary);

@@ -17,6 +17,8 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.static('frontend/itinrary/tourguide'));
+app.use(express.static('frontend/activity/guest'));
+app.use(express.static('frontend/advirtiser/activity'));
 
 // Listen on port 5000
 app.listen(5000, () => {

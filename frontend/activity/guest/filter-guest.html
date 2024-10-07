@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Activities</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Upcoming Activities</h1>
+    </header>
+
+    <section id="filterSection">
+        <h2>Filter Activities</h2>
+        <input type="date" id="filterDate" placeholder="Select Date">
+        <input type="number" id="filterBudget" placeholder="Max Budget">
+        <input type="text" id="filterCategory" placeholder="Category">
+        <input type="number" id="filterRating" placeholder="Min Rating (1-5)">
+        <button id="filterButton">Filter</button>
+    </section>
+
+    <section id="activitiesListSection">
+        <h2>Filtered Activities</h2>
+        <div id="activitiesList"></div>
+    </section>
+
+    <script src="filter-guest.js"></script>
+</body>
+</html>
