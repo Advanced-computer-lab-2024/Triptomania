@@ -9,10 +9,16 @@
 <body>
     <header>
         <h1>Historical Places</h1>
+        <button id="getMyPlacesBtn">Get My Historical Places</button> <!-- New Button -->
         <button id="addPlaceBtn">Add New Historical Place</button>
     </header>
     <section id="placesContainer"></section>
 
     <script src="js/app.js"></script>
+    <script>
+        document.getElementById('getMyPlacesBtn').addEventListener('click', function() {
+            window.location.href = 'getMyHistoricalPlaces.html'; // Redirect to new page
+        });
+    </script>
 </body>
 </html>
