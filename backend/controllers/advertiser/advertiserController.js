@@ -253,13 +253,9 @@ const viewMyActivities = async (req, res) => {
     editActivity,
     viewActivities,
     deleteActvivty,
-<<<<<<< HEAD
-    viewMyActivities
- }
-=======
+    viewMyActivities,
     createAdvertiser,
     getAdvertiser,
     updateAdvertiser,
     getOneAdvertiser
  }
->>>>>>> main

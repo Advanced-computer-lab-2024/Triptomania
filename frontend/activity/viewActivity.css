@@ -1,0 +1,81 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+  
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+  
+h1 {
+    margin-bottom: 20px;
+}
+  
+.filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+  
+input, select {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 48%; /* Adjust to fit two items in a row */
+}
+  
+button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+  
+button:hover {
+    background-color: #0056b3;
+}
+  
+.activity-list {
+    margin-top: 20px;
+}
+  
+.activity-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+  
+.activity-item h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+  
+.activity-item p {
+    margin: 5px 0;
+}
+  
+@media (max-width: 600px) {
+    .filter-section {
+        flex-direction: column;
+    }
+  
+    input, select {
+        width: 100%; /* Full width on small screens */
+    }
+}

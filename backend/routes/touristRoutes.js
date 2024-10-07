@@ -5,6 +5,7 @@ import filterByTag from '../controllers/shared/filterController.js';
 import touristController from '../controllers/tourist/touristController.js';
 import productController from '../controllers/shared/productController.js';
 import filterItineraries from '../controllers/shared/activityController.js';
+import activityController from '../controllers/shared/activityController.js';
 const router = express.Router();
 
 // Search route
@@ -18,6 +19,14 @@ router.post('/addTourist', touristController.CreateTourist);
 router.put('/updateTourist', touristController.UpdateTourist);
 router.get('/getTourist', touristController.getTourist);
 router.get('/getOneTourist', touristController.getOneTourist);
+
+router.get("/activity/sortActivities",activityController.sortActivities);
+router.get("/activity/viewActivities",activityController.viewActivities);
+router.get("/activity/filterActivities",activityController.filterActivities);
+
+
+router.get("/itineraries/sortItineraries" , activityController.sortItineraries);
+router.get("/itineraries/filtertineraries" , activityController.filterItineraries);
 
 router.get("/product/viewProducts",productController.viewProducts);
 router.get("/product/searchProducts",productController.searchProduct);

@@ -1,6 +1,7 @@
 // Import necessary modules
 import express from 'express';
 import dotenv from 'dotenv';    
+import cors from 'cors';
 import { connectDB } from './config/db.js';  
 import cors from 'cors';
 import sellerRoutes from './routes/sellerRoutes.js';
@@ -31,6 +32,10 @@ app.use(express.static('frontend'));
 const port = process.env.PORT || 5000;
 
 
+// Route to serve Google Maps API key
+app.get('/api/maps-key', (req, res) => {
+  res.json({ apiKey: process.env.GOOGLE_MAPS_API_KEY });
+});
 
 // Listen on port 5000
 app.listen(port, () => {
@@ -39,13 +44,11 @@ app.listen(port, () => {
 
 });
 
-
-
 // Debugging line to ensure MONGO_URI is loaded properly (uncomment if needed)
  //console.log(process.env.MONGO_URI);
 app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
-  });
+});
 
 
 app.use('/api/seller',sellerRoutes);

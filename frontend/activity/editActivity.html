@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Activity</title>
+    <link rel="stylesheet" href="editActivity.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places" async defer></script>
+</head>
+<body>
+    <header>
+        <h1>Edit Activity</h1>
+        <p>Modify Activity Details Seamlessly</p>
+    </header>
+
+    <div class="container">
+        <form id="editActivityForm">
+            <input type="text" id="name" placeholder="Activity Name" required>
+            <textarea id="description" placeholder="Description" required></textarea>
+            <input type="date" id="date" required>
+            <input type="time" id="time" required>
+            <input type="text" id="location" placeholder="Enter location" required>
+            <div id="map"></div>
+            <input type="number" id="price" placeholder="Price" required min="0">
+            <input type="text" id="category" placeholder="Category" required>
+            <input type="text" id="tags" placeholder="Tags (comma separated)" required>
+            <input type="number" id="specialDiscounts" placeholder="Special Discounts" required>
+            <label for="isBookingOpen">Is Booking Open?</label>
+            <input type="checkbox" id="isBookingOpen" checked>
+            <button type="submit">Update Activity</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script src="editActivity.js"></script>
+</body>
+</html>

@@ -106,133 +106,147 @@ const filterActivities = async (req, res) => {
       const filteredActivities = await activityModel.find(filters).sort({ date: 1 }); 
 
       res.status(200).json(filteredActivities);
-   } catch (error) {
+  } catch (error) {
       res.status(500).json({ message: "Error filtering activities", error: error.message });
-   }
+  }
 };
 
 const sortActivities = async (req, res) => {
-    try {
-      const { order, sortBy } = req.body;
-  
+  try {
+      const { order, sortBy } = req.query; // Using query instead of body
+
       // Validate 'order'
       if (!order || (order !== 'high' && order !== 'low')) {
-        return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
+          return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
       }
-  
+
       // Validate 'sortBy' for at least price, ratings, or both
       if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('ratings'))) {
-        return res.status(400).json({ message: "Invalid sort option. Use 'price', 'ratings', or both." });
+          return res.status(400).json({ message: "Invalid sort option. Use 'price', 'ratings', or both." });
       }
-  
+
       // Determine sort order: -1 for descending (high), 1 for ascending (low)
       const sortOrder = order === 'high' ? -1 : 1;
-  
+
       // Build dynamic sortOption based on sortBy
       let sortOption = {};
       if (sortBy.includes('price')) {
-        sortOption.price = sortOrder; // Add sorting by price
+          sortOption.price = sortOrder; // Add sorting by price
       }
       if (sortBy.includes('ratings')) {
-        sortOption.ratings = sortOrder; // Add sorting by ratings
+          sortOption.ratings = sortOrder; // Add sorting by ratings
       }
-  
+
       // Fetch and sort activities
       const activities = await activityModel.find().sort(sortOption);
-  
+
       // Handle no activities found
       if (activities.length === 0) {
-        return res.status(404).json({ message: 'No activities found.' });
+          return res.status(404).json({ message: 'No activities found.' });
       }
-  
+
       // Return sorted activities
       res.status(200).json(activities);
-    } catch (error) {
+  } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error sorting activities', error: error.message });
-    }
-  };
+  }
+};
+
   
-  const sortItineraries = async (req, res) => {
-    try {
-        const { order, sortBy } = req.body;
-  
-        // Validate 'order'
-        if (!order || (order !== 'high' && order !== 'low')) {
-            return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
-        }
-  
-        // Validate 'sortBy' for at least price, duration, or both
-        if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('duration'))) {
-            return res.status(400).json({ message: "Invalid sort option. Use 'price', 'duration', or both." });
-        }
-  
-        // Determine sort order: -1 for descending (high), 1 for ascending (low)
-        const sortOrder = order === 'high' ? -1 : 1;
-  
-        // Build dynamic sortOption based on sortBy
-        let sortOption = {};
-        if (sortBy.includes('price')) {
-            sortOption.price = sortOrder; // Add sorting by price
-        }
-        if (sortBy.includes('duration')) {
-            sortOption.duration = sortOrder; // Add sorting by duration
-        }
-  
-        // Fetch and sort itineraries
-        const itineraries = await itineraryModel.find().sort(sortOption);
-                // Handle no itineraries found
-                if (itineraries.length === 0) {
-                  return res.status(404).json({ message: 'No itineraries found.' });
-              }
-      
-              // Return sorted itineraries
-              res.status(200).json(itineraries);
-          } catch (error) {
-              console.error(error);
-              res.status(500).json({ message: 'Error sorting itineraries', error: error.message });
-          }
-      };
-      
-  
-  
-  
-  
-      const filterItineraries = async (req, res) => {
-        try {
-            const { budget, date, preferences, language } = req.query;
-    
-            const filters = {};
-    
-            // Filter by budget
-            if (budget) filters.price = { $lte: budget }; 
-            
-            // Filter by date (only include itineraries with available dates greater than or equal to the specified date)
-            if (date) {
-                filters.availableDates = { $gte: new Date(date) };
-            } 
-            
-            // Filter by preferences (assuming preferences is a comma-separated string)
-            if (preferences) {
-                filters.activities = { $in: preferences.split(',') }; // Adjust based on how preferences are stored
-            } 
-            
-            // Filter by language
-            if (language) filters.language = language; 
-    
-            const filteredItineraries = await itineraryModel.find(filters).sort({ availableDates: 1 }); 
-    
-            // Handle case where no itineraries are found
-            if (filteredItineraries.length === 0) {
-                return res.status(404).json({ message: 'No itineraries found matching your criteria.' });
+
+// Itineraries methods
+
+const sortItineraries = async (req, res) => {
+  try {
+      const { order, sortBy } = req.body;
+
+      // Validate 'order'
+      if (!order || (order !== 'high' && order !== 'low')) {
+          return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
+      }
+
+      // Validate 'sortBy' for at least price, duration, or both
+      if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('duration'))) {
+          return res.status(400).json({ message: "Invalid sort option. Use 'price', 'duration', or both." });
+      }
+
+      // Determine sort order: -1 for descending (high), 1 for ascending (low)
+      const sortOrder = order === 'high' ? -1 : 1;
+
+      // Build dynamic sortOption based on sortBy
+      let sortOption = {};
+      if (sortBy.includes('price')) {
+          sortOption.price = sortOrder; // Add sorting by price
+      }
+      if (sortBy.includes('duration')) {
+          sortOption.duration = sortOrder; // Add sorting by duration
+      }
+
+      // Fetch and sort itineraries
+      const itineraries = await itineraryModel.find().sort(sortOption);
+              // Handle no itineraries found
+              if (itineraries.length === 0) {
+                return res.status(404).json({ message: 'No itineraries found.' });
             }
     
-            // Return filtered itineraries
-            res.status(200).json(filteredItineraries);
+            // Return sorted itineraries
+            res.status(200).json(itineraries);
         } catch (error) {
-            res.status(500).json({ message: "Error filtering itineraries", error: error.message });
+            console.error(error);
+            res.status(500).json({ message: 'Error sorting itineraries', error: error.message });
         }
     };
+    
+
+
+
+
+    const filterItineraries = async (req, res) => {
+      try {
+          const { budget, date, preferences, language } = req.query;
+  
+          const filters = {};
+  
+          // Filter by budget
+          if (budget) filters.price = { $lte: budget }; 
+          
+          // Filter by date (only include itineraries with available dates greater than or equal to the specified date)
+          if (date) {
+              filters.availableDates = { $gte: new Date(date) };
+          } 
+          
+          // Filter by preferences (assuming preferences is a comma-separated string)
+          if (preferences) {
+              filters.activities = { $in: preferences.split(',') }; // Adjust based on how preferences are stored
+          } 
+          
+          // Filter by language
+          if (language) filters.language = language; 
+  
+          const filteredItineraries = await itineraryModel.find(filters).sort({ availableDates: 1 }); 
+  
+          // Handle case where no itineraries are found
+          if (filteredItineraries.length === 0) {
+              return res.status(404).json({ message: 'No itineraries found matching your criteria.' });
+          }
+  
+          // Return filtered itineraries
+          res.status(200).json(filteredItineraries);
+      } catch (error) {
+          res.status(500).json({ message: "Error filtering itineraries", error: error.message });
+      }
+  };
+
+
+
+
+
+
+
+
+
+  
 
 // const filterItineraries = async (req, res) => {
 //    try {

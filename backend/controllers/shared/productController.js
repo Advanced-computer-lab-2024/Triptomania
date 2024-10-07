@@ -206,6 +206,7 @@ const filterProducts = async (req, res) => {
  const sortProducts = async (req, res) => {
    try {
        
+
        const { order } = req.query;
 
        if (!order || (order !== 'high' && order !== 'low')) {
@@ -228,8 +229,6 @@ const filterProducts = async (req, res) => {
        res.status(500).json({ message: 'Error sorting products by ratings', error: error.message });
    }
 };
-
-
 
 export default{
    addProduct,

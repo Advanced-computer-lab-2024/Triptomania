@@ -1,4 +1,4 @@
-import express from 'express'
+import express from 'express';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
 
 const router = express.Router();
