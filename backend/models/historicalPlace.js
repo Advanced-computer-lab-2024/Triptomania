@@ -34,13 +34,16 @@ const historicalPlaceSchema = new Schema({
     Category: {    //check 
         type: String,
         required: true,
-    }
-    ,
+    },
     Tags: {       //check
         type: [String],
         required: false,
-    }
-
+    },
+    creatorId: 
+  {
+    type: Number,
+    required: true,
+  },
 }, { timestamps: true });
 
 const HistoricalPlace = mongoose.model('HistoricalPlace', historicalPlaceSchema);

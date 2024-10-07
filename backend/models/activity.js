@@ -45,6 +45,11 @@ const activitySchema = new Schema({
     type: Boolean,
     default: true, 
   },
+  creatorId: 
+  {
+    type: Number,
+    required: true,
+  },
 }, { timestamps: true });
 
 const Advertiser = mongoose.model('Advertiser', activitySchema);

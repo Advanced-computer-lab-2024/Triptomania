@@ -81,6 +81,11 @@ const itinerarySchema = new Schema({
         type: [String], // Array of tags for filtering
         default: [],
     },
+    creatorId: 
+    {
+        type: Number,
+        required: true,
+    },
 },  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 export default Itinerary;

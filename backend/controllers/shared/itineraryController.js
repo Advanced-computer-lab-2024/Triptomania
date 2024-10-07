@@ -47,10 +47,10 @@ const getItinerary = async (req, res) => {
 
 const addItinerary = async (req, res) => {
   try {
-    const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, bookingMade, Start_date, End_date, Tags } = req.body;
+    const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, bookingMade, Start_date, End_date, Tags, creatorId } = req.body;
 
     // Check that parameters are not empty
-    if (!Name || !activities || !locationsToVisit || !timeLine || !duration || !language || !price || !availableDates || !availableTimes || !pickUp || !dropOff || !bookingMade) {
+    if (!Name || !activities || !locationsToVisit || !timeLine || !duration || !language || !price || !availableDates || !availableTimes || !pickUp || !dropOff || !bookingMade || !creatorId) {
       return res.status(400).json({ message: "All required fields must be provided." });
     }
 
@@ -208,11 +208,46 @@ const deleteItinerary = async (req, res) => {
   }
 }
 
+const getMyItineraries = async (req, res) => {
+  const { creatorId } = req.params; // Extract creatorId from request parameters
+
+  try {
+      // Validate that creatorId is a number
+      if (isNaN(creatorId)) {
+          return res.status(400).json({
+              status: false,
+              error: 'Invalid creatorId, it must be a number.'
+          });
+      }
+
+      const itineraries = await itineraryModel.find({ creatorId: creatorId });
+
+      if (!itineraries || itineraries.length === 0) {
+          return res.status(404).json({
+              status: false,
+              error: 'No itineraries found for the provided creatorId.'
+          });
+      }
+
+      res.status(200).json({
+          status: true,
+          itineraries: itineraries
+      });
+  } catch (err) {
+      res.status(500).json({
+          status: false,
+          error: err.message
+      });
+  }
+};
+
+
 export default
   {
     getItinerary,
     addItinerary,
     editItinerary,
     deleteItinerary,
-    getItineraries
+    getItineraries,
+    getMyItineraries
   }

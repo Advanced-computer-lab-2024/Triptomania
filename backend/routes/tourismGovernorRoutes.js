@@ -14,6 +14,7 @@ router.post('/addHistoricalPlace', historicalPlaceController.addHistoricalPlace)
 // edit historical place
 router.put('/editHistoricalPlace/:id', historicalPlaceController.editHistoricalPlace);
 // delete historical place
+router.get('/getMyHistoricalPlaces/:creatorId', historicalPlaceController.getMyHistoricalPlaces);
 router.delete('/deleteHistoricalPlace/:id', historicalPlaceController.deleteHistoricalPlace);
 router.put('/addTagToHistoricalPlace/:id', tourismGoverner.addTagToHistoricalPlace);
 router.post('/addTag',tourismGoverner.addTag);

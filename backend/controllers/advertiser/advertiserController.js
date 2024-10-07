@@ -4,21 +4,26 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
 
  const addActivity = async (req, res) => {
     try {
-       const {name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen } = req.body;
+       const {name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen, creatorId} = req.body;
  
-       if (!name || !description || !date || !time || !location || !price || !category || !tags || !specialDiscounts || isBookingOpen === undefined) {
+       if (!name || !description || !date || !time || !location || !price || !category || !tags || !specialDiscounts || isBookingOpen === undefined || !creatorId) {
           return res.status(400).json({ message: "All required fields must be provided." });
        }
  
        if (typeof name !== 'string'||typeof description !== 'string' ) {
         return res.status(400).json({ message: "Must be a string" });
-     }
+       }
        if (typeof price !== 'number' || price <= 0) {
           return res.status(400).json({ message: "Price must be a positive number." });
        }
  
        if (specialDiscounts && (typeof specialDiscounts !== 'number' || specialDiscounts < 0)) {
           return res.status(400).json({ message: "Special discounts must be a non-negative number." });
+       }
+
+       if(typeof creatorId !== 'number')
+       {
+         return res.status(400).json({ message: "ID must be a number."});
        }
  
        const newActivity = new activityModel({
@@ -114,10 +119,79 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
     
  };
 
+ const getMyHistoricalPlaces = async (req, res) => {
+    const { creatorId } = req.params; // Extract creatorId from request parameters
+
+    try {
+        // Validate that creatorId is a number
+        if (isNaN(creatorId)) {
+            return res.status(400).json({
+                status: false,
+                error: 'Invalid creatorId, it must be a number.'
+            });
+        }
+
+        // Find all historical places with the same creatorId
+        const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId });
+
+        // Check if any historical places were found
+        if (!historicalPlaces || historicalPlaces.length === 0) {
+            return res.status(404).json({
+                status: false,
+                error: 'No historical places found for the provided creatorId.'
+            });
+        }
+
+        res.status(200).json({
+            status: true,
+            historicalPlaces: historicalPlaces
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            error: err.message
+        });
+    }
+};
+
+const viewMyActivities = async (req, res) => {
+   const { creatorId } = req.params; // Extract creatorId from request parameters
+
+   try {
+       // Validate that creatorId is a number
+       if (isNaN(creatorId)) {
+           return res.status(400).json({
+               status: false,
+               error: 'Invalid creatorId, it must be a number.'
+           });
+       }
+
+       const activities = await activityModel.find({ creatorId: creatorId });
+
+       if (!activities || activities.length === 0) {
+           return res.status(404).json({
+               status: false,
+               error: 'No activites found for the provided creatorId.'
+           });
+       }
+
+       res.status(200).json({
+           status: true,
+           activities: activities
+       });
+   } catch (err) {
+       res.status(500).json({
+           status: false,
+           error: err.message
+       });
+   }
+};
+
 
  export default{
     addActivity,
     editActivity,
     viewActivities,
-    deleteActvivty
+    deleteActvivty,
+    viewMyActivities
  }

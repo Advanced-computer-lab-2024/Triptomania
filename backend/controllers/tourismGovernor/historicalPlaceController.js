@@ -49,10 +49,10 @@ const getHistoricalPlace = async (req, res) => {
 const addHistoricalPlace = async (req, res) => {
     
     try {
-        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, Category } = req.body;
+        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, Category, creatorId } = req.body;
 
         // Check that all required fields are provided
-        if (!Name || !Description || !Picture || !Location || !Opening_hours || !Closing_hours || !Ticket_prices || !Category) {
+        if (!Name || !Description || !Picture || !Location || !Opening_hours || !Closing_hours || !Ticket_prices || !Category || !creatorId) {
             return res.status(400).json({ message: "All required fields must be provided." });
         }
 
@@ -78,8 +78,12 @@ const addHistoricalPlace = async (req, res) => {
         if (!timeFormat.test(Closing_hours)) {
             return res.status(400).json({ message: "Closing hours must be in the format of HH:MM" });
         }
-        if (typeof Ticket_prices !== 'integer') {
-            return res.status(400).json({ message: "Ticket prices must be a number" });
+        if (typeof Ticket_prices !== 'integer' || Ticket_prices <= 0) {
+            return res.status(400).json({ message: "Ticket prices must be a positive number" });
+        }
+        if(typeof creatorId !== 'number')
+        {
+            return res.status(400).json({ message: "ID must be a number."});
         }
 
         // Create a new historical place
@@ -154,10 +158,47 @@ const deleteHistoricalPlace = async (req, res) => {
     }
 }
 
+const getMyHistoricalPlaces = async (req, res) => {
+    const { creatorId } = req.params; // Extract creatorId from request parameters
+
+    try {
+        // Validate that creatorId is a number
+        if (isNaN(creatorId)) {
+            return res.status(400).json({
+                status: false,
+                error: 'Invalid creatorId, it must be a number.'
+            });
+        }
+
+        // Find all historical places with the same creatorId
+        const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId });
+
+        // Check if any historical places were found
+        if (!historicalPlaces || historicalPlaces.length === 0) {
+            return res.status(404).json({
+                status: false,
+                error: 'No historical places found for the provided creatorId.'
+            });
+        }
+
+        res.status(200).json({
+            status: true,
+            historicalPlaces: historicalPlaces
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            error: err.message
+        });
+    }
+};
+
+
 export default {
     getHistoricalPlaces,
     getHistoricalPlace,
     addHistoricalPlace,
     editHistoricalPlace,
-    deleteHistoricalPlace
+    deleteHistoricalPlace,
+    getMyHistoricalPlaces
 }
