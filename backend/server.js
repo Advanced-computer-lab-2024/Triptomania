@@ -1,6 +1,7 @@
 // Import necessary modules
 import express from 'express';
 import dotenv from 'dotenv';    
+import cors from 'cors';
 import { connectDB } from './config/db.js';
 import touristRoutes from './routes/touristRoutes.js';
 import tourGuideRoutes from './routes/tourGuideRoutes.js';
@@ -17,6 +18,8 @@ const app = express();
 // app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('controllers'));
+app.use(cors());
 
 const port = process.env.PORT || 5000;
 
