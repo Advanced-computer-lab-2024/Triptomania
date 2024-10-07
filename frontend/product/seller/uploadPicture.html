@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Product Picture</title>
+    <link rel="stylesheet" href="stylesUpload.css"> <!-- Add your custom CSS -->
+</head>
+<body>
+
+    <div class="container">
+        <h1>Upload a Picture for Your Product</h1>
+
+        <!-- Upload Form -->
+        <form id="uploadPictureForm">
+            <input type="file" id="productImage" accept="image/*" required><br>
+            <button type="submit">Upload Picture</button>
+        </form>
+
+        <button id="skipButton">Don't have a picture</button> <!-- Skip Button -->
+    </div>
+
+    <script src="uploadPicture.js"></script> <!-- JavaScript for handling picture uploads -->
+</body>
+</html>
