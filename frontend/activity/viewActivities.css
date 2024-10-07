@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #28a745; /* Green color for the header */
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+header p {
+    margin: 10px 0 0;
+    font-size: 1.2em;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    margin: 30px auto;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 2em;
+}
+
+.button-container {
+    text-align: center; /* Center the button */
+    margin-bottom: 20px; /* Add spacing below the button */
+}
+
+.activity-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.activity-item h3 {
+    margin: 0;
+}
+
+.activity-item p {
+    margin: 5px 0;
+}
+
+button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #28a745; /* Green color for buttons */
+    color: white;
+}
+
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+#responseMessage {
+    margin-top: 20px;
+    text-align: center;
+    color: #d9534f; /* Red color for error messages */
+}
