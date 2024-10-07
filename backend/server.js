@@ -45,11 +45,7 @@ app.get("/home", (req, res) => {
 
 app.use('/api/admin', adminRoutes);
 
-// app.post("/Admin/Product/addProduct",addProduct);
-// app.put("/Admin/product/editProduct/:id/:id",editProduct);
 
-
-//app.post("/Admin/Product/addProduct",addProduct);
 
 app.use("/api/tourist", touristRoutes);
 app.use("/api/tourGuide", tourGuideRoutes);
