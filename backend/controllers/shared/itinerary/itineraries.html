@@ -10,6 +10,7 @@
     <header>
         <h1>Itinerary Management</h1>
         <button id="addItineraryButton">Add New Itinerary</button>
+        <button id="getMyItinerariesButton">Get My Itineraries</button> <!-- New button -->
     </header>
     <main>
         <section id="itinerariesSection">
@@ -19,5 +20,16 @@
     </main>
 
     <script src="app.js"></script>
+    <script>
+        // Redirect to Add Itinerary page (if needed)
+        document.getElementById("addItineraryButton").addEventListener("click", function() {
+            window.location.href = "addItinerary.html";
+        });
+
+        // Redirect to Get My Itineraries page
+        document.getElementById("getMyItinerariesButton").addEventListener("click", function() {
+            window.location.href = "getMyItineraries.html";
+        });
+    </script>
 </body>
 </html>

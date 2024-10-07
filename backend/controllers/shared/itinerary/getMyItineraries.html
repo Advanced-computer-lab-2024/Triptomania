@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get My Itineraries</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Get My Itineraries</h1>
+    </header>
+    <main>
+        <form id="getMyItinerariesForm">
+            <label for="creatorId">Creator ID:</label>
+            <input type="text" id="creatorId" name="creatorId" required>
+            <button type="submit">Get Itineraries</button>
+        </form>
+
+        <section id="itinerariesSection">
+            <h2>Itineraries</h2>
+            <div id="itineraryList"></div>
+        </section>
+
+        <p id="errorMessage" style="color: red;"></p>
+    </main>
+
+    <script>
+        document.getElementById("getMyItinerariesForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            const creatorId = document.getElementById("creatorId").value;
+            const itineraryList = document.getElementById("itineraryList");
+            const errorMessage = document.getElementById("errorMessage");
+
+            // Clear previous results or error messages
+            itineraryList.innerHTML = '';
+            errorMessage.textContent = '';
+
+            // Fetch itineraries for the given creator ID
+            fetch(`http://localhost:5000/api/tourGuide/itinerary/getMyItineraries/${creatorId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch itineraries. Please check the creator ID or try again later.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status) {
+                        const itineraries = data.itineraries;
+                        if (itineraries.length === 0) {
+                            itineraryList.innerHTML = "<p>No itineraries found for this creator.</p>";
+                        } else {
+                            itineraries.forEach(itinerary => {
+                                const itineraryItem = document.createElement("div");
+                                itineraryItem.innerHTML = `<strong>Name:</strong> ${itinerary.Name} <br>
+                                                           <strong>Duration:</strong> ${itinerary.duration} <br>
+                                                           <strong>Price:</strong> ${itinerary.price} <br><hr>`;
+                                itineraryList.appendChild(itineraryItem);
+                            });
+                        }
+                    } else {
+                        errorMessage.textContent = `Error: ${data.error}`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching itineraries:", error);
+                    errorMessage.textContent = `Error fetching itineraries: ${error.message}`;
+                });
+        });
+    </script>
+</body>
+</html>

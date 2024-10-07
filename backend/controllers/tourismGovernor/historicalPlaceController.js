@@ -146,7 +146,7 @@ const deleteHistoricalPlace = async (req, res) => {
                 error: 'Historical place not found'
             });
         }
-        await historicalPlaceModel.findByIdAndRemove(id);
+        await historicalPlaceModel.findByIdAndDelete(id);
         res.status(200).json({
             status: true,
             message: 'Historical place deleted successfully'
