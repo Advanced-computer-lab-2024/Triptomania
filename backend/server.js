@@ -1,21 +1,25 @@
 // Import necessary modules
 import express from 'express';
 import dotenv from 'dotenv';    
+import { connectDB } from './config/db.js';  
 import cors from 'cors';
-import { connectDB } from './config/db.js';
+import sellerRoutes from './routes/sellerRoutes.js';
+import  adminRoutes from './routes/adminRoutes.js';
 import touristRoutes from './routes/touristRoutes.js';
 import tourGuideRoutes from './routes/tourGuideRoutes.js';
 import sellerRoutes from './routes/sellerRoutes.js';
 import advertiserRoutes from './routes/advertiserRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
+import tourismGovernerRoutes from './routes/tourismGovernorRoutes.js';
+import tourGuideRoutes from './routes/tourGuideRoutes.js';
 
 
-// Load environment variables from .env file
 dotenv.config(); 
 
 // Initialize express app
 const app = express();
-app.use(cors());
+
+// Enable express to parse JSON
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('controllers'));
@@ -25,6 +29,7 @@ app.use(express.static('frontend'));
 
 
 const port = process.env.PORT || 5000;
+
 
 
 // Listen on port 5000
@@ -43,12 +48,20 @@ app.get("/home", (req, res) => {
   });
 
 
-app.use('/api/admin', adminRoutes);
+app.use('/api/seller',sellerRoutes);
+app.use('/api/admin',adminRoutes);
+app.use('/api/tourist',touristRoutes);
+app.use('/api/advertiser',advertiserRoutes);
 
 
+//app.post("/Admin/Product/addProduct",addProduct);
 
-app.use("/api/tourist", touristRoutes);
-app.use("/api/tourGuide", tourGuideRoutes);
-app.use("/api/seller", sellerRoutes);
-app.use("/api/advertiser", advertiserRoutes);
+//app.use('/api/tourismGoverner', tourismGovernerRoutes);
+//app.get('/api/search', searchHistoricalPlaceByName);
+
+app.use('/api/tourismGoverner', tourismGovernerRoutes);
+app.use('/api/tourGuide', tourGuideRoutes);
+
+
+app.use(express.static('controllers'));
 

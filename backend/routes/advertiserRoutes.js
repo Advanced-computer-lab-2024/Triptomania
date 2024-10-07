@@ -8,8 +8,9 @@ router.put('/updateAdvertiser', advertiserController.updateAdvertiser);
 router.get('/getAdvertiser', advertiserController.getAdvertiser);
 
 router.post("/activity/addActivivty",advertiserController.addActivity);
-router.put("/activity/editActivivty",advertiserController.editActivity);
+router.put("/activity/editActivivty/:id",advertiserController.editActivity);
 router.get("/activity/viewActivivties",advertiserController.viewActivities);
-//router.put("/activity/deleteActivivty",advertiserController.deleteActivity);
+router.delete("/activity/deleteActivivty/:id",advertiserController.deleteActvivty);
+router.get("/activity/viewMyActivities/:creatorId", advertiserController.viewMyActivities);
 
 export default router;
