@@ -35,6 +35,7 @@ const touristSchema = new Schema({
   },wallet: {
     type: Number,
     required: false,
+    default:0
   },
   type: {
     type: String,

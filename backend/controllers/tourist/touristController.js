@@ -11,7 +11,7 @@ import crypto from 'crypto';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
-  const { username, email, password, mobile, nationality, DOB, job_Student, wallet } = req.body;
+  const { username, email, password, mobile, nationality, DOB, job_Student/*, wallet*/ } = req.body;
   //const hashed = hashPassword(Password);
   
   try {
