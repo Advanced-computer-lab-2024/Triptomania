@@ -34,9 +34,9 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
          Quantity
       });
 
-      await newProduct.save();
+      const prod = await newProduct.save();
 
-      res.status(201).json({ message: "Product added successfully", product: newProduct });
+      res.status(201).json({ message: "Product added successfully", product: prod });
    } catch (error) {
       res.status(500).json({ message: "Error adding product", error: error.message });
    }
