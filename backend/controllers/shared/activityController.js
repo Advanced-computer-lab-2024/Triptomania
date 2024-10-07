@@ -153,7 +153,86 @@ const sortActivities = async (req, res) => {
     }
   };
   
-
+  const sortItineraries = async (req, res) => {
+    try {
+        const { order, sortBy } = req.body;
+  
+        // Validate 'order'
+        if (!order || (order !== 'high' && order !== 'low')) {
+            return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
+        }
+  
+        // Validate 'sortBy' for at least price, duration, or both
+        if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('duration'))) {
+            return res.status(400).json({ message: "Invalid sort option. Use 'price', 'duration', or both." });
+        }
+  
+        // Determine sort order: -1 for descending (high), 1 for ascending (low)
+        const sortOrder = order === 'high' ? -1 : 1;
+  
+        // Build dynamic sortOption based on sortBy
+        let sortOption = {};
+        if (sortBy.includes('price')) {
+            sortOption.price = sortOrder; // Add sorting by price
+        }
+        if (sortBy.includes('duration')) {
+            sortOption.duration = sortOrder; // Add sorting by duration
+        }
+  
+        // Fetch and sort itineraries
+        const itineraries = await itineraryModel.find().sort(sortOption);
+                // Handle no itineraries found
+                if (itineraries.length === 0) {
+                  return res.status(404).json({ message: 'No itineraries found.' });
+              }
+      
+              // Return sorted itineraries
+              res.status(200).json(itineraries);
+          } catch (error) {
+              console.error(error);
+              res.status(500).json({ message: 'Error sorting itineraries', error: error.message });
+          }
+      };
+      
+  
+  
+  
+  
+      const filterItineraries = async (req, res) => {
+        try {
+            const { budget, date, preferences, language } = req.query;
+    
+            const filters = {};
+    
+            // Filter by budget
+            if (budget) filters.price = { $lte: budget }; 
+            
+            // Filter by date (only include itineraries with available dates greater than or equal to the specified date)
+            if (date) {
+                filters.availableDates = { $gte: new Date(date) };
+            } 
+            
+            // Filter by preferences (assuming preferences is a comma-separated string)
+            if (preferences) {
+                filters.activities = { $in: preferences.split(',') }; // Adjust based on how preferences are stored
+            } 
+            
+            // Filter by language
+            if (language) filters.language = language; 
+    
+            const filteredItineraries = await itineraryModel.find(filters).sort({ availableDates: 1 }); 
+    
+            // Handle case where no itineraries are found
+            if (filteredItineraries.length === 0) {
+                return res.status(404).json({ message: 'No itineraries found matching your criteria.' });
+            }
+    
+            // Return filtered itineraries
+            res.status(200).json(filteredItineraries);
+        } catch (error) {
+            res.status(500).json({ message: "Error filtering itineraries", error: error.message });
+        }
+    };
 
 // const filterItineraries = async (req, res) => {
 //    try {
@@ -184,5 +263,7 @@ export default {
     deleteCategory,
     filterActivities,
     sortActivities,
-    viewActivities
-}; 
+   filterItineraries,
+    viewActivities,
+    sortItineraries
+}

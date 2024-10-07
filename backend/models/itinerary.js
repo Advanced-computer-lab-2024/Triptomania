@@ -83,7 +83,7 @@ const itinerarySchema = new Schema({
     },
     creatorId: 
     {
-        type: Number,
+        type: mongoose.Types.ObjectId,
         required: true,
     },
 },  { timestamps: true });

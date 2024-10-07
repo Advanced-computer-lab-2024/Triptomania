@@ -12,7 +12,7 @@ export const search = async (req, res) => {
             return res.status(400).json({ error: 'Query is required' });
         }
 
-        // Search by name, category, or tag
+        // Search by name, category, or tag in places
         const places = await Place.find({
             $or: [
                 { Name: { $regex: query, $options: 'i' } },
@@ -21,21 +21,30 @@ export const search = async (req, res) => {
             ]
         });
 
+        console.log('Places found:', places.length);
+
+        // Search by name, category, or tag in activities
         const activities = await Activity.find({
             $or: [
-                { name: { $regex: query, $options: 'i' } },
-                { category: { $regex: query, $options: 'i' } },
-                { tags: { $in: [new RegExp(query, 'i')] } }
+                { name: { $regex: query, $options: 'i' } },    // Search by name, case-insensitive
+                { category: { $regex: query, $options: 'i' } }, // Search by category
+                // Since tags is a string, we use a simple regex to search within the string
+                { tags: { $regex: new RegExp(query, 'i') } }   // Search within tags string
             ]
         });
 
+        console.log('Activities found:', activities.length);
+        console.log('Activities:', activities);  // Log the actual activities to see the data
+
+        // Search by name, category, or tag in itineraries
         const itineraries = await Itinerary.find({
             $or: [
-                { Name: { $regex: query, $options: 'i' } },
-                { category: { $regex: query, $options: 'i' } },
-                { tags: { $in: [new RegExp(query, 'i')] } }
+                { Name: { $regex: query, $options: 'i' } },     // Search by itinerary name
+                { Tags: { $in: [new RegExp(query, 'i')] } }     // Search within tags
             ]
         });
+
+        console.log('Itineraries found:', itineraries.length);
 
         // Prepare the response
         const results = {
@@ -59,6 +68,7 @@ export const search = async (req, res) => {
         res.status(500).json({ error: 'Error occurred while searching' });
     }
 };
-export default{
+
+export default {
     search
-}
+};
