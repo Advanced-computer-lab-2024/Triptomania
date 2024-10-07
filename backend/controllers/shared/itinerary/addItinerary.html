@@ -97,6 +97,9 @@
         <label for="tags">Tags (comma-separated):</label>
         <input type="text" id="tags">
 
+        <label for="creatorId">Creator ID:</label>
+        <input type="text" id="creatorId" required> <!-- New field for Creator ID -->
+
         <button type="submit">Add Itinerary</button>
         <div id="error-message"></div>
     </form>
@@ -123,7 +126,7 @@
                 Start_date: document.getElementById('start_date').value,
                 End_date: document.getElementById('end_date').value,
                 Tags: document.getElementById('tags').value.split(',').map(tag => tag.trim()),
-                creatorId: "603c9e5eae94233a0f1f18a3", // Replace with a real ObjectId, // Replace with actual creator ID if available
+                creatorId: document.getElementById('creatorId').value, // Added line to get creatorId
             };
 
             console.log('Submitting itinerary:', itineraryData); // Log the data being submitted
