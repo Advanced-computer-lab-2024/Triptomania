@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Itinerary</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add this CSS for better form layout and scrollable behavior */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow-y: auto; /* Enable scrolling */
+            max-height: 80vh;  /* Set a maximum height for scrolling */
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        form input[type="text"],
+        form input[type="number"],
+        form input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Make sure the form is responsive and scrolls well */
+        @media (max-width: 768px) {
+            main {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Edit Itinerary</h1>
+    </header>
+    <main>
+        <div class="form-container">
+            <form id="editItineraryForm">
+                <!-- Name -->
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <!-- Activities -->
+                <label for="activities">Activities:</label>
+                <input type="text" id="activities" name="activities" placeholder="Enter activities" required>
+
+                <!-- Locations to Visit -->
+                <label for="locationsToVisit">Locations to Visit:</label>
+                <input type="text" id="locationsToVisit" name="locationsToVisit" placeholder="Enter locations" required>
+
+                <!-- Timeline -->
+                <label for="timeLine">Timeline:</label>
+                <input type="text" id="timeLine" name="timeLine" placeholder="Enter timeline" required>
+
+                <!-- Duration -->
+                <label for="duration">Duration:</label>
+                <input type="text" id="duration" name="duration" required>
+
+                <!-- Language -->
+                <label for="language">Language:</label>
+                <input type="text" id="language" name="language" placeholder="Enter language" required>
+
+                <!-- Price -->
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required>
+
+                <!-- Available Dates -->
+                <label for="availableDates">Available Dates:</label>
+                <input type="text" id="availableDates" name="availableDates" placeholder="Enter available dates" required>
+
+                <!-- Available Times -->
+                <label for="availableTimes">Available Times:</label>
+                <input type="text" id="availableTimes" name="availableTimes" placeholder="Enter available times" required>
+
+                <!-- Accessibility -->
+                <label for="accesibility">Accessibility:</label>
+                <input type="text" id="accesibility" name="accesibility" placeholder="Enter accessibility details">
+
+                <!-- Pick Up -->
+                <label for="pickUp">Pick Up:</label>
+                <input type="text" id="pickUp" name="pickUp" placeholder="Enter pick up details" required>
+
+                <!-- Drop Off -->
+                <label for="dropOff">Drop Off:</label>
+                <input type="text" id="dropOff" name="dropOff" placeholder="Enter drop off details" required>
+
+                <!-- Booking Made -->
+                <label for="bookingMade">Booking Made:</label>
+                <input type="text" id="bookingMade" name="bookingMade" placeholder="Enter booking details">
+
+                <!-- Start Date -->
+                <label for="Start_date">Start Date:</label>
+                <input type="date" id="Start_date" name="Start_date" required>
+
+                <!-- End Date -->
+                <label for="End_date">End Date:</label>
+                <input type="date" id="End_date" name="End_date" required>
+
+                <!-- Tags -->
+                <label for="Tags">Tags:</label>
+                <input type="text" id="Tags" name="Tags" placeholder="Enter tags">
+
+                <!-- Creator ID -->
+                <label for="creatorId">Creator ID:</label>
+                <input type="text" id="creatorId" name="creatorId" placeholder="Enter creator ID" required>
+
+                <!-- Submit Button -->
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="editItinerary.js"></script>
+</body>
+</html>

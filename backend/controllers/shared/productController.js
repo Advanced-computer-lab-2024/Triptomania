@@ -1,10 +1,11 @@
 // admin.js (Using ES Modules)
 import productModel from '../../models/product.js';
+import multer from 'multer';
 import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId validation
 
  const addProduct = async (req, res) => {
    try {
-      const { Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
+      const {Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
 
       if (!Name || !Description || !Price || !Seller || !Quantity) {
          return res.status(400).json({ message: "All required fields must be provided." });
@@ -33,11 +34,42 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
          Quantity
       });
 
-      await newProduct.save();
+      const prod = await newProduct.save();
 
-      res.status(201).json({ message: "Product added successfully", product: newProduct });
+      res.status(201).json({ message: "Product added successfully", product: prod });
    } catch (error) {
       res.status(500).json({ message: "Error adding product", error: error.message });
+   }
+};
+
+const uploadPicture = async (req, res) => {
+   try {
+       const { id } = req.params;
+
+       // Check if a file is uploaded
+       if (!req.file) {
+           return res.status(400).json({ message: "Product image is required." });
+       }
+
+       // Convert the file buffer to a Base64 string
+       const base64Image = req.file.buffer.toString('base64');
+
+       // Update the product with the new image
+       const updatedProduct = await productModel.findByIdAndUpdate(
+           id,
+           { Picture: base64Image },
+           { new: true, runValidators: true }
+       );
+
+       // Check if the product was found
+       if (!updatedProduct) {
+           return res.status(404).json({ message: "Product not found." });
+       }
+
+       // Return the updated product
+       res.status(200).json({ message: "Uploaded successfully", data: updatedProduct });
+   } catch (error) {
+       res.status(500).json({ message: "Error uploading photo", error: error.message });
    }
 };
 
@@ -99,7 +131,6 @@ const viewProducts = async (req, res) => {
       res.status(500).json({ message: 'Error retrieving products', error });
    }
 };
-
 
 
 const searchProduct = async (req, res) => {
@@ -175,7 +206,8 @@ const filterProducts = async (req, res) => {
  const sortProducts = async (req, res) => {
    try {
        
-       const { order } = req.body;
+
+       const { order } = req.query;
 
        if (!order || (order !== 'high' && order !== 'low')) {
            return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
@@ -204,5 +236,6 @@ export default{
    viewProducts,
    searchProduct,
    filterProducts,
-   sortProducts
+   sortProducts,
+   uploadPicture
 }

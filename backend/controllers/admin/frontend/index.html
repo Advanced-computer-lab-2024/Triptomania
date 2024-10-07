@@ -1,0 +1,41 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <button id="addAdminBtn">Add Admin</button>
+        <button id="addGovernorBtn">Add Tourism Governor</button>
+        <button id="preferenceTagsBtn">Manage Preference Tags</button>
+        <button id="activityCategoriesBtn">Manage Activity Categories</button>
+        <button id="userAccountsBtn">Manage User Accounts</button> <!-- New button added -->
+    </div>
+    <script>
+        document.getElementById('addAdminBtn').addEventListener('click', () => {
+            window.location.href = 'addAdmin.html'; // Redirect to Add Admin page
+        });
+
+        document.getElementById('addGovernorBtn').addEventListener('click', () => {
+            window.location.href = 'addTourismGoverner.html'; // Redirect to Add Tourism Governor page
+        });
+
+        document.getElementById('preferenceTagsBtn').addEventListener('click', () => {
+            window.location.href = 'preferenceTags.html'; // Redirect to Manage Preference Tags page
+        });
+
+        document.getElementById('activityCategoriesBtn').addEventListener('click', () => {
+            window.location.href = 'activityCategories.html'; // Redirect to Manage Activity Categories page
+        });
+
+        document.getElementById('userAccountsBtn').addEventListener('click', () => {
+            window.location.href = 'userAccounts.html'; // Redirect to Manage User Accounts page
+        });
+    </script>
+</body>
+</html>

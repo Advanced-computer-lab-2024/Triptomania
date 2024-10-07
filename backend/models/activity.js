@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
@@ -6,6 +7,17 @@ const activitySchema = new Schema({
     type: String,
     required: true,
   },
+=======
+// advertiser.js (Using ES Modules)
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
+
+const activitySchema = new Schema({
+  name: {
+        type: String,
+        required: true,
+      },
+>>>>>>> main
   description: {
     type: String,
     required: true,
@@ -26,6 +38,7 @@ const activitySchema = new Schema({
     type: Number,
     required: true,
   },
+<<<<<<< HEAD
   category: {
     type: mongoose.Schema.Types.ObjectId, // Refers to ObjectId of activityCategory
     ref: 'activityCategory',
@@ -36,6 +49,18 @@ const activitySchema = new Schema({
     ref: 'preferenceTags',
     required: true,
   }],
+=======
+  category: { //
+    type: String,
+    ref: 'activityCategory',
+    required: true
+  },
+  tags: {
+    type: String,
+    ref: 'preferenceTags',
+    required: true,
+  },
+>>>>>>> main
   specialDiscounts: {
     type: Number,
     default: 0,   
@@ -44,6 +69,14 @@ const activitySchema = new Schema({
     type: Boolean,
     default: true, 
   },
+<<<<<<< HEAD
+=======
+  creatorId: 
+  {
+    type: Number,
+    required: true,
+  },
+>>>>>>> main
 }, { timestamps: true });
 
 const Activity = mongoose.model('Activity', activitySchema);

@@ -3,9 +3,14 @@ import advertiserController from '../controllers/advertiser/advertiserController
 
 const router = express.Router();
 
-router.post("/activity/addActivity", advertiserController.addActivity); // Fixed spelling
-router.put("/activity/editActivity/:id", advertiserController.editActivity); // Added :id for edit
-router.get("/activity/viewActivities", advertiserController.viewActivities); // Fixed spelling
-router.delete("/activity/deleteActivity/:id", advertiserController.deleteActivity); // Added :id for delete
+router.post('/addAdvertiser', advertiserController.createAdvertiser);
+router.put('/updateAdvertiser', advertiserController.updateAdvertiser);
+router.get('/getAdvertiser', advertiserController.getAdvertiser);
+
+router.post("/activity/addActivivty",advertiserController.addActivity);
+router.put("/activity/editActivivty/:id",advertiserController.editActivity);
+router.get("/activity/viewActivivties",advertiserController.viewActivities);
+router.delete("/activity/deleteActivivty/:id",advertiserController.deleteActvivty);
+router.get("/activity/viewMyActivities/:creatorId", advertiserController.viewMyActivities);
 
 export default router;

@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    color: #002244;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #005f99;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
+button {
+    background-color: #005f99;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+button:hover {
+    background-color: #004466;
+}
+
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+}
+
+form label, form input, form textarea {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+input, textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#placesContainer {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.place {
+    background-color: #e6f2ff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #005f99;
+}
+
+.place h2 {
+    margin-top: 0;
+}

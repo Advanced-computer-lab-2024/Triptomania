@@ -1,0 +1,30 @@
+<!-- preferenceTags.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Preference Tags</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Preference Tags</h1>
+        <form id="addTagForm">
+            <label for="tagName">Preference Tag Name:</label>
+            <input type="text" id="tagName" required>
+
+            <label for="tagDescription">Preference Tag Description:</label>
+            <input type="text" id="tagDescription" required>
+
+            <button type="submit">Add Preference Tag</button>
+        </form>
+        <div id="message"></div>
+
+        <h2>Existing Preference Tags</h2>
+        <div id="tagsList"></div>
+        <button id="backBtn">Back</button>
+    </div>
+    <script src="preferenceTags.js"></script>
+</body>
+</html>

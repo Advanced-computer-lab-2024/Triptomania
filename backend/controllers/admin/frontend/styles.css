@@ -1,0 +1,120 @@
+/* styles.css */
+* {
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f7ff; /* Light blue background */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #0056b3; /* Darker blue for headings */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #0056b3; /* Dark blue for labels */
+}
+
+input {
+    width: calc(100% - 24px); /* Adjust width to accommodate padding and borders */
+    padding: 10px;
+    margin-bottom: 15px; /* Increased margin for better spacing */
+    border: 2px solid #007bff; /* Blue border */
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #0056b3; /* Darker blue when focused */
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Blue button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px; /* Add spacing between buttons */
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.tag-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+}
+
+.tag-item span {
+    flex-grow: 1; /* Allow the tag name and description to take up available space */
+    margin-right: 10px; /* Add space between text and buttons */
+}
+
+.tag-item button {
+    width: auto; /* Allow buttons to size according to content */
+    margin-left: 5px; /* Space between buttons */
+}
+
+#message {
+    margin-top: 15px;
+    text-align: center;
+    color: #28a745; /* Green for success messages */
+}
+
+#message.error {
+    color: #dc3545; /* Red for error messages */
+}
+
+/* Additional styles for user account management */
+#userList {
+    margin-top: 20px; /* Add spacing above user list */
+}
+
+/* Add styling for back button */
+#backBtn {
+    background-color: #f8f9fa; /* Light gray background */
+    color: #0056b3; /* Dark blue text */
+    border: 1px solid #007bff; /* Blue border */
+}
+
+#backBtn:hover {
+    background-color: #e2e6ea; /* Darker gray on hover */
+    color: white; /* White text on hover */
+}
+
+.delete-button {
+    background-color: #dc3545; /* Red background */
+    color: white; /* White text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px; /* Padding for the button */
+}
+
+.delete-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
