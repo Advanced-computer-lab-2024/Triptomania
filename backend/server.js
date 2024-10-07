@@ -18,6 +18,7 @@ const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 app.use(express.static('frontend'));
 
 const port = process.env.PORT || 5000;

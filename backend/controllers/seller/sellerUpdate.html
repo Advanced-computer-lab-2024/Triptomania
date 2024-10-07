@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advertiser Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input, textarea {
+      margin: 5px;
+      padding: 8px;
+      width: 250px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #advertiserList div {
+      margin-top: 10px;
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Seller Management</h1>
+
+  <h2>Update Seller</h2>
+  <form id="updateSellerForm">
+    <label for="username">username</label>
+    <input type="text" id="username"  readonly><br>
+    <label for="email">email</label>
+    <input type="email" id="email" ><br>
+    <label for="password">password</label>
+    <input type="password" id="password" ><br>
+    <label for="mobile">mobile</label>
+    <input type="text" id="mobile" ><br>
+    <label for="description">description</label>
+    <input type="text" id="description" ><br>
+
+    <button type="submit">Update Seller</button>
+  </form>
+
+
+
+  <script>
+ // Function to pre-fill the form with hardcoded data
+const hardcodedTourist = {
+    username: 'sellerTest',
+    email: 'seller1@gmail.com',
+    mobile: '',
+    description: ''
+};
+
+function prefillTouristData() {
+    document.getElementById('username').value = hardcodedTourist.username;
+    document.getElementById('email').value = hardcodedTourist.email;
+    document.getElementById('password').value = ""; // Keep the password field empty
+    document.getElementById('mobile').value = hardcodedTourist.mobile;
+    document.getElementById('description').value = hardcodedTourist.description; // Corrected this line
+}
+
+// Call the function to pre-fill the form with the hardcoded data
+prefillTouristData();
+
+document.getElementById('updateSellerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        mobile: document.getElementById('mobile').value,
+        description: document.getElementById('description').value,
+    };
+
+    Object.keys(data).forEach(key => {
+                if (!data[key]) {
+                    delete data[key];  // Remove keys with empty or null values
+                }
+            });
+
+
+    try {
+        const response = await fetch('http://localhost:5000/api/seller/updateSeller', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.status === 200) { // Check for success status
+            alert('Seller updated successfully!');
+        } else {
+            alert(result.message || 'Error updating seller.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+  </script>
+
+</body>
+</html>
