@@ -1,12 +1,11 @@
-// advertiser.js (Using ES Modules)
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
-const activity = new Schema({
+const activitySchema = new Schema({
   name: {
-        type: String,
-        required: true,
-      },
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     required: true,
@@ -27,16 +26,16 @@ const activity = new Schema({
     type: Number,
     required: true,
   },
-  category: { //
-    type: String,
+  category: {
+    type: mongoose.Schema.Types.ObjectId, // Refers to ObjectId of activityCategory
     ref: 'activityCategory',
-    required: true
-  },
-  tags: {
-    type: String,
-    ref: 'preferenceTags',
     required: true,
   },
+  tags: [{
+    type: mongoose.Schema.Types.ObjectId, // Array of ObjectId referring to preferenceTags
+    ref: 'preferenceTags',
+    required: true,
+  }],
   specialDiscounts: {
     type: Number,
     default: 0,   
@@ -47,5 +46,5 @@ const activity = new Schema({
   },
 }, { timestamps: true });
 
-const Advertiser = mongoose.model('Advertiser', activity);
-export default Advertiser;
+const Activity = mongoose.model('Activity', activitySchema);
+export default Activity;
