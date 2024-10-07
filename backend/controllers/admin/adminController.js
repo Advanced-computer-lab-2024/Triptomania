@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import adminModel from '../../models/admin.js';
 import touristModel from '../../models/tourist.js';
-import tourismGovernerModel from '../../models/tourist.js';
+import tourismGovernerModel from '../../models/tourismGovernor.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
@@ -75,9 +75,38 @@ const deleteAccount = async (req, res) => {
     }
 }
 
+const addTourismGoverner = async (req, res) => {
+    const { tourismGovernerName, tourismGovernerUsername, tourismGovernerPassword } = req.body;
+
+    // Validate required fields
+    if (!tourismGovernerName || !tourismGovernerUsername || !tourismGovernerPassword) {
+        return res.status(400).json({ message: "Please fill in all fields" });
+    }
+
+    try {
+        // Create a new instance of the tourism governor model
+        const tourismGoverner = new tourismGovernerModel({
+            TourismGovernerName: tourismGovernerName,
+            TourismGovernerUsername: tourismGovernerUsername,
+            TourismGovernerPassword: tourismGovernerPassword
+        });
+
+        // Save the new tourism governor to the database
+        await tourismGoverner.save();
+
+        // Respond with a success message
+        res.status(201).json({ message: "Tourism Governor added successfully" });
+    } catch (error) {
+        console.error("Error saving tourism governor:", error); // Log the error for debugging
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+};
+
+
 
 
 export default {
     addAdmin,
-    deleteAccount
+    deleteAccount,
+    addTourismGoverner
 }
