@@ -57,7 +57,7 @@ app.use('/api/advertiser',advertiserRoutes);
 //app.post("/Admin/Product/addProduct",addProduct);
 
 //app.use('/api/tourismGoverner', tourismGovernerRoutes);
-//app.get('/api/search', searchHistoricalPlaceByName);
+////app.get('/api/search', searchHistoricalPlaceByName);
 
 app.use('/api/tourismGoverner', tourismGovernerRoutes);
 app.use('/api/tourGuide', tourGuideRoutes);
