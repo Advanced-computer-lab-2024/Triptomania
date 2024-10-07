@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to check if a string is valid Base64
+    function isBase64(string) {
+        const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+        return base64Regex.test(string);
+    }
+
     // Function to display products with styling
     function displayProducts(products) {
         productList.innerHTML = ''; // Clear existing products
@@ -32,7 +38,17 @@ document.addEventListener('DOMContentLoaded', function () {
             productElement.style.marginBottom = '20px';
             productElement.style.transition = 'box-shadow 0.3s ease';
 
+            // Check for product image (if it's valid Base64)
+            let imageHtml;
+            if (product.Picture && isBase64(product.Picture)) {
+                imageHtml = `<img src="data:image/jpeg;base64,${product.Picture}" alt="${product.Name}" class="product-image">`;
+            } else {
+                imageHtml = `<p>No picture added</p>`;
+            }
+
+            // Add product details along with the image
             productElement.innerHTML = `
+                ${imageHtml}
                 <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
                 <p style="margin: 5px 0; color: #555;">${product.Description}</p>
                 <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: $${product.Price}</p>
@@ -108,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error filtering products:', error);
         }
     }
+    
 
     // Event listener for filter button
     filterButton.addEventListener('click', function () {

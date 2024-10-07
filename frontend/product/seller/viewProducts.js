@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch all products
     async function fetchProducts() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourist/product/viewProducts'); // View all products API
+            const response = await fetch('http://localhost:5000/api/seller/product/viewProducts'); // View all products API
             const products = await response.json();
             displayProducts(products);
         } catch (error) {
