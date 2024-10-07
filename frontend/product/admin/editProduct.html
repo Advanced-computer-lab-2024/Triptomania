@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Product</title>
+</head>
+<body>
+
+  <!-- Edit Product Form -->
+  <form id="editProductForm">
+    <h1>Edit Product</h1>
+
+    <!-- Hidden productId input to track the product being edited -->
+    <input type="hidden" id="productId">
+
+    <input type="text" id="name" placeholder="Product Name" ><br>
+    <input type="text" id="description" placeholder="Product Description" ><br>
+    <input type="number" id="price" placeholder="Product Price" ><br>
+    <input type="text" id="seller" placeholder="Seller Name" ><br>
+    <input type="number" id="quantity" placeholder="Quantity Available" ><br>
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <script src="editProduct.js"></script> <!-- JavaScript to handle form submissions -->
+</body>
+</html>
