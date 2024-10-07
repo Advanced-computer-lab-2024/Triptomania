@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Historical Place</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Add Historical Place</h1>
+    </header>
+    <form id="addPlaceForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="Name" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="Description" required></textarea>
+
+        <label for="picture">Picture URL:</label>
+        <input type="url" id="picture" name="Picture" required>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="Location" required>
+
+        <label for="openingHours">Opening Hours (HH:MM):</label>
+        <input type="text" id="openingHours" name="Opening_hours" required>
+
+        <label for="closingHours">Closing Hours (HH:MM):</label>
+        <input type="text" id="closingHours" name="Closing_hours" required>
+
+        <label for="ticketPrices">Ticket Prices:</label>
+        <input type="number" id="ticketPrices" name="Ticket_prices" required>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="Category" required>
+
+        <button type="submit">Add Historical Place</button>
+    </form>
+
+    <script src="js/add.js"></script>
+</body>
+</html>
