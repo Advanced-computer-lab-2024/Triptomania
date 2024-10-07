@@ -2,8 +2,13 @@
 import express from 'express';
 import dotenv from 'dotenv';    
 import { connectDB } from './config/db.js';  
-import { addProduct } from './controllers/shared/productController.js';
-import { editProduct } from './controllers/shared/productController.js';
+import sellerRoutes from './routes/sellerRoutes.js';
+import  adminRoutes from './routes/adminRoutes.js';
+import touristRoutes from './routes/touristRoutes.js';
+import tourguideRoutes from './routes/tourGuideRoutes.js';
+import advertiserRoutes from './routes/advertiserRoutes.js';
+import guestRoutes from './routes/guestRoutes.js';
+
 
 // Load environment variables from .env file
 dotenv.config(); 
@@ -11,7 +16,7 @@ dotenv.config();
 // Initialize express app
 const app = express();
 app.use(express.json());
-
+app.use(express.static('frontend/itinrary/tourguide'));
 
 // Listen on port 5000
 app.listen(5000, () => {
@@ -22,14 +27,16 @@ app.listen(5000, () => {
 
 
 
+
 // Debugging line to ensure MONGO_URI is loaded properly (uncomment if needed)
 // console.log(process.env.MONGO_URI);
 app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
 
-// app.post("/Admin/Product/addProduct",addProduct);
-// app.put("/Admin/Product/editProduct/:id",editProduct);
-
-
-//app.post("/Admin/Product/addProduct",addProduct);
+app.use('/api/seller',sellerRoutes);
+app.use('/api/seller',adminRoutes);
+app.use('/api/seller',touristRoutes);
+app.use('/api/tourguide',tourguideRoutes);
+app.use('/api/advertiser',advertiserRoutes);
+app.use('/api/guest',guestRoutes);

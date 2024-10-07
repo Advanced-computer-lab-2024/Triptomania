@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Itinerary</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Manage Itinerary Form -->
+    <form id="manageItineraryForm">
+        <h1>Manage Itinerary</h1>
+
+        <!-- Hidden itineraryId input to track the itinerary being edited -->
+        <input type="hidden" id="itineraryId">
+
+        <input type="text" id="activities" placeholder="Activities (comma-separated)" required><br>
+        <input type="text" id="locations" placeholder="Locations to Visit (comma-separated)" required><br>
+        <input type="text" id="timeline" placeholder="Timeline" required><br>
+        <input type="text" id="duration" placeholder="Duration of Each Activity" required><br>
+        <input type="text" id="language" placeholder="Language of Tour" required><br>
+        <input type="number" id="price" placeholder="Price of Tour" required><br>
+        <input type="text" id="availableDates" placeholder="Available Dates (comma-separated)" required><br>
+        <input type="text" id="availableTimes" placeholder="Available Times (comma-separated)" required><br>
+
+        <label>
+            Accessibility:
+            <input type="checkbox" id="accessibility">
+        </label><br>
+        
+        <input type="text" id="pickUpLocation" placeholder="Pick Up Location" required><br>
+        <input type="text" id="dropOffLocation" placeholder="Drop Off Location" required><br>
+
+        <button type="submit">Submit</button>
+        <button type="button" id="deleteItinerary">Delete Itinerary</button>
+        <button type="button" id="viewItineraryButton">View Itinerary</button>
+    </form>
+
+    <!-- Section to display the fetched itinerary details -->
+    <div id="itineraryDetails" style="display: none;">
+        <h2>Itinerary Details</h2>
+        <p><strong>Activities:</strong> <span id="itineraryActivities"></span></p>
+        <p><strong>Locations:</strong> <span id="itineraryLocations"></span></p>
+        <p><strong>Timeline:</strong> <span id="itineraryTimeline"></span></p>
+        <p><strong>Duration:</strong> <span id="itineraryDuration"></span></p>
+        <p><strong>Language:</strong> <span id="itineraryLanguage"></span></p>
+        <p><strong>Price:</strong> <span id="itineraryPrice"></span></p>
+        <p><strong>Available Dates:</strong> <span id="itineraryAvailableDates"></span></p>
+        <p><strong>Available Times:</strong> <span id="itineraryAvailableTimes"></span></p>
+        <p><strong>Accessibility:</strong> <span id="itineraryAccessibility"></span></p>
+        <p><strong>Pick Up Location:</strong> <span id="itineraryPickUpLocation"></span></p>
+        <p><strong>Drop Off Location:</strong> <span id="itineraryDropOffLocation"></span></p>
+    </div>
+
+    <script src="manageitineraries.js"></script> <!-- Update to the correct JavaScript file for itinerary management -->
+
+</body>
+</html>
