@@ -125,15 +125,7 @@ const viewMyActivities = async (req, res) => {
    const { creatorId } = req.params; // Extract creatorId from request parameters
 
    try {
-       // Validate that creatorId is a number
-       if (isNaN(creatorId)) {
-           return res.status(400).json({
-               status: false,
-               error: 'Invalid creatorId, it must be a number.'
-           });
-       }
-
-       const activities = await activityModel.find({ creatorId: creatorId });
+      const activities = await activityModel.find({ creatorId: creatorId });
 
        if (!activities || activities.length === 0) {
            return res.status(404).json({

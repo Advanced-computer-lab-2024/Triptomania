@@ -104,7 +104,7 @@ const addItinerary = async (req, res) => {
     // {
     //     return res.status(400).json({ message: "Drop off must be a string"});
     // }
-    const newItinerary = new itineraryModel({ Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, bookingMade, Start_date, End_date, Tags });
+    const newItinerary = new itineraryModel({ Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, bookingMade, Start_date, End_date, Tags, creatorId });
     await newItinerary.save();
     res.status(201).json({
       status: true,
@@ -212,14 +212,6 @@ const getMyItineraries = async (req, res) => {
   const { creatorId } = req.params; // Extract creatorId from request parameters
 
   try {
-      // Validate that creatorId is a number
-      if (isNaN(creatorId)) {
-          return res.status(400).json({
-              status: false,
-              error: 'Invalid creatorId, it must be a number.'
-          });
-      }
-
       const itineraries = await itineraryModel.find({ creatorId: creatorId });
 
       if (!itineraries || itineraries.length === 0) {

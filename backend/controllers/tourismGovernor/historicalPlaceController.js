@@ -163,15 +163,6 @@ const getMyHistoricalPlaces = async (req, res) => {
     const { creatorId } = req.params; // Extract creatorId from request parameters
 
     try {
-        // Validate that creatorId is a number
-        if (isNaN(creatorId)) {
-            return res.status(400).json({
-                status: false,
-                error: 'Invalid creatorId, it must be a number.'
-            });
-        }
-
-        // Find all historical places with the same creatorId
         const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId });
 
         // Check if any historical places were found
