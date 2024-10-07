@@ -11,7 +11,7 @@ import crypto from 'crypto';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
-  const { username, email, password, mobile, nationality, DOB, job_Student, wallet } = req.body;
+  const { username, email, password, mobile, nationality, DOB, job_Student/*, wallet*/ } = req.body;
   //const hashed = hashPassword(Password);
   
   try {
@@ -31,12 +31,8 @@ const CreateTourist = async (req, res) => {
     const monthDiff = new Date().getMonth() - dobDate.getMonth();
     const isUnderage = age < 18 || (age === 18 && monthDiff < 0);
 
-    if (isUnderage) {
-      return res.status(400).send({ message: 'You must be at least 18 years old to register.' });
-    }
-
     // Create a new tourist
-    const tourist = await userModel.create({ username, email, password, mobile, nationality, DOB, job_Student, wallet });
+    const tourist = await userModel.create({ username, email, password, mobile, nationality, DOB, job_Student, wallet, underage: isUnderage });
     res.status(200).json(tourist);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -57,51 +53,87 @@ const getTourist = async (req, res) => {
 
 ////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////
+
+// Get one tourist
+
+const getOneTourist = async (req, res) => {
+  try {
+   // const {  username, email, password, mobile, nationality,job_Student } = req.body;
+    const tourist = await userModel.find({username});
+    return res.status(200).send(tourist);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+////////////////////////////////////////////////////////////////
+
+
 // Update a tourist
 const UpdateTourist = async (req, res) => {
   try {
-    const {  username, email, password, mobile, nationality,job_Student } = req.body;
-    //const hashed = hashPassword(Password);
+    const { username, email, password, mobile, nationality, DOB, job_Student } = req.body;
+    console.log('Request Body:', req.body); // Log the incoming request
 
-    // Check if the email already exists
-    if (email) {
-      const existingTouristEmail = await userModel.findOne({ email });
-      if (existingTouristEmail) {
-        // Return an error if the email already exists
-        return res.status(400).send({ message: 'Email already exists.' });
-      }
-      updateData.email = email; // Add email to update data if it exists
+    // Fetch the existing tourist data
+    const existingTourist = await userModel.findOne({ username });
+    if (!existingTourist) {
+      return res.status(404).json({ error: 'User not found' });
     }
 
     const updateData = {
-      username,
-      email,
-      password,
-      mobile,
-      nationality,
-      job_Student,
+      email: email !== undefined ? email : existingTourist.email,
+      password: password !== undefined ? password : existingTourist.password,
+      mobile: mobile !== undefined ? mobile : existingTourist.mobile,
+      nationality: nationality !== undefined ? nationality : existingTourist.nationality,
+      DOB: DOB !== undefined ? DOB : existingTourist.DOB,  // Retain old DOB if not provided
+      job_Student: job_Student !== undefined ? job_Student : existingTourist.job_Student,
     };
 
-    // Remove undefined fields (in case the user didn't update all fields)
+    // Remove undefined fields (optional as we've handled undefined values)
     Object.keys(updateData).forEach(key => {
       if (updateData[key] === undefined) {
         delete updateData[key];
       }
     });
+    console.log('Update Data:', updateData); // Log what's going to be updated
 
-    // Update tourist data
-    const update = await userModel.findOneAndUpdate({ username }, updateData, { new: true }); // Add { new: true } to return the updated document
+    // Check if the email already exists but exclude the current user
+    if (email && email !== existingTourist.email) {
+      const existingTouristEmail = await userModel.findOne({ email, username: { $ne: username } });
+      if (existingTouristEmail) {
+        return res.status(400).send({ message: 'Email already exists.' });
+      }
+      updateData.email = email;
+    }
 
-    if (!update) {
+    const dobDate = new Date(updateData.DOB);
+    const age = new Date().getFullYear() - dobDate.getFullYear();
+    const monthDiff = new Date().getMonth() - dobDate.getMonth();
+    const isUnderage = age < 18 || (age === 18 && monthDiff < 0);
+
+    if (isUnderage) {
+      return res.status(400).send({ message: 'You must be at least 18 years old' });
+    }
+
+    const updatedTourist = await userModel.findOneAndUpdate({ username }, updateData, { new: true });
+    if (!updatedTourist) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.status(200).json(update);
+
+    console.log('Updated Tourist:', updatedTourist); // Log the updated document
+    res.status(200).json(updatedTourist);
   } catch (error) {
+    console.log('Error:', error); // Log the error if there's any
     res.status(400).json({ error: error.message });
   }
-}
+};
+
+
+
 
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, UpdateTourist };
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist };

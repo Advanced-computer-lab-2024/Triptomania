@@ -3,9 +3,6 @@ import productModel from '../../models/product.js';
 import multer from 'multer';
 import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId validation
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
  const addProduct = async (req, res) => {
    try {
       const {Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
@@ -37,9 +34,9 @@ const upload = multer({ storage });
          Quantity
       });
 
-      await newProduct.save();
+      const prod = await newProduct.save();
 
-      res.status(201).json({ message: "Product added successfully", product: newProduct });
+      res.status(201).json({ message: "Product added successfully", product: prod });
    } catch (error) {
       res.status(500).json({ message: "Error adding product", error: error.message });
    }
@@ -209,7 +206,7 @@ const filterProducts = async (req, res) => {
  const sortProducts = async (req, res) => {
    try {
        
-       const { order } = req.body;
+       const { order } = req.query;
 
        if (!order || (order !== 'high' && order !== 'low')) {
            return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });

@@ -35,10 +35,14 @@ const touristSchema = new Schema({
   },wallet: {
     type: Number,
     required: false,
+    default:0
   },
   type: {
     type: String,
     default: 'tourist'  // Default value for the type field
+  },
+  underage:{
+    type: Boolean,
   }
 }, { timestamps: true });
 

@@ -40,6 +40,20 @@ const CreateSeller = async (req, res) => {
   }
 };
 
+///////////////////////////////////////////////////////////////////
+
+// Get one seller
+
+const getOneSeller = async (req, res) => {
+  try {
+    //const {  username, email, password, mobile, nationality,job_Student } = req.body;
+    const seller = await SellerModel.find({username});
+    return res.status(200).send(seller);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 ///////////////////////////////////////////////////////////////
 
 // Get all sellers
@@ -63,12 +77,11 @@ const updateSeller = async (req, res) => {
 
     // Check if the email already exists
     if (email) {
-      const existingsellerEmail = await SellerModel.findOne({ email });
-      if (existingsellerEmail) {
+      const existingSellerEmail = await SellerModel.findOne({ email, username: { $ne: username } });
+      if (existingSellerEmail) {
         // Return an error if the email already exists
         return res.status(400).send({ message: 'Email already exists.' });
       }
-      updateData.email = email; // Add email to update data if it exists
     }
 
     // Update seller data
@@ -91,4 +104,4 @@ const updateSeller = async (req, res) => {
 /////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateSeller, getSeller, updateSeller };
+export default { CreateSeller, getSeller, updateSeller, getOneSeller };

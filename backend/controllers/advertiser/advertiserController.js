@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 // Create new advertiser
 const createAdvertiser = async (req, res) => {
   try {
-    const { username, email, password, mobile, companyName, companyHotline, website, profilePicture } = req.body;
+    const { username, email, password, mobile, companyName, companyHotline, website/*, profilePicture*/ } = req.body;
 
     // Check if the username or email already exists
     const existingAdvertiser = await AdvertiserModel.findOne({
@@ -33,8 +33,8 @@ const createAdvertiser = async (req, res) => {
       mobile,
       companyName,
       companyHotline,
-      website,
-      profilePicture
+      website/*,
+      profilePicture*/
     });
 
     res.status(201).send(adv);
@@ -42,7 +42,19 @@ const createAdvertiser = async (req, res) => {
     console.log(error);
   }
 };
+///////////////////////////////////////////////////////////////////
 
+// Get one seller
+
+const getOneAdvertiser = async (req, res) => {
+  try {
+    //const {  username, email, password, mobile, nationality,job_Student } = req.body;
+    const advertiser = await AdvertiserModel.find({username});
+    return res.status(200).send(advertiser);
+  } catch (error) {
+    console.log(error);
+  }
+};
 ///////////////////////////////////////////////////////////////////////
 
 // Get all advertisers
@@ -60,19 +72,18 @@ const getAdvertiser = async (req, res) => {
 // Update an advertiser
 const updateAdvertiser = async (req, res) => {
   try {
-    const { username, email, password, mobile, companyName, companyHotline, website, profilePicture } = req.body;
-    const updateData = { username, email,password, mobile, companyName, companyHotline, website, profilePicture };
+    const { username, email, password, mobile, companyName, companyHotline, website/*, profilePicture*/ } = req.body;
+    const updateData = { username, email,password, mobile, companyName, companyHotline, website/*, profilePicture*/ };
     //const hashed = hashPassword(password);
 
     // Check if the hashed password or email already exists
     //const advertiserPassword = await AdvertiserModel.findOne({ password });
     if (email) {
-      const existingadvertiserEmail = await AdvertiserModel.findOne({ email });
-      if (existingadvertiserEmail) {
+      const existingAdvertiserEmail = await AdvertiserModel.findOne({ email, username: { $ne: username } });
+      if (existingAdvertiserEmail) {
         // Return an error if the email already exists
         return res.status(400).send({ message: 'Email already exists.' });
       }
-      updateData.email = email; // Add email to update data if it exists
     }
 
     // Update advertiser data
@@ -212,5 +223,6 @@ const updateAdvertiser = async (req, res) => {
     deleteActvivty,
     createAdvertiser,
     getAdvertiser,
-    updateAdvertiser
+    updateAdvertiser,
+    getOneAdvertiser
  }

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advertiser Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input, textarea {
+      margin: 5px;
+      padding: 8px;
+      width: 250px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #advertiserList div {
+      margin-top: 10px;
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Advertiser Management</h1>
+
+  <!-- Form to create a new advertiser -->
+  <h2>Create a New Advertiser</h2>
+  <form id="createAdvertiserForm">
+    <label for="username">username</label>
+    <input type="text" id="username" placeholder="Username" required><br>
+    <label for="email">email</label>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <label for="password">password</label>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <!--<input type="text" id="mobile" placeholder="Mobile" required><br>
+    <input type="text" id="companyName" placeholder="Company Name"><br>
+    <input type="text" id="companyHotline" placeholder="Company Hotline"><br>
+    <input type="url" id="website" placeholder="Website"><br>
+    <input type="url" id="profilePicture" placeholder="Profile Picture URL"><br>-->
+    <button type="submit">Create Advertiser</button>
+  </form>
+
+  <!-- Form to update an existing advertiser -->
+ <!-- <h2>Update Advertiser</h2>
+  <form id="updateAdvertiserForm">
+    <input type="text" id="updateUsername" placeholder="Username" required><br>
+    <input type="email" id="updateEmail" placeholder="New Email"><br>
+    <input type="password" id="updatePassword" placeholder="New Password"><br>
+    <input type="text" id="updateMobile" placeholder="New Mobile"><br>
+    <input type="text" id="updateCompanyName" placeholder="New Company Name"><br>
+    <input type="text" id="updateCompanyHotline" placeholder="New Company Hotline"><br>
+    <input type="url" id="updateWebsite" placeholder="New Website"><br>
+    <input type="url" id="updateProfilePicture" placeholder="New Profile Picture URL"><br>
+    <button type="submit">Update Advertiser</button>
+  </form> -->
+
+  <!-- Button to fetch all advertisers 
+  <h2>All Advertisers</h2>
+  <button id="getAdvertisersBtn">Get All Advertisers</button>
+  <div id="advertiserList"></div> -->
+
+  <script>
+    // Function to create a new advertiser
+    document.getElementById('createAdvertiserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const data = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+         /*mobile: document.getElementById('mobile').value,
+        companyName: document.getElementById('companyName').value,
+        companyHotline: document.getElementById('companyHotline').value,
+        website: document.getElementById('website').value,
+        profilePicture: document.getElementById('profilePicture').value,*/
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/advertiser/addAdvertiser', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.status === 201) {
+          alert('Advertiser created successfully!');
+        } else {
+          alert(result.message || 'Error creating advertiser.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    // Function to update an advertiser
+   /* document.getElementById('updateAdvertiserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const data = {
+        username: document.getElementById('updateUsername').value,
+        email: document.getElementById('updateEmail').value,
+        password: document.getElementById('updatePassword').value,
+        mobile: document.getElementById('updateMobile').value,
+        companyName: document.getElementById('updateCompanyName').value,
+        companyHotline: document.getElementById('updateCompanyHotline').value,
+        website: document.getElementById('updateWebsite').value,
+        profilePicture: document.getElementById('updateProfilePicture').value,
+      };
+
+      try {
+        const response = await fetch('/api/advertisers', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        if (response.status === 200) {
+          alert('Advertiser updated successfully!');
+        } else {
+          alert(result.message || 'Error updating advertiser.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    // Function to get all advertisers
+    const getAdvertisers = async () => {
+      try {
+        const response = await fetch('/api/advertisers');
+        const advertisers = await response.json();
+
+        const advertiserList = document.getElementById('advertiserList');
+        advertiserList.innerHTML = ''; // Clear existing advertisers
+
+        advertisers.forEach(advertiser => {
+          const advertiserItem = document.createElement('div');
+          advertiserItem.innerHTML = <strong>${advertiser.username}</strong> - ${advertiser.email} - ${advertiser.companyName};
+          advertiserList.appendChild(advertiserItem);
+        });
+      } catch (error) {
+        console.error('Error getting advertisers:', error);
+      }
+    };
+
+    // Attach event listener to button to get all advertisers
+    document.getElementById('getAdvertisersBtn').addEventListener('click', getAdvertisers);*/
+  </script>
+
+</body>
+</html>
