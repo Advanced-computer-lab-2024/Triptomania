@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Activity</title>
+    <link rel="stylesheet" href="addActivity.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Add Activity</h1>
+        <form id="activityForm">
+            <input type="text" id="name" placeholder="Activity Name" required>
+            <textarea id="description" placeholder="Description" required></textarea>
+            <input type="date" id="date" required>
+            <input type="time" id="time" required>
+            <input type="text" id="location" placeholder="Location" required>
+            <input type="number" id="price" placeholder="Price" required min="0">
+            <input type="text" id="category" placeholder="Category" required>
+            <input type="text" id="tags" placeholder="Tags (comma separated)" required>
+            <input type="number" id="specialDiscounts" placeholder="Special Discounts" required>
+            <label for="isBookingOpen">Is Booking Open?</label>
+            <input type="checkbox" id="isBookingOpen" checked>
+            <button type="submit">Add Activity</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script src="addActivity.js"></script>
+</body>
+</html>
