@@ -15,6 +15,7 @@ dotenv.config();
 // Initialize express app
 const app = express();
 // app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
@@ -39,7 +40,7 @@ app.get("/home", (req, res) => {
 app.use('/api/admin', adminRoutes);
 
 // app.post("/Admin/Product/addProduct",addProduct);
-// app.put("/Admin/Product/editProduct/:id",editProduct);
+// app.put("/Admin/product/editProduct/:id/:id",editProduct);
 
 
 //app.post("/Admin/Product/addProduct",addProduct);
