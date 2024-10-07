@@ -172,5 +172,6 @@ export const updateTag = async (req, res) => {
     addTagToHistoricalPlace,
     addTag,
     getTags,
-    deleteTag
+    deleteTag,
+    updateTag
 }
