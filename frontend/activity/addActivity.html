@@ -7,14 +7,23 @@
     <link rel="stylesheet" href="addActivity.css">
 </head>
 <body>
+    <header>
+        <h1>Activity Management</h1>
+        <p>Create and Add New Activities Seamlessly</p>
+    </header>
+
     <div class="container">
-        <h1>Add Activity</h1>
+        <h2>Add Activity</h2>
         <form id="activityForm">
             <input type="text" id="name" placeholder="Activity Name" required>
             <textarea id="description" placeholder="Description" required></textarea>
             <input type="date" id="date" required>
             <input type="time" id="time" required>
-            <input type="text" id="location" placeholder="Location" required>
+
+            <!-- Google Maps location input -->
+            <input type="text" id="location" placeholder="Enter location" required>
+            <div id="map"></div>
+
             <input type="number" id="price" placeholder="Price" required min="0">
             <input type="text" id="category" placeholder="Category" required>
             <input type="text" id="tags" placeholder="Tags (comma separated)" required>
