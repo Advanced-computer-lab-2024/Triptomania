@@ -1,6 +1,10 @@
 // admin.js (Using ES Modules)
 import productModel from '../../models/product.js';
+import multer from 'multer';
 import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId validation
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
  const addProduct = async (req, res) => {
    try {
@@ -38,6 +42,37 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
       res.status(201).json({ message: "Product added successfully", product: newProduct });
    } catch (error) {
       res.status(500).json({ message: "Error adding product", error: error.message });
+   }
+};
+
+const uploadPicture = async (req, res) => {
+   try {
+       const { id } = req.params;
+
+       // Check if a file is uploaded
+       if (!req.file) {
+           return res.status(400).json({ message: "Product image is required." });
+       }
+
+       // Convert the file buffer to a Base64 string
+       const base64Image = req.file.buffer.toString('base64');
+
+       // Update the product with the new image
+       const updatedProduct = await productModel.findByIdAndUpdate(
+           id,
+           { Picture: base64Image },
+           { new: true, runValidators: true }
+       );
+
+       // Check if the product was found
+       if (!updatedProduct) {
+           return res.status(404).json({ message: "Product not found." });
+       }
+
+       // Return the updated product
+       res.status(200).json({ message: "Uploaded successfully", data: updatedProduct });
+   } catch (error) {
+       res.status(500).json({ message: "Error uploading photo", error: error.message });
    }
 };
 
@@ -205,5 +240,6 @@ export default{
    viewProducts,
    searchProduct,
    filterProducts,
-   sortProducts
+   sortProducts,
+   uploadPicture
 }
