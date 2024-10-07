@@ -5,9 +5,8 @@ import { connectDB } from './config/db.js';
 import sellerRoutes from './routes/sellerRoutes.js';
 import  adminRoutes from './routes/adminRoutes.js';
 import touristRoutes from './routes/touristRoutes.js';
-import tourguideRoutes from './routes/tourGuideRoutes.js';
+import tourGuideRoutes from './routes/tourGuideRoutes.js';
 import advertiserRoutes from './routes/advertiserRoutes.js';
-import guestRoutes from './routes/guestRoutes.js';
 
 
 // Load environment variables from .env file
@@ -35,8 +34,7 @@ app.get("/home", (req, res) => {
   });
 
 app.use('/api/seller',sellerRoutes);
-app.use('/api/seller',adminRoutes);
-app.use('/api/seller',touristRoutes);
-app.use('/api/tourguide',tourguideRoutes);
+app.use('/api/admin',adminRoutes);
+app.use('/api/tourist',touristRoutes);
+app.use('/api/tourGuide',tourGuideRoutes);
 app.use('/api/advertiser',advertiserRoutes);
-app.use('/api/guest',guestRoutes);
