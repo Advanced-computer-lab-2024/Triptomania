@@ -52,5 +52,5 @@ const activitySchema = new Schema({
   },
 }, { timestamps: true });
 
-const Advertiser = mongoose.model('Advertiser', activitySchema);
-export default Advertiser;
+const Activity = mongoose.model('Activity', activitySchema);
+export default Activity;

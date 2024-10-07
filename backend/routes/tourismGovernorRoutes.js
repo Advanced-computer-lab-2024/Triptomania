@@ -1,6 +1,6 @@
 import express from 'express';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
-import tourismGoverner from '../controllers/tourismGovernor/tourismGovernor.js';
+import tourismGoverner from '../controllers/tourismGovernor/tourismGovernorController.js';
 import HistoricalPlace from '../models/historicalPlace.js';
 
 const router = express.Router();

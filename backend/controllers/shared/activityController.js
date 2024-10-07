@@ -82,7 +82,6 @@ const deleteCategory = async (req, res) => {
     }
 }
 
-
 const viewActivities = async (req, res) => {
     try {
        const bookings = await activityModel.find().sort({ createdAt: -1 }); 
@@ -185,6 +184,5 @@ export default {
     deleteCategory,
     filterActivities,
     sortActivities,
-   // filterItineraries,
     viewActivities
-}
+}; 
