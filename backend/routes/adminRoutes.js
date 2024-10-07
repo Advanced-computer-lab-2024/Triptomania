@@ -35,7 +35,7 @@ router.delete('/deleteAccount', adminController.deleteAccount);
 router.post('/addTourismGoverner', tourismGovernorController.addTourismGoverner);
 
 router.post("/product/addProduct",productController.addProduct);
-router.put("/product/editProduct",productController.editProduct);
+router.put("/product/editProduct/:id",productController.editProduct);
 router.get("/product/viewProducts",productController.viewProducts);
 router.get("/product/searchProducts",productController.searchProduct);
 router.get("/product/filterProducts",productController.filterProducts);
