@@ -32,7 +32,7 @@ const CreateTourist = async (req, res) => {
     const isUnderage = age < 18 || (age === 18 && monthDiff < 0);
 
     // Create a new tourist
-    const tourist = await userModel.create({ username, email, password, mobile, nationality, DOB, job_Student, wallet, underage: isUnderage });
+    const tourist = await userModel.create({ username, email, password, mobile, nationality, DOB, job_Student, underage: isUnderage });
     res.status(200).json(tourist);
   } catch (error) {
     res.status(400).json({ error: error.message });
