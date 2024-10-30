@@ -46,8 +46,8 @@ const activitySchema = new Schema({
   },
   creatorId: 
   {
-    type: Number,
-    required: true,
+      type: mongoose.Types.ObjectId,
+      required: true,
   },
 }, { timestamps: true });
 

@@ -82,6 +82,7 @@ document.getElementById('activityForm').addEventListener('submit', async functio
     const tags = document.getElementById('tags').value.split(',').map(tag => tag.trim());
     const specialDiscounts = parseFloat(document.getElementById('specialDiscounts').value);
     const isBookingOpen = document.getElementById('isBookingOpen').checked;
+    const creatorId = document.getElementById('creatorId').value;
 
     const activityData = {
         name,
@@ -93,7 +94,8 @@ document.getElementById('activityForm').addEventListener('submit', async functio
         category,
         tags,
         specialDiscounts,
-        isBookingOpen
+        isBookingOpen,
+        creatorId
     };
 
     try {
@@ -106,7 +108,7 @@ document.getElementById('activityForm').addEventListener('submit', async functio
         });
 
         const result = await response.json();
-        document.getElementById('responseMessage').textContent = result.message;
+        document.getElementById('responseMessage').textContent = result.error;
 
         if (response.status === 201) {
             document.getElementById('activityForm').reset();

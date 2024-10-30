@@ -73,7 +73,7 @@ const getOneTourist = async (req, res) => {
 // Update a tourist
 const UpdateTourist = async (req, res) => {
   try {
-    const { username, email, password, mobile, nationality, DOB, job_Student } = req.body;
+    const { username, email, password, mobile, nationality, job_Student, wallet } = req.body;
     console.log('Request Body:', req.body); // Log the incoming request
 
     // Fetch the existing tourist data
@@ -87,8 +87,8 @@ const UpdateTourist = async (req, res) => {
       password: password !== undefined ? password : existingTourist.password,
       mobile: mobile !== undefined ? mobile : existingTourist.mobile,
       nationality: nationality !== undefined ? nationality : existingTourist.nationality,
-      DOB: DOB !== undefined ? DOB : existingTourist.DOB,  // Retain old DOB if not provided
       job_Student: job_Student !== undefined ? job_Student : existingTourist.job_Student,
+      wallet: wallet !== undefined ? wallet : existingTourist.wallet
     };
 
     // Remove undefined fields (optional as we've handled undefined values)
@@ -106,15 +106,6 @@ const UpdateTourist = async (req, res) => {
         return res.status(400).send({ message: 'Email already exists.' });
       }
       updateData.email = email;
-    }
-
-    const dobDate = new Date(updateData.DOB);
-    const age = new Date().getFullYear() - dobDate.getFullYear();
-    const monthDiff = new Date().getMonth() - dobDate.getMonth();
-    const isUnderage = age < 18 || (age === 18 && monthDiff < 0);
-
-    if (isUnderage) {
-      return res.status(400).send({ message: 'You must be at least 18 years old' });
     }
 
     const updatedTourist = await userModel.findOneAndUpdate({ username }, updateData, { new: true });

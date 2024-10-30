@@ -107,27 +107,9 @@ const updateAdvertiser = async (req, res) => {
     try {
        const {name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen, creatorId} = req.body;
  
-       if (!name || !description || !date || !time || !location || !price || !category || !tags || !specialDiscounts || isBookingOpen === undefined || !creatorId) {
-          return res.status(400).json({ message: "All required fields must be provided." });
-       }
- 
-       if (typeof name !== 'string'||typeof description !== 'string' ) {
-        return res.status(400).json({ message: "Must be a string" });
-       }
-       if (typeof price !== 'number' || price <= 0) {
-          return res.status(400).json({ message: "Price must be a positive number." });
-       }
- 
-       if (specialDiscounts && (typeof specialDiscounts !== 'number' || specialDiscounts < 0)) {
-          return res.status(400).json({ message: "Special discounts must be a non-negative number." });
-       }
-
-       if(typeof creatorId !== 'number')
-       {
-         return res.status(400).json({ message: "ID must be a number."});
-       }
  
        const newActivity = new activityModel({
+          name,
           description,
           date,
           time,
@@ -136,14 +118,15 @@ const updateAdvertiser = async (req, res) => {
           category,
           tags,
           specialDiscounts: specialDiscounts || 0, 
-          isBookingOpen: isBookingOpen !== undefined ? isBookingOpen : true, 
+          isBookingOpen: isBookingOpen !== undefined ? isBookingOpen : true,
+          creatorId 
        });
  
        await newActivity.save();
  
-       res.status(201).json({ message: "Booking added successfully", booking: newBooking });
+       res.status(201).json({ message: "Activity added successfully", activity: newActivity });
     } catch (error) {
-       res.status(500).json({ message: "Error adding booking", error: error.message });
+       res.status(500).json({ message: "Error adding activity", error: error.message });
     }
  };
  
