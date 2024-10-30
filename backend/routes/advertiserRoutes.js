@@ -7,10 +7,10 @@ router.post('/addAdvertiser', advertiserController.createAdvertiser);
 router.put('/updateAdvertiser', advertiserController.updateAdvertiser);
 router.get('/getAdvertiser', advertiserController.getAdvertiser);
 
-router.post("/activity/addActivivty",advertiserController.addActivity);
-router.put("/activity/editActivivty/:id",advertiserController.editActivity);
-router.get("/activity/viewActivivties",advertiserController.viewActivities);
-router.delete("/activity/deleteActivivty/:id",advertiserController.deleteActvivty);
+router.post("/activity/addActivity",advertiserController.addActivity);
+router.put("/activity/editActivity/:id",advertiserController.editActivity);
+router.get("/activity/viewActivities",advertiserController.viewActivities);
+router.delete("/activity/deleteActivity/:id",advertiserController.deleteActvivty);
 router.get("/activity/viewMyActivities/:creatorId", advertiserController.viewMyActivities);
 
 export default router;

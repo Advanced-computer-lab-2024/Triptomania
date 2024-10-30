@@ -18,10 +18,10 @@ const app = express();
 
 // Enable express to parse JSON
 
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('controllers'));
-app.use(cors());
 
 app.use(express.static('frontend'));
 
