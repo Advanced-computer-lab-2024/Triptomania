@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Events and Itineraries</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #eef2f3;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 1px #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin: 30px 0;
+        }
+
+        .section h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #2980b9;
+            padding-bottom: 10px;
+        }
+
+        .event {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            transition: transform 0.2s;
+        }
+
+        .event:hover {
+            transform: scale(1.02);
+            border-color: #2980b9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .event h3 {
+            margin: 0 0 10px 0;
+            color: #34495e;
+        }
+
+        .event p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .event {
+                padding: 10px;
+            }
+        }
+
+        /* New Styles for Filters and Sorting */
+        .filter-sort {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f3f3f3;
+            border-radius: 8px;
+        }
+
+        .filter-sort label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .filter-sort input, 
+        .filter-sort select, 
+        .filter-sort button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Upcoming Activities, Itineraries, and Historical Places</h1>
+
+    <div class="filter-sort">
+        <h2>Filter and Sort Itineraries</h2>
+        <h3>Filter Itineraries</h3>
+        <label for="budget">Budget (max):</label>
+        <input type="number" id="budget" placeholder="Enter maximum budget">
+
+        <label for="date">Available From Date:</label>
+        <input type="date" id="date">
+
+        <label for="preferences">Preferences (comma-separated):</label>
+        <input type="text" id="preferences" placeholder="e.g., beaches,family-friendly">
+
+        <label for="language">Language:</label>
+        <input type="text" id="language" placeholder="Enter preferred language">
+
+        <button id="filterBtn">Filter Itineraries</button>
+
+        <h3>Sort Itineraries</h3>
+        <label for="sortBy">Sort By:</label>
+        <select id="sortBy" multiple>
+            <option value="price">Price</option>
+            <option value="duration">Duration</option>
+        </select>
+
+        <label for="order">Order:</label>
+        <select id="order">
+            <option value="low">Low to High</option>
+            <option value="high">High to Low</option>
+        </select>
+
+        <button id="sortBtn">Sort Itineraries</button>
+    </div>
+
+    <div class="section">
+        <h2>Upcoming Activities</h2>
+        <div id="activities"></div>
+    </div>
+
+    <div class="section">
+        <h2>Upcoming Itineraries</h2>
+        <div id="itineraries"></div>
+    </div>
+
+    <div class="section">
+        <h2>Historical Places/Museums</h2>
+        <div id="historicalPlaces"></div>
+    </div>
+
+    <div class="loading" id="loading">Loading...</div>
+    <div class="error" id="error"></div>
+</div>
+
+<script>
+    async function fetchUpcomingEvents() {
+        try {
+            const response = await fetch('http://localhost:5000/api/tourist/upcoming');
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok, status: ' + response.status);
+            }
+
+            const data = await response.json();
+            console.log('Data received:', data);
+
+            // Hide loading text
+            document.getElementById('loading').style.display = 'none';
+
+            const activities = data.upcomingActivities || [];
+            const itineraries = data.upcomingItineraries || [];
+            const historicalPlaces = data.HistoricalPlaces || [];
+
+            const excludeFields = ['_id', 'createdAt', 'updatedAt', '__v'];
+
+            // Display activities
+            const activitiesDiv = document.getElementById('activities');
+            if (activities.length === 0) {
+                activitiesDiv.innerHTML = '<p>No upcoming activities found.</p>';
+            } else {
+                activities.forEach(activity => {
+                    const activityElement = document.createElement('div');
+                    activityElement.className = 'event';
+
+                    activityElement.innerHTML = Object.keys(activity)
+                        .filter(key => !excludeFields.includes(key))
+                        .map(key => {
+                            let value = activity[key];
+                            if (key === 'price') {
+                                return `<p><strong>Price:</strong> ${value}</p>`; // Only show single price
+                            }
+                            return `<p><strong>${capitalizeFirstLetter(key)}:</strong> ${value}</p>`;
+                        }).join('');
+
+                    activitiesDiv.appendChild(activityElement);
+                });
+            }
+
+            // Display itineraries
+            const itinerariesDiv = document.getElementById('itineraries');
+            if (itineraries.length === 0) {
+                itinerariesDiv.innerHTML = '<p>No upcoming itineraries found.</p>';
+            } else {
+                itineraries.forEach(itinerary => {
+                    const itineraryElement = document.createElement('div');
+                    itineraryElement.className = 'event';
+
+                    itineraryElement.innerHTML = Object.keys(itinerary)
+                        .filter(key => !excludeFields.includes(key))
+                        .map(key => {
+                            let value = itinerary[key];
+                            if (key === 'price') {
+                                return `<p><strong>Price:</strong> ${value}</p>`; // Only show single price
+                            }
+                            return `<p><strong>${capitalizeFirstLetter(key)}:</strong> ${value}</p>`;
+                        }).join('');
+
+                    itinerariesDiv.appendChild(itineraryElement);
+                });
+            }
+
+            // Display historical places
+            const historicalPlacesDiv = document.getElementById('historicalPlaces');
+            if (historicalPlaces.length === 0) {
+                historicalPlacesDiv.innerHTML = '<p>No historical places found.</p>';
+            } else {
+                historicalPlaces.forEach(place => {
+                    const placeElement = document.createElement('div');
+                    placeElement.className = 'event';
+
+                    placeElement.innerHTML = `
+                        <h3>${place.Name}</h3>
+                        <p><strong>Description:</strong> ${place.Description}</p>
+                        <p><strong>Picture:</strong> <img src="${place.Picture}" alt="${place.Name}"></p>
+                        <p><strong>Location:</strong> ${place.Location}</p>
+                        <p><strong>Opening Hours:</strong> ${place.Opening_hours}</p>
+                        <p><strong>Closing Hours:</strong> ${place.Closing_hours}</p>
+                        <p><strong>Category:</strong> ${place.Category}</p>
+                        <p><strong>Tags:</strong> ${place.Tags.join(', ')}</p>
+                        ${generateTicketPriceHTML(place.Ticket_prices)} <!-- Display multi-tier prices for historical places -->
+                    `;
+
+                    historicalPlacesDiv.appendChild(placeElement);
+                });
+            }
+
+        } catch (error) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').innerText = 'An error occurred while fetching results: ' + error.message;
+            console.error('Error fetching upcoming events:', error);
+        }
+    }
+
+    // Function to generate HTML for ticket prices in historical places
+    function generateTicketPriceHTML(ticketPrice) {
+        const foreignPrice = ticketPrice * 2;
+        const studentPrice = ticketPrice * 0.5;
+        return `
+            <p><strong>Ticket Prices (Native):</strong> ${ticketPrice}</p>
+            <p><strong>Ticket Prices (Foreigner):</strong> ${foreignPrice}</p>
+            <p><strong>Ticket Prices (Student):</strong> ${studentPrice}</p>
+        `;
+    }
+
+    // Utility function to capitalize the first letter of each key
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1).replace(/([A-Z])/g, ' $1');
+    }
+
+    // Filter and sort functionality
+    document.getElementById('filterBtn').addEventListener('click', () => {
+        const budget = document.getElementById('budget').value;
+        const date = document.getElementById('date').value;
+        const preferences = document.getElementById('preferences').value.split(',').map(p => p.trim());
+        const language = document.getElementById('language').value;
+
+        // Implement your filter logic here, possibly by calling a new API endpoint with these parameters
+        console.log('Filtering itineraries with:', { budget, date, preferences, language });
+    });
+
+    document.getElementById('sortBtn').addEventListener('click', () => {
+        const sortBy = Array.from(document.getElementById('sortBy').selectedOptions).map(option => option.value);
+        const order = document.getElementById('order').value;
+
+        // Implement your sort logic here, possibly by calling a new API endpoint with these parameters
+        console.log('Sorting itineraries by:', { sortBy, order });
+    });
+
+    //// Call the function to fetch upcoming events
+    fetchUpcomingEvents();
+</script>
+
+</body>
+</html>

@@ -37,8 +37,8 @@ const activitySchema = new Schema({
     required: true,
   }],
   specialDiscounts: {
-    type: Number,
-    default: 0,   
+    type: [String],
+    default: [],   
   },
   isBookingOpen: {
     type: Boolean,
