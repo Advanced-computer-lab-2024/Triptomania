@@ -49,6 +49,11 @@ const activitySchema = new Schema({
       type: mongoose.Types.ObjectId,
       required: true,
   },
+  ratings: 
+  {
+      type: Number,
+      default: 0,
+  },
 }, { timestamps: true });
 
 const Activity = mongoose.model('Activity', activitySchema);

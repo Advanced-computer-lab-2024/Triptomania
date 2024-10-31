@@ -1,35 +1,40 @@
-import HistoricalPlace from '../../models/historicalPlace.js'; // Adjusted to match naming convention
+import mongoose from 'mongoose';
+import HistoricalPlace from '../../models/historicalPlace.js';
 
-// Filter historical places/museums by tag
-export const filterByTag = async (req, res) => {
+const filterByTag = async (req, res) => {
     try {
-        const tag = req.query.tag; // Get the tag from the request query
-        console.log('Filter tag:', tag); // Log the filter tag
+        const tags = req.query.tags; // Retrieve the tags from the request query
 
-        if (!tag) {
-            // If no tag is provided, return all historical places
+        if (!tags) {
+            // If no tags are provided, return all historical places
             const historicalPlaces = await HistoricalPlace.find(); // Fetch all places
             return res.status(200).json({ message: "Fetched all historical places", historicalPlaces });
         }
 
-        // Find historical places that match the tag
+        // Convert tags to an array of MongoDB ObjectIds
+        const tagIds = Array.isArray(tags)
+            ? tags.map(tag => mongoose.Types.ObjectId(tag)) // Convert each tag to ObjectId
+            : [mongoose.Types.ObjectId(tags)]; // Single tag case
+
+        // Find historical places where the Tags field contains any of the specified tag IDs
         const historicalPlaces = await HistoricalPlace.find({
-            Tags: { $regex: tag, $options: 'i' } // Case-insensitive search
-        });
+            Tags: { $in: tagIds }
+        }).populate('Tags'); // Populate to retrieve full tag info if needed
 
         // Check if any places were found
         if (historicalPlaces.length === 0) {
-            return res.status(404).json({ message: 'No historical places found for the given tag.' });
+            return res.status(404).json({ message: 'No historical places found for the given tags.' });
         }
 
         // Return the filtered results
-        return res.status(200).json({ message: "Fetched historical places by tag", historicalPlaces });
+        return res.status(200).json({ message: "Fetched historical places by tags", historicalPlaces });
 
     } catch (error) {
         console.error('Error in filterByTag function:', error); // Log the error
-        return res.status(500).json({ error: 'Error occurred while filtering historical places by tag.' });
+        return res.status(500).json({ error: 'Error occurred while filtering historical places by tags.' });
     }
 };
-export default{
+
+export default {
     filterByTag
-}
+};

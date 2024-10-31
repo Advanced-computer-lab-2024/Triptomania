@@ -64,13 +64,13 @@ const itinerarySchema = new Schema({
     bookingMade:
     {
         type: [mongoose.Types.ObjectId],
-        required: true, // Check if booking is made
+        default: []
     },
-    Start_date:
-    {
-        type: String, // DD/MM/YYYY Date type
-        required: true,
-    },
+    preferenceTags: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'preferencetags',
+        required: false,
+    }],
     End_date:
     {
         type: String, // DD/MM/YYYY Date type

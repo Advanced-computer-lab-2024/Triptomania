@@ -4,7 +4,7 @@ import  viewUpcoming  from '../controllers/shared/viewController.js'; // Adjust 
 import filterByTag from '../controllers/shared/filterController.js';
 import touristController from '../controllers/tourist/touristController.js';
 import productController from '../controllers/shared/productController.js';
-import filterItineraries from '../controllers/shared/activityController.js';
+import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
 const router = express.Router();
 
@@ -12,8 +12,8 @@ const router = express.Router();
 router.post('/search', search.search);
 router.get('/upcoming', viewUpcoming.viewUpcoming);
 router.get('/filterByTag', filterByTag.filterByTag);
-router.get('/filterItineraries',filterItineraries.filterItineraries);
-router.get('/sort',filterItineraries.sortItineraries);
+router.get('/filterItineraries',itineraryController.filterItineraries);
+router.get('/sort',itineraryController.sortItineraries);
 
 router.post('/addTourist', touristController.CreateTourist);
 router.put('/updateTourist', touristController.UpdateTourist);
@@ -25,8 +25,8 @@ router.get("/activity/viewActivities",activityController.viewActivities);
 router.get("/activity/filterActivities",activityController.filterActivities);
 
 
-router.get("/itineraries/sortItineraries" , activityController.sortItineraries);
-router.get("/itineraries/filtertineraries" , activityController.filterItineraries);
+router.get("/itineraries/sortItineraries" , itineraryController.sortItineraries);
+router.get("/itineraries/filtertineraries" , itineraryController.filterItineraries);
 
 router.get("/product/viewProducts",productController.viewProducts);
 router.get("/product/searchProducts",productController.searchProduct);

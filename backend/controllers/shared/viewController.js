@@ -5,32 +5,34 @@ import HistoricalPlace from '../../models/historicalPlace.js';
 // Fetch all upcoming activities, itineraries, and historical places/museums
 export const viewUpcoming = async (req, res) => {
     try {
-        const currentDate = new Date(); // Get the current date
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0); // Set time to midnight (00:00:00) to include all of today
 
-        // Find all upcoming activities with a future date
+        // Find all activities with a date today or in the future
         const upcomingActivities = await Activity.find({
-            date: { $gte: currentDate }
+            date: { $gte: startOfToday }
         });
 
-        // Find all upcoming itineraries with a future date
+        // Find all itineraries with a date today or in the future
         const upcomingItineraries = await Itinerary.find({
-            date: { $gte: currentDate }
+            date: { $gte: startOfToday }
         });
 
         // Fetch all historical places/museums (no date constraints)
-        const HistoricalPlaces = await HistoricalPlace.find();
+        const historicalPlaces = await HistoricalPlace.find();
 
         // Return the results in a combined response
         res.status(200).json({
             upcomingActivities,
             upcomingItineraries,
-            HistoricalPlaces
+            historicalPlaces
         });
 
     } catch (error) {
         res.status(500).json({ error: 'Error occurred while fetching upcoming data' });
     }
 };
-export default{
+
+export default {
     viewUpcoming
-}
+};

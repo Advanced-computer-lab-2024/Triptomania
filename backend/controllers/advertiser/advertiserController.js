@@ -106,7 +106,10 @@ const updateAdvertiser = async (req, res) => {
  const addActivity = async (req, res) => {
     try {
        const {name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen, creatorId} = req.body;
- 
+      
+       if (!tags) {
+        tags = [];
+       }
  
        const newActivity = new activityModel({
           name,

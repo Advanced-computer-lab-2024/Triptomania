@@ -47,12 +47,12 @@ const getItinerary = async (req, res) => {
 
 const addItinerary = async (req, res) => {
   try {
-    const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, bookingMade, Start_date, End_date, Tags, creatorId } = req.body;
+    const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff,  Start_date, End_date, Tags, creatorId, preferenceTags } = req.body;
 
-    // Check that parameters are not empty
-    if (!Name || !activities || !locationsToVisit || !timeLine || !duration || !language || !price || !availableDates || !availableTimes || !pickUp || !dropOff || !bookingMade || !creatorId) {
-      return res.status(400).json({ message: "All required fields must be provided." });
-    }
+    // // Check that parameters are not empty
+    // if (!Name || !activities || !locationsToVisit || !timeLine || !duration || !language || !price || !availableDates || !availableTimes || !pickUp || !dropOff || !bookingMade || !creatorId) {
+    //   return res.status(400).json({ message: "All required fields must be provided." });
+    // }
 
     // Check that parameters' type is right
     // if(typeof Name !== 'string')
@@ -104,7 +104,10 @@ const addItinerary = async (req, res) => {
     // {
     //     return res.status(400).json({ message: "Drop off must be a string"});
     // }
-    const newItinerary = new itineraryModel({ Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, bookingMade, Start_date, End_date, Tags, creatorId });
+    if (!preferenceTags) {
+      preferenceTags = [];
+    }
+    const newItinerary = new itineraryModel({ Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, Start_date, End_date, Tags, creatorId, preferenceTags });
     await newItinerary.save();
     res.status(201).json({
       status: true,
@@ -233,6 +236,91 @@ const getMyItineraries = async (req, res) => {
   }
 };
 
+const sortItineraries = async (req, res) => {
+  try {
+      const { order, sortBy } = req.body;
+
+      // Validate 'order'
+      if (!order || (order !== 'high' && order !== 'low')) {
+          return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
+      }
+
+      // Validate 'sortBy' for at least price, duration, or both
+      if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('duration'))) {
+          return res.status(400).json({ message: "Invalid sort option. Use 'price', 'duration', or both." });
+      }
+
+      // Determine sort order: -1 for descending (high), 1 for ascending (low)
+      const sortOrder = order === 'high' ? -1 : 1;
+
+      // Build dynamic sortOption based on sortBy
+      let sortOption = {};
+      if (sortBy.includes('price')) {
+          sortOption.price = sortOrder; // Add sorting by price
+      }
+      if (sortBy.includes('duration')) {
+          sortOption.duration = sortOrder; // Add sorting by duration
+      }
+
+      // Fetch and sort itineraries
+      const itineraries = await itineraryModel.find().sort(sortOption);
+              // Handle no itineraries found
+              if (itineraries.length === 0) {
+                return res.status(404).json({ message: 'No itineraries found.' });
+            }
+    
+            // Return sorted itineraries
+            res.status(200).json(itineraries);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error sorting itineraries', error: error.message });
+        }
+    };
+    
+
+
+
+
+    const filterItineraries = async (req, res) => {
+      try {
+          const { budget, date, preferences, language } = req.query;
+  
+          const filters = {};
+  
+          // Filter by budget
+          if (budget) filters.price = { $lte: budget }; 
+          
+          // Filter by date (only include itineraries with available dates greater than or equal to the specified date)
+          if (date) {
+              // Convert the date string to a Date object for comparison
+              const parsedDate = new Date(date);
+              filters.availableDates = { $gte: parsedDate }; // Match itineraries with available dates on or after the specified date
+          } 
+          
+          // Filter by preferences (assuming preferences is a comma-separated string of ObjectIds)
+          if (preferences) {
+              const preferenceArray = preferences.split(',').map(id => mongoose.Types.ObjectId(id.trim())); // Convert string to ObjectIds
+              filters.preferenceTags = { $in: preferenceArray }; // Match itineraries with any of the specified preference tags
+          } 
+          
+          // Filter by language
+          if (language) filters.language = language; 
+  
+          // Fetch the filtered itineraries
+          const filteredItineraries = await Itinerary.find(filters).sort({ availableDates: 1 }); 
+  
+          // Handle case where no itineraries are found
+          if (filteredItineraries.length === 0) {
+              return res.status(404).json({ message: 'No itineraries found matching your criteria.' });
+          }
+  
+          // Return filtered itineraries
+          res.status(200).json(filteredItineraries);
+      } catch (error) {
+          console.error(error); // Log the error for debugging purposes
+          res.status(500).json({ message: "Error filtering itineraries", error: error.message });
+      }
+  };
 
 export default
   {
@@ -241,5 +329,7 @@ export default
     editItinerary,
     deleteItinerary,
     getItineraries,
-    getMyItineraries
+    getMyItineraries,
+    sortItineraries,
+    filterItineraries
   }

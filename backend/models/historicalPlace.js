@@ -5,12 +5,11 @@ const historicalPlaceSchema = new Schema({
     Name: {
         type: String,
         required: true,
-      },
-   
+    },
     Description: {
         type: String,
         required: true,
-      },
+    },
     Picture: {
         type: String,
         required: true, 
@@ -31,20 +30,20 @@ const historicalPlaceSchema = new Schema({
         type: Number,
         required: true,
     },
-    Category: {    //check 
+    Category: {
         type: String,
         required: true,
     },
-    Tags: {       //check
-        type: [String],
+    Tags: [{         // References the `tags` collection
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'tags',  // Referencing the `tags` collection model
         required: false,
+    }],
+    creatorId: {
+        type: mongoose.Types.ObjectId,
+        ref: 'tourismgoverners',
+        required: true,
     },
-    creatorId: 
-  {
-    type: mongoose.Types.ObjectId,
-    ref: 'tourismgoverners',
-    required: true,
-  },
 }, { timestamps: true });
 
 const HistoricalPlace = mongoose.model('HistoricalPlace', historicalPlaceSchema);

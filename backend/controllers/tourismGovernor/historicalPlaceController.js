@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import historicalPlaceModel from '../../models/historicalPlace.js';
-import HistoricalPlace from '../../models/historicalPlace.js';
 
 const getHistoricalPlaces = async (req, res) => {
     try {
