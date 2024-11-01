@@ -126,7 +126,7 @@
     // Fetch tags from the API to populate the dropdown list
     async function fetchTags() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourismGoverner/getTags');
+            const response = await fetch('http://localhost:5000/api/tourismGovernor/getTags');
             if (!response.ok) {
                 throw new Error('Error fetching tags');
             }
