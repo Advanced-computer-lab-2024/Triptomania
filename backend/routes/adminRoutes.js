@@ -10,44 +10,298 @@ import advertiserController from '../controllers/advertiser/advertiserController
 
 const router = express.Router();
 
-// add a new activity category
+/**
+ * @swagger
+ * tags:
+ *   - name: Admin
+ *     description: All admin-related endpoints for managing activities, preference tags, users, and products
+ */
+
+/**
+ * @swagger
+ * /api/admin/activities/addCategory:
+ *   post:
+ *     summary: Add a new activity category
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Activity category added successfully
+ */
 router.post('/activities/addCategory', activityController.addCategory);
-// get all activity categories
+
+/**
+ * @swagger
+ * /api/admin/activities/getCategories:
+ *   get:
+ *     summary: Get all activity categories
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of activity categories
+ */
 router.get('/activities/getCategories', activityController.getCategories);
-// update an activity category
+
+/**
+ * @swagger
+ * /api/admin/activities/editCategory/{id}:
+ *   put:
+ *     summary: Update an activity category
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the activity category to update
+ *     responses:
+ *       200:
+ *         description: Activity category updated successfully
+ */
 router.put('/activities/editCategory/:id', activityController.editCategory);
-// delete an activity category
+
+/**
+ * @swagger
+ * /api/admin/activities/deleteCategory/{id}:
+ *   delete:
+ *     summary: Delete an activity category
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the activity category to delete
+ *     responses:
+ *       200:
+ *         description: Activity category deleted successfully
+ */
 router.delete('/activities/deleteCategory/:id', activityController.deleteCategory);
 
-// add a new preference tag
+/**
+ * @swagger
+ * /api/admin/tags/addPreferenceTag:
+ *   post:
+ *     summary: Add a new preference tag
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Preference tag added successfully
+ */
 router.post('/tags/addPreferenceTag', preferenceTagController.addPreferenceTag);
-// get all preference tags
+
+/**
+ * @swagger
+ * /api/admin/tags/getPreferenceTags:
+ *   get:
+ *     summary: Get all preference tags
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of preference tags
+ */
 router.get('/tags/getPreferenceTags', preferenceTagController.getPreferenceTags);
-// update an preference tag
+
+/**
+ * @swagger
+ * /api/admin/tags/editPreferenceTag/{id}:
+ *   put:
+ *     summary: Update a preference tag
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the preference tag to update
+ *     responses:
+ *       200:
+ *         description: Preference tag updated successfully
+ */
 router.put('/tags/editPreferenceTag/:id', preferenceTagController.editPreferenceTag);
-// delete an preference tag
+
+/**
+ * @swagger
+ * /api/admin/tags/deletePreferenceTag/{id}:
+ *   delete:
+ *     summary: Delete a preference tag
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the preference tag to delete
+ *     responses:
+ *       200:
+ *         description: Preference tag deleted successfully
+ */
 router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePreferenceTag);
 
-// add an admin in the system
+/**
+ * @swagger
+ * /api/admin/addAdmin:
+ *   post:
+ *     summary: Add a new admin to the system
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Admin added successfully
+ */
 router.post('/addAdmin', adminController.addAdmin);
 
-// delete an account
+/**
+ * @swagger
+ * /api/admin/deleteAccount:
+ *   delete:
+ *     summary: Delete an account
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully
+ */
 router.delete('/deleteAccount', adminController.deleteAccount);
 
-// add a tourism governer in the system
+/**
+ * @swagger
+ * /api/admin/addTourismGoverner:
+ *   post:
+ *     summary: Add a new tourism governor to the system
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Tourism governor added successfully
+ */
 router.post('/addTourismGoverner', adminController.addTourismGoverner);
 
-router.post("/product/addProduct",productController.addProduct);
-router.put("/product/editProduct/:id",productController.editProduct);
-router.get("/product/viewProducts",productController.viewProducts);
-router.get("/product/searchProducts",productController.searchProduct);
-router.get("/product/filterProducts",productController.filterProducts);
-router.get("/product/sortProducts",productController.sortProducts);
+/**
+ * @swagger
+ * /api/admin/product/addProduct:
+ *   post:
+ *     summary: Add a new product
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Product added successfully
+ */
+router.post("/product/addProduct", productController.addProduct);
 
-// get all users
+/**
+ * @swagger
+ * /api/admin/product/editProduct/{id}:
+ *   put:
+ *     summary: Edit an existing product
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the product to edit
+ *     responses:
+ *       200:
+ *         description: Product edited successfully
+ */
+router.put("/product/editProduct/:id", productController.editProduct);
+
+/**
+ * @swagger
+ * /api/admin/product/viewProducts:
+ *   get:
+ *     summary: View all products
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of products
+ */
+router.get("/product/viewProducts", productController.viewProducts);
+
+/**
+ * @swagger
+ * /api/admin/product/searchProducts:
+ *   get:
+ *     summary: Search for products
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Search results for products
+ */
+router.get("/product/searchProducts", productController.searchProduct);
+
+/**
+ * @swagger
+ * /api/admin/product/filterProducts:
+ *   get:
+ *     summary: Filter products
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Filtered products list
+ */
+router.get("/product/filterProducts", productController.filterProducts);
+
+/**
+ * @swagger
+ * /api/admin/product/sortProducts:
+ *   get:
+ *     summary: Sort products
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Sorted products list
+ */
+router.get("/product/sortProducts", productController.sortProducts);
+
+/**
+ * @swagger
+ * /api/admin/getTourists:
+ *   get:
+ *     summary: Get all tourists
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of tourists
+ */
 router.get('/getTourists', touristController.getTourist);
+
+/**
+ * @swagger
+ * /api/admin/getSellers:
+ *   get:
+ *     summary: Get all sellers
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of sellers
+ */
 router.get('/getSellers', sellerController.getSeller);
+
+/**
+ * @swagger
+ * /api/admin/getTourGuides:
+ *   get:
+ *     summary: Get all tour guides
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of tour guides
+ */
 router.get('/getTourGuides', tourGuideController.getTourGuide);
+
+/**
+ * @swagger
+ * /api/admin/getAdvertisers:
+ *   get:
+ *     summary: Get all advertisers
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of advertisers
+ */
 router.get('/getAdvertisers', advertiserController.getAdvertiser);
 
 export default router;
