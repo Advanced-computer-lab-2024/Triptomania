@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const id = urlParams.get("id");
 
     // Fetch historical place by ID
-    const response = await fetch(`http://localhost:5000/api/tourismGoverner/getHistoricalPlace/${id}`);
+    const response = await fetch(`http://localhost:5000/api/tourismGovernor/getHistoricalPlace/${id}`);
     const result = await response.json();
 
     if (result.status) {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = Object.fromEntries(formData.entries());
         const placeId = document.getElementById("placeId").value;
 
-        const response = await fetch(`http://localhost:5000/api/tourismGoverner/editHistoricalPlace/${placeId}`, {
+        const response = await fetch(`http://localhost:5000/api/tourismGovernor/editHistoricalPlace/${placeId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

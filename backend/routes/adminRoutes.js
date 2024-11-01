@@ -167,7 +167,7 @@ router.delete('/deleteAccount', adminController.deleteAccount);
 
 /**
  * @swagger
- * /api/admin/addTourismGoverner:
+ * /api/admin/addTourismGovernor:
  *   post:
  *     summary: Add a new tourism governor to the system
  *     tags: [Admin]
@@ -175,7 +175,7 @@ router.delete('/deleteAccount', adminController.deleteAccount);
  *       200:
  *         description: Tourism governor added successfully
  */
-router.post('/addTourismGoverner', adminController.addTourismGoverner);
+router.post('/addTourismGovernor', adminController.addTourismGovernor);
 
 /**
  * @swagger

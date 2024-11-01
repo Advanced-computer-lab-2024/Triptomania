@@ -2,42 +2,42 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 const Schema = mongoose.Schema;
 
-const tourismGovernerSchema = new Schema({
-    TourismGovernerName: {
+const tourismGovernorSchema = new Schema({
+    TourismGovernorName: {
         type: String,
         required: true,
     },
-    TourismGovernerUsername: {
+    TourismGovernorUsername: {
         type: String,
         required: true,
     },
-    TourismGovernerPassword: {
+    TourismGovernorPassword: {
         type: String,
         required: true,
     },
     type: {
         type: String,
-        default: 'tourismGoverner'  // Default value for the type field
+        default: 'tourismGovernor'  // Default value for the type field
     }
 });
 
-tourismGovernerSchema.pre('save', async function (next) {
-    const tourismGoverner = this;
+tourismGovernorSchema.pre('save', async function (next) {
+    const tourismGovernor = this;
 
-    if (!tourismGoverner.isModified('TourismGovenerPassword')) return next();
+    if (!tourismGovernor.isModified('TourismGovenerPassword')) return next();
 
     try {
         const saltRounds = 10;
-        tourismGoverner.TourismGovenerPassword = await bcrypt.hash(tourismGoverner.TourismGovenerPassword, saltRounds);
+        tourismGovernor.TourismGovenerPassword = await bcrypt.hash(tourismGovernor.TourismGovenerPassword, saltRounds);
         next();
     } catch (error) {
         next(error);
     }
 });
 
-tourismGovernerSchema.methods.comparePassword = async function (candidatePassword) {
+tourismGovernorSchema.methods.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.TourismGovenerPassword);
 };
 
-const TourismGoverner = mongoose.model('tourismGoverner', tourismGovernerSchema);
-export default TourismGoverner;
+const TourismGovernor = mongoose.model('tourismGovernor', tourismGovernorSchema);
+export default TourismGovernor;

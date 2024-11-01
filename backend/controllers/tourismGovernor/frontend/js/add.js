@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // Make the API request to add the historical place
-        fetch('http://localhost:5000/api/tourismGoverner/addHistoricalPlace', {
+        fetch('http://localhost:5000/api/tourismGovernor/addHistoricalPlace', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

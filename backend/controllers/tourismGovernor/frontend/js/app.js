@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Fetch all historical places
-    const response = await fetch('http://localhost:5000/api/tourismGoverner/getHistoricalPlaces');
+    const response = await fetch('http://localhost:5000/api/tourismGovernor/getHistoricalPlaces');
     const result = await response.json();
 
     if (result.status) {
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             placeDiv.querySelector(".deleteBtn").addEventListener("click", async (e) => {
                 const id = e.target.getAttribute("data-id");
                 if (confirm("Are you sure you want to delete this place?")) {
-                    await fetch(`http://localhost:5000/api/tourismGoverner/deleteHistoricalPlace/${id}`, {
+                    await fetch(`http://localhost:5000/api/tourismGovernor/deleteHistoricalPlace/${id}`, {
                         method: "DELETE"
                     });
                     window.location.reload();

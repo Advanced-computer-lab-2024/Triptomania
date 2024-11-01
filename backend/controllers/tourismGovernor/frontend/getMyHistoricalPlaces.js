@@ -1,4 +1,4 @@
-fetch(`http://localhost:5000/api/tourismGoverner/getMyHistoricalPlaces/${creatorId}`)
+fetch(`http://localhost:5000/api/tourismGovernor/getMyHistoricalPlaces/${creatorId}`)
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);

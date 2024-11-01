@@ -7,13 +7,13 @@ document.getElementById('governorForm').addEventListener('submit', async functio
     const password = document.getElementById('governorPassword').value;
 
     const data = {
-        tourismGovernerName: name,
-        tourismGovernerUsername: username,
-        tourismGovernerPassword: password
+        tourismGovernorName: name,
+        tourismGovernorUsername: username,
+        tourismGovernorPassword: password
     };
 
     try {
-        const response = await fetch('http://localhost:5000/api/admin/addTourismGoverner', {
+        const response = await fetch('http://localhost:5000/api/admin/addTourismGovernor', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

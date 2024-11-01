@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import adminModel from '../../models/admin.js';
 import touristModel from '../../models/tourist.js';
-import tourismGovernerModel from '../../models/tourismGovernor.js';
+import tourismGovernorModel from '../../models/tourismGovernor.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
@@ -52,8 +52,8 @@ const deleteAccount = async (req, res) => {
             case "advertiser":
                 deletedAccount = await advertiserModel.findByIdAndDelete(id); // Add await and capture result
                 break;
-            case "tourismGoverner":
-                deletedAccount = await tourismGovernerModel.findByIdAndDelete(id); // Add await and capture result
+            case "tourismGovernor":
+                deletedAccount = await tourismGovernorModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "admin":
                 deletedAccount = await adminModel.findByIdAndDelete(id); // Add await and capture result
@@ -75,24 +75,24 @@ const deleteAccount = async (req, res) => {
     }
 }
 
-const addTourismGoverner = async (req, res) => {
-    const { tourismGovernerName, tourismGovernerUsername, tourismGovernerPassword } = req.body;
+const addTourismGovernor = async (req, res) => {
+    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword } = req.body;
 
     // Validate required fields
-    if (!tourismGovernerName || !tourismGovernerUsername || !tourismGovernerPassword) {
+    if (!tourismGovernorName || !tourismGovernorUsername || !tourismGovernorPassword) {
         return res.status(400).json({ message: "Please fill in all fields" });
     }
 
     try {
         // Create a new instance of the tourism governor model
-        const tourismGoverner = new tourismGovernerModel({
-            TourismGovernerName: tourismGovernerName,
-            TourismGovernerUsername: tourismGovernerUsername,
-            TourismGovernerPassword: tourismGovernerPassword
+        const tourismGovernor = new tourismGovernorModel({
+            TourismGovernorName: tourismGovernorName,
+            TourismGovernorUsername: tourismGovernorUsername,
+            TourismGovernorPassword: tourismGovernorPassword
         });
 
         // Save the new tourism governor to the database
-        await tourismGoverner.save();
+        await tourismGovernor.save();
 
         // Respond with a success message
         res.status(201).json({ message: "Tourism Governor added successfully" });
@@ -108,5 +108,5 @@ const addTourismGoverner = async (req, res) => {
 export default {
     addAdmin,
     deleteAccount,
-    addTourismGoverner
+    addTourismGovernor
 }
