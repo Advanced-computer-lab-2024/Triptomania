@@ -54,6 +54,11 @@ const activitySchema = new Schema({
       type: Number,
       default: 0,
   },
+  comments:
+  {
+    type: [String],
+    required: false,
+  },
 }, { timestamps: true });
 
 const Activity = mongoose.model('Activity', activitySchema);
