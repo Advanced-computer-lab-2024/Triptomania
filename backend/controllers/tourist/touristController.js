@@ -136,44 +136,44 @@ const addComment = async (req, res) => {
   switch(type) 
   {
     case "activity":
-      const updatedActivity = await Activity.findByIdAndUpdate(
+      addedComment = await Activity.findByIdAndUpdate(
         activityId,
         { $push: { comments: comment } },
         { new: true } // Return the updated document
       );
   
       // Check if the activity was found and updated
-      if (!updatedActivity) {
+      if (!addedComment) {
         return res.status(404).json({ error: 'Activity not found' });
       }
   
-      res.status(200).json(updatedActivity); // Send the updated activity with the new comment
+      res.status(200).json(addedComment); // Send the updated activity with the new comment
     case "tourGuide":
-      const updatedTourGuide = await Activity.findByIdAndUpdate(
+      addedComment = await Activity.findByIdAndUpdate(
         activityId,
         { $push: { comments: comment } },
         { new: true } // Return the updated document
       );
   
       // Check if the tour guide was found and updated
-      if (!updatedTourGuide) {
+      if (!addedComment) {
         return res.status(404).json({ error: 'Tour guide not found' });
       }
   
-      res.status(200).json(updatedTourGuide); // Send the updated itinerary with the new comment
+      res.status(200).json(addedComment); // Send the updated itinerary with the new comment
     case "itinerary":
-      const updatedIitnerary = await Activity.findByIdAndUpdate(
+      addedComment = await Activity.findByIdAndUpdate(
         activityId,
         { $push: { comments: comment } },
         { new: true } // Return the updated document
       );
   
       // Check if the itinerary was found and updated
-      if (!updatedIitnerary) {
+      if (!addedComment) {
         return res.status(404).json({ error: 'Tour guide not found' });
       }
   
-      res.status(200).json(updatedIitnerary); // Send the updated itinerary with the new comment
+      res.status(200).json(addedComment); // Send the updated itinerary with the new comment
   }
   } catch(error) {
     console.log('Error:', error); // Log the error if there's any
