@@ -10,7 +10,7 @@ const UserSchema = new Schema({
     mobile: { type: String },
     yearsOfExperience: { type: Number },
     previousWork: { type: String },
-    comments:{type: [String],required: false},
+    comments:{type: [String],default: []},
     type: {type: String,default: 'tourGuide'}
 },{timestamps:true});
 

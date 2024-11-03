@@ -57,7 +57,7 @@ const activitySchema = new Schema({
   comments:
   {
     type: [String],
-    required: false,
+    default: [],
   },
 }, { timestamps: true });
 

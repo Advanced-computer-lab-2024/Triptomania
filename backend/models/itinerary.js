@@ -89,7 +89,7 @@ const itinerarySchema = new Schema({
     comments:
   {
     type: [String],
-    required: false,
+    default: [],
   },
 },  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
