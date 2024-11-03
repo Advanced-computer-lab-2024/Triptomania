@@ -121,10 +121,70 @@ const UpdateTourist = async (req, res) => {
   }
 };
 
+const addComment = async (req, res) => {
+  const { id, type } = req.body; // Get activityId and comment from the request body
+  
+  try {
+    // Check if ID exists
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid category ID format." });
+   }
+
+   let addedComment;
+
+  // Add comment depending on the type
+  switch(type) 
+  {
+    case "activity":
+      const updatedActivity = await Activity.findByIdAndUpdate(
+        activityId,
+        { $push: { comments: comment } },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if the activity was found and updated
+      if (!updatedActivity) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+  
+      res.status(200).json(updatedActivity); // Send the updated activity with the new comment
+    case "tourGuide":
+      const updatedTourGuide = await Activity.findByIdAndUpdate(
+        activityId,
+        { $push: { comments: comment } },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if the tour guide was found and updated
+      if (!updatedTourGuide) {
+        return res.status(404).json({ error: 'Tour guide not found' });
+      }
+  
+      res.status(200).json(updatedTourGuide); // Send the updated itinerary with the new comment
+    case "itinerary":
+      const updatedIitnerary = await Activity.findByIdAndUpdate(
+        activityId,
+        { $push: { comments: comment } },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if the itinerary was found and updated
+      if (!updatedIitnerary) {
+        return res.status(404).json({ error: 'Tour guide not found' });
+      }
+  
+      res.status(200).json(updatedIitnerary); // Send the updated itinerary with the new comment
+  }
+  } catch(error) {
+    console.log('Error:', error); // Log the error if there's any
+    res.status(400).json({ error: error.message });
+  }
+}
+
 
 
 
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist };
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, addComment};
