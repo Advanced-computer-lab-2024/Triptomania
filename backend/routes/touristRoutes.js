@@ -88,6 +88,8 @@ router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
  */
 router.post('/addTourist', touristController.CreateTourist);
 
+router.put('/redeem/:id', touristController.redeemPoints);
+
 /**
  * @swagger
  * /api/tourist/updateTourist:

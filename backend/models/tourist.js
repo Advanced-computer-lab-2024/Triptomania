@@ -43,6 +43,11 @@ const touristSchema = new Schema({
   },
   underage:{
     type: Boolean,
+  },
+  points:{
+    type: Number,
+    required: false,
+    default:0
   }
 }, { timestamps: true });
 
