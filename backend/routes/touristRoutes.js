@@ -210,7 +210,6 @@ router.get("/product/filterProducts", productController.filterProducts);
  */
 router.get("/product/sortProducts", productController.sortProducts);
 /**
- * 
  * @swagger
  * /api/tourist/rateTourGuide/{touristId}:
  *   post:
