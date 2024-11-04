@@ -73,7 +73,7 @@ const getOneTourist = async (req, res) => {
 // Update a tourist
 const UpdateTourist = async (req, res) => {
   try {
-    const { username, email, password, mobile, nationality, job_Student, wallet } = req.body;
+    const { username, email, password, mobile, nationality, job_Student, wallet, points } = req.body;
     console.log('Request Body:', req.body); // Log the incoming request
 
     // Fetch the existing tourist data
@@ -88,7 +88,8 @@ const UpdateTourist = async (req, res) => {
       mobile: mobile !== undefined ? mobile : existingTourist.mobile,
       nationality: nationality !== undefined ? nationality : existingTourist.nationality,
       job_Student: job_Student !== undefined ? job_Student : existingTourist.job_Student,
-      wallet: wallet !== undefined ? wallet : existingTourist.wallet
+      wallet: wallet !== undefined ? wallet : existingTourist.wallet,
+      points: points !== undefined ? points : existingTourist.points
     };
 
     // Remove undefined fields (optional as we've handled undefined values)
@@ -121,6 +122,39 @@ const UpdateTourist = async (req, res) => {
   }
 };
 
+const redeemPoints = async (req, res) => {
+
+    try{
+        const {id} = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+          return res.status(400).send({ message: 'Invalid ID format' });
+        }
+
+        const tourist = await userModel.findOne({ _id: id });
+
+    if (!tourist) {
+      return res.status(404).send({ message: 'Tourist not found' });
+    }
+
+    if (tourist.points % 5000 !== 0 || tourist.points < 5000 ) {
+      return res.status(400).json({ message: "Points must be a multiple of 5000 to redeem." });
+    }
+
+        const pointsToRedeem = tourist.points * 0.01;
+        tourist.wallet += pointsToRedeem;
+    
+    const redeemed = await userModel.findOneAndUpdate(
+      { _id: id },
+      { wallet: tourist.wallet, points: 0 },
+      { new: true }
+  );
+
+  res.status(200).json({ message: "wallet updated successfully" });
+} catch (error) {
+  res.status(500).json({ message: "Error updating wallet", error: error.message });
+}
+};
 const addComment = async (req, res) => {
   const { id, type } = req.body; // Get activityId and comment from the request body
   
@@ -213,4 +247,5 @@ const reviewProduct = async (req, res) => {
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints };
 export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, addComment, reviewProduct};
