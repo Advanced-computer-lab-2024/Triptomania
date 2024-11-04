@@ -1,5 +1,7 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
+import Itinerary from '../../models/itinerary.js'; // Adjust the path as necessary
+import tourguide from '../../models/tourGuide.js'; // Adjust the path as necessary
 import activityModel from '../../models/activity.js';
 import itineraryModel from '../../models/itinerary.js';
 
@@ -154,6 +156,151 @@ const redeemPoints = async (req, res) => {
   res.status(500).json({ message: "Error updating wallet", error: error.message });
 }
 };
+const addComment = async (req, res) => {
+  const { id, type } = req.body; // Get activityId and comment from the request body
+  
+  try {
+    // Check if ID exists
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid category ID format." });
+   }
+
+   let addedComment;
+
+  // Add comment depending on the type
+  switch(type) 
+  {
+    case "activity":
+      addedComment = await Activity.findByIdAndUpdate(
+        activityId,
+        { $push: { comments: comment } },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if the activity was found and updated
+      if (!addedComment) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+  
+      res.status(200).json(addedComment); // Send the updated activity with the new comment
+    case "tourGuide":
+      addedComment = await Activity.findByIdAndUpdate(
+        activityId,
+        { $push: { comments: comment } },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if the tour guide was found and updated
+      if (!addedComment) {
+        return res.status(404).json({ error: 'Tour guide not found' });
+      }
+  
+      res.status(200).json(addedComment); // Send the updated itinerary with the new comment
+    case "itinerary":
+      addedComment = await Activity.findByIdAndUpdate(
+        activityId,
+        { $push: { comments: comment } },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if the itinerary was found and updated
+      if (!addedComment) {
+        return res.status(404).json({ error: 'Tour guide not found' });
+      }
+  
+      res.status(200).json(addedComment); // Send the updated itinerary with the new comment
+  }
+  } catch(error) {
+    console.log('Error:', error); // Log the error if there's any
+    res.status(400).json({ error: error.message });
+  }
+}
+
+
+// Add review to a product
+const reviewProduct = async (req, res) => {
+  const { productId, review } = req.body; // Get productId and reviews from the request body
+  
+  try {
+    // Find the product by ID and add the review to the Reviews array
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $push: { Reviews: review } },
+      { new: true } // Return the updated document
+    );
+
+    // Check if the product was found and updated
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.status(200).json(updatedProduct); // Send the updated product with the new review
+  } catch (error) {
+    console.log('Error:', error); // Log the error if there's any
+    res.status(400).json({ error: error.message });
+  }
+};
+
+/////////////////////////////////////////////////////////////////
+export const rateTourGuide = async (req, res) => {
+  const { itineraryId, rating } = req.body; // Get itineraryId and rating from request body
+  const touristId = req.params.touristId; // Get touristId from URL parameters
+
+  try {
+      // Verify if the tourist exists
+      const tourist = await userModel.findById(touristId);
+      if (!tourist) return res.status(404).json({ error: 'Tourist not found' });
+
+      // Find the itinerary
+      const itinerary = await itineraryModel.findById(itineraryId);
+      if (!itinerary) return res.status(404).json({ error: 'Itinerary not found' });
+
+      // Check if the tourist completed the itinerary by checking bookingMade
+      if (!itinerary.bookingMade.includes(touristId)) {
+          return res.status(403).json({ error: 'You have not completed this itinerary' });
+      }
+
+      // Check if the itinerary has ended by comparing the end date with the current date
+      const currentDate = new Date();
+      const [day, month, year] = itinerary.End_date.split('/'); // Assuming format is DD/MM/YYYY
+      const endDate = new Date(year, month - 1, day); // JavaScript months are 0-indexed
+
+      if (endDate > currentDate) {
+          return res.status(403).json({ error: 'This itinerary has not ended yet; you cannot rate it' });
+      }
+
+      // Find the tour guide associated with the itinerary
+      const tourGuide = await tourguide.findById(itinerary.creatorId);
+      if (!tourGuide) return res.status(404).json({ error: 'Tour guide not found' });
+
+      // Check if the tourist has already rated this tour guide for the specific itinerary
+      const existingRatingIndex = tourGuide.ratings.findIndex(r => r.touristId.toString() === touristId);
+
+      if (existingRatingIndex !== -1) {
+          // Update the existing rating
+          tourGuide.ratings[existingRatingIndex].rating = rating;
+      } else {
+          // Add a new rating
+          tourGuide.ratings.push({ touristId, rating });
+      }
+
+      // Calculate new average rating
+      const totalRatings = tourGuide.ratings.length;
+      const sumRatings = tourGuide.ratings.reduce((sum, rate) => sum + rate.rating, 0);
+      tourGuide.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0; // Prevent division by zero
+
+      // Save the updated tour guide without triggering validation errors for required fields
+      await tourguide.findByIdAndUpdate(itinerary.creatorId, { ratings: tourGuide.ratings, averageRating: tourGuide.averageRating }, { new: true });
+
+      res.status(200).json({ message: 'Rating submitted successfully', averageRating: tourGuide.averageRating });
+  } catch (error) {
+      console.error("Error in rateTourGuide:", error); // Log the error for debugging
+      res.status(500).json({ error: 'Server error', details: error.message });
+  }
+};
+
+
+
 
 const chooseCategory = async (req, res) => { //frontend will be list of categories once tourist click on 
                                              // specific category all details of it appears
@@ -263,4 +410,5 @@ const bookItinerary = async (req, res) => {
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide};
+
