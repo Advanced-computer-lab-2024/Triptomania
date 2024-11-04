@@ -1,5 +1,7 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
+import Itinerary from '../../models/itinerary.js'; // Adjust the path as necessary
+import tourguide from '../../models/tourGuide.js'; // Adjust the path as necessary
 
 import mongoose from 'mongoose';
 import crypto from 'crypto';
@@ -241,17 +243,20 @@ const reviewProduct = async (req, res) => {
 };
 
 /////////////////////////////////////////////////////////////////
-
 export const rateTourGuide = async (req, res) => {
-  const { itineraryId, rating } = req.body;
-  const touristId = req.user._id;
+  const { itineraryId, rating } = req.body; // Get itineraryId and rating from request body
+  const touristId = req.params.touristId; // Get touristId from URL parameters
 
   try {
+      // Verify if the tourist exists
+      const tourist = await userModel.findById(touristId);
+      if (!tourist) return res.status(404).json({ error: 'Tourist not found' });
+
       // Find the itinerary
       const itinerary = await Itinerary.findById(itineraryId);
       if (!itinerary) return res.status(404).json({ error: 'Itinerary not found' });
-      
-      // Check if the tourist completed the itinerary
+
+      // Check if the tourist completed the itinerary by checking bookingMade
       if (!itinerary.bookingMade.includes(touristId)) {
           return res.status(403).json({ error: 'You have not completed this itinerary' });
       }
@@ -266,22 +271,32 @@ export const rateTourGuide = async (req, res) => {
       }
 
       // Find the tour guide associated with the itinerary
-      const tourGuide = await TourGuide.findById(itinerary.creatorId);
+      const tourGuide = await tourguide.findById(itinerary.creatorId);
       if (!tourGuide) return res.status(404).json({ error: 'Tour guide not found' });
 
-      // Add the tourist's rating to the tour guide's ratings array
-      tourGuide.ratings.push({ touristId, rating });
-      
+      // Check if the tourist has already rated this tour guide for the specific itinerary
+      const existingRatingIndex = tourGuide.ratings.findIndex(r => r.touristId.toString() === touristId);
+
+      if (existingRatingIndex !== -1) {
+          // Update the existing rating
+          tourGuide.ratings[existingRatingIndex].rating = rating;
+      } else {
+          // Add a new rating
+          tourGuide.ratings.push({ touristId, rating });
+      }
+
       // Calculate new average rating
       const totalRatings = tourGuide.ratings.length;
       const sumRatings = tourGuide.ratings.reduce((sum, rate) => sum + rate.rating, 0);
-      tourGuide.averageRating = sumRatings / totalRatings;
+      tourGuide.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0; // Prevent division by zero
 
-      await tourGuide.save();
+      // Save the updated tour guide without triggering validation errors for required fields
+      await tourguide.findByIdAndUpdate(itinerary.creatorId, { ratings: tourGuide.ratings, averageRating: tourGuide.averageRating }, { new: true });
 
       res.status(200).json({ message: 'Rating submitted successfully', averageRating: tourGuide.averageRating });
   } catch (error) {
-      res.status(500).json({ error: 'Server error' });
+      console.error("Error in rateTourGuide:", error); // Log the error for debugging
+      res.status(500).json({ error: 'Server error', details: error.message });
   }
 };
 

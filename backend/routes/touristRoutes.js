@@ -209,6 +209,74 @@ router.get("/product/filterProducts", productController.filterProducts);
  *         description: Sorted list of products
  */
 router.get("/product/sortProducts", productController.sortProducts);
+/**
+ * 
+ * @swagger
+ * /api/tourist/rateTourGuide/{touristId}:
+ *   post:
+ *     summary: Rate a tour guide after completing a tour
+ *     tags: [Tourist]
+ *     parameters:
+ *       - in: path
+ *         name: touristId
+ *         required: true
+ *         description: The ID of the tourist giving the rating
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               itineraryId:
+ *                 type: string
+ *                 description: The ID of the itinerary for which the tour guide is being rated
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 maximum: 5
+ *                 description: The rating value (0 to 5)
+ *     responses:
+ *       200:
+ *         description: Successfully rated the tour guide
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating submitted successfully."
+ *                 averageRating:
+ *                   type: number
+ *                   format: float
+ *                   description: The new average rating for the tour guide
+ *       400:
+ *         description: Invalid input, such as rating out of range or itinerary expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid rating value or itinerary has expired."
+ *       404:
+ *         description: Tour guide or itinerary not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Tour guide or itinerary not found."
+ */
+router.put('/rateTourGuide/:touristId', touristController.rateTourGuide);
+
 
 router.post("/comment/ :id", touristController.addComment);
 
