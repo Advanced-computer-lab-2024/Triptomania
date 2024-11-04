@@ -31,6 +31,11 @@ const activitySchema = new Schema({
     ref: 'activityCategory',
     required: true,
   },
+  bookingMade:
+    {
+        type: [mongoose.Types.ObjectId],
+        default: []
+    },
   tags: [{
     type: mongoose.Schema.Types.ObjectId, // Array of ObjectId referring to preferenceTags
     ref: 'preferenceTags',

@@ -90,6 +90,12 @@ router.post('/addTourist', touristController.CreateTourist);
 
 router.put('/redeem/:id', touristController.redeemPoints);
 
+router.get('/chooseCategory/:id', touristController.chooseCategory);
+
+router.put('/bookActivity/:activityId', touristController.bookActivity);
+
+router.put('/bookItinerary/:itineraryId', touristController.bookItinerary);
+
 /**
  * @swagger
  * /api/tourist/updateTourist:

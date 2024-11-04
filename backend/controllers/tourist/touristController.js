@@ -1,13 +1,12 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
+import activityModel from '../../models/activity.js';
+import itineraryModel from '../../models/itinerary.js';
 
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 
-// Function to hash passwords
-/*const hashPassword = (password) => {
-  return crypto.createHash('sha256').update(password).digest('hex'); // SHA-256 hash
-};*/
+import activityCategoryModel from '../../models/activityCategory.js';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
@@ -156,8 +155,112 @@ const redeemPoints = async (req, res) => {
 }
 };
 
+const chooseCategory = async (req, res) => { //frontend will be list of categories once tourist click on 
+                                             // specific category all details of it appears
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid category ID format." });
+    }
+
+
+    const category = await activityCategoryModel.findById(id);
+
+    if (!category) {
+        return res.status(404).json({ message: "Category not found." });
+    }
+
+   
+    res.status(200).json({ message: "Category details retrieved successfully", categoryDetails: category });
+} catch (error) {
+    res.status(500).json({ message: "Error retrieving category details", error: error.message });
+}
+
+};
+
+
+// Method for booking an activity
+const bookActivity = async (req, res) => {
+  const { activityId } = req.params; 
+  const { _id } = req.body; 
+
+  try {
+    // Check if the activity exists
+    const activity = await activityModel.findById(activityId);
+    if (!activity) {
+      return res.status(404).json({ message: 'Activity not found.' });
+    }
+
+    // Check if the tourist exists
+    const tourist = await userModel.findById(_id);
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found.' });
+    }
+
+    // Check if the tourist's wallet has enough funds
+    if (tourist.wallet < activity.price) {
+      return res.status(400).json({ message: 'Insufficient funds in wallet.' });
+    }
+
+    // Proceed with booking
+    activity.bookingMade.push(_id); // Add the touristId to the activity's bookingMade array
+    tourist.wallet -= activity.price; // Deduct the price from the tourist's wallet
+
+    // Save the updated activity and tourist objects
+    await activity.save(); // Save the updated activity with the new booking
+    await tourist.save(); // Save the updated tourist's wallet
+
+    res.status(200).json({ message: 'Activity booked successfully!', activity });
+  } catch (error) {
+    console.error('Error booking activity:', error);
+    res.status(500).json({ message: 'Error booking activity', error: error.message });
+  }
+};
+
+
+
+const bookItinerary = async (req, res) => {
+  const { itineraryId } = req.params; 
+  const { _id } = req.body; 
+
+  try {
+    // Check if the activity exists
+    const itinerary = await itineraryModel.findById(itineraryId);
+    if (!itinerary) {
+      return res.status(404).json({ message: 'Itinerary not found.' });
+    }
+
+    // Check if the tourist exists
+    const tourist = await userModel.findById(_id);
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found.' });
+    }
+
+    // Check if the tourist's wallet has enough funds
+    if (tourist.wallet < itinerary.price) {
+      return res.status(400).json({ message: 'Insufficient funds in wallet.' });
+    }
+
+    // Proceed with booking
+    itinerary.bookingMade.push(_id); 
+    tourist.wallet -= itinerary.price; // Deduct the price from the tourist's wallet
+
+    // Save the updated activity and tourist objects
+    await itinerary.save(); // Save the updated activity with the new booking
+    await tourist.save(); // Save the updated tourist's wallet
+
+    res.status(200).json({ message: 'Itinerary booked successfully!', itinerary });
+  } catch (error) {
+    console.error('Error booking activity:', error);
+    res.status(500).json({ message: 'Error booking itinerary', error: error.message });
+  }
+};
+
+
+
 
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints };
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary};
