@@ -277,19 +277,19 @@ export const rateTourGuide = async (req, res) => {
       const existingRatingIndex = tourGuide.ratings.findIndex(r => r.touristId.toString() === touristId);
 
       if (existingRatingIndex !== -1) {
-          // Update the existing rating
-          tourGuide.ratings[existingRatingIndex].rating = rating;
-      } else {
-          // Add a new rating
-          tourGuide.ratings.push({ touristId, rating });
+          // If the tourist has already rated, return a message
+          return res.status(400).json({ error: 'You have already rated this tour guide for this itinerary' });
       }
+
+      // Add a new rating
+      tourGuide.ratings.push({ touristId, rating });
 
       // Calculate new average rating
       const totalRatings = tourGuide.ratings.length;
       const sumRatings = tourGuide.ratings.reduce((sum, rate) => sum + rate.rating, 0);
       tourGuide.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0; // Prevent division by zero
 
-      // Save the updated tour guide without triggering validation errors for required fields
+      // Save the updated tour guide
       await tourguide.findByIdAndUpdate(itinerary.creatorId, { ratings: tourGuide.ratings, averageRating: tourGuide.averageRating }, { new: true });
 
       res.status(200).json({ message: 'Rating submitted successfully', averageRating: tourGuide.averageRating });
@@ -298,6 +298,7 @@ export const rateTourGuide = async (req, res) => {
       res.status(500).json({ error: 'Server error', details: error.message });
   }
 };
+
 
 
 
@@ -404,11 +405,55 @@ const bookItinerary = async (req, res) => {
   }
 };
 
+//////////////////////////////////////////////////////////////////////
+export const rateItinerary = async (req, res) => {
+  const { itineraryId, rating } = req.body;
+  const touristId = req.params.touristId;
+
+  try {
+      // Verify if the tourist (user) exists
+      const user = await userModel.findById(touristId);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      // Find the itinerary
+      const itinerary = await itineraryModel.findById(itineraryId);
+      if (!itinerary) return res.status(404).json({ message: 'Itinerary not found' });
+
+      // Check if the itinerary has ended by comparing the end date with the current date
+      const currentDate = new Date();
+      const [day, month, year] = itinerary.End_date.split('/'); // Assuming format is DD/MM/YYYY
+      const endDate = new Date(year, month - 1, day); // JavaScript months are 0-indexed
+
+      if (endDate > currentDate) {
+          return res.status(403).json({ message: 'This itinerary has not ended yet; you cannot rate it' });
+      }
+
+      // Check if the user has already rated this itinerary
+      if (itinerary.ratings && itinerary.ratings.some(r => r.touristId.equals(touristId))) {
+          return res.status(400).json({ message: 'You have already rated this itinerary' });
+      }
+
+      // Add the user's rating to the itinerary's ratings array
+      itinerary.ratings.push({ touristId, rating });
+
+      // Calculate new average rating
+      const totalRatings = itinerary.ratings.length;
+      const sumRatings = itinerary.ratings.reduce((sum, rate) => sum + rate.rating, 0);
+      itinerary.averageRating = sumRatings / totalRatings;
+
+      await itinerary.save();
+
+      res.status(200).json({ message: 'Rating submitted successfully', averageRating: itinerary.averageRating });
+  } catch (error) {
+      console.error("Error in rateItinerary:", error); // Log the error for debugging
+      res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
 
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary};
 
