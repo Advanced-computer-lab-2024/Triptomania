@@ -240,6 +240,51 @@ const reviewProduct = async (req, res) => {
   }
 };
 
+/////////////////////////////////////////////////////////////////
+
+export const rateTourGuide = async (req, res) => {
+  const { itineraryId, rating } = req.body;
+  const touristId = req.user._id;
+
+  try {
+      // Find the itinerary
+      const itinerary = await Itinerary.findById(itineraryId);
+      if (!itinerary) return res.status(404).json({ error: 'Itinerary not found' });
+      
+      // Check if the tourist completed the itinerary
+      if (!itinerary.bookingMade.includes(touristId)) {
+          return res.status(403).json({ error: 'You have not completed this itinerary' });
+      }
+
+      // Check if the itinerary has ended by comparing the end date with the current date
+      const currentDate = new Date();
+      const [day, month, year] = itinerary.End_date.split('/'); // Assuming format is DD/MM/YYYY
+      const endDate = new Date(year, month - 1, day); // JavaScript months are 0-indexed
+
+      if (endDate > currentDate) {
+          return res.status(403).json({ error: 'This itinerary has not ended yet; you cannot rate it' });
+      }
+
+      // Find the tour guide associated with the itinerary
+      const tourGuide = await TourGuide.findById(itinerary.creatorId);
+      if (!tourGuide) return res.status(404).json({ error: 'Tour guide not found' });
+
+      // Add the tourist's rating to the tour guide's ratings array
+      tourGuide.ratings.push({ touristId, rating });
+      
+      // Calculate new average rating
+      const totalRatings = tourGuide.ratings.length;
+      const sumRatings = tourGuide.ratings.reduce((sum, rate) => sum + rate.rating, 0);
+      tourGuide.averageRating = sumRatings / totalRatings;
+
+      await tourGuide.save();
+
+      res.status(200).json({ message: 'Rating submitted successfully', averageRating: tourGuide.averageRating });
+  } catch (error) {
+      res.status(500).json({ error: 'Server error' });
+  }
+};
+
 
 
 
@@ -247,4 +292,4 @@ const reviewProduct = async (req, res) => {
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, addComment, reviewProduct};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, addComment, reviewProduct,rateTourGuide};
