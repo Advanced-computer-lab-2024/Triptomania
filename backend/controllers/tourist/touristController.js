@@ -182,9 +182,35 @@ const addComment = async (req, res) => {
 }
 
 
+// Add review to a product
+const reviewProduct = async (req, res) => {
+  const { productId, review } = req.body; // Get productId and reviews from the request body
+  
+  try {
+    // Find the product by ID and add the review to the Reviews array
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $push: { Reviews: review } },
+      { new: true } // Return the updated document
+    );
+
+    // Check if the product was found and updated
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.status(200).json(updatedProduct); // Send the updated product with the new review
+  } catch (error) {
+    console.log('Error:', error); // Log the error if there's any
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, addComment};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, addComment, reviewProduct};

@@ -208,4 +208,8 @@ router.get("/product/filterProducts", productController.filterProducts);
  */
 router.get("/product/sortProducts", productController.sortProducts);
 
+router.post("/comment/ :id", touristController.addComment);
+
+router.post("/product/reviews/ :id", touristController.reviewProduct);
+
 export default router;
