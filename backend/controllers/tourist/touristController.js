@@ -247,5 +247,4 @@ const reviewProduct = async (req, res) => {
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints };
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, addComment, reviewProduct};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, addComment, reviewProduct};
