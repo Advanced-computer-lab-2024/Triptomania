@@ -86,6 +86,11 @@ const itinerarySchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
     },
+    comments:
+  {
+    type: [String],
+    default: [],
+  },
 },  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 export default Itinerary;
