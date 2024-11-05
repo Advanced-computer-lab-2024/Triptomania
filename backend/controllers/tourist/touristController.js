@@ -678,8 +678,65 @@ const updateBadge = async (tourist) => {
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
+const rateProduct = async (req, res) => {
+  const { productId, rating } = req.body; // Extract productId and rating from request body
+  const touristId = req.params.touristId; // Extract touristId from request parameters
+
+  // Check if all required fields are provided
+  if (!productId || rating === undefined || !touristId) {
+    return res.status(400).json({ message: 'Product ID, rating, and tourist ID are required' });
+  }
+
+  console.log('Tourist ID:', touristId);
+  console.log('Product ID:', productId);
+  console.log('Rating:', rating); // Log the rating to check its value
+
+  try {
+    // Validate input
+    if (rating < 0 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 0 and 5.' });
+    }
+
+    // Find the product
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found.' });
+    }
+
+    // Initialize ratings if undefined
+    if (!product.Rating) {
+      product.Rating = [];
+    }
+
+    // Check if the tourist has already rated this product
+    const hasRated = product.Rating.some(r => r.touristId && r.touristId.equals(touristId));
+    if (hasRated) {
+      return res.status(400).json({ message: 'You have already rated this product.' });
+    }
+
+    // Add a new rating
+    product.Rating.push({ touristId: new mongoose.Types.ObjectId(touristId), rating });
+
+    // Calculate new average rating
+    const totalRatings = product.Rating.length;
+    const sumRatings = product.Rating.reduce((sum, rate) => sum + rate.rating, 0);
+    
+    // Update averageRating
+    product.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
+
+    // Save the updated product
+    await product.save();
+
+    res.status(200).json({ message: 'Product rated successfully!', averageRating: product.averageRating });
+  } catch (error) {
+    console.error('Error rating product:', error);
+    res.status(500).json({ message: 'Error rating product', error: error.message });
+  }
+};
+
+//////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary,rateActivity, badge,processPayment};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary,rateActivity, badge,processPayment,rateProduct};
 
