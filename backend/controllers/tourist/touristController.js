@@ -3,6 +3,7 @@ import userModel from '../../models/tourist.js';
 import tourguide from '../../models/tourGuide.js'; // Adjust the path as necessary
 import activityModel from '../../models/activity.js';
 import itineraryModel from '../../models/itinerary.js';
+import productModel from '../../models/product.js';
 
 import mongoose from 'mongoose';
 import crypto from 'crypto';
@@ -566,8 +567,119 @@ async function rateActivity(req, res) {
 }
 
 //////////////////////////////////////////////////////////////////////
+const processPayment = async (req, res) => {
+  const { _id } = req.params; // Tourist ID
+  const { itemId } = req.body; // Item ID
+
+  try {
+    // Fetch the tourist by ID
+    const tourist = await userModel.findById(_id);
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found.' });
+    }
+
+    // Search for the item in Itinerary, Activity, and Product collections
+    let item = await itineraryModel.findById(itemId);
+    let itemType = 'itinerary';
+
+    if (!item) {
+      item = await activityModel.findById(itemId);
+      itemType = item ? 'activity' : itemType;
+    }
+
+    if (!item) {
+      item = await productModel.findById(itemId);
+      itemType = item ? 'product' : itemType;
+    }
+
+    // If item not found in any collection
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found in Itinerary, Activity, or Product collections.' });
+    }
+
+    // Log the item's price for debugging
+    const itemPrice = item.price || item.Price;
+
+    // Check for sufficient funds
+    if (tourist.wallet < itemPrice) {
+      return res.status(400).json({ message: 'Insufficient funds in wallet.' });
+    }
+
+    // Deduct the item's price from the tourist's wallet
+    tourist.wallet -= itemPrice; // Deduct from wallet
+
+    // Calculate loyalty points only for itineraries and activities
+    let pointsEarned = 0;
+
+    if (itemType === 'itinerary' || itemType === 'activity') {
+      if (tourist.level === 1) {
+        pointsEarned = itemPrice * 0.5;
+      } else if (tourist.level === 2) {
+        pointsEarned = itemPrice * 1;
+      } else if (tourist.level === 3) {
+        pointsEarned = itemPrice * 1.5;
+      }
+    }
+
+    // Update the tourist's points
+    tourist.points += pointsEarned;
+
+    // Call the method to update the badge and level
+    await updateBadge(tourist);
+
+    // Prepare update data for the tourist
+    const updateData = {
+      wallet: tourist.wallet,
+      points: tourist.points,
+      level: tourist.level, // Ensure level is included
+      badge: tourist.badge, // Ensure badge is included
+    };
+
+    // Update the tourist's information
+    const updatedTourist = await userModel.findByIdAndUpdate(_id, updateData, { new: true });
+    if (!updatedTourist) {
+      return res.status(404).json({ message: 'Tourist not found during update.' });
+    }
+
+    res.status(200).json({
+      message: 'Payment processed successfully!',
+      walletBalance: updatedTourist.wallet,
+      totalPoints: updatedTourist.points, // Include total points
+      badge: updatedTourist.badge, // Include updated badge
+      itemDetails: item,
+    });
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    res.status(500).json({ message: 'Error processing payment', error: error.message });
+  }
+};
+
+// Method to update badge and level
+const updateBadge = async (tourist) => {
+  try {
+    // Update the level and badge based on points
+    if (tourist.points <= 100000) {
+      tourist.level = 1;
+      tourist.badge = 'BRONZE';
+    } else if (tourist.points <= 500000) {
+      tourist.level = 2;
+      tourist.badge = 'SILVER';
+    } else {
+      tourist.level = 3;
+      tourist.badge = 'GOLD';
+    }
+
+    // Save the tourist document to update the database
+    await tourist.save();
+    console.log('Level and badge updated successfully!', tourist);
+  } catch (error) {
+    console.error('Error updating level and badge:', error);
+  }
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary,rateActivity, badge};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary,rateActivity, badge,processPayment};
 

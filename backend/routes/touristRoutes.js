@@ -353,6 +353,7 @@ router.put('/rateItinerary/:touristId', touristController.rateItinerary);
 
 router.put('/rateActivity/:touristId', touristController.rateActivity);//youssef
 
+router.put('/processPayment/:_id', touristController.processPayment);
 
 
 router.post("/comment/ :id", touristController.addComment);
