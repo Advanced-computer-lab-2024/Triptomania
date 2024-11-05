@@ -1,6 +1,5 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
-import Itinerary from '../../models/itinerary.js'; // Adjust the path as necessary
 import tourguide from '../../models/tourGuide.js'; // Adjust the path as necessary
 import activityModel from '../../models/activity.js';
 import itineraryModel from '../../models/itinerary.js';
@@ -404,11 +403,54 @@ const bookItinerary = async (req, res) => {
   }
 };
 
+const badge = async (req, res) => {
+  const { _id } = req.params;
 
+  try {
+
+    const tourist = await userModel.findById(_id);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found.' });
+    }
+
+ 
+    if (tourist.points <= 100000) {
+      tourist.level = 1;
+    } else if (tourist.points <= 500000) {
+      tourist.level = 2;
+    } else {
+      tourist.level = 3;
+    }
+
+
+    switch (tourist.level) {
+      case 1:
+        tourist.badge = 'BRONZE';
+        break;
+      case 2:
+        tourist.badge = 'SILVER';
+        break;
+      case 3:
+        tourist.badge = 'GOLD';
+        break;
+      default:
+        tourist.badge = 'BRONZE';
+    }
+
+
+    await tourist.save();
+
+    res.status(200).json({ message: 'Level and badge updated successfully!', tourist });
+  } catch (error) {
+    console.error('Error updating level and badge:', error);
+    res.status(500).json({ message: 'Error updating level and badge', error: error.message });
+  }
+};
 
 
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide, badge};
 

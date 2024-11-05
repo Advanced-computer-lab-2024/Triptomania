@@ -96,6 +96,8 @@ router.put('/bookActivity/:activityId', touristController.bookActivity);
 
 router.put('/bookItinerary/:itineraryId', touristController.bookItinerary);
 
+router.put('/badge/:_id', touristController.badge);
+
 /**
  * @swagger
  * /api/tourist/updateTourist:
