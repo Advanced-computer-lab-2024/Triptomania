@@ -15,7 +15,7 @@ const activitySchema = new Schema({
     required: true,
   },
   time: {
-    type: String,  
+    type: String,
     required: true,
   },
   location: {
@@ -27,41 +27,38 @@ const activitySchema = new Schema({
     required: true,
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId, // Refers to ObjectId of activityCategory
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'activityCategory',
     required: true,
   },
-  bookingMade:
-    {
-        type: [mongoose.Types.ObjectId],
-        default: []
-    },
+  bookingMade: {
+    type: [mongoose.Types.ObjectId],
+    default: []
+  },
   tags: [{
-    type: mongoose.Schema.Types.ObjectId, // Array of ObjectId referring to preferenceTags
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'preferenceTags',
     required: true,
   }],
   specialDiscounts: {
     type: [String],
-    default: [],   
+    default: [],
   },
   isBookingOpen: {
     type: Boolean,
-    default: true, 
+    default: true,
   },
-  creatorId: 
-  {
-      type: mongoose.Types.ObjectId,
-      required: true,
+  creatorId: {
+    type: mongoose.Types.ObjectId,
+    required: true,
   },
-  ratings: 
-  {
-      type: Number,
-      default: 0,
-  },
-  comments:
-  {
-    type: [String],
+  ratings: [{
+        touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
+        rating: { type: Number, min: 0, max: 5, required: true }
+    }],
+    averageRating: { type: Number, default: 0 },
+  comments: {
+        type: [String],
     default: [],
   },
 }, { timestamps: true });

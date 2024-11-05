@@ -283,6 +283,76 @@ router.get("/product/sortProducts", productController.sortProducts);
  *                   example: "Tour guide or itinerary not found."
  */
 router.put('/rateTourGuide/:touristId', touristController.rateTourGuide);
+/**
+ * @swagger
+ * /api/tourist/rateItinerary/{touristId}:
+ *   put:
+ *     summary: Rate an itinerary after completing the tour
+ *     tags: [Tourist]
+ *     parameters:
+ *       - in: path
+ *         name: touristId
+ *         required: true
+ *         description: The ID of the tourist giving the rating
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               itineraryId:
+ *                 type: string
+ *                 description: The ID of the itinerary being rated
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 maximum: 5
+ *                 description: The rating value (0 to 5)
+ *     responses:
+ *       200:
+ *         description: Successfully rated the itinerary
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating submitted successfully."
+ *                 averageRating:
+ *                   type: number
+ *                   format: float
+ *                   description: The new average rating for the itinerary
+ *       400:
+ *         description: Invalid input, such as rating out of range or itinerary expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid rating value or itinerary has expired."
+ *       404:
+ *         description: Itinerary not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Itinerary not found."
+ */
+
+router.put('/rateItinerary/:touristId', touristController.rateItinerary);
+
+router.put('/rateActivity/:touristId', touristController.rateActivity);//youssef
+
 
 
 router.post("/comment/ :id", touristController.addComment);
