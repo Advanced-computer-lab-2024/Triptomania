@@ -349,6 +349,8 @@ router.put('/rateTourGuide/:touristId', touristController.rateTourGuide);
 
 router.put('/rateItinerary/:touristId', touristController.rateItinerary);
 
+router.put('/rateActivity/:touristId', touristController.rateActivity);//youssef
+
 
 
 router.post("/comment/ :id", touristController.addComment);
