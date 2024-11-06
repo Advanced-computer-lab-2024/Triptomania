@@ -1,6 +1,9 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
-
+import Product from '../../models/product.js';
+import Activity from '../../models/activity.js';
+import TourGuide from '../../models/tourGuide.js';
+import Itinerary from '../../models/itinerary.js';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 
@@ -155,75 +158,74 @@ const redeemPoints = async (req, res) => {
   res.status(500).json({ message: "Error updating wallet", error: error.message });
 }
 };
+
+
 const addComment = async (req, res) => {
-  const { id, type } = req.body; // Get activityId and comment from the request body
-  
+  const { type, comment } = req.body; // Get the type and comment from the request body
+  const { id } = req.params; // Get the ID from the URL parameter
+
   try {
-    // Check if ID exists
+    // Check if ID is a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Invalid category ID format." });
-   }
+      return res.status(400).json({ message: "Invalid ID format." });
+    }
 
-   let addedComment;
+    let addedComment;
 
-  // Add comment depending on the type
-  switch(type) 
-  {
-    case "activity":
-      addedComment = await Activity.findByIdAndUpdate(
-        activityId,
-        { $push: { comments: comment } },
-        { new: true } // Return the updated document
-      );
-  
-      // Check if the activity was found and updated
-      if (!addedComment) {
-        return res.status(404).json({ error: 'Activity not found' });
-      }
-  
-      res.status(200).json(addedComment); // Send the updated activity with the new comment
-    case "tourGuide":
-      addedComment = await Activity.findByIdAndUpdate(
-        activityId,
-        { $push: { comments: comment } },
-        { new: true } // Return the updated document
-      );
-  
-      // Check if the tour guide was found and updated
-      if (!addedComment) {
-        return res.status(404).json({ error: 'Tour guide not found' });
-      }
-  
-      res.status(200).json(addedComment); // Send the updated itinerary with the new comment
-    case "itinerary":
-      addedComment = await Activity.findByIdAndUpdate(
-        activityId,
-        { $push: { comments: comment } },
-        { new: true } // Return the updated document
-      );
-  
-      // Check if the itinerary was found and updated
-      if (!addedComment) {
-        return res.status(404).json({ error: 'Tour guide not found' });
-      }
-  
-      res.status(200).json(addedComment); // Send the updated itinerary with the new comment
-  }
-  } catch(error) {
+    // Add comment depending on the type
+    switch (type) {
+      case "activity":
+        addedComment = await Activity.findByIdAndUpdate(
+          id,
+          { $push: { comments: comment } },
+          { new: true } // Return the updated document
+        );
+        break;
+
+      case "tourGuide":
+        addedComment = await TourGuide.findByIdAndUpdate(
+          id,
+          { $push: { comments: comment } },
+          { new: true } // Return the updated document
+        );
+        break;
+
+      case "itinerary":
+        addedComment = await Itinerary.findByIdAndUpdate(
+          id,
+          { $push: { comments: comment } },
+          { new: true } // Return the updated document
+        );
+        break;
+
+      default:
+        return res.status(400).json({ message: "Invalid type specified." });
+    }
+
+    // Check if the entity was found and updated
+    if (!addedComment) {
+      return res.status(404).json({ error: `${type} not found` });
+    }
+
+    // Send the updated document with the new comment
+    res.status(200).json(addedComment);
+
+  } catch (error) {
     console.log('Error:', error); // Log the error if there's any
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
-}
+};
 
 
 // Add review to a product
 const reviewProduct = async (req, res) => {
-  const { productId, review } = req.body; // Get productId and reviews from the request body
+  const { review } = req.body; // Get the review from the request body
+  const { id } = req.params; // Get the product ID from the URL parameters
   
   try {
     // Find the product by ID and add the review to the Reviews array
     const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
+      id,
       { $push: { Reviews: review } },
       { new: true } // Return the updated document
     );
