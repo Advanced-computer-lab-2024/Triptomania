@@ -357,8 +357,8 @@ router.put('/processPayment/:_id', touristController.processPayment);
 
 router.put('/rateProduct/:touristId',touristController.rateProduct);
 
-router.post("/comment/ :id", touristController.addComment);
+router.post("/comment/:id", touristController.addComment);
 
-router.post("/product/reviews/ :id", touristController.reviewProduct);
+router.post("/product/reviews/:id", touristController.reviewProduct);
 
 export default router;
