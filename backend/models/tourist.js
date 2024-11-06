@@ -48,6 +48,14 @@ const touristSchema = new Schema({
     type: Number,
     required: false,
     default:0
+  },
+  badge: {
+    type: String,
+    defualt: 'BRONZE'
+  },
+  level:{
+    type: Number,
+    default:1
   }
 }, { timestamps: true });
 
