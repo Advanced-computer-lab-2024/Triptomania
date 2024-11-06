@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Process Payment</h1>
+
+    <form id="paymentForm">
+        <label for="touristId">Your Tourist ID:</label>
+        <input type="text" id="touristId" required>
+
+        <label for="itemSelect">Select Item:</label>
+        <select id="itemSelect" required>
+            <option value="" disabled selected>Select an item</option>
+        </select>
+
+        <button type="submit">Process Payment</button>
+    </form>
+
+    <div class="message" id="responseMessage"></div>
+</div>
+
+<script>
+    // Fetch all products, itineraries, and activities
+    async function fetchItems() {
+        try {
+            const [productsResponse, itinerariesResponse, activitiesResponse] = await Promise.all([
+                fetch('http://localhost:5000/api/seller/product/viewProducts'),
+                fetch('http://localhost:5000/api/tourGuide/itinerary/getItineraries'),
+                fetch('http://localhost:5000/api/admin/activities/getActivities')
+            ]);
+
+            const products = await productsResponse.json();
+            const itineraries = await itinerariesResponse.json();
+            const activities = await activitiesResponse.json();
+
+            // Log the response data to debug
+            console.log("Products:", products);
+            console.log("Itineraries:", itineraries);
+            console.log("Activities:", activities);
+
+            const itemSelect = document.getElementById('itemSelect');
+
+            // Function to handle adding items to the dropdown
+            const addItemsToDropdown = (items, label) => {
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item._id;
+                        option.textContent = `${label}: ${item.Name || item.name} - $${item.Price || item.price}`;
+                        itemSelect.appendChild(option);
+                    });
+                }
+            };
+
+            // Clear previous options
+            itemSelect.innerHTML = '<option value="" disabled selected>Select an item</option>';
+
+            // Add products, itineraries, and activities to the dropdown
+            addItemsToDropdown(products, 'Product');
+            addItemsToDropdown(itineraries.itinerary, 'Itinerary');  // Access the 'itinerary' field
+            addItemsToDropdown(activities, 'Activity');
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = 'Error loading items: ' + error.message;
+        }
+    }
+
+    // Submit the payment form
+    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const touristId = document.getElementById('touristId').value;
+        const itemId = document.getElementById('itemSelect').value;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/tourist/processPayment/${touristId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ itemId })
+            });
+            const result = await response.json();
+
+            document.getElementById('responseMessage').innerText = response.ok
+                ? `Payment processed successfully! Remaining Balance: $${result.walletBalance}, Points Earned: ${result.totalPoints}`
+                : result.message;
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = 'Payment processing error: ' + error.message;
+        }
+    });
+
+    // Load items on page load
+    window.onload = fetchItems;
+</script>
+
+</body>
+</html>
