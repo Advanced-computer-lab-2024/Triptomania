@@ -1,15 +1,10 @@
 // Import userModel and other modules using ES module syntax
+import mongoose from 'mongoose';
 import userModel from '../../models/tourist.js';
 import tourguide from '../../models/tourGuide.js'; // Adjust the path as necessary
 import activityModel from '../../models/activity.js';
 import itineraryModel from '../../models/itinerary.js';
 import productModel from '../../models/product.js';
-
-import Product from '../../models/product.js';
-import Activity from '../../models/activity.js';
-import TourGuide from '../../models/tourGuide.js';
-import Itinerary from '../../models/itinerary.js';
-import mongoose from 'mongoose';
 import crypto from 'crypto';
 
 import activityCategoryModel from '../../models/activityCategory.js';
@@ -177,7 +172,7 @@ const addComment = async (req, res) => {
     // Add comment depending on the type
     switch (type) {
       case "activity":
-        addedComment = await Activity.findByIdAndUpdate(
+        addedComment = await activityModel.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
           { new: true } // Return the updated document
@@ -185,7 +180,7 @@ const addComment = async (req, res) => {
         break;
 
       case "tourGuide":
-        addedComment = await TourGuide.findByIdAndUpdate(
+        addedComment = await tourguide.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
           { new: true } // Return the updated document
@@ -193,7 +188,7 @@ const addComment = async (req, res) => {
         break;
 
       case "itinerary":
-        addedComment = await Itinerary.findByIdAndUpdate(
+        addedComment = await itineraryModel.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
           { new: true } // Return the updated document
@@ -226,7 +221,7 @@ const reviewProduct = async (req, res) => {
   
   try {
     // Find the product by ID and add the review to the Reviews array
-    const updatedProduct = await Product.findByIdAndUpdate(
+    const updatedProduct = await productModel.findByIdAndUpdate(
       id,
       { $push: { Reviews: review } },
       { new: true } // Return the updated document
@@ -741,5 +736,5 @@ const rateProduct = async (req, res) => {
 
 // Export all functions using ES module syntax
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary,rateActivity, badge,processPayment,rateProduct};
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct,rateTourGuide,rateItinerary,rateActivity, badge,processPayment,rateProduct, updateBadge};
 
