@@ -1,19 +1,12 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
-
-import mongoose from 'mongoose';
-import crypto from 'crypto';
-
-// Function to hash passwords
-/*const hashPassword = (password) => {
-  return crypto.createHash('sha256').update(password).digest('hex'); // SHA-256 hash
-};*/
+import amadeus from '../../config/amadeus.js';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
   const { username, email, password, mobile, nationality, DOB, job_Student/*, wallet*/ } = req.body;
   //const hashed = hashPassword(Password);
-  
+
   try {
     // Check for existing user by username or email
     const existingTourist = await userModel.findOne({
@@ -59,8 +52,8 @@ const getTourist = async (req, res) => {
 
 const getOneTourist = async (req, res) => {
   try {
-   // const {  username, email, password, mobile, nationality,job_Student } = req.body;
-    const tourist = await userModel.find({username});
+    // const {  username, email, password, mobile, nationality,job_Student } = req.body;
+    const tourist = await userModel.find({ username });
     return res.status(200).send(tourist);
   } catch (error) {
     console.log(error);
@@ -121,10 +114,33 @@ const UpdateTourist = async (req, res) => {
   }
 };
 
+const searchHotel = async (req, res) => {
+  try {
+    const { hotelName } = req.body;
+    if (!hotelName) {
+      return res.status(400).json({ error: 'Hotel name is required' });
+    }
+
+    // Call Amadeus Hotel Search API
+    const response = await amadeus.referenceData.locations.hotels.byCity.get({
+      // keyword: hotelName,
+      // subType: 'HOTEL_GDS',
+      cityCode: 'NYC', // Replace CITY_CODE with the relevant city code, or add it as a request parameter if needed
+    });
+
+    // Check for valid response
+    if (response.data && response.data.length > 0) {
+      res.status(200).json({
+        hotels: response,
+      });
+    } else {
+      res.status(404).json({ message: 'No hotels found' });
+    }
+  } catch (error) {
+    console.error('Error fetching hotels:', error);
+    res.status(500).json({ error: error });
+  }
+}
 
 
-
-//////////////////////////////////////////////////////////////////////
-
-// Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist };
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, searchHotel};

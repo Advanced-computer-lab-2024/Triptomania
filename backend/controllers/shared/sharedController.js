@@ -6,6 +6,8 @@ import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
 import bcrypt from 'bcryptjs';
+import firebase from '../../config/firebase.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const changePassword = async (req, res) => {
     try {
@@ -71,7 +73,7 @@ const changePassword = async (req, res) => {
                 )
                 break;
             case "admin":
-                account = await touristModel.findByIdAndUpdate(
+                account = await adminModel.findByIdAndUpdate(
                     id,
                     { password: newPass },
                     { new: true }
@@ -80,7 +82,7 @@ const changePassword = async (req, res) => {
             default:
                 return res.status(400).json({ message: "Invalid type" });
         }
-    } catch(error) {
+    } catch (error) {
         console.error("Error changing password:", error);
         res.status(500).json({ message: "Something went wrong" });
     }
@@ -95,4 +97,145 @@ async function hashPassword(password) {
         console.error("Error hashing password:", error);
         throw new Error('Failed to hash password');
     }
+}
+
+const uploadDocuments = async (req, res) => {
+    try {
+        const { id, type } = req.params;
+        const file = req.file; // Get file from request
+
+        if (!file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Upload PDF to Firebase Storage
+        const fileUrl = await upload(file.buffer, file.originalname);
+
+        // Define update object based on user type
+        let updatedUser;
+        if (type === 'seller') {
+            updatedUser = await sellerModel.findByIdAndUpdate(
+                id,
+                { $set: { documents: fileUrl } },
+                { new: true }
+            );
+        } else if (type === 'advertiser') {
+            updatedUser = await advertiserModel.findByIdAndUpdate(
+                id,
+                { $set: { documents: fileUrl } },
+                { new: true }
+            );
+        } else if (type === 'tourGuide') {
+            updatedUser = await tourGuideModel.findByIdAndUpdate(
+                id,
+                { $set: { documents: fileUrl } },
+                { new: true }
+            );
+        } else {
+            return res.status(400).json({ message: 'Invalid user type' });
+        }
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({
+            message: 'Document uploaded and user updated successfully',
+            documents: fileUrl,
+        });
+    } catch (error) {
+        console.error('Error uploading documents:', error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+
+}
+
+const uploadProfilePicture = async (req, res) => {
+    try {
+        const { id, type } = req.params;
+        const file = req.file; // Get file from request
+
+        if (!file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Upload image to Firebase Storage
+        const fileUrl = await upload(file.buffer, file.originalname);
+
+        // Define update object based on user type
+        let updatedUser;
+        if (type === 'seller') {
+            updatedUser = await sellerModel.findByIdAndUpdate(
+                id,
+                { $set: { profilePicture: fileUrl } },
+                { new: true }
+            );
+        } else if (type === 'advertiser') {
+            updatedUser = await advertiserModel.findByIdAndUpdate(
+                id,
+                { $set: { profilePicture: fileUrl } },
+                { new: true }
+            );
+        } else if (type === 'tourGuide') {
+            updatedUser = await tourGuideModel.findByIdAndUpdate(
+                id,
+                { $set: { profilePicture: fileUrl } },
+                { new: true }
+            );
+        } else if (type === 'tourist') {
+            updatedUser = await touristModel.findByIdAndUpdate(
+                id,
+                { $set: { profilePicture: fileUrl } },
+                { new: true }
+            );
+        } else {
+            return res.status(400).json({ message: 'Invalid user type' });
+        }
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({
+            message: 'Profile picture uploaded and user updated successfully',
+            profilePicture: fileUrl,
+        });
+    } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+}
+
+
+async function upload(fileBuffer, fileName) {
+    try {
+        // Generate a unique file name
+        const uniqueFileName = `${uuidv4()}-${fileName}`;
+
+        // Create a reference to the file in Firebase Storage
+        const file = firebase.bucket.file(uniqueFileName);
+
+        // Upload the file buffer to Firebase Storage
+        await file.save(fileBuffer, {
+            metadata: {
+                contentType: 'application/pdf', // Set content type as PDF
+            },
+        });
+
+        // Make the file publicly accessible
+        await file.makePublic();
+
+        // Return the public URL
+        const fileUrl = `https://storage.googleapis.com/${firebase.bucket.name}/${uniqueFileName}`;
+        return fileUrl;
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        throw new Error('Failed to upload file to Firebase');
+    }
+}
+
+export default {
+    changePassword,
+    uploadDocuments,
+    uploadProfilePicture
 }
