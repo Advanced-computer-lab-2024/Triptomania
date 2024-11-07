@@ -599,12 +599,12 @@ const processPayment = async (req, res) => {
     const itemPrice = item.price || item.Price;
 
     // Check for sufficient funds
-    if (tourist.wallet < itemPrice) {
-      return res.status(400).json({ message: 'Insufficient funds in wallet.' });
-    }
+    //if (tourist.wallet < itemPrice) {
+      //return res.status(400).json({ message: 'Insufficient funds in wallet.' });
+    //}
 
     // Deduct the item's price from the tourist's wallet
-    tourist.wallet -= itemPrice; // Deduct from wallet
+    //tourist.wallet -= itemPrice; // Deduct from wallet
 
     // Calculate loyalty points only for itineraries and activities
     let pointsEarned = 0;
