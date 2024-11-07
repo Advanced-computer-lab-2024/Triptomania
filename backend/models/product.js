@@ -36,7 +36,9 @@ Rating: [{
         touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
         rating: { type: Number, min: 0, max: 5, required: true }
     }],
-    averageRating: { type: Number, default: 0 }
+    averageRating: { type: Number, default: 0 },
+    Purchasers: [{ type: mongoose.Types.ObjectId, ref: 'Tourist' }] // List of tourist IDs who purchased the product
+
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

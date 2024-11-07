@@ -685,10 +685,6 @@ const rateProduct = async (req, res) => {
     return res.status(400).json({ message: 'Product ID, rating, and tourist ID are required' });
   }
 
-  console.log('Tourist ID:', touristId);
-  console.log('Product ID:', productId);
-  console.log('Rating:', rating); // Log the rating to check its value
-
   try {
     // Validate input
     if (rating < 0 || rating > 5) {
@@ -700,10 +696,14 @@ const rateProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found.' });
     }
-
     // Initialize ratings if undefined
     if (!product.Rating) {
       product.Rating = [];
+    }
+    // Check if the tourist is in the list of purchasers
+    const isPurchaser = product.Purchasers.some(id => id.equals(touristId));
+    if (!isPurchaser) {
+      return res.status(403).json({ message: 'Only purchasers of this product can rate it.' });
     }
 
     // Check if the tourist has already rated this product
@@ -718,7 +718,7 @@ const rateProduct = async (req, res) => {
     // Calculate new average rating
     const totalRatings = product.Rating.length;
     const sumRatings = product.Rating.reduce((sum, rate) => sum + rate.rating, 0);
-    
+
     // Update averageRating
     product.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
 
