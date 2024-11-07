@@ -2,6 +2,7 @@ import sellerController from "../controllers/seller/sellerController.js";
 import productController from '../controllers/shared/productController.js';
 import express from 'express';
 import multer from "multer";
+import sharedController from "../controllers/shared/sharedController.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -157,5 +158,11 @@ router.get("/product/sortProducts", productController.sortProducts);
  *         description: Product picture uploaded successfully
  */
 router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
+
+router.put('/changePassword/:id', sharedController.changePassword);
+
+router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+
+router.put('/uploadProfilePicture/:id/:type', upload.single('file'), sharedController.uploadProfilePicture);
 
 export default router;

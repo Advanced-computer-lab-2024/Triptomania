@@ -6,6 +6,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import productController from '../controllers/shared/productController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -207,5 +208,9 @@ router.get("/product/filterProducts", productController.filterProducts);
  *         description: Sorted list of products
  */
 router.get("/product/sortProducts", productController.sortProducts);
+
+router.put('/changePassword/:id/:type', sharedController.changePassword);
+
+router.get('/searchHotel', touristController.searchHotel);
 
 export default router;

@@ -7,6 +7,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import tourGuideController from '../controllers/tourGuide/tourGuideController.js';
 import sellerController from '../controllers/seller/sellerController.js';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -303,5 +304,7 @@ router.get('/getTourGuides', tourGuideController.getTourGuide);
  *         description: List of advertisers
  */
 router.get('/getAdvertisers', advertiserController.getAdvertiser);
+
+router.put('/changePassword/:id/:type', sharedController.changePassword);
 
 export default router;
