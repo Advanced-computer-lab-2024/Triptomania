@@ -173,7 +173,7 @@ const addComment = async (req, res) => {
       case "activity":
         // Checks if tourist participated in that activity
         const activityCheck = await activityModel.findById(id);
-        if(!activityCheck.participants.includes(touristId)){
+        if (!activityCheck.participants.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the activity to comment it' });
         }
         addedComment = await activityModel.findByIdAndUpdate(
@@ -186,7 +186,7 @@ const addComment = async (req, res) => {
       case "tourGuide":
         // Checks if tourist was with this tour guide
         const tourGuideCheck = await tourguide.findById(id);
-        if (!tourGuideCheck.tourists.includes(touristId)){
+        if (!tourGuideCheck.tourists.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate with this tour guide to leave a comment' });
         }
         addedComment = await tourguide.findByIdAndUpdate(
@@ -199,7 +199,7 @@ const addComment = async (req, res) => {
       case "itinerary":
         // Checks if tourist participated in that itinerary
         const itineraryCheck = await itineraryModel.findById(id);
-        if(!itineraryCheck.participants.includes(touristId)){
+        if (!itineraryCheck.participants.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the itinerary to comment it' });
         }
         addedComment = await itineraryModel.findByIdAndUpdate(
@@ -779,7 +779,7 @@ const fileComplaint = async (req, res) => {
 
     await complaint.save();
 
-    res.status(201).json({complaint, message: 'Complaint filed successfully' });
+    res.status(201).json({ complaint, message: 'Complaint filed successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -788,7 +788,7 @@ const fileComplaint = async (req, res) => {
 const viewMyComplaints = async (req, res) => {
   try {
     const { touristId } = req.params;
-    
+
     const complaints = await complaintModel.find({ touristId });
 
     return res.status(200).json({ message: 'Complaints retrieved successfully', complaints });
@@ -797,9 +797,27 @@ const viewMyComplaints = async (req, res) => {
   }
 };
 
+const choosePreferences = async (req, res) => {
+  const { preferences } = req.body;
+  const { touristId } = req.params;
+
+  try {
+    // Verify the tourist exists
+    const tourist = await userModel.findByIdAndUpdate(touristId, { $set: {preferences: preferences} }, { new: true });
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+    
+    res.status(200).json({ message: 'Preferences updated successfully', tourist: tourist });
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 //////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct, rateTourGuide, rateItinerary, rateActivity, badge, processPayment, rateProduct, updateBadge, fileComplaint, viewMyComplaints }; // eslint-disable-line no-unused-vars
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct, rateTourGuide, rateItinerary, rateActivity, badge, processPayment, rateProduct, updateBadge, fileComplaint, viewMyComplaints, choosePreferences}; // eslint-disable-line no-unused-vars
 

@@ -56,7 +56,11 @@ const touristSchema = new Schema({
   level:{
     type: Number,
     default:1
-  }
+  },
+  preferences: {
+    type: Array,
+    default: []
+  },
 }, { timestamps: true });
 
 touristSchema.pre('save', async function(next){

@@ -369,4 +369,6 @@ router.post('/complaint/addComplaint/:touristId', touristController.fileComplain
 
 router.get('/complaint/viewMyComplaints/:touristId', touristController.viewMyComplaints);
 
+router.put('/selectTouristPreferences/:touristId', touristController.choosePreferences);
+
 export default router;
