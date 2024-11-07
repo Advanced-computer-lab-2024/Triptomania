@@ -70,6 +70,9 @@ const itinerarySchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
     },
+    participants: [{
+        type: mongoose.Types.ObjectId, ref: 'Tourist'
+     }],
     comments: {
         type: [String],
         default: [],

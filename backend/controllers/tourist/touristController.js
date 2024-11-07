@@ -158,7 +158,7 @@ const redeemPoints = async (req, res) => {
 
 
 const addComment = async (req, res) => {
-  const { type, comment } = req.body; // Get the type and comment from the request body
+  const { type, comment, touristId } = req.body; // Get the type and comment from the request body
   const { id } = req.params; // Get the ID from the URL parameter
 
   try {
@@ -172,6 +172,11 @@ const addComment = async (req, res) => {
     // Add comment depending on the type
     switch (type) {
       case "activity":
+        // Checks if tourist participated in that activity
+        const activityCheck = await activityModel.findById(id);
+        if(!activityCheck.participants.includes(touristId)){
+          return res.status(403).json({ error: 'You must participate in the activity to comment it' });
+        }
         addedComment = await activityModel.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
@@ -180,6 +185,11 @@ const addComment = async (req, res) => {
         break;
 
       case "tourGuide":
+        // Checks if tourist was with this tour guide
+        const tourGuideCheck = await tourguide.findById(id);
+        if (!tourGuideCheck.tourists.includes(touristId)){
+          return res.status(403).json({ error: 'You must participate with this tour guide to leave a comment' });
+        }
         addedComment = await tourguide.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
@@ -188,6 +198,11 @@ const addComment = async (req, res) => {
         break;
 
       case "itinerary":
+        // Checks if tourist participated in that itinerary
+        const itineraryCheck = await itineraryModel.findById(id);
+        if(!itineraryCheck.participants.includes(touristId)){
+          return res.status(403).json({ error: 'You must participate in the itinerary to comment it' });
+        }
         addedComment = await itineraryModel.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
@@ -216,10 +231,22 @@ const addComment = async (req, res) => {
 
 // Add review to a product
 const reviewProduct = async (req, res) => {
-  const { review } = req.body; // Get the review from the request body
+  const { review, touristId } = req.body; // Get the review from the request body
   const { id } = req.params; // Get the product ID from the URL parameters
   
   try {
+    // Find the product by ID
+    const product = await productModel.findById(id);
+
+    // Check if the product exists
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Check if the touristId is in the Purchasers array
+    if (!product.Purchasers.includes(touristId)) {
+      return res.status(403).json({ error: 'You must purchase the product to review it' });
+    }
     // Find the product by ID and add the review to the Reviews array
     const updatedProduct = await productModel.findByIdAndUpdate(
       id,
