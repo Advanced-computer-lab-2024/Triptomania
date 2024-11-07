@@ -10,7 +10,9 @@ const SellerSchema = new Schema({
     password: { type: String, required: true },
     mobile: { type: String},
     description: { type: String }, 
-    type: {type: String,default: 'seller'}
+    type: {type: String,default: 'seller'},
+    documents: {type: String, required: false, default: 'none'},
+    profilePicture: {type: String, required: false, default: 'none'}
     
 }, {timestamps:true});
 

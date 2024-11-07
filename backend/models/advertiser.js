@@ -13,7 +13,9 @@ const AdvertiserSchema = new Schema({
     companyHotline: { type: Number }, 
     website: { type: String }, 
     profilePicture: { type: String }, 
-    type: {type: String,default: 'advertiser'}
+    type: {type: String,default: 'advertiser'},
+    documents: {type: String, required: false, default: 'none'},
+    profilePicture: {type: String, required: false, default: 'none'}
 });
 
 AdvertiserSchema.pre('save', async function(next){

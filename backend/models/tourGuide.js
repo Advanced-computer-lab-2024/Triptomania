@@ -10,7 +10,9 @@ const UserSchema = new Schema({
     mobile: { type: String },
     yearsOfExperience: { type: Number },
     previousWork: { type: String },
-    type: {type: String,default: 'tourGuide'}
+    type: {type: String,default: 'tourGuide'},
+    documents: {type: String, required: false, default: 'none'},
+    profilePicture: {type: String, required: false, default: 'none'}
 },{timestamps:true});
 
 UserSchema.pre('save', async function(next){
