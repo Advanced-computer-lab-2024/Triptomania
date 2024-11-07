@@ -8,6 +8,7 @@ import advertiserModel from '../../models/advertiser.js';
 import bcrypt from 'bcryptjs';
 import firebase from '../../config/firebase.js';
 import { v4 as uuidv4 } from 'uuid';
+import { fileTypeFromBuffer } from 'file-type';
 
 const changePassword = async (req, res) => {
     try {
@@ -109,7 +110,7 @@ const uploadDocuments = async (req, res) => {
         }
 
         // Upload PDF to Firebase Storage
-        const fileUrl = await upload(file.buffer, file.originalname);
+        const fileUrl = await upload(file.buffer, file.originalname, "pdf");
 
         // Define update object based on user type
         let updatedUser;
@@ -160,7 +161,7 @@ const uploadProfilePicture = async (req, res) => {
         }
 
         // Upload image to Firebase Storage
-        const fileUrl = await upload(file.buffer, file.originalname);
+        const fileUrl = await upload(file.buffer, file.originalname, "image");
 
         // Define update object based on user type
         let updatedUser;
@@ -207,18 +208,25 @@ const uploadProfilePicture = async (req, res) => {
 }
 
 
-async function upload(fileBuffer, fileName) {
+async function upload(fileBuffer, fileName, type) {
     try {
         // Generate a unique file name
         const uniqueFileName = `${uuidv4()}-${fileName}`;
 
+        // Detect the MIME type from the file buffer
+        const fileType = await fileTypeFromBuffer(fileBuffer);
+
+        if (!fileType) {
+            throw new Error('Could not determine the file type');
+        }
+
         // Create a reference to the file in Firebase Storage
         const file = firebase.bucket.file(uniqueFileName);
 
-        // Upload the file buffer to Firebase Storage
+        // Upload the file buffer to Firebase Storage with the detected content type
         await file.save(fileBuffer, {
             metadata: {
-                contentType: 'application/pdf', // Set content type as PDF
+                contentType: fileType.mime, // Use detected MIME type
             },
         });
 
