@@ -7,6 +7,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import tourGuideController from '../controllers/tourGuide/tourGuideController.js';
 import sellerController from '../controllers/seller/sellerController.js';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
+import complaintsController from '../controllers/admin/complaintsController.js';
 
 const router = express.Router();
 
@@ -218,7 +219,7 @@ router.put("/product/editProduct/:id", productController.editProduct);
  *       200:
  *         description: List of products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts", adminController.viewProductsAdmin);
 
 /**
  * @swagger
@@ -255,6 +256,8 @@ router.get("/product/filterProducts", productController.filterProducts);
  *         description: Sorted products list
  */
 router.get("/product/sortProducts", productController.sortProducts);
+
+router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
 
 /**
  * @swagger
@@ -303,5 +306,14 @@ router.get('/getTourGuides', tourGuideController.getTourGuide);
  *         description: List of advertisers
  */
 router.get('/getAdvertisers', advertiserController.getAdvertiser);
+
+router.get('/complaints/viewComplaints',complaintsController.viewComplaints);
+router.get('/complaints/viewComplaint/:id',complaintsController.viewComplaintDetails);
+router.put('/complaints/updateStatus',complaintsController.updateComplaintStatus);
+router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDate);
+router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
+
+
+
 
 export default router;

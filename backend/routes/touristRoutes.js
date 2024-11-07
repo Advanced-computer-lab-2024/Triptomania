@@ -170,7 +170,7 @@ router.get("/activity/filterActivities", activityController.filterActivities);
  *       200:
  *         description: List of all products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts", touristController.viewProductsTourist);
 
 /**
  * @swagger

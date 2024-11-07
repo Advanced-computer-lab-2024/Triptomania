@@ -158,4 +158,7 @@ router.get("/product/sortProducts", productController.sortProducts);
  */
 router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
 
+
+router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
+
 export default router;

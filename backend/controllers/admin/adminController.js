@@ -5,6 +5,7 @@ import tourismGovernorModel from '../../models/tourismGovernor.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
+import productModel from "../../models/product.js";
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
@@ -103,10 +104,20 @@ const addTourismGovernor = async (req, res) => {
 };
 
 
-
+const viewProductsAdmin = async (req, res) => {
+    try {
+       // Exclude 'Quantity' field by setting it to 0
+       const products = await productModel.find();
+       res.status(200).json(products);  
+    } catch (error) {
+       console.log(error);
+       res.status(500).json({ message: 'Error retrieving products', error });
+    }
+ };
 
 export default {
     addAdmin,
     deleteAccount,
-    addTourismGovernor
+    addTourismGovernor,
+    viewProductsAdmin
 }

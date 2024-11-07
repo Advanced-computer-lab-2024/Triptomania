@@ -123,14 +123,15 @@ const uploadPicture = async (req, res) => {
 
 const viewProducts = async (req, res) => {
    try {
-      // Exclude 'Quantity' field by setting it to 0
-      const products = await productModel.find();
-      res.status(200).json(products);  
+      // Exclude archived products by setting Archive: false in the filter
+      const products = await productModel.find({ Archive: false });
+      res.status(200).json(products);
    } catch (error) {
       console.log(error);
       res.status(500).json({ message: 'Error retrieving products', error });
    }
 };
+
 
 
 const searchProduct = async (req, res) => {
@@ -230,6 +231,35 @@ const filterProducts = async (req, res) => {
    }
 };
 
+const toggleArchiveStatus = async (req, res) => {
+   const { id } = req.params;
+
+   try {
+       // Validate the product ID
+       if (!mongoose.Types.ObjectId.isValid(id)) {
+           return res.status(400).json({ message: "Invalid product ID format." });
+       }
+
+       // Find the product and toggle the Archive status
+       const product = await productModel.findById(id);
+       if (!product) {
+           return res.status(404).json({ message: "Product not found." });
+       }
+
+       // Toggle the Archive status
+       product.Archive = !product.Archive;
+
+       // Save the updated product
+       await product.save();
+
+       return res.status(200).json({ message: "Product archive status updated", product });
+   } catch (error) {
+       return res.status(500).json({ message: "Error updating archive status", error: error.message });
+   }
+};
+
+
+
 export default{
    addProduct,
    editProduct,
@@ -237,5 +267,6 @@ export default{
    searchProduct,
    filterProducts,
    sortProducts,
-   uploadPicture
+   uploadPicture,
+   toggleArchiveStatus
 }

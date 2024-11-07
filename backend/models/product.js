@@ -36,6 +36,15 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
+  Archive: {
+    type : Boolean,
+    required :false,
+    default: false,  
+  },
+  Sales:{
+    type: Number,
+    default:0,
+  }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
