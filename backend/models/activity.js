@@ -52,6 +52,9 @@ const activitySchema = new Schema({
     type: mongoose.Types.ObjectId,
     required: true,
   },
+  participants: [{
+     type: mongoose.Types.ObjectId, ref: 'Tourist'
+  }],
   ratings: [{
         touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
         rating: { type: Number, min: 0, max: 5, required: true }

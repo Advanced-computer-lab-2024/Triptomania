@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     previousWork: { type: String },
     comments: { type: [String], default: [] },
     type: { type: String, default: 'tourGuide' },
+    tourists: [{ type: mongoose.Types.ObjectId, ref: 'Tourist'}],
     ratings: [{
         touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
         rating: { type: Number, min: 0, max: 5, required: true }
