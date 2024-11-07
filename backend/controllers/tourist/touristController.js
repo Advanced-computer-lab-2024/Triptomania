@@ -760,18 +760,26 @@ const rateProduct = async (req, res) => {
 
 const fileComplaint = async (req, res) => {
   const { title, body } = req.body;
-  const touristId = req.params.touristId;
+  const { touristId } = req.params;
+
+  console.log(touristId);
 
   try {
     // Verify the tourist exists
-    const tourist = await userModel.findById(touristId);
+    const tourist = await userModel.findOne({ _id: touristId });
     if (!tourist) {
       return res.status(404).json({ error: 'Tourist not found' });
     }
 
-    // Create the complaint
-    const complaint = await complaintModel.create({ title, body, touristId });
-    res.status(201).json(complaint);
+    const complaint = new complaintModel({
+      title,
+      body,
+      touristId
+    });
+
+    await complaint.save();
+
+    res.status(201).json({complaint, message: 'Complaint filed successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -780,6 +788,7 @@ const fileComplaint = async (req, res) => {
 const viewMyComplaints = async (req, res) => {
   try {
     const { touristId } = req.params;
+    
     const complaints = await complaintModel.find({ touristId });
 
     return res.status(200).json({ message: 'Complaints retrieved successfully', complaints });
