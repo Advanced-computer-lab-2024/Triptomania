@@ -365,4 +365,8 @@ router.post("/itinerary/comment/:id", touristController.addComment);
 
 router.post("/product/reviews/:id", touristController.reviewProduct);
 
+router.post('/complaint/addComplaint', touristController.fileComplaint);
+
+router.post('/complaint/viewMyComplaints', touristController.viewMyComplaints);
+
 export default router;
