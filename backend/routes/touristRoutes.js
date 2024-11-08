@@ -371,4 +371,6 @@ router.get('/complaint/viewMyComplaints/:touristId', touristController.viewMyCom
 
 router.put('/selectTouristPreferences/:touristId', touristController.choosePreferences);
 
+router.put('/cancelBooking/:touristId', touristController.cancelBooking);
+
 export default router;

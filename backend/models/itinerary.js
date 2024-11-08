@@ -58,6 +58,10 @@ const itinerarySchema = new Schema({
         ref: 'PreferenceTag', // Adjust the model name as needed
         required: false,
     }],
+    Start_date:{
+        type: String, // DD/MM/YYYY Date type
+        required: true,
+    },
     End_date: {
         type: String, // DD/MM/YYYY Date type
         required: true,

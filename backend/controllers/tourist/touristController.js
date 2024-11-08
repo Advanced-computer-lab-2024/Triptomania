@@ -809,10 +809,78 @@ const choosePreferences = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+//////////////////////////////////////////////////////////////////\
+// Utility function to check if cancellation is allowed (48 hours window)
+const isCancellationAllowed = (eventDate) => {
+  const now = new Date();
+  const eventStartDate = new Date(eventDate);
+  const diffInMs = eventStartDate - now;
+  const diffInHours = diffInMs / (1000 * 60 * 60);  // Convert milliseconds to hours
+  return diffInHours > 48; // Return true if more than 48 hours before the event
+};
 
+// Cancel booking for either Activity or Itinerary
+export const cancelBooking = async (req, res) => {
+  try {
+    const touristId = req.params.touristId;  // Correctly capture the touristId from the URL
+    const { itemId } = req.body;             // Capture itemId from the request body
+
+    // Validate if the touristId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(touristId)) {
+        return res.status(400).json({ message: "Invalid tourist ID format" });
+    }
+
+    // Validate if the itemId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(itemId)) {
+        return res.status(400).json({ message: "Invalid item ID format" });
+    }
+
+    // Search for the item in itineraryModel first
+    let item = await itineraryModel.findById(itemId);
+    let itemType = 'itinerary';
+
+    // If it's not found in the itinerary, try finding it in the activityModel
+    if (!item) {
+        item = await activityModel.findById(itemId);
+        itemType = item ? 'activity' : itemType;
+    }
+
+    // If the item is not found, return an error
+    if (!item) {
+        return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Ensure the touristId is in the bookingMade array
+    const bookingIndex = item.bookingMade.indexOf(touristId);
+    if (bookingIndex === -1) {
+        return res.status(400).json({ message: "Tourist did not book this item" });
+    }
+
+    // Get the date of the item (activity or itinerary)
+    const itemDate = new Date(item.date || item.Start_date);  // Use date from activity or Start_date from itinerary
+
+    // Ensure cancellation is happening at least 48 hours before the event
+    if (!isCancellationAllowed(itemDate)) {
+        return res.status(400).json({ message: "Cancellation window has passed. You can cancel up to 48 hours before the start." });
+    }
+
+    // Remove the booking from the bookingMade array
+    item.bookingMade.splice(bookingIndex, 1);
+
+    // Update only the bookingMade field using updateOne to bypass validation
+    await item.updateOne({ $set: { bookingMade: item.bookingMade } });
+
+    // Return success message
+    return res.status(200).json({ message: "Booking canceled successfully" });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 //////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct, rateTourGuide, rateItinerary, rateActivity, badge, processPayment, rateProduct, updateBadge, fileComplaint, viewMyComplaints, choosePreferences}; // eslint-disable-line no-unused-vars
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct, rateTourGuide, rateItinerary, rateActivity, badge, processPayment, rateProduct, updateBadge, fileComplaint, viewMyComplaints, choosePreferences,cancelBooking}; // eslint-disable-line no-unused-vars
 
