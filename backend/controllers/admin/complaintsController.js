@@ -1,5 +1,5 @@
 import complaintModel from '../../models/complaint.js'; 
-
+import mongoose from 'mongoose';
 /**
  * Fetch all complaints and their statuses (pending/resolved).
  * @param {Object} req 
@@ -130,7 +130,7 @@ const viewComplaintDetails = async (req, res) => {
         }
 
         // Find the complaint by ID
-        const complaint = await Complaint.findById(id).populate('touristId', 'name email'); // You can modify the fields to include as needed
+        const complaint = await complaintModel.findById(id).populate('touristId', 'name email'); // You can modify the fields to include as needed
 
         // Check if the complaint was found
         if (!complaint) {
@@ -144,11 +144,41 @@ const viewComplaintDetails = async (req, res) => {
     }
 };
 
+ const replyToComplaint = async (req, res) => {
+    const { id } = req.params;
+    const { reply } = req.body;
+
+    if (!reply) {
+        return res.status(400).json({ message: "Reply content is required." });
+    }
+
+    try {
+        // Find the complaint by ID and update its reply and status
+        const updatedComplaint = await Complaint.findByIdAndUpdate(
+            id,
+            { reply, status: "replied" }, // Update reply content and set status to "replied"
+            { new: true, runValidators: true } // Return the updated document
+        );
+
+        // Check if the complaint was found
+        if (!updatedComplaint) {
+            return res.status(404).json({ message: "Complaint not found." });
+        }
+
+        // Respond with the updated complaint
+        res.status(200).json({ message: "Reply added successfully", complaint: updatedComplaint });
+    } catch (error) {
+        console.error("Error replying to complaint:", error);
+        res.status(500).json({ message: "Error replying to complaint", error: error.message });
+    }
+};
+
 export default {
     viewComplaints,
     updateComplaintStatus,
     sortComplaintsByDate,
     filterComplaintsByStatus,
-    viewComplaintDetails
+    viewComplaintDetails,
+    replyToComplaint
 };
 

@@ -312,7 +312,7 @@ router.get('/complaints/viewComplaint/:id',complaintsController.viewComplaintDet
 router.put('/complaints/updateStatus',complaintsController.updateComplaintStatus);
 router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDate);
 router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
-
+router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
 
 
 

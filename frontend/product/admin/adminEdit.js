@@ -55,9 +55,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
                 <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
                 <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
+                <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>
+                <p style="font-size: 0.9em; color: #888;">Quantity: ${product.Quantity}</p>
+                <button class="archive-button" data-id="${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; border: none; cursor: pointer;">
+                ${product.Archive ? 'Unarchive' : 'Archive'}
+                </button>
+
                 <a href="editProduct.html?id=${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Edit</a>
             `;
 
+     // Add event listeners for archive buttons
+     const archiveButtons = document.querySelectorAll('.archive-button');
+     archiveButtons.forEach(button => {
+        button.addEventListener('click', async function () {
+            const productId = this.getAttribute('data-id');
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/product/archive/${productId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    alert('Product archived/unarchived successfully');
+                    fetchProducts(); // Refresh product list
+                } else {
+                    alert('Failed to archive/unarchive product');
+                }
+            } catch (error) {
+                console.error('Error archiving/unarchiving product:', error);
+            }
+        });
+        
+     });
+        
             productElement.addEventListener('mouseover', function () {
                 productElement.style.borderColor = '#0056b3';
                 productElement.style.boxShadow = '0 6px 12px rgba(0, 123, 255, 0.2)';
@@ -133,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const max = parseFloat(maxPrice.value) || Infinity; // Default to Infinity if empty
         filterProducts(min, max);
     });
+
 
     // Initial fetch of all products on page load
     fetchProducts();
