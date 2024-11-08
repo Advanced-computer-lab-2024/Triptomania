@@ -253,11 +253,6 @@ const reviewProduct = async (req, res) => {
       { new: true } // Return the updated document
     );
 
-    // Check if the product was found and updated
-    if (!updatedProduct) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-
     res.status(200).json(updatedProduct); // Send the updated product with the new review
   } catch (error) {
     console.log('Error:', error); // Log the error if there's any
