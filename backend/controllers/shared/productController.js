@@ -249,8 +249,7 @@ const toggleArchiveStatus = async (req, res) => {
        // Toggle the Archive status
        product.Archive = !product.Archive;
 
-       // Save the updated product
-       await product.save();
+       await productModel.findByIdAndUpdate(id, { Archive: product.Archive });
 
        return res.status(200).json({ message: "Product archive status updated", product });
    } catch (error) {

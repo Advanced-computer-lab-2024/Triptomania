@@ -86,6 +86,16 @@ const itinerarySchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
     },
+    isActivated: 
+    {
+        type: Boolean,
+        default: true,
+    },
+    isFlagged:
+    {
+        type: Boolean,
+        default: false,
+    },
 },  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 export default Itinerary;

@@ -316,7 +316,7 @@ router.get('/complaints/filterComplaints',complaintsController.filterComplaintsB
 router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
 
 
-router.put('/flagitinerary',adminController.flagItinerary);
+router.put('/flagitinerary/:id',adminController.flagItinerary);
 
 /**
  * @swagger

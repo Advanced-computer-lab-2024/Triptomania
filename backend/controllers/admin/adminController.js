@@ -108,28 +108,29 @@ const addTourismGovernor = async (req, res) => {
 
 
 const flagItinerary = async (req, res) => {
-    const { itineraryId } = req.query; // Extracting itineraryId from query parameters
+    const { id } = req.params; // Extracting itineraryId from query parameters
 
     try {
         // Validate if the ID is a valid MongoDB ObjectId
-        if (!mongoose.Types.ObjectId.isValid(itineraryId)) {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid itinerary ID format." });
         }
-
+  
         // Find the itinerary by ID
-        const itinerary = await ItineraryModel.findById(itineraryId);
-
+        const itinerary = await ItineraryModel.findById(id);
+        
         if (!itinerary) {
             return res.status(404).json({ message: "Itinerary not found." });
         }
-
-        // Toggle the flag status
-        itinerary.isFlagged = !itinerary.isFlagged; // Toggle the isFlagged value
-        await itinerary.save();
-
-        return res.status(200).json({ message: `Itinerary ${itinerary.isFlagged ? 'flagged' : 'unflagged'} successfully.` });
+  
+        let isFlagged = itinerary.isFlagged;
+      
+        // Preserve the creatorId and save the itinerary
+        await ItineraryModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
+  
+        return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
     } catch (error) {
-        console.error("Error flagging itinerary:", error);
+        console.error("Error toggling itinerary flag:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }

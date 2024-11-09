@@ -104,7 +104,7 @@
             const responseMessage = document.getElementById('responseMessage');
 
             try {
-                const response = await fetch(`/api/admin/flagitinerary?itineraryId=${encodeURIComponent(itineraryId)}`, {
+                const response = await fetch(`http://localhost:5000/api/admin/flagitinerary/${encodeURIComponent(itineraryId)}`, {
                     method: 'PUT', // Use PUT method
                 });
 
