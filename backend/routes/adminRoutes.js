@@ -315,5 +315,18 @@ router.get('/complaints/filterComplaints',complaintsController.filterComplaintsB
 router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
 
 
+router.put('/flagitinerary',adminController.flagItinerary);
+
+/**
+ * @swagger
+ * /api/admin/itineraries/getItineraries:
+ *   get:
+ *     summary: Get a list of all itineraries
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of itineraries
+ */
+router.get("/itineraries/getItineraries/:id", itineraryController.viewItineraries);
 
 export default router;

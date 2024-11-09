@@ -5,7 +5,7 @@ import tourismGovernorModel from '../../models/tourismGovernor.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
-import productModel from "../../models/product.js";
+import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
@@ -103,21 +103,54 @@ const addTourismGovernor = async (req, res) => {
     }
 };
 
+// Function to flag an itinerary
+
+
+const flagItinerary = async (req, res) => {
+    const { itineraryId } = req.query; // Extracting itineraryId from query parameters
+
+    try {
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(itineraryId)) {
+            return res.status(400).json({ message: "Invalid itinerary ID format." });
+        }
+
+        // Find the itinerary by ID
+        const itinerary = await ItineraryModel.findById(itineraryId);
+
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found." });
+        }
+
+        // Toggle the flag status
+        itinerary.isFlagged = !itinerary.isFlagged; // Toggle the isFlagged value
+        await itinerary.save();
+
+        return res.status(200).json({ message: `Itinerary ${itinerary.isFlagged ? 'flagged' : 'unflagged'} successfully.` });
+    } catch (error) {
+        console.error("Error flagging itinerary:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+}
+
+
 
 const viewProductsAdmin = async (req, res) => {
     try {
-       // Exclude 'Quantity' field by setting it to 0
-       const products = await productModel.find();
-       res.status(200).json(products);  
+        // Exclude 'Quantity' field by setting it to 0
+        const products = await productModel.find();
+        res.status(200).json(products);
     } catch (error) {
-       console.log(error);
-       res.status(500).json({ message: 'Error retrieving products', error });
+        console.log(error);
+        res.status(500).json({ message: 'Error retrieving products', error });
     }
- };
+};
+
 
 export default {
     addAdmin,
     deleteAccount,
     addTourismGovernor,
+    flagItinerary,
     viewProductsAdmin
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Itinerary</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            margin: 30px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Flag Itinerary</h1>
+        <p>Please enter the itinerary ID to flag it.</p>
+    </header>
+    <div class="container">
+        <h2>Flag Itinerary Form</h2>
+        <form id="flagItineraryForm">
+            <input type="text" id="itineraryId" placeholder="Enter itinerary ID" required>
+            <button type="submit">Flag Itinerary</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('flagItineraryForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const itineraryId = document.getElementById('itineraryId').value;
+            const responseMessage = document.getElementById('responseMessage');
+
+            try {
+                const response = await fetch(`/api/admin/flagitinerary?itineraryId=${encodeURIComponent(itineraryId)}`, {
+                    method: 'PUT', // Use PUT method
+                });
+
+                // Check if the response is not OK (status code not in the range 200-299)
+                if (!response.ok) {
+                    const errorData = await response.json(); // Get the error message from the response
+                    responseMessage.textContent = errorData.message || 'An error occurred. Please try again.';
+                    responseMessage.style.color = 'red';
+                    return; // Exit the function if there's an error
+                }
+
+                const data = await response.json();
+                responseMessage.textContent = data.message;
+                responseMessage.style.color = 'green';
+            } catch (error) {
+                console.error("Fetch error:", error); // Log the error to the console
+                responseMessage.textContent = 'An error occurred. Please try again.';
+                responseMessage.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

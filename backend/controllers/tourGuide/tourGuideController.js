@@ -1,6 +1,7 @@
 // Import TourGuideModel and other modules using ES module syntax
 import TourGuideModel from '../../models/tourGuide.js';
 import mongoose from 'mongoose';
+import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
 
 
 // Function to hash passwords
@@ -9,6 +10,7 @@ import mongoose from 'mongoose';
 };*/
 
 // Create a new tour guide
+
 const CreateTourGuide = async (req, res) => {
   try {
     const { username, email, password, mobile, yearsOfExperience, previousWork } = req.body;
@@ -203,7 +205,45 @@ export const deleteTour = async (req, res) => {
   }
 };
 
+
+// Function to activate or deactivate an itinerary
+
+
+
+const toggleItineraryStatus = async (req, res) => {
+  const { itineraryId } = req.query; // Extracting itineraryId from query parameters
+
+  try {
+      // Validate if the ID is a valid MongoDB ObjectId
+      if (!mongoose.Types.ObjectId.isValid(itineraryId)) {
+          return res.status(400).json({ message: "Invalid itinerary ID format." });
+      }
+
+      // Find the itinerary by ID
+      const itinerary = await ItineraryModel.findById(itineraryId);
+      
+      if (!itinerary) {
+          return res.status(404).json({ message: "Itinerary not found." });
+      }
+
+      let isActivated = itinerary.isActivated;
+    
+      // Preserve the creatorId and save the itinerary
+      await ItineraryModel.findByIdAndUpdate(itineraryId, { isActivated: !isActivated }, { new: true });
+
+      return res.status(200).json({ message: `Itinerary ${isActivated ? 'deactivated' : 'activated'} successfully.` });
+  } catch (error) {
+      console.error("Error toggling itinerary status:", error);
+      res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+}
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateTourGuide, getTourGuide, updateTourGuide, getOneTourGuide };
+export default { CreateTourGuide, getTourGuide, updateTourGuide, getOneTourGuide,toggleItineraryStatus };

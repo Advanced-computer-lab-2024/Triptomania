@@ -1,5 +1,6 @@
 import sellerController from "../controllers/seller/sellerController.js";
 import productController from '../controllers/shared/productController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 import express from 'express';
 import multer from "multer";
 
@@ -161,4 +162,5 @@ router.post("/product/uploadPicture/:id", upload.single('file'), productControll
 
 router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
 
+router.put("/request/delete",sharedController.requestAccountDeletion);
 export default router;

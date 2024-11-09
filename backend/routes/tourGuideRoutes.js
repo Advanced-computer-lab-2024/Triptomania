@@ -1,6 +1,7 @@
 import express from 'express';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import tourGuideController from '../controllers/tourGuide/tourGuideController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -146,5 +147,6 @@ router.put('/updateTourguide', tourGuideController.updateTourGuide);
  *         description: Tour guide information retrieved successfully
  */
 router.get('/getTourguide', tourGuideController.getTourGuide);
-
+router.put('/activate/itinerary', tourGuideController.toggleItineraryStatus);
+router.put("/request/delete",sharedController.requestAccountDeletion);
 export default router;

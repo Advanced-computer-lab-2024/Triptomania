@@ -1,6 +1,7 @@
 import express from 'express';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 import tourismGovernor from '../controllers/tourismGovernor/tourismGovernorController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -185,4 +186,5 @@ router.delete('/deleteTag/:id', tourismGovernor.deleteTag);
  */
 router.put('/updateTag', tourismGovernor.updateTag);
 
+router.put("/request/delete",sharedController.requestAccountDeletion);
 export default router;

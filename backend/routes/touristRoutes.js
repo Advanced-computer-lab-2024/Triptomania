@@ -6,6 +6,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import productController from '../controllers/shared/productController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -75,6 +76,18 @@ router.get('/filterItineraries', itineraryController.filterItineraries);
  *         description: Sorted list of itineraries
  */
 router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
+
+/**
+ * @swagger
+ * /api/tourist/itinerary/getItineraries:
+ *   get:
+ *     summary: Get a list of all itineraries
+ *     tags: [Tourist]
+ *     responses:
+ *       200:
+ *         description: List of itineraries
+ */
+router.get("/itineraries/getItineraries/:id", itineraryController.getItineraries);
 
 /**
  * @swagger
@@ -208,4 +221,5 @@ router.get("/product/filterProducts", productController.filterProducts);
  */
 router.get("/product/sortProducts", productController.sortProducts);
 
+router.put("/request/delete",sharedController.requestAccountDeletion);
 export default router;

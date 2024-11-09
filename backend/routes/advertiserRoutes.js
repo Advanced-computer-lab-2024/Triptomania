@@ -1,5 +1,6 @@
 import express from 'express';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -126,5 +127,5 @@ router.delete('/activity/deleteActivity/:id', advertiserController.deleteActvivt
  *         description: List of activities created by the advertiser
  */
 router.get('/activity/viewMyActivities/:creatorId', advertiserController.viewMyActivities);
-
+router.put("/request/delete",sharedController.requestAccountDeletion);
 export default router;
