@@ -310,7 +310,7 @@ router.get('/getAdvertisers', advertiserController.getAdvertiser);
 
 router.get('/complaints/viewComplaints',complaintsController.viewComplaints);
 router.get('/complaints/viewComplaint/:id',complaintsController.viewComplaintDetails);
-router.put('/complaints/updateStatus',complaintsController.updateComplaintStatus);
+router.put('/complaints/updateStatus/:id',complaintsController.updateComplaintStatus);
 router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDate);
 router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
 router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);

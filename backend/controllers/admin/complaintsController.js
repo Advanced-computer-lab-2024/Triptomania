@@ -7,21 +7,25 @@ import mongoose from 'mongoose';
  */
 const viewComplaints = async (req, res) => {
     try {
-        
-        const complaints = await complaintModel.find({}, "title status");
+        const complaints = await complaintModel.find({}, "title status date");
 
-        
         if (complaints.length === 0) {
             return res.status(404).json({ message: "No complaints found" });
         }
 
         
-        res.status(200).json(complaints);
+        const formattedComplaints = complaints.map(complaint => ({
+            ...complaint.toObject(),
+            date: complaint.date ? complaint.date.toISOString() : null 
+        }));
+
+        res.status(200).json(formattedComplaints);
     } catch (error) {
         console.error("Error retrieving complaints:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
+
 
 
 const sortComplaintsByDate = async (req, res) => {
@@ -65,7 +69,7 @@ const filterComplaintsByStatus = async (req, res) => {
         const { status } = req.query;
 
         
-        if (!status || !['pending', 'resolved'].includes(status)) {
+        if (!status || !['pending', 'resolved', 'received'].includes(status)) {
             console.log("Invalid status received:", status);
             return res.status(400).json({ message: "Invalid status. Must be either 'pending' or 'resolved'." });
         }
@@ -91,7 +95,7 @@ const filterComplaintsByStatus = async (req, res) => {
 
 const updateComplaintStatus = async (req, res) => {
     try {
-        const { complaintId } = req.params; 
+        const { id } = req.params; 
         const { status } = req.body; 
 
         
@@ -101,7 +105,7 @@ const updateComplaintStatus = async (req, res) => {
 
         
         const updatedComplaint = await complaintModel.findByIdAndUpdate(
-            complaintId,
+            id,
             { status },
             { new: true, runValidators: true }
         );
@@ -154,7 +158,7 @@ const viewComplaintDetails = async (req, res) => {
 
     try {
         // Find the complaint by ID and update its reply and status
-        const updatedComplaint = await Complaint.findByIdAndUpdate(
+        const updatedComplaint = await complaintModel.findByIdAndUpdate(
             id,
             { reply, status: "resolved" }, // Update reply content and set status to "resolved"
             { new: true, runValidators: true } // Return the updated document
