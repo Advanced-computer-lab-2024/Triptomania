@@ -150,3 +150,5 @@ export const requestAccountDeletion = async (req, res) => {
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
+
+export default { requestAccountDeletion, changePassword };

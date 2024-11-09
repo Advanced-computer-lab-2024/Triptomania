@@ -8,6 +8,7 @@ import tourGuideController from '../controllers/tourGuide/tourGuideController.js
 import sellerController from '../controllers/seller/sellerController.js';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
 import complaintsController from '../controllers/admin/complaintsController.js';
+import itineraryController from '../controllers/shared/itineraryController.js';
 
 const router = express.Router();
 

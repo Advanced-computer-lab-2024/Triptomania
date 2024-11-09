@@ -6,6 +6,7 @@ import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
 import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
+import productModel from '../../models/product.js'; // Import the product model
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
