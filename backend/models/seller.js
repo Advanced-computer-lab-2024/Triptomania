@@ -10,7 +10,11 @@ const SellerSchema = new Schema({
     password: { type: String, required: true },
     mobile: { type: String},
     description: { type: String }, 
-    type: {type: String,default: 'seller'}
+    type: {type: String,default: 'seller'},
+    deleteAccount:{
+    type: Boolean,
+    default: false
+  }
     
 }, {timestamps:true});
 

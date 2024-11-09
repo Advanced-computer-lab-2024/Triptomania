@@ -156,7 +156,7 @@ const viewComplaintDetails = async (req, res) => {
         // Find the complaint by ID and update its reply and status
         const updatedComplaint = await Complaint.findByIdAndUpdate(
             id,
-            { reply, status: "replied" }, // Update reply content and set status to "replied"
+            { reply, status: "resolved" }, // Update reply content and set status to "resolved"
             { new: true, runValidators: true } // Return the updated document
         );
 

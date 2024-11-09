@@ -13,7 +13,12 @@ const AdvertiserSchema = new Schema({
     companyHotline: { type: Number }, 
     website: { type: String }, 
     profilePicture: { type: String }, 
-    type: {type: String,default: 'advertiser'}
+    type: {type: String,default: 'advertiser'},
+    deleteAccount:{
+    type: Boolean,
+    default: false
+  }
+
 });
 
 AdvertiserSchema.pre('save', async function(next){

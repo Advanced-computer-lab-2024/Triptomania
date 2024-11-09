@@ -43,6 +43,10 @@ const touristSchema = new Schema({
   },
   underage:{
     type: Boolean,
+  },
+  deleteAccount:{
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

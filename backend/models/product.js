@@ -12,7 +12,7 @@ const productSchema = new Schema({
     required: true,
   },
   Seller: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   Price: {

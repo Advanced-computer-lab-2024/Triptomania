@@ -10,7 +10,12 @@ const UserSchema = new Schema({
     mobile: { type: String },
     yearsOfExperience: { type: Number },
     previousWork: { type: String },
-    type: {type: String,default: 'tourGuide'}
+    type: {type: String,default: 'tourGuide'},
+    deleteAccount:{
+    type: Boolean,
+    default: false
+  }
+
 },{timestamps:true});
 
 UserSchema.pre('save', async function(next){
