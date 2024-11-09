@@ -1,0 +1,190 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    margin: 0;
+}
+
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.2em;
+    color: #333;
+}
+
+
+.filter-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 20px;
+    gap: 15px; 
+}
+
+
+#statusSelect, #sortDate {
+    padding: 12px;
+    width: 48%; 
+    min-width: 280px; 
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 18px; 
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+#statusSelect:focus, #sortDate:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+
+button#filterButton {
+    padding: 12px;
+    width: 100%;
+    max-width: 240px; 
+    font-size: 18px; 
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#filterButton:hover {
+    background-color: #0056b3;
+}
+
+
+#complaintsList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px; 
+}
+
+
+.complaint-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.3s ease;
+    text-align: center;
+}
+
+
+.complaint-item h2 {
+    font-size: 1.8em; 
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+
+.complaint-item p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 16px;
+}
+
+
+button.editStatusButton {
+    margin-top: 15px;
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 20px; 
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.editStatusButton:hover {
+    background-color: #0056b3;
+}
+
+button.replyButton {
+    margin-top: 15px;
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 20px; 
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.replyButton:hover {
+    background-color: #0056b3;
+}
+@media (max-width: 600px) {
+    .filter-section {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    #statusSelect, #sortDate, button#filterButton {
+        width: 100%;
+        min-width: unset; 
+        font-size: 16px; 
+    }
+
+    #complaintsList {
+        max-width: 100%;
+    }
+
+    .complaint-item h2 {
+        font-size: 1.5em;
+    }
+
+
+
+
+  
+.status-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+.status-option {
+    padding: 8px 12px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.status-option:hover {
+    background-color: #0056b3;
+}
+
+
+.success-message {
+    margin-top: 10px;
+    font-size: 16px;
+    color: green;
+}
+
+
+}
