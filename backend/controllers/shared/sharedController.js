@@ -10,6 +10,17 @@ import firebase from '../../config/firebase.js';
 import { v4 as uuidv4 } from 'uuid';
 import { fileTypeFromBuffer } from 'file-type';
 
+async function hashPassword(password) {
+    try {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return hashedPassword;
+    } catch (error) {
+        console.error("Error hashing password:", error);
+        throw new Error('Failed to hash password');
+    }
+}
+
 const changePassword = async (req, res) => {
     try {
         const { oldPassword, newPassword, confirmPassword } = req.body;
@@ -20,83 +31,71 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ message: "Invalid account ID format." });
         }
 
+        // Check if newPassword and confirmPassword match
         if (newPassword !== confirmPassword) {
             return res.status(400).json({ message: "Passwords do not match" });
         }
 
+        // Check if newPassword meets minimum length
         if (newPassword.length < 8) {
             return res.status(400).json({ message: "Password must be at least 8 characters long" });
         }
 
+        // Check if newPassword is different from oldPassword
         if (newPassword === oldPassword) {
             return res.status(400).json({ message: "New password must be different from the old password" });
         }
 
-        newPass = await hashPassword(newPassword);
-
+        // Define a variable to hold the user account
         let account;
+        let model;
 
-        // Depending on the type, find the appropriate account
+        // Select the appropriate model based on the type
         switch (type) {
             case "tourist":
-                account = await touristModel.findByIdAndUpdate(
-                    id,
-                    { password: newPass },
-                    { new: true }
-                )
+                model = touristModel;
                 break;
             case "tourGuide":
-                account = await tourGuideModel.findByIdAndUpdate(
-                    id,
-                    { password: newPass },
-                    { new: true }
-                )
+                model = tourGuideModel;
                 break;
             case "seller":
-                account = await sellerModel.findByIdAndUpdate(
-                    id,
-                    { password: newPass },
-                    { new: true }
-                )
+                model = sellerModel;
                 break;
             case "advertiser":
-                account = await advertiserModel.findByIdAndUpdate(
-                    id,
-                    { password: newPass },
-                    { new: true }
-                )
+                model = advertiserModel;
                 break;
             case "tourismGovernor":
-                account = await tourismGovernorModel.findByIdAndUpdate(
-                    id,
-                    { password: newPass },
-                    { new: true }
-                )
+                model = tourismGovernorModel;
                 break;
             case "admin":
-                account = await adminModel.findByIdAndUpdate(
-                    id,
-                    { password: newPass },
-                    { new: true }
-                )
+                model = adminModel;
                 break;
             default:
                 return res.status(400).json({ message: "Invalid type" });
         }
+
+        // Retrieve the account based on ID and type
+        account = await model.findById(id);
+
+        if (!account) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        // Verify the old password
+        const isMatch = await bcrypt.compare(oldPassword, account.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect old password" });
+        }
+
+        // Hash the new password
+        const hashedPassword = await hashPassword(newPassword);
+
+        await model.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
+
+        res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
         console.error("Error changing password:", error);
         res.status(500).json({ message: "Something went wrong" });
-    }
-}
-
-async function hashPassword(password) {
-    try {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        return hashedPassword;
-    } catch (error) {
-        console.error("Error hashing password:", error);
-        throw new Error('Failed to hash password');
     }
 }
 

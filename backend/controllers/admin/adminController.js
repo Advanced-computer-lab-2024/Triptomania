@@ -15,9 +15,9 @@ const addAdmin = async (req, res) => {
 
     try {
         const admin = new adminModel({
-            AdminName: adminName,
-            AdminUsername: adminUsername,
-            AdminPassword: adminPassword
+            name: adminName,
+            username: adminUsername,
+            password: adminPassword
         });
 
         await admin.save();
@@ -86,9 +86,9 @@ const addTourismGovernor = async (req, res) => {
     try {
         // Create a new instance of the tourism governor model
         const tourismGovernor = new tourismGovernorModel({
-            TourismGovernorName: tourismGovernorName,
-            TourismGovernorUsername: tourismGovernorUsername,
-            TourismGovernorPassword: tourismGovernorPassword
+            name: tourismGovernorName,
+            username: tourismGovernorUsername,
+            password: tourismGovernorPassword
         });
 
         // Save the new tourism governor to the database
