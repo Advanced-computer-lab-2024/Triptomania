@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Comment</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Add a Comment</h1>
+
+    <div class="form-group">
+      <label for="type">Type (activity/itinerary/tourguide):</label>
+      <input type="text" id="type" placeholder="Enter type (e.g., activity or tourguide)" required />
+    </div>
+
+    <div class="form-group">
+      <label for="touristId">Tourist ID:</label>
+      <input type="text" id="touristId" placeholder="Enter your tourist ID" required />
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea id="comment" placeholder="Enter your comment" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="typeId">Activity/Itinereary/Tourguide ID:</label>
+      <input type="text" id="typeId" placeholder="Enter the activity or tour guide ID" required />
+    </div>
+
+    <button id="submitCommentBtn">Submit Comment</button>
+    <p id="responseMessage"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
