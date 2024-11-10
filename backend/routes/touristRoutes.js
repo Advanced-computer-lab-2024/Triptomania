@@ -211,7 +211,19 @@ router.get("/product/sortProducts", productController.sortProducts);
 
 router.put('/changePassword/:id/:type', sharedController.changePassword);
 
-router.get('/searchHotel', touristController.searchHotel);
+router.get('/getHotels', touristController.getHotels);
+
+router.get('/getHotelOffers', touristController.getHotelOffers);
+
+router.post('/bookHotel/:id', touristController.bookHotel)
+
+router.get('/searchFlights', touristController.searchFlights);
+
+router.get('/getFlightDetails/:flightOfferId', touristController.getFlightDetails);
+
+router.post('/bookFlight/:id', touristController.bookFlight);
+
+router.get('/flight', touristController.flight);
 
 
 
