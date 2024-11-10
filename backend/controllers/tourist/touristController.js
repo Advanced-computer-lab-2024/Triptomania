@@ -219,12 +219,13 @@ const addComment = async (req, res) => {
 
       case "tourGuide":
         // Checks if tourist was with this tour guide
-        const tourGuideCheck = await tourguide.findById(id);
-        if (!tourGuideCheck.tourists.includes(touristId)) {
-          return res.status(403).json({ error: 'You must participate with this tour guide to leave a comment' });
+        const tourGuideCheck = await itineraryModel.findById(id);
+        if (!tourGuideCheck.bookingMade.includes(touristId)) {
+            return res.status(403).json({ error: 'You must participate with this tour guide to leave a comment' });
         }
+        const tourGuideid = tourGuideCheck.creatorId;
         addedComment = await tourguide.findByIdAndUpdate(
-          id,
+          tourGuideid,
           { $push: { comments: comment } },
           { new: true } // Return the updated document
         );
@@ -233,7 +234,7 @@ const addComment = async (req, res) => {
       case "itinerary":
         // Checks if tourist participated in that itinerary
         const itineraryCheck = await itineraryModel.findById(id);
-        if (!itineraryCheck.participants.includes(touristId)) {
+        if (!itineraryCheck.bookingMade.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the itinerary to comment it' });
         }
         addedComment = await itineraryModel.findByIdAndUpdate(

@@ -11,8 +11,6 @@ document.getElementById("submitReviewBtn").addEventListener("click", async funct
   }
 
   const requestData = {
-    productId,
-    rating: 5, // You can adjust this or add a rating input
     touristId,
     review
   };
@@ -26,21 +24,33 @@ document.getElementById("submitReviewBtn").addEventListener("click", async funct
       body: JSON.stringify(requestData),
     });
 
-    if (response.status === 405) {
-      // Specific handling for 405 error
-      document.getElementById("responseMessage").textContent = "Method Not Allowed: Check the server route and method.";
-      document.getElementById("responseMessage").style.color = "red";
+    const responseData = await response.json();
+
+    if (response.ok) {
+      // Success case
+      document.getElementById("responseMessage").textContent = "Review submitted successfully!";
+      document.getElementById("responseMessage").style.color = "green";
       return;
     }
 
-    if (!response.ok) {
-      // General error handling for other HTTP errors
-      throw new Error(`HTTP error! Status: ${response.status}`);
+    // Handle specific backend error messages
+    if (response.status === 404) {
+      document.getElementById("responseMessage").textContent = responseData.error || "Product not found.";
+      document.getElementById("responseMessage").style.color = "red";
+    } else if (response.status === 403) {
+      document.getElementById("responseMessage").textContent = responseData.error || "You must purchase the product to review it.";
+      document.getElementById("responseMessage").style.color = "red";
+    } else if (response.status === 400) {
+      document.getElementById("responseMessage").textContent = responseData.error || "Bad request. Please check your input.";
+      document.getElementById("responseMessage").style.color = "red";
+    } else if (response.status === 500) {
+      document.getElementById("responseMessage").textContent = responseData.error || "Server error. Please try again later.";
+      document.getElementById("responseMessage").style.color = "red";
+    } else {
+      // General error handler for other unknown errors
+      document.getElementById("responseMessage").textContent = responseData.error || "An unknown error occurred.";
+      document.getElementById("responseMessage").style.color = "red";
     }
-
-    const data = await response.json();
-    document.getElementById("responseMessage").textContent = "Review submitted successfully!";
-    document.getElementById("responseMessage").style.color = "green";
 
   } catch (error) {
     // Network or other unexpected error handling
