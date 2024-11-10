@@ -233,7 +233,7 @@ const addComment = async (req, res) => {
       case "itinerary":
         // Checks if tourist participated in that itinerary
         const itineraryCheck = await itineraryModel.findById(id);
-        if (!itineraryCheck.participants.includes(touristId)) {
+        if (!itineraryCheck.bookingMade.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the itinerary to comment it' });
         }
         addedComment = await itineraryModel.findByIdAndUpdate(
