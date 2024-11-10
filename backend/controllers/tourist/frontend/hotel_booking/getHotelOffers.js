@@ -10,7 +10,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       });
       const data = await response.json();
-      console.log(data.offers[0].offers);
+      console.log(data);
+      if (!data.offers) {
+        throw new Error(data.message);
+      }
       displayOffers(data.offers[0].offers);
     } catch (error) {
       console.error("Error fetching hotel offers:", error);
