@@ -223,7 +223,6 @@ router.get('/getFlightDetails/:flightOfferId', touristController.getFlightDetail
 
 router.post('/bookFlight/:id', touristController.bookFlight);
 
-router.get('/flight', touristController.flight);
 
 
 
