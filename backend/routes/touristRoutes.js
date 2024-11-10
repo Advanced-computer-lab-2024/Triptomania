@@ -357,11 +357,7 @@ router.put('/processPayment/:_id', touristController.processPayment);
 
 router.put('/rateProduct/:touristId',touristController.rateProduct);
 
-router.post("/activity/comment/:id", touristController.addComment);
-
-router.post("/tourGuide/comment/:id", touristController.addComment);
-
-router.post("/itinerary/comment/:id", touristController.addComment);
+router.post("/comment/:id", touristController.addComment);
 
 router.post("/product/reviews/:id", touristController.reviewProduct);
 
