@@ -117,7 +117,7 @@ const UpdateTourist = async (req, res) => {
 
 const getHotels = async (req, res) => {
   try {
-    const { city } = req.body;
+    const { city } = req.query;
     if (!city) {
       return res.status(400).json({ error: 'Hotel city is required' });
     }
@@ -143,7 +143,7 @@ const getHotels = async (req, res) => {
 
 const getHotelOffers = async (req, res) => {
   try {
-    const { hotelId } = req.body;
+    const { hotelId } = req.query;
 
     if (!hotelId) {
       return res.status(400).json({ error: 'Hotel ID is required' });
@@ -173,9 +173,6 @@ const getHotelOffers = async (req, res) => {
 };
 
 async function getValidAccessToken() {
-
-  console.log("Fetching new access token");
-  // Fetch a new token if none is cached or the cached token is expired
   const { accessToken, tokenExpiryTimestamp } = await getAccessToken();
   return accessToken;
 }
@@ -240,7 +237,7 @@ const bookHotel = async (req, res) => {
           {
             tid: 1,
             title: 'MR',
-            firstName: firstName,
+            firstName: firstName || 'Bob',  // Use firstName from tourist data
             lastName: lastName || 'Doe',  // Use lastName from tourist data
             phone: tourist.mobile,
             email: tourist.email
