@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Complaint</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    form { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    h2 { text-align: center; }
+    .input-group { margin: 10px 0; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"], textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+    textarea { resize: vertical; height: 100px; }
+    .submit-btn { display: block; width: 100%; padding: 10px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .submit-btn:hover { background-color: #45a049; }
+    .error-message { color: red; text-align: center; margin-top: 10px; display: none; } /* Initially hidden */
+  </style>
+</head>
+<body>
+
+<h2>Submit a Complaint</h2>
+<form id="complaintForm">
+  <div class="input-group">
+    <label for="touristId">Tourist ID:</label>
+    <input type="text" id="touristId" name="touristId" required>
+  </div>
+  <div class="input-group">
+    <label for="complaintTitle">Complaint Title:</label>
+    <input type="text" id="complaintTitle" name="complaintTitle" required>
+  </div>
+  <div class="input-group">
+    <label for="complaintBody">Complaint Description:</label>
+    <textarea id="complaintBody" name="complaintBody" required></textarea>
+  </div>
+
+  <button type="submit" class="submit-btn">Submit Complaint</button>
+  <div id="errorMessage" class="error-message"></div>
+</form>
+
+<script>
+  document.getElementById('complaintForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = ''; // Clear previous error messages
+    errorMessage.style.display = 'none'; // Hide error message initially
+
+    const touristId = document.getElementById('touristId').value.trim();
+    const complaintTitle = document.getElementById('complaintTitle').value.trim();
+    const complaintBody = document.getElementById('complaintBody').value.trim();
+
+    if (!touristId || !complaintTitle || !complaintBody) {
+      errorMessage.textContent = 'All fields are required.';
+      errorMessage.style.display = 'block'; // Show error message
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/tourist/fileComplaint/${touristId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: complaintTitle, body: complaintBody, date: new Date().toISOString() })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Complaint submitted successfully.');
+        document.getElementById('complaintForm').reset(); // Clear form after successful submission
+      } else {
+        errorMessage.textContent = `Error: ${result.error}`;
+        errorMessage.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+      errorMessage.textContent = 'An error occurred while submitting your complaint. Please try again later.';
+      errorMessage.style.display = 'block';
+    }
+  });
+</script>
+
+</body>
+</html>
