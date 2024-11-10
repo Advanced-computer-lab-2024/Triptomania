@@ -207,7 +207,7 @@ const addComment = async (req, res) => {
       case "activity":
         // Checks if tourist participated in that activity
         const activityCheck = await activityModel.findById(id);
-        if (!activityCheck.participants.includes(touristId)) {
+        if (!activityCheck.bookingMade.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the activity to comment it' });
         }
         addedComment = await activityModel.findByIdAndUpdate(
