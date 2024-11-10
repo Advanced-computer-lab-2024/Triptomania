@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Preferences</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    form { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    h2 { text-align: center; }
+    .preference-group { margin: 10px 0; }
+    .submit-btn { display: block; width: 100%; padding: 10px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .submit-btn:hover { background-color: #45a049; }
+    .error-message { color: red; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>Choose Your Preferences</h2>
+<form id="preferencesForm">
+  <div class="preference-group">
+    <label><input type="checkbox" name="preferences" value="Historic Areas"> Historic Areas</label>
+  </div>
+  <div class="preference-group">
+    <label><input type="checkbox" name="preferences" value="Beaches"> Beaches</label>
+  </div>
+  <div class="preference-group">
+    <label><input type="checkbox" name="preferences" value="Family-Friendly"> Family-Friendly Activities</label>
+  </div>
+  <div class="preference-group">
+    <label><input type="checkbox" name="preferences" value="Shopping"> Shopping</label>
+  </div>
+  <div class="preference-group">
+    <label><input type="checkbox" name="preferences" value="Budget Options"> Budget Options</label>
+  </div>
+
+  <button type="submit" class="submit-btn">Submit Preferences</button>
+  <div id="errorMessage" class="error-message"></div>
+</form>
+
+<script>
+  document.getElementById('preferencesForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = '';  // Clear previous error messages
+
+    const selectedPreferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked'))
+                                      .map(checkbox => checkbox.value);
+
+    if (selectedPreferences.length === 0) {
+      errorMessage.textContent = 'Please select at least one preference.';
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/tourist/choosePreferences`,{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preferences: selectedPreferences })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+      } else {
+        errorMessage.textContent = `Error: ${result.error}`;
+      }
+    } catch (error) {
+      console.error('Error submitting preferences:', error);
+      errorMessage.textContent = 'An error occurred while submitting your preferences. Please try again later.';
+    }
+  });
+</script>
+
+</body>
+</html>
