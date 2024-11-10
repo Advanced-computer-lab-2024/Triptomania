@@ -852,7 +852,6 @@ const choosePreferences = async (req, res) => {
   }
 }
 //////////////////////////////////////////////////////////////////\
-// Utility function to check if cancellation is allowed (48 hours window)
 const isCancellationAllowed = (eventDate) => {
   const now = new Date();
   const eventStartDate = new Date(eventDate);
@@ -868,13 +867,13 @@ export const cancelBooking = async (req, res) => {
     const { itemId } = req.body;             // Capture itemId from the request body
 
     // Validate if the touristId is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(touristId)) {
-        return res.status(400).json({ message: "Invalid tourist ID format" });
+    if (!touristId || !mongoose.Types.ObjectId.isValid(touristId)) {
+        return res.status(400).json({ message: "Invalid tourist ID format or missing tourist ID" });
     }
 
     // Validate if the itemId is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(itemId)) {
-        return res.status(400).json({ message: "Invalid item ID format" });
+    if (!itemId || !mongoose.Types.ObjectId.isValid(itemId)) {
+        return res.status(400).json({ message: "Invalid item ID format or missing item ID" });
     }
 
     // Search for the item in itineraryModel first
@@ -889,13 +888,13 @@ export const cancelBooking = async (req, res) => {
 
     // If the item is not found, return an error
     if (!item) {
-        return res.status(404).json({ message: "Item not found" });
+        return res.status(404).json({ message: `Item with ID ${itemId} not found` });
     }
 
     // Ensure the touristId is in the bookingMade array
     const bookingIndex = item.bookingMade.indexOf(touristId);
     if (bookingIndex === -1) {
-        return res.status(400).json({ message: "Tourist did not book this item" });
+        return res.status(400).json({ message: `Tourist with ID ${touristId} did not book this item` });
     }
 
     // Get the date of the item (activity or itinerary)
@@ -903,7 +902,7 @@ export const cancelBooking = async (req, res) => {
 
     // Ensure cancellation is happening at least 48 hours before the event
     if (!isCancellationAllowed(itemDate)) {
-        return res.status(400).json({ message: "Cancellation window has passed. You can cancel up to 48 hours before the start." });
+        return res.status(400).json({ message: `Cancellation window has passed. You can cancel up to 48 hours before the start of the ${itemType}` });
     }
 
     // Remove the booking from the bookingMade array
@@ -920,6 +919,7 @@ export const cancelBooking = async (req, res) => {
     return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 //////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax

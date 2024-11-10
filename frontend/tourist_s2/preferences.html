@@ -3,71 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Choose Preferences</title>
+  <title>Cancel Booking</title>
   <style>
     body { font-family: Arial, sans-serif; }
-    form { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    .container { max-width: 500px; margin: auto; padding: 20px; }
     h2 { text-align: center; }
-    .preference-group { margin: 10px 0; }
-    .submit-btn { display: block; width: 100%; padding: 10px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    .submit-btn:hover { background-color: #45a049; }
-    .error-message { color: red; text-align: center; margin-top: 10px; }
+    .input-group { margin: 10px 0; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
+    .cancel-btn { width: 100%; padding: 10px; font-size: 16px; background-color: #FF6347; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .cancel-btn:hover { background-color: #FF4500; }
+    .error-message, .success-message { text-align: center; margin-top: 10px; }
+    .error-message { color: red; }
+    .success-message { color: green; }
   </style>
 </head>
 <body>
 
-<h2>Choose Your Preferences</h2>
-<form id="preferencesForm">
-  <div class="preference-group">
-    <label><input type="checkbox" name="preferences" value="Historic Areas"> Historic Areas</label>
-  </div>
-  <div class="preference-group">
-    <label><input type="checkbox" name="preferences" value="Beaches"> Beaches</label>
-  </div>
-  <div class="preference-group">
-    <label><input type="checkbox" name="preferences" value="Family-Friendly"> Family-Friendly Activities</label>
-  </div>
-  <div class="preference-group">
-    <label><input type="checkbox" name="preferences" value="Shopping"> Shopping</label>
-  </div>
-  <div class="preference-group">
-    <label><input type="checkbox" name="preferences" value="Budget Options"> Budget Options</label>
-  </div>
-
-  <button type="submit" class="submit-btn">Submit Preferences</button>
-  <div id="errorMessage" class="error-message"></div>
-</form>
+<div class="container">
+  <h2>Cancel Booking</h2>
+  <form id="cancelForm">
+    <div class="input-group">
+      <label for="touristId">Tourist ID:</label>
+      <input type="text" id="touristId" name="touristId" required>
+    </div>
+    <div class="input-group">
+      <label for="itemId">Booking Item ID:</label>
+      <input type="text" id="itemId" name="itemId" required>
+    </div>
+    <button type="submit" class="cancel-btn">Cancel Booking</button>
+    <div id="responseMessage" class="error-message"></div>
+  </form>
+</div>
 
 <script>
-  document.getElementById('preferencesForm').addEventListener('submit', async (event) => {
+  document.getElementById('cancelForm').addEventListener('submit', async (event) => {
     event.preventDefault();
-    const errorMessage = document.getElementById('errorMessage');
-    errorMessage.textContent = '';  // Clear previous error messages
+    const responseMessage = document.getElementById('responseMessage');
+    responseMessage.textContent = '';  // Clear previous messages
 
-    const selectedPreferences = Array.from(document.querySelectorAll('input[name="preferences"]:checked'))
-                                      .map(checkbox => checkbox.value);
+    const touristId = document.getElementById('touristId').value.trim();
+    const itemId = document.getElementById('itemId').value.trim();
 
-    if (selectedPreferences.length === 0) {
-      errorMessage.textContent = 'Please select at least one preference.';
+    if (!touristId || !itemId) {
+      responseMessage.textContent = 'Both Tourist ID and Booking Item ID are required.';
+      responseMessage.className = 'error-message';
       return;
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tourist/choosePreferences/${touristId}`,{
+      const response = await fetch(`http://localhost:5000/api/tourist/cancelBooking/${touristId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preferences: selectedPreferences })
+        body: JSON.stringify({ itemId })
       });
 
-      const result = await response.json();
+      // Check if the response is JSON
+      let result = {};
+      try {
+        result = await response.json();  // Attempt to parse JSON response
+      } catch (e) {
+        // If JSON parsing fails, set result to a default error message
+        result = { message: 'Unexpected error occurred, please try again later.' };
+      }
+
       if (response.ok) {
-        alert(result.message);
+        responseMessage.textContent = result.message;
+        responseMessage.className = 'success-message';
+        document.getElementById('cancelForm').reset(); // Reset form on success
       } else {
-        errorMessage.textContent = `Error: ${result.error}`;
+        // Handle HTTP errors (e.g., 400, 404, 500)
+        responseMessage.textContent = result.message || 'An error occurred. Please try again.';
+        responseMessage.className = 'error-message';
       }
     } catch (error) {
-      console.error('Error submitting preferences:', error);
-      errorMessage.textContent = 'An error occurred while submitting your preferences. Please try again later.';
+      console.error('Error during cancellation:', error);
+      responseMessage.textContent = 'An error occurred while processing your request. Please try again later.';
+      responseMessage.className = 'error-message';
     }
   });
 </script>
