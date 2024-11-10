@@ -15,6 +15,8 @@ const AdvertiserSchema = new Schema({
     profilePicture: { type: String }, 
     type: {type: String,default: 'advertiser'},
     documents: {type: String, required: false, default: 'none'},
+    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    acceptedTerms: { type: Boolean, default: false },
     profilePicture: {type: String, required: false, default: 'none'}
 });
 

@@ -307,4 +307,13 @@ router.get('/getAdvertisers', advertiserController.getAdvertiser);
 
 router.put('/changePassword/:id/:type', sharedController.changePassword);
 
+
+router.put('/acceptUser/:id/:type', sharedController.acceptUser);
+
+router.put('/rejectUser/:id/:type', sharedController.rejectUser);
+
+router.get('/pending-users', sharedController.getPendingUsers);
+
+
+
 export default router;

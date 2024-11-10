@@ -165,4 +165,6 @@ router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.
 
 router.put('/uploadProfilePicture/:id/:type', upload.single('file'), sharedController.uploadProfilePicture);
 
+router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
 export default router;

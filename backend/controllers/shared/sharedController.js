@@ -151,6 +151,7 @@ const uploadDocuments = async (req, res) => {
 
 }
 
+
 const uploadProfilePicture = async (req, res) => {
     try {
         const { id, type } = req.params;
@@ -242,8 +243,192 @@ async function upload(fileBuffer, fileName, type) {
     }
 }
 
+const acceptUser = async (req, res) => {
+    try {
+        const { id, type } = req.params;
+
+        // Map user type to the corresponding model
+        const userModels = {
+            seller: sellerModel,
+            advertiser: advertiserModel,
+            tourGuide: tourGuideModel,
+        };
+
+        const UserModel = userModels[type];
+
+        if (!UserModel) {
+            return res.status(400).json({ message: 'Invalid user type' });
+        }
+
+        // Find and update the user status to 'accepted'
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            id,
+            { $set: { status: 'accepted' } },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Success response
+        res.status(200).json({
+            message: 'User accepted successfully',
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error('Error accepting user:', error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+};
+
+const rejectUser = async (req, res) => {
+    try {
+        const { id, type } = req.params;
+
+        // Map user type to the corresponding model
+        const userModels = {
+            seller: sellerModel,
+            advertiser: advertiserModel,
+            tourGuide: tourGuideModel,
+        };
+
+        const UserModel = userModels[type];
+
+        if (!UserModel) {
+            return res.status(400).json({ message: 'Invalid user type' });
+        }
+
+        // Find and update the user status to 'rejected'
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            id,
+            { $set: { status: 'rejected' } },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Success response
+        res.status(200).json({
+            message: 'User rejected successfully',
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error('Error rejecting user:', error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+};
+
+const getPendingUsers = async (req, res) => {
+    try {
+        // Find all sellers with status "pending"
+        const pendingSellers = await sellerModel.find({ status: 'pending' });
+
+        // Find all advertisers with status "pending"
+        const pendingAdvertisers = await advertiserModel.find({ status: 'pending' });
+
+        // Find all tour guides with status "pending"
+        const pendingTourGuides = await tourGuideModel.find({ status: 'pending' });
+
+        // Combine all the pending users into one array
+        const pendingUsers = {
+            sellers: pendingSellers,
+            advertisers: pendingAdvertisers,
+            tourGuides: pendingTourGuides
+        };
+
+        // Send the response with all the pending users
+        res.status(200).json({
+            message: 'Pending users retrieved successfully',
+            pendingUsers
+        });
+    } catch (error) {
+        console.error('Error retrieving pending users:', error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
+    }
+};
+
+
+const acceptTerms = async (req, res) => {
+    try {
+        // Extract id and type from the route parameters
+        const { id, type } = req.params;
+
+        // Log the ID and type to verify the values are coming through correctly
+        console.log(`Received ID: ${id}`);
+        console.log(`Received Type: ${type}`);
+
+        // Trim any leading/trailing spaces from the ID
+        const trimmedId = id.trim();
+
+        // Validate if the ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(trimmedId)) {
+            return res.status(400).json({ message: 'Invalid ID format' });
+        }
+
+        // Map user type to the corresponding model
+        const userModels = {
+            seller: sellerModel,
+            advertiser: advertiserModel,
+            tourGuide: tourGuideModel,
+        };
+
+        const UserModel = userModels[type];
+
+        if (!UserModel) {
+            return res.status(400).json({ message: 'Invalid user type' });
+        }
+
+        // Find and update the user to set 'acceptedTerms' to true
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            trimmedId,
+            { $set: { acceptedTerms: true } },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Success response
+        res.status(200).json({
+            message: 'Terms accepted successfully',
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error('Error in acceptTerms function:', error);
+
+        // Log more detailed information if it's a specific error type
+        if (error instanceof TypeError) {
+            console.error('Type Error Details:', error.stack);
+        } else if (error instanceof ReferenceError) {
+            console.error('Reference Error Details:', error.stack);
+        }
+
+        console.error('Complete Error Object:', JSON.stringify(error));
+        console.error('Stack Trace:', error.stack);
+
+        res.status(500).json({
+            message: 'Something went wrong',
+            error: error.message,
+            stack: error.stack,
+        });
+    }
+};
+
+
+
+
+
+
 export default {
     changePassword,
     uploadDocuments,
-    uploadProfilePicture
+    uploadProfilePicture,
+    acceptUser, 
+    rejectUser,
+    getPendingUsers,
+    acceptTerms
 }

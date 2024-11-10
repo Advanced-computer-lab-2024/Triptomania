@@ -136,4 +136,6 @@ router.put('/changePassword/:id/:type', sharedController.changePassword);
 
 router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
 
+router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
 export default router;

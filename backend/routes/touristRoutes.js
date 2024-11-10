@@ -213,4 +213,6 @@ router.put('/changePassword/:id/:type', sharedController.changePassword);
 
 router.get('/searchHotel', touristController.searchHotel);
 
+
+
 export default router;

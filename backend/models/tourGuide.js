@@ -12,6 +12,8 @@ const UserSchema = new Schema({
     previousWork: { type: String },
     type: {type: String,default: 'tourGuide'},
     documents: {type: String, required: false, default: 'none'},
+    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    acceptedTerms: { type: Boolean, default: false },
     profilePicture: {type: String, required: false, default: 'none'}
 },{timestamps:true});
 
