@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+        li:hover {
+            background-color: #e0e0e0;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Activity Categories</h1>
+    <ul id="categoriesList"></ul>
+
+    <script>
+        // Fetch categories from the API
+        fetch('http://localhost:5000/api/admin/activities/getCategories')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // Debugging: Log the response structure
+                const categoriesList = document.getElementById('categoriesList');
+
+                data.forEach(category => {
+                    // Create list item for each category
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a href="categoryDetails.html?id=${category._id}">${category.CategoryName}</a>`;
+                    categoriesList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching categories:', error));
+    </script>
+</body>
+</html>
