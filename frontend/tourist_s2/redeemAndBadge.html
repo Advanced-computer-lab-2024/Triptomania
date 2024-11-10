@@ -59,43 +59,44 @@
 
         // Redeem points and update tourist info
         function redeemPoints() {
-            const touristId = touristIdInput.value.trim();
-            if (!touristId) {
-                statusMessage.textContent = 'Please enter a valid Tourist ID';
-                return;
-            }
+    const touristId = touristIdInput.value.trim();
+    if (!touristId) {
+        statusMessage.textContent = 'Please enter a valid Tourist ID';
+        return;
+    }
 
-            statusMessage.textContent = 'Processing redeem request...';
-            console.log('Redeeming points for ID:', touristId);
+    statusMessage.textContent = 'Processing redeem request...';
+    console.log('Redeeming points for ID:', touristId);
 
-            // Redeem points API call
-            fetch(`http://localhost:5000/api/tourist/redeem/${touristId}`, {
-                method: 'PUT',
-            })
-            .then(response => {
-                console.log('Redeem Response:', response.status);
-                if (!response.ok) {
-                    throw new Error('Failed to redeem points');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Redeem Result:', data);
-                if (data.message) {
-                    statusMessage.textContent = data.message;
-
-                    // Fetch the updated tourist information after redeeming points
-                    fetchTouristInfo(touristId);
-                } else {
-                    statusMessage.textContent = 'Points redeemed successfully!';
-                    // Fetch the updated tourist info after redeeming
-                    fetchTouristInfo(touristId);
-                }
-            })
-            .catch(error => {
-                statusMessage.textContent = `Error: ${error.message}`;
+    // Redeem points API call
+    fetch(`http://localhost:5000/api/tourist/redeem/${touristId}`, {
+        method: 'PUT',
+    })
+    .then(response => {
+        console.log('Redeem Response:', response.status);
+        if (!response.ok) {
+            // If the response isn't successful, parse the error message from the backend
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Failed to redeem points');
             });
         }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Redeem Result:', data);
+
+        // Use the backend's message directly
+        statusMessage.textContent = data.message;
+
+        // Fetch the updated tourist information after redeeming points
+        fetchTouristInfo(touristId);
+    })
+    .catch(error => {
+        // Use the backend's error message (or a generic fallback)
+        statusMessage.textContent = `Error: ${error.message}`;
+    });
+}
+
 
         // Event listener for redeem points button
         redeemPointsButton.addEventListener('click', redeemPoints);
