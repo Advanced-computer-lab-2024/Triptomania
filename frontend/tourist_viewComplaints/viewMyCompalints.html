@@ -58,7 +58,7 @@
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tourist/viewMyComplaints/${touristId}`, {
+      const response = await fetch(`http://localhost:5000/api/tourist/complaint/viewMyComplaints/${touristId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -72,7 +72,7 @@
       const result = await response.json();
       const complaints = result.complaints;
 
-      if (complaints.length === 0) {
+      if (!complaints || complaints.length === 0) {
         noComplaints.textContent = 'No complaints found.';
       } else {
         complaints.forEach(complaint => {
@@ -88,11 +88,19 @@
           complaintDate.textContent = `Date: ${new Date(complaint.date).toLocaleDateString()}`;
 
           const complaintBody = document.createElement('div');
-          complaintBody.textContent = complaint.body;
+          complaintBody.textContent = `Description: ${complaint.body}`;
+
+          const complaintStatus = document.createElement('div');
+          complaintStatus.textContent = `Status: ${complaint.status}`;
+
+          const complaintReply = document.createElement('div');
+          complaintReply.textContent = `Reply: ${complaint.reply || "No reply yet"}`;
 
           complaintItem.appendChild(complaintTitle);
           complaintItem.appendChild(complaintDate);
           complaintItem.appendChild(complaintBody);
+          complaintItem.appendChild(complaintStatus);
+          complaintItem.appendChild(complaintReply);
 
           complaintsList.appendChild(complaintItem);
         });

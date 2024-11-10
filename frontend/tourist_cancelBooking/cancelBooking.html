@@ -53,20 +53,21 @@
 
     try {
       const response = await fetch(`http://localhost:5000/api/tourist/cancelBooking/${touristId}`, {
-        method: 'POST',
+        method: 'PUT',  // Ensure this is the correct HTTP method (PUT)
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId })
+        body: JSON.stringify({ itemId })  // Send itemId in the body
       });
 
-      const result = await response.json();
-      // Use the message returned from the backend (same as in cancelBooking function)
-      if (response.ok) {
-        responseMessage.textContent = result.message;
-        responseMessage.className = 'success-message';
-        document.getElementById('cancelForm').reset(); // Reset form on success
-      } else {
+      // Handle non-200 responses
+      if (!response.ok) {
+        const result = await response.json();
         responseMessage.textContent = result.message || 'An error occurred. Please try again.';
         responseMessage.className = 'error-message';
+      } else {
+        const result = await response.json();
+        responseMessage.textContent = result.message || 'Booking canceled successfully';
+        responseMessage.className = 'success-message';
+        document.getElementById('cancelForm').reset();  // Reset form on success
       }
     } catch (error) {
       console.error('Error during cancellation:', error);

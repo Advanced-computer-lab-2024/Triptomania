@@ -59,7 +59,7 @@ const itinerarySchema = new Schema({
         required: false,
     }],
     Start_date:{
-        type: String, // DD/MM/YYYY Date type
+        type: Date,
         required: true,
     },
     End_date: {
