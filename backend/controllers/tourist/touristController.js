@@ -57,14 +57,29 @@ const getTourist = async (req, res) => {
 // Get one tourist
 
 const getOneTourist = async (req, res) => {
+  const { id } = req.params; 
   try {
-    // const {  username, email, password, mobile, nationality,job_Student } = req.body;
-    const tourist = await userModel.find({ username });
-    return res.status(200).send(tourist);
+   
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid tourist ID format' });
+    }
+
+    // Find the tourist by ID
+    const tourist = await userModel.findById(id);
+
+    
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    
+    return res.status(200).json(tourist);
   } catch (error) {
-    console.log(error);
+    console.error('Error getting tourist:', error);
+    return res.status(500).json({ message: 'Error fetching tourist information', error: error.message });
   }
 };
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -122,7 +137,6 @@ const UpdateTourist = async (req, res) => {
 };
 
 const redeemPoints = async (req, res) => {
-
   try {
     const { id } = req.params;
 
@@ -136,24 +150,44 @@ const redeemPoints = async (req, res) => {
       return res.status(404).send({ message: 'Tourist not found' });
     }
 
-    if (tourist.points % 5000 !== 0 || tourist.points < 5000) {
-      return res.status(400).json({ message: "Points must be a multiple of 5000 to redeem." });
+    if (tourist.points < 5000) {
+      return res.status(400).json({ message: "Insufficient points to redeem." });
     }
 
-    const pointsToRedeem = tourist.points * 0.01;
+    // Calculate redeemable points (round down to the nearest multiple of 5000)
+    const redeemablePoints = Math.floor(tourist.points / 5000) * 5000;
+    const pointsToRedeem = redeemablePoints * 0.01;
+
     tourist.wallet += pointsToRedeem;
+    tourist.points -= redeemablePoints;
 
-    const redeemed = await userModel.findOneAndUpdate(
-      { _id: id },
-      { wallet: tourist.wallet, points: 0 },
-      { new: true }
-    );
+    // Update badge logic directly
+    if (tourist.points <= 100000) {
+      tourist.level = 1;
+      tourist.badge = 'BRONZE';
+    } else if (tourist.points <= 500000) {
+      tourist.level = 2;
+      tourist.badge = 'SILVER';
+    } else {
+      tourist.level = 3;
+      tourist.badge = 'GOLD';
+    }
 
-    res.status(200).json({ message: "wallet updated successfully" });
+    // Save the updated tourist details
+    await tourist.save();
+
+    res.status(200).json({ 
+      message: "Wallet and badge updated successfully", 
+      wallet: tourist.wallet, 
+      remainingPoints: tourist.points, 
+      badge: tourist.badge 
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error updating wallet", error: error.message });
+    res.status(500).json({ message: "Error updating wallet and badge", error: error.message });
   }
 };
+
+
 
 
 const addComment = async (req, res) => {
@@ -370,6 +404,10 @@ const bookActivity = async (req, res) => {
       return res.status(400).json({ message: 'Insufficient funds in wallet.' });
     }
 
+    if (activity.bookingMade.includes(_id)) {
+      return res.status(400).json({ message: 'You have already booked this activity.' });
+    }
+
     // Proceed with booking
     activity.bookingMade.push(_id); // Add the touristId to the activity's bookingMade array
     tourist.wallet -= activity.price; // Deduct the price from the tourist's wallet
@@ -407,6 +445,10 @@ const bookItinerary = async (req, res) => {
     // Check if the tourist's wallet has enough funds
     if (tourist.wallet < itinerary.price) {
       return res.status(400).json({ message: 'Insufficient funds in wallet.' });
+    }
+
+    if (itinerary.bookingMade.includes(_id)) {
+      return res.status(400).json({ message: 'You have already booked this Itinerary.' });
     }
 
     // Proceed with booking

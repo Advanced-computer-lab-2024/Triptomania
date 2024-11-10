@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Activity or Itinerary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book an Activity or Itinerary</h1>
+    <form id="bookingForm">
+        <label for="touristId">Tourist ID:</label>
+        <input type="text" id="touristId" placeholder="Enter Tourist ID" required>
+
+        <label for="activityDropdown">Select Activity:</label>
+        <select id="activityDropdown">
+            <option value="">-- Select Activity --</option>
+        </select>
+
+        <button type="button" id="bookActivityButton">Book Activity</button>
+
+        <label for="itineraryDropdown">Select Itinerary:</label>
+        <select id="itineraryDropdown">
+            <option value="">-- Select Itinerary --</option>
+        </select>
+
+        <button type="button" id="bookItineraryButton">Book Itinerary</button>
+    </form>
+
+    <script>
+        // API endpoints
+        const activitiesUrl = 'http://localhost:5000/api/admin/activities/getActivities';
+        const itinerariesUrl = 'http://localhost:5000/api/tourGuide/itinerary/getItineraries';
+        const bookActivityUrl = 'http://localhost:5000/api/tourist/bookActivity';
+        const bookItineraryUrl = 'http://localhost:5000/api/tourist/bookItinerary';
+
+        // Fetch and populate activities
+        fetch(activitiesUrl)
+            .then(response => response.json())
+            .then(data => {
+                const activityDropdown = document.getElementById('activityDropdown');
+                data.forEach(activity => {
+                    const option = document.createElement('option');
+                    option.value = activity._id;
+                    option.textContent = activity.name; // Assuming 'name' is the field for activity name
+                    activityDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching activities:', error));
+
+        // Fetch and populate itineraries
+        fetch(itinerariesUrl)
+    .then(response => response.json())
+    .then(data => {
+        console.log('Fetched Itineraries:', data); // Debugging
+        const itineraryDropdown = document.getElementById('itineraryDropdown');
+        
+        // Clear any previous options
+        itineraryDropdown.innerHTML = '<option value="">-- Select Itinerary --</option>';
+
+        if (Array.isArray(data.itinerary)) {
+            data.itinerary.forEach(itinerary => {
+                const option = document.createElement('option');
+                option.value = itinerary._id;  // Use the itinerary ID as the option's value
+                option.textContent = itinerary.Name;  // Only display the 'Name' in the dropdown
+                itineraryDropdown.appendChild(option);
+            });
+        } else {
+            console.error('Unexpected response format:', data);
+        }
+    })
+    .catch(error => console.error('Error fetching itineraries:', error));
+
+
+
+        
+
+// Book Activity
+document.getElementById('bookActivityButton').addEventListener('click', () => {
+    const touristId = document.getElementById('touristId').value;
+    const activityId = document.getElementById('activityDropdown').value;
+
+    if (!touristId || !activityId) {
+        alert('Please enter Tourist ID and select an Activity.');
+        return;
+    }
+
+    fetch(`${bookActivityUrl}/${activityId}`, {
+        method: 'PUT',  // Ensure this is a PUT request
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            _id: touristId  // Sending tourist ID in the request body
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);  // Show a message from the server
+            } else {
+                console.error('No message returned:', data);
+                alert('Something went wrong while booking the activity.');
+            }
+        })
+        .catch(error => {
+            console.error('Error booking activity:', error);
+            alert('An error occurred while booking the activity.');
+        });
+});
+
+
+
+        
+// Book Itinerary
+document.getElementById('bookItineraryButton').addEventListener('click', () => {
+    const touristId = document.getElementById('touristId').value;
+    const itineraryId = document.getElementById('itineraryDropdown').value;
+
+    if (!touristId || !itineraryId) {
+        alert('Please enter Tourist ID and select an Itinerary.');
+        return;
+    }
+
+    fetch(`${bookItineraryUrl}/${itineraryId}`, {
+        method: 'PUT',  // Ensure this is a PUT request
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            _id: touristId  // Sending tourist ID in the request body
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);  // Show a message from the server
+            } else {
+                console.error('No message returned:', data);
+                alert('Something went wrong while booking the itinerary.');
+            }
+        })
+        .catch(error => {
+            console.error('Error booking itinerary:', error);
+            alert('An error occurred while booking the itinerary.');
+        });
+});
+
+
+    </script>
+</body>
+</html>

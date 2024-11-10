@@ -132,7 +132,7 @@ router.get('/getTourist', touristController.getTourist);
  *       200:
  *         description: Details of the specified tourist
  */
-router.get('/getOneTourist', touristController.getOneTourist);
+router.get('/getOneTourist/:id', touristController.getOneTourist);
 
 /**
  * @swagger
