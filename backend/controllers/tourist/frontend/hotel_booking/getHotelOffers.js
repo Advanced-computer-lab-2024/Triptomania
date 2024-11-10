@@ -10,9 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       });
       const data = await response.json();
-      console.log(data);
       if (!data.offers) {
-        throw new Error(data.message);
+        throw new Error("No offers found for this hotel");
       }
       displayOffers(data.offers[0].offers);
     } catch (error) {
