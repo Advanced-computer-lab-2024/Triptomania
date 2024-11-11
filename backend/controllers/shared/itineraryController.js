@@ -29,9 +29,6 @@ const getItineraries = async (req, res) => {
 
 const viewItineraries = async (req, res) => { 
   try {
-    // Assuming user ID is available in req.user.id
-    const {id} = req.params;
-
     // Retrieve itineraries based on `isActivated` and `bookingMade`
     const itineraries = await itineraryModel.find({
     });

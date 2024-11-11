@@ -79,7 +79,7 @@ router.get("/itinerary/getItinerary/:id", itineraryController.getItinerary);
  *       200:
  *         description: List of itineraries
  */
-router.get("/itinerary/getItineraries", itineraryController.getItineraries);
+router.get("/itinerary/viewItineraries", itineraryController.viewItineraries);
 
 /**
  * @swagger

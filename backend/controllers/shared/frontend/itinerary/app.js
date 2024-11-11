@@ -19,10 +19,11 @@ async function fetchExchangeRates(base = "USD") {
 async function fetchItineraries() {
     await fetchExchangeRates(); // Fetch exchange rates on page load
     try {
-        const response = await fetch("http://localhost:5000/api/tourGuide/itinerary/getItineraries");
+        const response = await fetch("http://localhost:5000/api/tourGuide/itinerary/viewItineraries");
         const data = await response.json();
+        console.log(data);
         if (data.status) {
-            lastFetchedItineraries = data.itinerary;
+            lastFetchedItineraries = data.itineraries;
             displayItineraries(lastFetchedItineraries); // Default display in USD
         }
     } catch (error) {
