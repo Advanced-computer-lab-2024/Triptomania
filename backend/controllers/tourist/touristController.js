@@ -1,5 +1,6 @@
 // Import userModel and other modules using ES module syntax
 import userModel from '../../models/tourist.js';
+import productModel from '../../models/product.js';
 import { amadeus, getAccessToken } from '../../config/amadeus.js';
 import axios from 'axios';
 
