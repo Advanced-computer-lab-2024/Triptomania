@@ -11,7 +11,7 @@ import mongoose from 'mongoose';
 // Create new advertiser
 const createAdvertiser = async (req, res) => {
   try {
-    const { username, email, password, mobile, companyName, companyHotline, website/*, profilePicture*/ } = req.body;
+    const { firstName, lastName, username, email, password, mobile, companyName, companyHotline, website/*, profilePicture*/ } = req.body;
 
     // Check if the username or email already exists
     const existingAdvertiser = await AdvertiserModel.findOne({
@@ -27,6 +27,8 @@ const createAdvertiser = async (req, res) => {
 
     // Create new advertiser
     const adv = await AdvertiserModel.create({
+      firstName, 
+      lastName,
       username,
       email,
       password,
@@ -72,8 +74,8 @@ const getAdvertiser = async (req, res) => {
 // Update an advertiser
 const updateAdvertiser = async (req, res) => {
   try {
-    const { username, email, password, mobile, companyName, companyHotline, website/*, profilePicture*/ } = req.body;
-    const updateData = { username, email,password, mobile, companyName, companyHotline, website/*, profilePicture*/ };
+    const { firstName, lastName, username, email, password, mobile, companyName, companyHotline, website/*, profilePicture*/ } = req.body;
+    const updateData = { firstName, lastName, username, email,password, mobile, companyName, companyHotline, website/*, profilePicture*/ };
     //const hashed = hashPassword(password);
 
     // Check if the hashed password or email already exists

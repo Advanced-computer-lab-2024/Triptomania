@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs';
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -12,13 +14,16 @@ const UserSchema = new Schema({
     previousWork: { type: String },
     comments: { type: [String], default: [] },
     type: { type: String, default: 'tourGuide' },
-    tourists: [{ type: mongoose.Types.ObjectId, ref: 'Tourist'}],
-    ratings: [{
+    tourists: [{ type: mongoose.Types.ObjectId, ref: 'Tourist' }],
+    ratings: [
+      {
         touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
         rating: { type: Number, min: 0, max: 5, required: true }
-    }],
+      }
+    ],
     averageRating: { type: Number, default: 0 }
-}, { timestamps: true });
+  }, { timestamps: true });
+  
 
 UserSchema.pre('save', async function (next) {
     const tourguide = this;

@@ -10,8 +10,8 @@ import activityCategoryModel from '../../models/activityCategory.js';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
-  const { username, email, password, mobile, nationality, DOB, job_Student/*, wallet*/ } = req.body;
-  //const hashed = hashPassword(Password);
+  const { firstName, lastName, username, email, password, mobile, nationality, DOB, job_Student } = req.body;
+  
 
   try {
     // Check for existing user by username or email
@@ -31,7 +31,7 @@ const CreateTourist = async (req, res) => {
     const isUnderage = age < 18 || (age === 18 && monthDiff < 0);
 
     // Create a new tourist
-    const tourist = await userModel.create({ username, email, password, mobile, nationality, DOB, job_Student, underage: isUnderage });
+    const tourist = await userModel.create({ firstName, lastName, username, email, password, mobile, nationality, DOB, job_Student, underage: isUnderage });
     res.status(200).json(tourist);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -87,7 +87,7 @@ const getOneTourist = async (req, res) => {
 // Update a tourist
 const UpdateTourist = async (req, res) => {
   try {
-    const { username, email, password, mobile, nationality, job_Student, wallet, points } = req.body;
+    const { firstName, lastName, username, email, password, mobile, nationality, job_Student, wallet, points } = req.body;
     console.log('Request Body:', req.body); // Log the incoming request
 
     // Fetch the existing tourist data
@@ -97,6 +97,8 @@ const UpdateTourist = async (req, res) => {
     }
 
     const updateData = {
+      firstName: firstName !== undefined ? firstName : existingTourist.firstName,
+      lastName: lastName !== undefined ? lastName : existingTourist.lastName,
       email: email !== undefined ? email : existingTourist.email,
       password: password !== undefined ? password : existingTourist.password,
       mobile: mobile !== undefined ? mobile : existingTourist.mobile,
@@ -105,6 +107,7 @@ const UpdateTourist = async (req, res) => {
       wallet: wallet !== undefined ? wallet : existingTourist.wallet,
       points: points !== undefined ? points : existingTourist.points
     };
+    
 
     // Remove undefined fields (optional as we've handled undefined values)
     Object.keys(updateData).forEach(key => {
