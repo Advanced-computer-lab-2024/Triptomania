@@ -195,6 +195,7 @@ const addComment = async (req, res) => {
   const { id } = req.params; // Get the ID from the URL parameter
 
   try {
+    const currentDate = new Date();
     // Check if ID is a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid ID format." });
@@ -210,6 +211,12 @@ const addComment = async (req, res) => {
         if (!activityCheck.bookingMade.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the activity to comment it' });
         }
+
+        
+        if (currentDate < activityCheck.date) {
+          return res.status(403).json({ error: 'You can only comment after the activity date.' });
+        }
+
         addedComment = await activityModel.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
@@ -223,6 +230,11 @@ const addComment = async (req, res) => {
         if (!tourGuideCheck.bookingMade.includes(touristId)) {
             return res.status(403).json({ error: 'You must participate with this tour guide to leave a comment' });
         }
+
+        if (currentDate < itineraryModel.End_date) {
+          return res.status(403).json({ error: 'You can only comment after the itinerary date.' });
+        }
+        
         const tourGuideid = tourGuideCheck.creatorId;
         addedComment = await tourguide.findByIdAndUpdate(
           tourGuideid,
@@ -237,6 +249,11 @@ const addComment = async (req, res) => {
         if (!itineraryCheck.bookingMade.includes(touristId)) {
           return res.status(403).json({ error: 'You must participate in the itinerary to comment it' });
         }
+
+        if (currentDate < itineraryModel.End_date) {
+          return res.status(403).json({ error: 'You can only comment after the itinerary date.' });
+        }
+
         addedComment = await itineraryModel.findByIdAndUpdate(
           id,
           { $push: { comments: comment } },
