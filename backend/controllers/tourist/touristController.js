@@ -344,7 +344,7 @@ const bookFlight = async (req, res) => {
       return res.status(400).json({ error: 'Missing required parameters for booking' });
     }
 
-    const tourist = await userModel.findOne({ _id: id });
+    const tourist = await userModel.findById(id);
 
     // Create the booking request data
     const bookingData = {
@@ -356,7 +356,7 @@ const bookFlight = async (req, res) => {
             id: "1",
             dateOfBirth: '1982-01-16',
             name: {
-              firstName: tourist.username,
+              firstName: tourist.username || "BOB",
               lastName: "SMITH",
             },
             gender: "MALE",
