@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Activities</title>
+    <style>
+        /* CSS for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            margin: 30px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .activity-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .activity-item h3 {
+            margin: 0;
+        }
+
+        .activity-item p {
+            margin: 5px 0;
+        }
+
+        .share-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745; /* Green for share */
+            color: white;
+        }
+
+        .share-button:hover {
+            background-color: #218838;
+        }
+
+        .share-link {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #007bff;
+            word-break: break-all;
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            text-align: center;
+            color: #d9534f; /* Red color for error messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>All Activities</h2>
+        <div id="activityList"></div>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        async function fetchActivities() {
+            try {
+                const response = await fetch('http://localhost:5000/api/advertiser/activity/viewActivities');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch activities');
+                }
+                const activities = await response.json();
+                displayActivities(activities);
+            } catch (error) {
+                document.getElementById('responseMessage').textContent = "Error loading activities: " + error.message;
+            }
+        }
+
+        // Function to display activities on the page
+        function displayActivities(activities) {
+            const activityList = document.getElementById('activityList');
+            activityList.innerHTML = ''; // Clear previous activities
+
+            activities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.classList.add('activity-item');
+                activityItem.innerHTML = `
+                    <h3>${activity.name}</h3>
+                    <p>${activity.description}</p>
+                    <p>Date: ${activity.date}, Time: ${activity.time}</p>
+                    <p>Location: <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.location)}" target="_blank">${activity.location}</a></p>
+                    <p>Price: $${activity.price}</p>
+                    <p>Category: ${activity.category}</p>
+                    <p>Tags: ${activity.tags.join(', ')}</p>
+                    <p>Special Discounts: ${activity.specialDiscounts}</p>
+                    <p>Is Booking Open: ${activity.isBookingOpen ? 'Yes' : 'No'}</p>
+                    <button class="share-button" onclick="shareActivity('${activity._id}')">Share</button>
+                    <p id="share-link-${activity._id}" class="share-link" style="display: none;"></p>
+                `;
+
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        // Function to handle sharing an activity
+        function shareActivity(activityId) {
+            const shareLinkElement = document.getElementById(`share-link-${activityId}`);
+            const shareableLink = `http://localhost:5000/activity/${activityId}`;
+            shareLinkElement.textContent = `Shareable Link: ${shareableLink}`;
+            shareLinkElement.style.display = 'block'; // Show the link
+        }
+
+        // Call fetchActivities on page load
+        document.addEventListener('DOMContentLoaded', fetchActivities);
+    </script>
+</body>
+</html>
