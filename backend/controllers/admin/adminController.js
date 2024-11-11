@@ -5,6 +5,8 @@ import tourismGovernorModel from '../../models/tourismGovernor.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
+import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
+import productModel from '../../models/product.js'; // Import the product model
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
@@ -102,11 +104,55 @@ const addTourismGovernor = async (req, res) => {
     }
 };
 
+// Function to flag an itinerary
 
+
+const flagItinerary = async (req, res) => {
+    const { id } = req.params; // Extracting itineraryId from query parameters
+
+    try {
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid itinerary ID format." });
+        }
+  
+        // Find the itinerary by ID
+        const itinerary = await ItineraryModel.findById(id);
+        
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found." });
+        }
+  
+        let isFlagged = itinerary.isFlagged;
+      
+        // Preserve the creatorId and save the itinerary
+        await ItineraryModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
+  
+        return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
+    } catch (error) {
+        console.error("Error toggling itinerary flag:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+}
+
+
+
+const viewProductsAdmin = async (req, res) => {
+    try {
+        // Exclude 'Quantity' field by setting it to 0
+        const products = await productModel.find();
+        res.status(200).json(products);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error retrieving products', error });
+    }
+};
 
 
 export default {
     addAdmin,
     deleteAccount,
-    addTourismGovernor
+    addTourismGovernor,
+    flagItinerary,
+    viewProductsAdmin
 }

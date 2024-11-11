@@ -1,0 +1,42 @@
+<!-- path/to/toggleItinerary.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Itinerary Status</title>
+    <link rel="stylesheet" href="path/to/your/styles.css"> <!-- Link to your existing CSS -->
+</head>
+<body>
+    <div class="container">
+        <h1>Toggle Itinerary Status</h1>
+        <form id="toggleItineraryForm">
+            <label for="itineraryId">Itinerary ID:</label>
+            <input type="text" id="itineraryId" name="itineraryId" required>
+            <button type="submit">Toggle Status</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('toggleItineraryForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const itineraryId = document.getElementById('itineraryId').value;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/tourGuide/activate/itinerary?itineraryId=${itineraryId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                document.getElementById('responseMessage').innerText = data.message;
+            } catch (error) {
+                document.getElementById('responseMessage').innerText = "Error: " + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -550,4 +550,18 @@ const bookTransportation = async (req, res) => {
   }
 }
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, getHotels, getHotelOffers, bookHotel, searchFlights, getFlightDetails, bookFlight, bookTransportation };
+//View products
+
+const viewProductsTourist = async (req, res) => {
+  try {
+     // Exclude archived products by setting Archive: false in the filter
+     const products = await productModel.find({ Archive: false });
+     res.status(200).json(products);
+  } catch (error) {
+     console.log(error);
+     res.status(500).json({ message: 'Error retrieving products', error });
+  }
+};
+
+// Export all functions using ES module syntax
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, getHotels, getHotelOffers, bookHotel, searchFlights, getFlightDetails, bookFlight, bookTransportation, viewProductsTourist };

@@ -1,5 +1,6 @@
 import sellerController from "../controllers/seller/sellerController.js";
 import productController from '../controllers/shared/productController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 import express from 'express';
 import multer from "multer";
 import sharedController from "../controllers/shared/sharedController.js";
@@ -166,5 +167,10 @@ router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.
 router.put('/uploadProfilePicture/:id/:type', upload.single('file'), sharedController.uploadProfilePicture);
 
 router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
+
+router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
+
+router.put("/request/delete",sharedController.requestAccountDeletion);
 
 export default router;

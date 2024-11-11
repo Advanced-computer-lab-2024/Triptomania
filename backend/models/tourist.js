@@ -59,6 +59,10 @@ const touristSchema = new Schema({
       type: Object
     }
   ],
+  deleteAccount:{
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 touristSchema.pre('save', async function(next){

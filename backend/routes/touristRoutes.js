@@ -79,6 +79,18 @@ router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
 
 /**
  * @swagger
+ * /api/tourist/itinerary/getItineraries:
+ *   get:
+ *     summary: Get a list of all itineraries
+ *     tags: [Tourist]
+ *     responses:
+ *       200:
+ *         description: List of itineraries
+ */
+router.get("/itineraries/getItineraries/:id", itineraryController.getItineraries);
+
+/**
+ * @swagger
  * /api/tourist/addTourist:
  *   post:
  *     summary: Add a new tourist
@@ -171,7 +183,7 @@ router.get("/activity/filterActivities", activityController.filterActivities);
  *       200:
  *         description: List of all products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts", touristController.viewProductsTourist);
 
 /**
  * @swagger
@@ -224,5 +236,7 @@ router.get('/getFlightDetails/:flightOfferId', touristController.getFlightDetail
 router.post('/bookFlight/:id', touristController.bookFlight);
 
 router.post('/bookTransportation/:id', touristController.bookTransportation);
+
+router.put("/request/delete",sharedController.requestAccountDeletion);
 
 export default router;

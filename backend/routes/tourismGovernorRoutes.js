@@ -188,4 +188,6 @@ router.put('/updateTag', tourismGovernor.updateTag);
 
 router.put('/changePassword/:id/:type', sharedController.changePassword);
 
+router.put("/request/delete",sharedController.requestAccountDeletion);
+
 export default router;

@@ -48,15 +48,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add product details along with the image
             productElement.innerHTML = `
-                ${imageHtml}
-                <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
-                <p style="margin: 5px 0; color: #555;">${product.Description}</p>
-                <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: $${product.Price}</p>
-                <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
-                <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
-                <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
-                <a href="editProduct.html?id=${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Edit</a>
-            `;
+        ${imageHtml}
+        <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
+        <p style="margin: 5px 0; color: #555;">${product.Description}</p>
+        <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: $${product.Price}</p>
+        <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
+        <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
+        <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
+        <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>
+        <p style="font-size: 0.9em; color: #888;">Quantity: ${product.Quantity}</p>
+        <button class="archive-button" data-id="${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; border: none; cursor: pointer;">
+            ${product.Archive ? 'Unarchive' : 'Archive'}
+        </button>
+        <a href="editProduct.html?id=${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Edit</a>
+    `;
+
+            // Event listener for each archive button
+            const archiveButton = productElement.querySelector('.archive-button');
+            archiveButton.addEventListener('click', async function () {
+                const productId = this.getAttribute('data-id');
+                try {
+                    const response = await fetch(`http://localhost:5000/api/seller/product/archive/${productId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (response.ok) {
+                        alert('Product archived/unarchived successfully');
+                        fetchProducts(); // Refresh product list
+                    } else {
+                        alert('Failed to archive/unarchive product');
+                    }
+                } catch (error) {
+                    console.error('Error archiving/unarchiving product:', error);
+                }
+            });
 
             productElement.addEventListener('mouseover', function () {
                 productElement.style.borderColor = '#0056b3';
@@ -125,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error filtering products:', error);
         }
     }
-    
+
 
     // Event listener for filter button
     filterButton.addEventListener('click', function () {

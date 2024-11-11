@@ -8,6 +8,8 @@ import tourGuideController from '../controllers/tourGuide/tourGuideController.js
 import sellerController from '../controllers/seller/sellerController.js';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import complaintsController from '../controllers/admin/complaintsController.js';
+import itineraryController from '../controllers/shared/itineraryController.js';
 
 const router = express.Router();
 
@@ -219,7 +221,7 @@ router.put("/product/editProduct/:id", productController.editProduct);
  *       200:
  *         description: List of products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts", adminController.viewProductsAdmin);
 
 /**
  * @swagger
@@ -256,6 +258,8 @@ router.get("/product/filterProducts", productController.filterProducts);
  *         description: Sorted products list
  */
 router.get("/product/sortProducts", productController.sortProducts);
+
+router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
 
 /**
  * @swagger
@@ -314,6 +318,27 @@ router.put('/rejectUser/:id/:type', sharedController.rejectUser);
 
 router.get('/pending-users', sharedController.getPendingUsers);
 
+router.get('/complaints/viewComplaints',complaintsController.viewComplaints);
+router.get('/complaints/viewComplaint/:id',complaintsController.viewComplaintDetails);
+router.put('/complaints/updateStatus/:id',complaintsController.updateComplaintStatus);
+router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDate);
+router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
+router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
+
+
+router.put('/flagitinerary/:id',adminController.flagItinerary);
+
+/**
+ * @swagger
+ * /api/admin/itineraries/getItineraries:
+ *   get:
+ *     summary: Get a list of all itineraries
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: List of itineraries
+ */
+router.get("/itineraries/getItineraries/:id", itineraryController.viewItineraries);
 
 
 export default router;

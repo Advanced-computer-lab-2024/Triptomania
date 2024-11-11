@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const addItineraryButton = document.getElementById("addItineraryButton");
 
     // Fetch all itineraries from API
-    fetch("http://localhost:5000/api/tourGuide/itinerary/getItineraries")
+    fetch("http://localhost:5000/api/tourist/itinerary/getItineraries/6700f56fe9d5e0bb3bde6996")
         .then(response => response.json())
         .then(data => {
             if (data.status) {
-                const itineraries = data.itinerary;
+                const itineraries = data.itineraries;
                 itineraries.forEach(itinerary => {
                     const itineraryDiv = document.createElement("div");
                     itineraryDiv.classList.add("itinerary");
