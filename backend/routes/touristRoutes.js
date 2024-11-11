@@ -217,7 +217,7 @@ router.get('/getHotelOffers', touristController.getHotelOffers);
 
 router.post('/bookHotel/:id', touristController.bookHotel)
 
-router.get('/searchFlights', touristController.searchFlights);
+router.post('/searchFlights', touristController.searchFlights);
 
 router.get('/getFlightDetails/:flightOfferId', touristController.getFlightDetails);
 

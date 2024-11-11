@@ -259,6 +259,8 @@ const bookHotel = async (req, res) => {
 
     let response = await amadeus.booking.hotelOrders.post(bookingData);
 
+    await userModel.findByIdAndUpdate(id, { $push: { hotelBookings: response.data.id } });
+
     return res.status(200).json(response.data);  // Send booking response back to client
 
   } catch (error) {
@@ -377,6 +379,8 @@ const bookFlight = async (req, res) => {
     // Call Amadeus API to book the flight
     const bookingResponse = await amadeus.booking.flightOrders.post(bookingData);
 
+    await userModel.findByIdAndUpdate(id, { $push: { flightBookings: bookingResponse.data.id } });
+    
     // Return the booking response
     return res.status(201).json(bookingResponse.data);
 

@@ -43,7 +43,17 @@ const touristSchema = new Schema({
   },
   underage:{
     type: Boolean,
-  }
+  },
+  hotelBookings: [
+    {
+      type: String,
+    },
+  ],
+  flightBookings: [
+    {
+      type: String,
+    },
+  ],
 }, { timestamps: true });
 
 touristSchema.pre('save', async function(next){
