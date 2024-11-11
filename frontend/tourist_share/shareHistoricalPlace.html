@@ -29,6 +29,12 @@
         .historical-place-item h3 {
             margin: 0;
         }
+        .historical-place-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
         .share-button {
             margin-top: 10px;
             padding: 8px 12px;
@@ -58,7 +64,7 @@
 <script>
     async function fetchHistoricalPlaces() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourismGovernor/getHistoricalPlaces'); // Adjust API endpoint as needed
+            const response = await fetch('http://localhost:5000/api/tourist/getHistoricalPlaces'); // Adjust API endpoint as needed
             if (response.ok) {
                 const data = await response.json();
                 displayHistoricalPlaces(data.historicalPlaces);
@@ -79,11 +85,16 @@
             placeItem.classList.add('historical-place-item');
 
             placeItem.innerHTML = `
-                <h3>${place.name}</h3>
-                <p>${place.description}</p>
-                <p>Location: ${place.location}</p>
+                <h3>${place.Name}</h3>
+                <img src="${place.Picture}" alt="${place.Name} Image">
+                <p><strong>Description:</strong> ${place.Description}</p>
+                <p><strong>Location:</strong> ${place.Location}</p>
+                <p><strong>Opening Hours:</strong> ${place.Opening_hours}</p>
+                <p><strong>Closing Hours:</strong> ${place.Closing_hours}</p>
+                <p><strong>Ticket Price:</strong> $${place.Ticket_prices.toFixed(2)}</p>
+                <p><strong>Category:</strong> ${place.Category}</p>
                 <button class="share-button" onclick="sharePlace('${place._id}')">Share</button>
-                <p class="share-link" id="shareLink-${place._id}">http://localhost:5000/tourismGovernor/historicalPlace/${place._id}</p>
+                <p class="share-link" id="shareLink-${place._id}">http://localhost:5000/api/tourist/getHistoricalPlace/${place._id}</p>
             `;
 
             listContainer.appendChild(placeItem);

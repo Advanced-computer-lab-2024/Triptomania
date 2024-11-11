@@ -121,9 +121,18 @@
         // Function to handle sharing an activity
         function shareActivity(activityId) {
             const shareLinkElement = document.getElementById(`share-link-${activityId}`);
-            const shareableLink = `http://localhost:5000/activity/${activityId}`;
+            const shareableLink = `http://localhost:5000/api/tourist/activities/getActivity/${activityId}`;
             shareLinkElement.textContent = `Shareable Link: ${shareableLink}`;
             shareLinkElement.style.display = 'block'; // Show the link
+
+            // Optionally copy the link to clipboard
+        navigator.clipboard.writeText(shareableLink)
+            .then(() => {
+                alert("Link copied to clipboard!");
+            })
+            .catch(err => {
+                console.error("Could not copy text: ", err);
+            });
         }
 
         // Call fetchActivities on page load
