@@ -6,6 +6,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import productController from '../controllers/shared/productController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
+import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 
 const router = express.Router();
 
@@ -368,5 +369,17 @@ router.get('/complaint/viewMyComplaints/:touristId', touristController.viewMyCom
 router.put('/selectTouristPreferences/:touristId', touristController.choosePreferences);
 
 router.put('/cancelBooking/:touristId', touristController.cancelBooking);
+
+router.get('/activities/getActivities', activityController.viewActivities);
+
+router.get('/activities/getActivity/:id', activityController.getActivity);
+
+router.get('/itineraries/getItineraries', itineraryController.getItineraries);
+
+router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
+
+router.get('/getHistoricalPlaces', historicalPlaceController.getHistoricalPlaces);
+
+router.get('/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
 
 export default router;
