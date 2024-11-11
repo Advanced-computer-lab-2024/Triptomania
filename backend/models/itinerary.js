@@ -58,10 +58,11 @@ const itinerarySchema = new Schema({
         ref: 'PreferenceTag', // Adjust the model name as needed
         required: false,
     }],
-    Start_date:{
+    Start_date: {
         type: Date,
         required: true,
-    },
+        default: Date.now // Automatically sets the current date
+    },    
     End_date: {
         type: String, // DD/MM/YYYY Date type
         required: true,

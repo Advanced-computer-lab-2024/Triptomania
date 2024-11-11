@@ -1,23 +1,43 @@
-// Function to fetch all activities from the server
+let exchangeRates = { USD: 1 }; // Default exchange rate for USD
+let lastFetchedActivities = []; // Store activities data
+
+// Fetch exchange rates for the selected currency
+async function fetchExchangeRates(base = "USD") {
+    try {
+        const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${base}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch exchange rates');
+        }
+        const data = await response.json();
+        exchangeRates = data.rates;
+    } catch (error) {
+        console.error("Error fetching exchange rates:", error.message);
+    }
+}
+
+// Fetch activities from the server
 async function fetchActivities() {
+    await fetchExchangeRates(); // Fetch exchange rates on page load
     try {
         const response = await fetch('http://localhost:5000/api/advertiser/activity/viewActivities');
         if (!response.ok) {
             throw new Error('Failed to fetch activities');
         }
         const activities = await response.json();
-        displayActivities(activities);
+        displayActivities(activities); // Default display in USD
     } catch (error) {
         document.getElementById('responseMessage').textContent = "Error loading activities: " + error.message;
     }
 }
 
-// Function to display activities on the page
-function displayActivities(activities) {
+// Display activities with the selected currency conversion
+function displayActivities(activities, currency = "USD") {
+    lastFetchedActivities = activities; // Store for later conversions
     const activityList = document.getElementById('activityList');
     activityList.innerHTML = ''; // Clear previous activities
 
     activities.forEach(activity => {
+        const convertedPrice = (activity.price * exchangeRates[currency]).toFixed(2);
         const activityItem = document.createElement('div');
         activityItem.classList.add('activity-item');
         activityItem.innerHTML = `
@@ -25,7 +45,7 @@ function displayActivities(activities) {
             <p>${activity.description}</p>
             <p>Date: ${activity.date}, Time: ${activity.time}</p>
             <p>Location: <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.location)}" target="_blank">${activity.location}</a></p>
-            <p>Price: $${activity.price}</p>
+            <p>Price: ${convertedPrice} ${currency}</p>
             <p>Category: ${activity.category}</p>
             <p>Tags: ${activity.tags.join(', ')}</p>
             <p>Special Discounts: ${activity.specialDiscounts}</p>
@@ -38,7 +58,14 @@ function displayActivities(activities) {
     });
 }
 
-// Function to delete an activity
+// Handle currency selection change
+document.getElementById('currencySelect').addEventListener('change', async function () {
+    const selectedCurrency = this.value;
+    await fetchExchangeRates("USD"); // Update exchange rates based on USD
+    displayActivities(lastFetchedActivities, selectedCurrency); // Redisplay activities in new currency
+});
+
+// Delete an activity
 async function deleteActivity(id) {
     if (!confirm('Are you sure you want to delete this activity?')) return;
 
@@ -59,12 +86,12 @@ async function deleteActivity(id) {
     }
 }
 
-// Function to redirect to the edit activity page
+// Redirect to edit activity page
 function editActivity(id) {
     window.location.href = `editActivity.html?id=${id}`; // Redirect to edit page
 }
 
-// Function to redirect to the add activity page
+// Redirect to add activity page
 document.getElementById('addActivityButton').addEventListener('click', function() {
     window.location.href = 'addActivity.html'; // Redirect to add activity page
 });

@@ -6,7 +6,7 @@ body {
 }
 
 header {
-    background-color: #28a745; /* Green color for the header */
+    background-color: #28a745;
     color: white;
     padding: 20px;
     text-align: center;
@@ -39,8 +39,22 @@ h2 {
 }
 
 .button-container {
-    text-align: center; /* Center the button */
-    margin-bottom: 20px; /* Add spacing below the button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.button-container label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.button-container select {
+    padding: 5px;
+    margin-right: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 .activity-item {
@@ -64,16 +78,16 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #28a745; /* Green color for buttons */
+    background-color: #28a745;
     color: white;
 }
 
 button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #218838;
 }
 
 #responseMessage {
     margin-top: 20px;
     text-align: center;
-    color: #d9534f; /* Red color for error messages */
+    color: #d9534f;
 }
