@@ -525,4 +525,20 @@ const bookFlight = async (req, res) => {
 //   }
 // }
 
+const bookTransportation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { origin, destination, travelDate, travelTime, travelType } = req.body;
+
+    if (!origin || !destination || !travelDate || !travelTime || !travelType) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    const tourist = await userModel.findById(id);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, getHotels, getHotelOffers, bookHotel, searchFlights, getFlightDetails, bookFlight };
