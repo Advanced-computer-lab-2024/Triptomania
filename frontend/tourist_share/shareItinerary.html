@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itineraries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .share-button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+
+        .share-button:hover {
+            background-color: #218838;
+        }
+
+        .share-link {
+            font-size: 0.9em;
+            color: #007bff;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>All Itineraries</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Share</th>
+                </tr>
+            </thead>
+            <tbody id="itinerariesTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchAllItineraries() {
+            try {
+                const response = await fetch('http://localhost:5000/api/tourguide/itinerary'); // Adjust API endpoint as needed
+                if (response.ok) {
+                    const itineraries = await response.json();
+                    populateItinerariesTable(itineraries);
+                } else {
+                    throw new Error('Error fetching itineraries');
+                }
+            } catch (error) {
+                console.error('Error fetching itineraries:', error);
+            }
+        }
+
+        // Function to populate the itineraries table
+        function populateItinerariesTable(itineraries) {
+            const tableBody = document.getElementById('itinerariesTableBody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            itineraries.forEach(itinerary => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${itinerary.title}</td>
+                    <td>${itinerary.description}</td>
+                    <td>
+                        <button class="share-button" onclick="shareItinerary('${itinerary._id}')">Share</button>
+                        <p id="share-link-${itinerary._id}" class="share-link" style="display: none;"></p>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to handle sharing an itinerary
+        function shareItinerary(itineraryId) {
+            const shareLinkElement = document.getElementById(`share-link-${itineraryId}`);
+            const shareableLink = `http://localhost:5000/itinerary/${itineraryId}`;
+            shareLinkElement.textContent = `Shareable Link: ${shareableLink}`;
+            shareLinkElement.style.display = 'block'; // Show the link
+        }
+
+        // Fetch and display itineraries on page load
+        document.addEventListener('DOMContentLoaded', fetchAllItineraries);
+    </script>
+</body>
+</html>
