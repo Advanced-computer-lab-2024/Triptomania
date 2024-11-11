@@ -12,6 +12,10 @@ const touristSchema = new Schema({
     type: String,
     required: true,
   },
+  deleteAccount:{
+    type: Boolean,
+    default: false
+  },
   username: {
     type: String,
     required: true,
@@ -25,7 +29,7 @@ const touristSchema = new Schema({
     required: true,
   },
   mobile: {
-    type: Number,
+    type: String,
     required: true,
   },
   nationality: {
@@ -67,6 +71,25 @@ const touristSchema = new Schema({
     type: Array,
     default: [],
   },
+  hotelBookings: [
+    {
+      type: String,
+    },
+  ],
+  flightBookings: [
+    {
+      type: String,
+    },
+  ],
+  transportationBookings: [
+    {
+      type: Object
+    }
+  ],
+  deleteAccount:{
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 touristSchema.pre('save', async function (next) {

@@ -1,5 +1,6 @@
 import sellerController from "../controllers/seller/sellerController.js";
 import productController from '../controllers/shared/productController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 import express from 'express';
 import multer from "multer";
 
@@ -92,7 +93,7 @@ router.put("/product/editProduct/:id", productController.editProduct);
  *       200:
  *         description: List of products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts/:id", sellerController.viewProducts);
 
 /**
  * @swagger
@@ -157,5 +158,18 @@ router.get("/product/sortProducts", productController.sortProducts);
  *         description: Product picture uploaded successfully
  */
 router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
+
+router.put('/changePassword/:id', sharedController.changePassword);
+
+router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+
+router.put('/uploadProfilePicture/:id/:type', upload.single('file'), sharedController.uploadProfilePicture);
+
+router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
+
+router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
+
+router.put("/request/delete",sharedController.requestAccountDeletion);
 
 export default router;

@@ -5,17 +5,25 @@ import bcrypt from 'bcryptjs';
 const Schema =mongoose.Schema;
 
 const AdvertiserSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  mobile: { type: String },
-  companyName: { type: String },
-  companyHotline: { type: Number },
-  website: { type: String },
-  profilePicture: { type: String },
-  type: { type: String, default: 'advertiser' }
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    mobile: { type: String },
+    companyName: { type: String }, 
+    companyHotline: { type: Number }, 
+    website: { type: String }, 
+    profilePicture: { type: String }, 
+    type: {type: String,default: 'advertiser'},
+    documents: {type: String, required: false, default: 'none'},
+    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    acceptedTerms: { type: Boolean, default: false },
+    profilePicture: {type: String, required: false, default: 'none'},
+    deleteAccount:{
+      type: Boolean,
+      default: false
+    }
 });
 
 

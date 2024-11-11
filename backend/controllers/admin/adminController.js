@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 import adminModel from '../../models/admin.js';
-import touristModel from '../../models/tourist.js';
 import tourismGovernorModel from '../../models/tourismGovernor.js';
+
+import touristModel from '../../models/tourist.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
+import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
+import productModel from '../../models/product.js'; // Import the product model
+import activityModel from '../../models/activity.js'; 
+
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
@@ -15,9 +20,9 @@ const addAdmin = async (req, res) => {
 
     try {
         const admin = new adminModel({
-            AdminName: adminName,
-            AdminUsername: adminUsername,
-            AdminPassword: adminPassword
+            name: adminName,
+            username: adminUsername,
+            password: adminPassword
         });
 
         await admin.save();
@@ -27,6 +32,79 @@ const addAdmin = async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 }
+
+
+const addTourismGovernor = async (req, res) => {
+    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword } = req.body;
+
+    // Validate required fields
+    if (!tourismGovernorName || !tourismGovernorUsername || !tourismGovernorPassword) {
+        return res.status(400).json({ message: "Please fill in all fields" });
+    }
+
+    try {
+        // Create a new instance of the tourism governor model
+        const tourismGovernor = new tourismGovernorModel({
+            name: tourismGovernorName,
+            username: tourismGovernorUsername,
+            password: tourismGovernorPassword
+        });
+
+        // Save the new tourism governor to the database
+        await tourismGovernor.save();
+
+        // Respond with a success message
+        res.status(201).json({ message: "Tourism Governor added successfully" });
+    } catch (error) {
+        console.error("Error saving tourism governor:", error); // Log the error for debugging
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+};
+
+// Function to flag an itinerary
+
+
+const flagItinerary = async (req, res) => {
+    const { id } = req.params; // Extracting itineraryId from query parameters
+
+    try {
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid itinerary ID format." });
+        }
+  
+        // Find the itinerary by ID
+        const itinerary = await ItineraryModel.findById(id);
+        
+        if (!itinerary) {
+            return res.status(404).json({ message: "Itinerary not found." });
+        }
+  
+        let isFlagged = itinerary.isFlagged;
+      
+        // Preserve the creatorId and save the itinerary
+        await ItineraryModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
+  
+        return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
+    } catch (error) {
+        console.error("Error toggling itinerary flag:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+}
+
+
+
+const viewProductsAdmin = async (req, res) => {
+    try {
+        // Exclude 'Quantity' field by setting it to 0
+        const products = await productModel.find();
+        res.status(200).json(products);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error retrieving products', error });
+    }
+};
+
 const deleteAccount = async (req, res) => {
     try {
         const { id, type } = req.body;
@@ -61,7 +139,7 @@ const deleteAccount = async (req, res) => {
             default:
                 return res.status(400).json({ message: "Invalid type" }); // Return after sending response
         }
-
+ 
         // Check if the account was found and deleted
         if (!deletedAccount) {
             return res.status(404).json({ message: "Account not found or already deleted" });
@@ -74,33 +152,96 @@ const deleteAccount = async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 }
-
-const addTourismGovernor = async (req, res) => {
-    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword } = req.body;
-
-    // Validate required fields
-    if (!tourismGovernorName || !tourismGovernorUsername || !tourismGovernorPassword) {
-        return res.status(400).json({ message: "Please fill in all fields" });
+const checkValidity = async (touristId) => {
+    // Check if the tourist has any hotel or flight bookings
+    const tourist = await touristModel.findById(touristId); // Use touristModel here
+    if (!tourist) {
+        throw new Error("Tourist not found");
     }
 
+    // Check if there are any hotel or flight bookings
+    if (tourist.hotelBookings.length > 0 || tourist.flightBookings.length > 0) {
+        return false; // Return false if there are any bookings
+    } 
+
+    // Check for upcoming itineraries
+    const upcomingItineraries = await ItineraryModel.find({ // Use ItineraryModel here
+        bookingMade: { $in: [touristId] },
+        isActivated: true,
+        availableDates: { $elemMatch: { $gte: new Date().toISOString().split('T')[0] } }
+    });
+
+    // Check for upcoming activities
+    const upcomingActivities = await activityModel.find({ // Use activityModel here
+        creatorId: touristId,
+        isBookingOpen: true,
+        date: { $gte: new Date() }
+    });
+
+    // If there are any upcoming itineraries or activities, return false
+    if (upcomingItineraries.length > 0 || upcomingActivities.length > 0) {
+        return false;
+    }
+
+    // If no bookings and no upcoming itineraries or activities, return true
+    return true;
+}
+const getUsers = async (req, res) => {
     try {
-        // Create a new instance of the tourism governor model
-        const tourismGovernor = new tourismGovernorModel({
-            TourismGovernorName: tourismGovernorName,
-            TourismGovernorUsername: tourismGovernorUsername,
-            TourismGovernorPassword: tourismGovernorPassword
-        });
+        const deletedTourists = await touristModel.find({ deleteAccount: true });
+        console.log('Deleted Tourists:', deletedTourists); // Log the result
+        
+        const deletedTourGuides = await tourGuideModel.find({ deleteAccount: true });
+        console.log('Deleted Tour Guides:', deletedTourGuides); // Log the result
+        
+        const deletedAdvertisers = await advertiserModel.find({ deleteAccount: true });
+        console.log('Deleted Advertisers:', deletedAdvertisers); // Log the result
+        
+        const deletedSellers = await sellerModel.find({ deleteAccount: true });
+        console.log('Deleted Sellers:', deletedSellers); // Log the result
 
-        // Save the new tourism governor to the database
-        await tourismGovernor.save();
+        const deletedUsers = [
+            ...deletedTourists,
+            ...deletedTourGuides,
+            ...deletedAdvertisers,
+            ...deletedSellers
+        ];
 
-        // Respond with a success message
-        res.status(201).json({ message: "Tourism Governor added successfully" });
+        // Check if deletedUsers is empty
+        if (deletedUsers.length === 0) {
+            console.log("No deleted users found.");
+        }
+
+        // Check validity for tourists only
+        const usersResponse = await Promise.all(deletedUsers.map(async (user) => {
+            const userObj = user.toObject(); // Convert Mongoose document to plain object
+            if (user.type === 'tourist') {
+                try {
+                    const isValid = await checkValidity(user._id);
+                    return {
+                        ...userObj,
+                        canDelete: isValid // Add a flag to indicate if the user can be deleted
+                    };
+                } catch (validityError) {
+                    console.error("Error checking validity for user:", user._id, validityError);
+                    return {
+                        ...userObj,
+                        canDelete: false // Default to false if there's an error
+                    };
+                }
+            }
+            return {
+                ...userObj,
+                canDelete: true // Non-tourist users can always be deleted
+            };
+        }));
+
+        res.status(200).json(usersResponse);
     } catch (error) {
-        console.error("Error saving tourism governor:", error); // Log the error for debugging
+        console.error("Error retrieving deleted users:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
-};
+}
 
 
 
@@ -108,5 +249,12 @@ const addTourismGovernor = async (req, res) => {
 export default {
     addAdmin,
     deleteAccount,
-    addTourismGovernor
+    addTourismGovernor,
+    flagItinerary,
+    viewProductsAdmin,
+    getUsers ,
+    checkValidity,
+    
+ 
+
 }

@@ -83,8 +83,17 @@ const itinerarySchema = new Schema({
         touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
         rating: { type: Number, min: 0, max: 5, required: true }
     }],
-    averageRating: { type: Number, default: 0 }
-}, { timestamps: true });
-
+    averageRating: { type: Number, default: 0 },
+    isActivated: 
+    {
+        type: Boolean,
+        default: true,
+    },
+    isFlagged:
+    {
+        type: Boolean,
+        default: false,
+    },
+},  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 export default Itinerary;

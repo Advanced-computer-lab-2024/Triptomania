@@ -5,16 +5,23 @@ import bcrypt from 'bcryptjs';
 const Schema = mongoose.Schema;
 
 const SellerSchema = new Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  mobile: { type: String },
-  description: { type: String },
-  type: { type: String, default: 'seller' }
-}, { timestamps: true });
-
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true},
+    password: { type: String, required: true },
+    mobile: { type: String},
+    description: { type: String }, 
+    type: {type: String,default: 'seller'},
+    documents: {type: String, required: false, default: 'none'},
+    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    acceptedTerms: { type: Boolean, default: false },
+    profilePicture: {type: String, required: false, default: 'none'},
+    deleteAccount:{
+      type: Boolean,
+      default: false
+    }
+}, {timestamps:true});
 
 SellerSchema.pre('save', async function(next){
     const seller = this;

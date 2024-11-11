@@ -7,6 +7,7 @@ import productController from '../controllers/shared/productController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
 
@@ -76,6 +77,18 @@ router.get('/filterItineraries', itineraryController.filterItineraries);
  *         description: Sorted list of itineraries
  */
 router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
+
+/**
+ * @swagger
+ * /api/tourist/itinerary/getItineraries:
+ *   get:
+ *     summary: Get a list of all itineraries
+ *     tags: [Tourist]
+ *     responses:
+ *       200:
+ *         description: List of itineraries
+ */
+router.get("/itineraries/getItineraries/:id", itineraryController.getItineraries);
 
 /**
  * @swagger
@@ -381,5 +394,23 @@ router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
 router.get('/getHistoricalPlaces', historicalPlaceController.getHistoricalPlaces);
 
 router.get('/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
+
+router.put('/changePassword/:id/:type', sharedController.changePassword);
+
+router.get('/getHotels', touristController.getHotels);
+
+router.get('/getHotelOffers', touristController.getHotelOffers);
+
+router.post('/bookHotel/:id', touristController.bookHotel)
+
+router.post('/searchFlights', touristController.searchFlights);
+
+router.get('/getFlightDetails/:flightOfferId', touristController.getFlightDetails);
+
+router.post('/bookFlight/:id', touristController.bookFlight);
+
+router.post('/bookTransportation/:id', touristController.bookTransportation);
+
+router.put("/request/delete",sharedController.requestAccountDeletion);
 
 export default router;

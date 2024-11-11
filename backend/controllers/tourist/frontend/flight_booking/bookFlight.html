@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Flight</title>
+    <link rel="stylesheet" href="bookFlight.css">
+</head>
+<body>
+    <h1>Book Flight</h1>
+    
+    <form id="bookFlightForm">
+        <label for="touristId">Tourist ID:</label>
+        <input type="text" id="touristId" required>
+
+        <h2>Document Information</h2>
+        <label for="documentType">Document Type:</label>
+        <input type="text" id="documentType" value="PASSPORT" required>
+
+        <label for="birthPlace">Birth Place:</label>
+        <input type="text" id="birthPlace" required>
+
+        <label for="issuanceLocation">Issuance Location:</label>
+        <input type="text" id="issuanceLocation" required>
+
+        <label for="issuanceDate">Issuance Date (YYYY-MM-DD):</label>
+        <input type="date" id="issuanceDate" required>
+
+        <label for="documentNumber">Document Number:</label>
+        <input type="text" id="documentNumber" required>
+
+        <label for="expiryDate">Expiry Date (YYYY-MM-DD):</label>
+        <input type="date" id="expiryDate" required>
+
+        <label for="issuanceCountry">Issuance Country:</label>
+        <input type="text" id="issuanceCountry" required>
+
+        <label for="validityCountry">Validity Country:</label>
+        <input type="text" id="validityCountry" required>
+
+        <label for="nationality">Nationality:</label>
+        <input type="text" id="nationality" required>
+
+        <label>
+            <input type="checkbox" id="holder" checked>
+            Holder (Check if true)
+        </label>
+
+        <button type="submit">Book Flight</button>
+    </form>
+
+    <div id="bookingResult"></div>
+
+    <script src="bookFlight.js"></script>
+</body>
+</html>

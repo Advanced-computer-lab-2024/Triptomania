@@ -21,9 +21,16 @@ const UserSchema = new Schema({
         rating: { type: Number, min: 0, max: 5, required: true }
       }
     ],
-    averageRating: { type: Number, default: 0 }
-  }, { timestamps: true });
-  
+    averageRating: { type: Number, default: 0 },
+    documents: {type: String, required: false, default: 'none'},
+    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    acceptedTerms: { type: Boolean, default: false },
+    profilePicture: {type: String, required: false, default: 'none'},
+    deleteAccount:{
+      type: Boolean,
+      default: false
+    }
+},{timestamps:true});
 
 UserSchema.pre('save', async function (next) {
     const tourguide = this;

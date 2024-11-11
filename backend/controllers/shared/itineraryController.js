@@ -1,21 +1,53 @@
 import mongoose from 'mongoose';
 import itineraryModel from '../../models/itinerary.js';
 
-const getItineraries = async (req, res) => {
+const getItineraries = async (req, res) => { 
   try {
-    const itinerary = await itineraryModel.find();
+    // Assuming user ID is available in req.user.id
+    const {id} = req.params;
+
+    // Retrieve itineraries based on `isActivated` and `bookingMade`
+    const itineraries = await itineraryModel.find({
+      $or: [
+        {isFlagged: false, isActivated: true}, // Public itineraries
+        { isFlagged: false,bookingMade: id } // Private itineraries where the user has a booking
+      ]
+    });
 
     res.status(200).json({
       status: true,
-      itinerary: itinerary
+      itineraries: itineraries
     });
   } catch (err) {
     res.status(500).json({
       status: false,
       error: err.message
-    })
+    });
   }
-}
+};
+
+
+const viewItineraries = async (req, res) => { 
+  try {
+    // Assuming user ID is available in req.user.id
+    const {id} = req.params;
+
+    // Retrieve itineraries based on `isActivated` and `bookingMade`
+    const itineraries = await itineraryModel.find({
+    });
+
+    res.status(200).json({
+      status: true,
+      itineraries: itineraries
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      error: err.message
+    });
+  }
+};
+
 
 const getItinerary = async (req, res) => {
   const { id } = req.params;
@@ -331,5 +363,6 @@ export default
     getItineraries,
     getMyItineraries,
     sortItineraries,
-    filterItineraries
+    filterItineraries,
+    viewItineraries
   }
