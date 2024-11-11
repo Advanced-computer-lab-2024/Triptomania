@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch all products
     async function fetchProducts() {
         try {
-            const response = await fetch('http://localhost:5000/api/seller/product/viewProducts'); // View all products API
+            const response = await fetch('http://localhost:5000/api/seller/product/viewProducts/6700fdfb48a56dba84ece11c'); // View all products API
             const products = await response.json();
             displayProducts(products);
         } catch (error) {
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function () {
         <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
         <p style="margin: 5px 0; color: #555;">${product.Description}</p>
         <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: $${product.Price}</p>
-        <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
         <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
         <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
         <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>

@@ -1,6 +1,7 @@
 // Import SellerModel and other modules using ES module syntax
 import SellerModel from '../../models/seller.js';
 import mongoose from 'mongoose';
+import productModel from '../../models/product.js';
 //import crypto from 'crypto';
 
 // Function to hash passwords
@@ -101,7 +102,23 @@ const updateSeller = async (req, res) => {
   }
 };
 
+const viewProducts = async (req, res) => {
+  try {
+     const {id} = req.params;
+
+     //filter by the seller's ID
+     const products = await productModel.find({ 
+        Seller: id, // Filter products added by the logged-in seller
+     });
+
+     res.status(200).json(products);
+  } catch (error) {
+     console.log(error);
+     res.status(500).json({ message: 'Error retrieving products', error });
+  }
+};
+
 /////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateSeller, getSeller, updateSeller, getOneSeller };
+export default { CreateSeller, getSeller, updateSeller, getOneSeller,viewProducts};

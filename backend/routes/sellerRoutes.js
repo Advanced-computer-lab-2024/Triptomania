@@ -93,7 +93,7 @@ router.put("/product/editProduct/:id", productController.editProduct);
  *       200:
  *         description: List of products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts/:id", sellerController.viewProducts);
 
 /**
  * @swagger
