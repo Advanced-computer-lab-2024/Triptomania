@@ -17,6 +17,7 @@ const AdvertiserSchema = new Schema({
     deleteAccount:{
     type: Boolean,
     default: false
+    
   }
 
 });

@@ -5,6 +5,10 @@ import bcrypt from 'bcryptjs';
 const Schema = mongoose.Schema;
 
 const touristSchema = new Schema({
+  deleteAccount:{
+    type: Boolean,
+    default: false
+  },
   username: {
     type: String,
     required: true,
@@ -18,7 +22,7 @@ const touristSchema = new Schema({
     required: true,
   },
   mobile: {
-    type: Number,
+    type: String,
     required: true,
   },
   nationality: {
@@ -44,11 +48,17 @@ const touristSchema = new Schema({
   underage:{
     type: Boolean,
   },
-  deleteAccount:{
-    type: Boolean,
-    default: false
-  }
-}, { timestamps: true });
+  hotelBookings: [
+    {
+      type: String,
+    },
+  ],
+  flightBookings: [
+    {
+      type: String,
+    },
+  ],
+}, { timestamps: true }); 
 
 touristSchema.pre('save', async function(next){
   const tourist = this;

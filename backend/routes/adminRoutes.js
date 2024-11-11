@@ -315,6 +315,8 @@ router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDat
 router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
 router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
 
+router.get('/getusersrequestdelete',adminController.getUsers);
+//router.delete('/deleteTouristAccount/:id',adminController.deleteTouristAccount)
 
 router.put('/flagitinerary/:id',adminController.flagItinerary);
 
@@ -329,5 +331,5 @@ router.put('/flagitinerary/:id',adminController.flagItinerary);
  *         description: List of itineraries
  */
 router.get("/itineraries/getItineraries/:id", itineraryController.viewItineraries);
-
 export default router;
+ 

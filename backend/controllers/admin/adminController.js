@@ -1,12 +1,15 @@
 import mongoose from "mongoose";
 import adminModel from '../../models/admin.js';
-import touristModel from '../../models/tourist.js';
 import tourismGovernorModel from '../../models/tourismGovernor.js';
+
+import touristModel from '../../models/tourist.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
 import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
 import productModel from '../../models/product.js'; // Import the product model
+import activityModel from '../../models/activity.js'; 
+
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
@@ -29,53 +32,7 @@ const addAdmin = async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 }
-const deleteAccount = async (req, res) => {
-    try {
-        const { id, type } = req.body;
 
-        // Validate if the ID is a valid MongoDB ObjectId
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid category ID format." });
-        }
-
-        let deletedAccount;
-
-        // Depending on the type, delete the appropriate account
-        switch (type) {
-            case "tourist":
-                deletedAccount = await touristModel.findByIdAndDelete(id); // Add await and capture result
-                break;
-            case "tourGuide":
-                deletedAccount = await tourGuideModel.findByIdAndDelete(id); // Add await and capture result
-                break;
-            case "seller":
-                deletedAccount = await sellerModel.findByIdAndDelete(id); // Add await and capture result
-                break;
-            case "advertiser":
-                deletedAccount = await advertiserModel.findByIdAndDelete(id); // Add await and capture result
-                break;
-            case "tourismGovernor":
-                deletedAccount = await tourismGovernorModel.findByIdAndDelete(id); // Add await and capture result
-                break;
-            case "admin":
-                deletedAccount = await adminModel.findByIdAndDelete(id); // Add await and capture result
-                break;
-            default:
-                return res.status(400).json({ message: "Invalid type" }); // Return after sending response
-        }
-
-        // Check if the account was found and deleted
-        if (!deletedAccount) {
-            return res.status(404).json({ message: "Account not found or already deleted" });
-        }
-
-        // If the account was deleted successfully
-        res.status(200).json({ message: "Account deleted successfully" });
-    } catch (error) {
-        // In case of any errors during the process
-        res.status(500).json({ message: "Something went wrong" });
-    }
-}
 
 const addTourismGovernor = async (req, res) => {
     const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword } = req.body;
@@ -148,11 +105,156 @@ const viewProductsAdmin = async (req, res) => {
     }
 };
 
+const deleteAccount = async (req, res) => {
+    try {
+        const { id, type } = req.body;
+
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid category ID format." });
+        }
+
+        let deletedAccount;
+
+        // Depending on the type, delete the appropriate account
+        switch (type) {
+            case "tourist":
+                deletedAccount = await touristModel.findByIdAndDelete(id); // Add await and capture result
+                break;
+            case "tourGuide":
+                deletedAccount = await tourGuideModel.findByIdAndDelete(id); // Add await and capture result
+                break;
+            case "seller":
+                deletedAccount = await sellerModel.findByIdAndDelete(id); // Add await and capture result
+                break;
+            case "advertiser":
+                deletedAccount = await advertiserModel.findByIdAndDelete(id); // Add await and capture result
+                break;
+            case "tourismGovernor":
+                deletedAccount = await tourismGovernorModel.findByIdAndDelete(id); // Add await and capture result
+                break;
+            case "admin":
+                deletedAccount = await adminModel.findByIdAndDelete(id); // Add await and capture result
+                break;
+            default:
+                return res.status(400).json({ message: "Invalid type" }); // Return after sending response
+        }
+ 
+        // Check if the account was found and deleted
+        if (!deletedAccount) {
+            return res.status(404).json({ message: "Account not found or already deleted" });
+        }
+
+        // If the account was deleted successfully
+        res.status(200).json({ message: "Account deleted successfully" });
+    } catch (error) {
+        // In case of any errors during the process
+        res.status(500).json({ message: "Something went wrong" });
+    }
+}
+const checkValidity = async (touristId) => {
+    // Check if the tourist has any hotel or flight bookings
+    const tourist = await touristModel.findById(touristId); // Use touristModel here
+    if (!tourist) {
+        throw new Error("Tourist not found");
+    }
+
+    // Check if there are any hotel or flight bookings
+    if (tourist.hotelBookings.length > 0 || tourist.flightBookings.length > 0) {
+        return false; // Return false if there are any bookings
+    } 
+
+    // Check for upcoming itineraries
+    const upcomingItineraries = await ItineraryModel.find({ // Use ItineraryModel here
+        bookingMade: { $in: [touristId] },
+        isActivated: true,
+        availableDates: { $elemMatch: { $gte: new Date().toISOString().split('T')[0] } }
+    });
+
+    // Check for upcoming activities
+    const upcomingActivities = await activityModel.find({ // Use activityModel here
+        creatorId: touristId,
+        isBookingOpen: true,
+        date: { $gte: new Date() }
+    });
+
+    // If there are any upcoming itineraries or activities, return false
+    if (upcomingItineraries.length > 0 || upcomingActivities.length > 0) {
+        return false;
+    }
+
+    // If no bookings and no upcoming itineraries or activities, return true
+    return true;
+}
+const getUsers = async (req, res) => {
+    try {
+        const deletedTourists = await touristModel.find({ deleteAccount: true });
+        console.log('Deleted Tourists:', deletedTourists); // Log the result
+        
+        const deletedTourGuides = await tourGuideModel.find({ deleteAccount: true });
+        console.log('Deleted Tour Guides:', deletedTourGuides); // Log the result
+        
+        const deletedAdvertisers = await advertiserModel.find({ deleteAccount: true });
+        console.log('Deleted Advertisers:', deletedAdvertisers); // Log the result
+        
+        const deletedSellers = await sellerModel.find({ deleteAccount: true });
+        console.log('Deleted Sellers:', deletedSellers); // Log the result
+
+        const deletedUsers = [
+            ...deletedTourists,
+            ...deletedTourGuides,
+            ...deletedAdvertisers,
+            ...deletedSellers
+        ];
+
+        // Check if deletedUsers is empty
+        if (deletedUsers.length === 0) {
+            console.log("No deleted users found.");
+        }
+
+        // Check validity for tourists only
+        const usersResponse = await Promise.all(deletedUsers.map(async (user) => {
+            const userObj = user.toObject(); // Convert Mongoose document to plain object
+            if (user.type === 'tourist') {
+                try {
+                    const isValid = await checkValidity(user._id);
+                    return {
+                        ...userObj,
+                        canDelete: isValid // Add a flag to indicate if the user can be deleted
+                    };
+                } catch (validityError) {
+                    console.error("Error checking validity for user:", user._id, validityError);
+                    return {
+                        ...userObj,
+                        canDelete: false // Default to false if there's an error
+                    };
+                }
+            }
+            return {
+                ...userObj,
+                canDelete: true // Non-tourist users can always be deleted
+            };
+        }));
+
+        res.status(200).json(usersResponse);
+    } catch (error) {
+        console.error("Error retrieving deleted users:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+}
+
+
+
 
 export default {
     addAdmin,
     deleteAccount,
     addTourismGovernor,
     flagItinerary,
-    viewProductsAdmin
+    viewProductsAdmin,
+    getUsers ,
+    checkValidity,
+    
+ 
+
 }
