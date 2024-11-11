@@ -159,8 +159,17 @@ router.get("/product/sortProducts", productController.sortProducts);
  */
 router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
 
+router.put('/changePassword/:id', sharedController.changePassword);
+
+router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+
+router.put('/uploadProfilePicture/:id/:type', upload.single('file'), sharedController.uploadProfilePicture);
+
+router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
 
 router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
 
 router.put("/request/delete",sharedController.requestAccountDeletion);
+
 export default router;
