@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Hotel</title>
+  <link rel="stylesheet" href="bookHotel.css">
+</head>
+<body>
+  <h1>Book Hotel Offer</h1>
+  <form id="bookingForm">
+    <label for="touristId">Tourist ID:</label>
+    <input type="text" id="touristId" name="touristId" required>
+
+    <label for="paymentMethod">Payment Method:</label>
+    <input type="text" id="paymentMethod" name="paymentMethod" required>
+
+    <label for="vendorCode">Vendor Code:</label>
+    <input type="text" id="vendorCode" name="vendorCode" required>
+
+    <label for="cardNumber">Card Number:</label>
+    <input type="text" id="cardNumber" name="cardNumber" required>
+
+    <label for="expiryDate">Expiry Date (YYYY-MM):</label>
+    <input type="text" id="expiryDate" name="expiryDate" required>
+
+    <label for="holderName">Card Holder Name:</label>
+    <input type="text" id="holderName" name="holderName" required>
+
+    <button type="submit">Book Now</button>
+  </form>
+  <script src="bookHotel.js"></script>
+</body>
+</html>

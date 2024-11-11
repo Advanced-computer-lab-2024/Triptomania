@@ -2,6 +2,11 @@ import express from 'express';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import tourGuideController from '../controllers/tourGuide/tourGuideController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import multer from 'multer';
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 
 const router = express.Router();
 
@@ -147,6 +152,16 @@ router.put('/updateTourguide', tourGuideController.updateTourGuide);
  *         description: Tour guide information retrieved successfully
  */
 router.get('/getTourguide', tourGuideController.getTourGuide);
+
+
+router.put('/changePassword/:id/:type', sharedController.changePassword);
+
+router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+
+router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
+
 router.put('/activate/itinerary', tourGuideController.toggleItineraryStatus);
 router.put("/request/delete",sharedController.requestAccountDeletion);
+
 export default router;

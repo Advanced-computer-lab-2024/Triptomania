@@ -3,15 +3,15 @@ import bcrypt from "bcryptjs";
 const Schema = mongoose.Schema;
 
 const adminSchema = new Schema({
-    AdminName: {
+    name: {
         type: String,
         required: true,
     },
-    AdminUsername: {
+    username: {
         type: String,
         required: true,
     },
-    AdminPassword: {
+    password: {
         type: String,
         required: true,
     },
@@ -24,11 +24,11 @@ const adminSchema = new Schema({
 adminSchema.pre('save', async function (next) {
     const admin = this;
 
-    if (!admin.isModified('AdminPassword')) return next();
+    if (!admin.isModified('password')) return next();
 
     try {
         const saltRounds = 10;
-        admin.AdminPassword = await bcrypt.hash(admin.AdminPassword, saltRounds);
+        admin.password = await bcrypt.hash(admin.password, saltRounds);
         next();
     } catch (error) {
         next(error);
@@ -36,7 +36,7 @@ adminSchema.pre('save', async function (next) {
 });
 
 adminSchema.methods.comparePassword = async function (candidatePassword) {
-    return bcrypt.compare(candidatePassword, this.AdminPassword);
+    return bcrypt.compare(candidatePassword, this.password);
 };
 
 const Admin = mongoose.model('admin', adminSchema);

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Transportation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Book Transportation</h1>
+    <form id="transportationForm">
+      <label for="userId">User ID:</label>
+      <input type="text" id="userId" name="userId" required>
+
+      <label for="origin">Origin:</label>
+      <input type="text" id="origin" name="origin" required>
+
+      <label for="destination">Destination:</label>
+      <input type="text" id="destination" name="destination" required>
+
+      <label for="travelDate">Travel Date:</label>
+      <input type="date" id="travelDate" name="travelDate" required>
+
+      <label for="travelTime">Travel Time:</label>
+      <input type="time" id="travelTime" name="travelTime" required>
+
+      <label for="travelType">Travel Type:</label>
+      <select id="travelType" name="travelType" required>
+        <option value="bus">Bus</option>
+        <option value="train">Train</option>
+        <option value="flight">Flight</option>
+      </select>
+
+      <button type="button" onclick="bookTransportation()">Book Now</button>
+    </form>
+    <p id="responseMessage"></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

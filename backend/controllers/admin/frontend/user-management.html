@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="user-management.css">
+</head>
+<body>
+    <div class="container">
+        <h1>User Management</h1>
+
+        <!-- Get Pending Users Section -->
+        <section class="section">
+            <h2>Pending Users</h2>
+            <button id="getPendingUsersBtn">Get Pending Users</button>
+            <div id="pendingUsersList"></div>
+        </section>
+
+        <!-- Accept User Section -->
+        <section class="section">
+            <h2>Accept User</h2>
+            <form id="acceptUserForm">
+                <label for="acceptUserId">User ID:</label>
+                <input type="text" id="acceptUserId" name="id" required>
+                <label for="acceptUserType">User Type:</label>
+                <select id="acceptUserType" name="type">
+                    <option value="seller">Seller</option>
+                    <option value="advertiser">Advertiser</option>
+                    <option value="tourGuide">Tour Guide</option>
+                </select>
+                <button type="submit">Accept User</button>
+            </form>
+        </section>
+
+        <!-- Reject User Section -->
+        <section class="section">
+            <h2>Reject User</h2>
+            <form id="rejectUserForm">
+                <label for="rejectUserId">User ID:</label>
+                <input type="text" id="rejectUserId" name="id" required>
+                <label for="rejectUserType">User Type:</label>
+                <select id="rejectUserType" name="type">
+                    <option value="seller">Seller</option>
+                    <option value="advertiser">Advertiser</option>
+                    <option value="tourGuide">Tour Guide</option>
+                </select>
+                <button type="submit">Reject User</button>
+            </form>
+        </section>
+
+        <!-- Response Section -->
+        <section class="response" id="responseSection">
+            <h3 id="responseMessage"></h3>
+        </section>
+    </div>
+
+    <script src="user-management.js"></script>
+</body>
+</html>

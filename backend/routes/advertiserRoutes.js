@@ -1,6 +1,9 @@
 import express from 'express';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import multer from 'multer';
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const router = express.Router();
 
@@ -127,5 +130,13 @@ router.delete('/activity/deleteActivity/:id', advertiserController.deleteActvivt
  *         description: List of activities created by the advertiser
  */
 router.get('/activity/viewMyActivities/:creatorId', advertiserController.viewMyActivities);
+
+router.put('/changePassword/:id/:type', sharedController.changePassword);
+
+router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+
+router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+
 router.put("/request/delete",sharedController.requestAccountDeletion);
+
 export default router;

@@ -1,0 +1,63 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+h1 {
+  color: #003366;
+  margin-top: 30px;
+  font-size: 24px;
+}
+
+#offersList {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Offer Styles */
+.offer {
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.offer p {
+  font-size: 18px;
+  color: #555555;
+  margin: 0;
+}
+
+.offer button {
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  background-color: #007acc;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.offer button:hover {
+  background-color: #005fa3;
+}
+
+.offer:hover {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
