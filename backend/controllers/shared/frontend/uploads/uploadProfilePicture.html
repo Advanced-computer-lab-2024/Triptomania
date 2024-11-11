@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Profile Picture</title>
+    <link rel="stylesheet" href="uploadProfilePicture.css">
+</head>
+<body>
+    <h1>Upload Profile Picture</h1>
+    <form id="uploadProfilePictureForm">
+        <label for="userType">User Type:</label>
+        <select id="userType" required>
+            <option value="seller">Seller</option>
+            <option value="advertiser">Advertiser</option>
+            <option value="tourGuide">Tour Guide</option>
+            <option value="tourist">Tourist</option>
+        </select>
+
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" required>
+
+        <label for="profilePicture">Select Profile Picture:</label>
+        <input type="file" id="profilePicture" accept="image/*" required>
+
+        <button type="submit">Upload Profile Picture</button>
+    </form>
+    
+    <div id="uploadResult"></div>
+
+    <script src="uploadProfilePicture.js"></script>
+</body>
+</html>

@@ -5,6 +5,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const minPrice = document.getElementById('minPrice');
     const maxPrice = document.getElementById('maxPrice');
     const filterButton = document.getElementById('filterButton');
+    const currencySelect = document.getElementById('currencySelect'); // Currency dropdown
+
+    // Hardcoded exchange rates (could be updated later with a real API if needed)
+    const exchangeRates = {
+        USD: 1,
+        EUR: 0.93,  // Example: 1 USD = 0.93 EUR
+        GBP: 0.81,  // Example: 1 USD = 0.81 GBP
+        INR: 83.75  // Example: 1 USD = 83.75 INR
+    };
 
     // Function to fetch all products
     async function fetchProducts() {
@@ -17,15 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to check if a string is valid Base64
-    function isBase64(string) {
-        const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-        return base64Regex.test(string);
-    }
-
     // Function to display products with styling
     function displayProducts(products) {
         productList.innerHTML = ''; // Clear existing products
+        const selectedCurrency = currencySelect.value;  // Get selected currency
         products.forEach(product => {
             const productElement = document.createElement('div');
             productElement.classList.add('product-item');
@@ -38,6 +42,9 @@ document.addEventListener('DOMContentLoaded', function () {
             productElement.style.marginBottom = '20px';
             productElement.style.transition = 'box-shadow 0.3s ease';
 
+            // Convert price based on selected currency
+            const convertedPrice = (product.Price * exchangeRates[selectedCurrency]).toFixed(2);
+
             // Check for product image (if it's valid Base64)
             let imageHtml;
             if (product.Picture && isBase64(product.Picture)) {
@@ -48,19 +55,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Add product details along with the image
             productElement.innerHTML = `
-        ${imageHtml}
-        <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
-        <p style="margin: 5px 0; color: #555;">${product.Description}</p>
-        <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: $${product.Price}</p>
-        <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
-        <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
-        <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>
-        <p style="font-size: 0.9em; color: #888;">Quantity: ${product.Quantity}</p>
-        <button class="archive-button" data-id="${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; border: none; cursor: pointer;">
-            ${product.Archive ? 'Unarchive' : 'Archive'}
-        </button>
-        <a href="editProduct.html?id=${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Edit</a>
-    `;
+                ${imageHtml}
+                <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
+                <p style="margin: 5px 0; color: #555;">${product.Description}</p>
+                <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: ${selectedCurrency} ${convertedPrice}</p>
+                <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
+                <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
+                <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
+                <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>
+                <p style="font-size: 0.9em; color: #888;">Quantity: ${product.Quantity}</p>
+                <button class="archive-button" data-id="${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; border: none; cursor: pointer;">
+                    ${product.Archive ? 'Unarchive' : 'Archive'}
+                </button>
+                <a href="editProduct.html?id=${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Edit</a>
+            `;
 
             // Event listener for each archive button
             const archiveButton = productElement.querySelector('.archive-button');
@@ -97,6 +105,11 @@ document.addEventListener('DOMContentLoaded', function () {
             productList.appendChild(productElement);
         });
     }
+
+    // Event listener for currency dropdown change
+    currencySelect.addEventListener('change', function () {
+        fetchProducts(); // Fetch products again after currency change
+    });
 
     // Event listener for search input
     searchInput.addEventListener('input', function () {
@@ -151,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error filtering products:', error);
         }
     }
-
 
     // Event listener for filter button
     filterButton.addEventListener('click', function () {

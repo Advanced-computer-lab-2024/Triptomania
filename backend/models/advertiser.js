@@ -14,11 +14,14 @@ const AdvertiserSchema = new Schema({
     website: { type: String }, 
     profilePicture: { type: String }, 
     type: {type: String,default: 'advertiser'},
+    documents: {type: String, required: false, default: 'none'},
+    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    acceptedTerms: { type: Boolean, default: false },
+    profilePicture: {type: String, required: false, default: 'none'},
     deleteAccount:{
-    type: Boolean,
-    default: false
-  }
-
+      type: Boolean,
+      default: false
+    }
 });
 
 AdvertiserSchema.pre('save', async function(next){

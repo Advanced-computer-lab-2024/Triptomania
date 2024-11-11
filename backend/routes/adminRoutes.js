@@ -7,6 +7,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import tourGuideController from '../controllers/tourGuide/tourGuideController.js';
 import sellerController from '../controllers/seller/sellerController.js';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
+import sharedController from '../controllers/shared/sharedController.js';
 import complaintsController from '../controllers/admin/complaintsController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 
@@ -308,6 +309,15 @@ router.get('/getTourGuides', tourGuideController.getTourGuide);
  */
 router.get('/getAdvertisers', advertiserController.getAdvertiser);
 
+router.put('/changePassword/:id/:type', sharedController.changePassword);
+
+
+router.put('/acceptUser/:id/:type', sharedController.acceptUser);
+
+router.put('/rejectUser/:id/:type', sharedController.rejectUser);
+
+router.get('/pending-users', sharedController.getPendingUsers);
+
 router.get('/complaints/viewComplaints',complaintsController.viewComplaints);
 router.get('/complaints/viewComplaint/:id',complaintsController.viewComplaintDetails);
 router.put('/complaints/updateStatus/:id',complaintsController.updateComplaintStatus);
@@ -315,6 +325,8 @@ router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDat
 router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
 router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
 
+router.get('/getusersrequestdelete',adminController.getUsers);
+//router.delete('/deleteTouristAccount/:id',adminController.deleteTouristAccount)
 
 router.put('/flagitinerary/:id',adminController.flagItinerary);
 
@@ -329,5 +341,5 @@ router.put('/flagitinerary/:id',adminController.flagItinerary);
  *         description: List of itineraries
  */
 router.get("/itineraries/getItineraries/:id", itineraryController.viewItineraries);
-
 export default router;
+ 

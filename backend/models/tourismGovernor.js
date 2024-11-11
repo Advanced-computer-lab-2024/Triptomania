@@ -3,15 +3,15 @@ import bcrypt from "bcryptjs";
 const Schema = mongoose.Schema;
 
 const tourismGovernorSchema = new Schema({
-    TourismGovernorName: {
+    name: {
         type: String,
         required: true,
     },
-    TourismGovernorUsername: {
+    username: {
         type: String,
         required: true,
     },
-    TourismGovernorPassword: {
+    password: {
         type: String,
         required: true,
     },
@@ -24,11 +24,11 @@ const tourismGovernorSchema = new Schema({
 tourismGovernorSchema.pre('save', async function (next) {
     const tourismGovernor = this;
 
-    if (!tourismGovernor.isModified('TourismGovenerPassword')) return next();
+    if (!tourismGovernor.isModified('password')) return next();
 
     try {
         const saltRounds = 10;
-        tourismGovernor.TourismGovenerPassword = await bcrypt.hash(tourismGovernor.TourismGovenerPassword, saltRounds);
+        tourismGovernor.password = await bcrypt.hash(tourismGovernor.password, saltRounds);
         next();
     } catch (error) {
         next(error);
@@ -36,7 +36,7 @@ tourismGovernorSchema.pre('save', async function (next) {
 });
 
 tourismGovernorSchema.methods.comparePassword = async function (candidatePassword) {
-    return bcrypt.compare(candidatePassword, this.TourismGovenerPassword);
+    return bcrypt.compare(candidatePassword, this.password);
 };
 
 const TourismGovernor = mongoose.model('tourismGovernor', tourismGovernorSchema);
