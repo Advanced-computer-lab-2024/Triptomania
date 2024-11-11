@@ -103,17 +103,19 @@
 
     <script>
         const apiBase = 'http://localhost:5000/api/tourist/search';
-    
+
         // Handle search button click
         document.getElementById('searchButton').addEventListener('click', async () => {
             const query = document.getElementById('searchInput').value;
-    
+
+            // Check if the search input is empty
             if (!query) {
                 document.getElementById('responseMessage').innerText = 'Please enter a search query.';
                 document.getElementById('responseMessage').className = 'response error';
+                document.getElementById('resultsContainer').innerHTML = '';  // Clear any previous results
                 return;
             }
-    
+
             try {
                 const response = await fetch(apiBase, {
                     method: 'POST',
@@ -122,79 +124,81 @@
                     },
                     body: JSON.stringify({ query: query })
                 });
-    
+
                 // Check for HTTP response status
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-    
+
                 const result = await response.json();
-                console.log("API Response:", result);  // Log response for debugging
-    
+                console.log("API Response:", result);
+
                 const resultsContainer = document.getElementById('resultsContainer');
-                resultsContainer.innerHTML = '';  // Clear previous results
-    
-                // Extract results from response
+                resultsContainer.innerHTML = ''; // Clear previous results
+
                 const { places, activities, itineraries } = result;
-    
+
+                let hasResults = false; // Flag to check if we have any results
+
                 // Display places
                 if (places && places.length > 0) {
                     const placeSection = document.createElement('div');
                     placeSection.innerHTML = '<h3>Places</h3>';
                     places.forEach(place => {
-                        const tags = Array.isArray(place.Tags) ? place.Tags.join(', ') : place.Tags || 'No tags available'; // Defensive check for Tags
+                        const tags = Array.isArray(place.Tags) ? place.Tags.map(tag => tag.name).join(', ') : 'No tags available';
                         const placeItem = document.createElement('div');
                         placeItem.className = 'result-item';
                         placeItem.innerHTML = `<h3>${place.Name}</h3><p>Category: ${place.Category}</p><p>Tags: ${tags}</p>`;
                         placeSection.appendChild(placeItem);
                     });
                     resultsContainer.appendChild(placeSection);
+                    hasResults = true;
                 }
-    
+
                 // Display activities
                 if (activities && activities.length > 0) {
                     const activitySection = document.createElement('div');
                     activitySection.innerHTML = '<h3>Activities</h3>';
                     activities.forEach(activity => {
-                        const tags = Array.isArray(activity.tags) ? activity.tags.join(', ') : activity.tags || 'No tags available'; // Defensive check for tags
+                        const tags = Array.isArray(activity.tags) ? activity.tags.map(tag => tag.PreferenceTagName).join(', ') : 'No tags available';
                         const activityItem = document.createElement('div');
                         activityItem.className = 'result-item';
                         activityItem.innerHTML = `<h3>${activity.name}</h3><p>Category: ${activity.category}</p><p>Tags: ${tags}</p>`;
                         activitySection.appendChild(activityItem);
                     });
                     resultsContainer.appendChild(activitySection);
+                    hasResults = true;
                 }
-    
+
                 // Display itineraries
                 if (itineraries && itineraries.length > 0) {
-                    console.log("Itineraries Data:", itineraries); // Log itineraries data for inspection
                     const itinerarySection = document.createElement('div');
                     itinerarySection.innerHTML = '<h3>Itineraries</h3>';
                     itineraries.forEach(itinerary => {
-                        const tags = Array.isArray(itinerary.tags) ? itinerary.tags.join(', ') : itinerary.tags || 'No tags available'; // Defensive check for tags
+                        const tags = Array.isArray(itinerary.preferenceTags) ? itinerary.preferenceTags.map(tag => tag.PreferenceTagName).join(', ') : 'No tags available';
                         const itineraryItem = document.createElement('div');
                         itineraryItem.className = 'result-item';
-                        itineraryItem.innerHTML = `<h3>${itinerary.Name}</h3><p>Category: ${itinerary.category}</p><p>Tags: ${tags}</p>`;
+                        itineraryItem.innerHTML = `<h3>${itinerary.Name}</h3><p>Tags: ${tags}</p>`;
                         itinerarySection.appendChild(itineraryItem);
                     });
                     resultsContainer.appendChild(itinerarySection);
+                    hasResults = true;
                 }
-    
-                // If no results were found
-                if (places.length === 0 && activities.length === 0 && itineraries.length === 0) {
-                    document.getElementById('responseMessage').innerText = 'No results found for your query.';
+
+                // If no results were found but the query is not empty
+                if (!hasResults) {
+                    document.getElementById('responseMessage').innerText = 'Sorry, nothing found for your search query.';
                     document.getElementById('responseMessage').className = 'response error';
                 } else {
                     document.getElementById('responseMessage').innerText = '';
                 }
-    
+
             } catch (error) {
-                console.error('Error fetching results:', error); // Log the error details
+                console.error('Error fetching results:', error);
                 document.getElementById('responseMessage').innerText = `An error occurred while fetching results: ${error.message}`;
                 document.getElementById('responseMessage').className = 'response error';
             }
         });
     </script>
-    
 </body>
 </html>

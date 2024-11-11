@@ -13,7 +13,7 @@ import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary 
 
 const CreateTourGuide = async (req, res) => {
   try {
-    const { username, email, password, mobile, yearsOfExperience, previousWork } = req.body;
+    const { firstName, lastName, username, email, password, mobile, yearsOfExperience, previousWork } = req.body;
 
     // Check if the username or email already exists
     const existingTourGuide = await TourGuideModel.findOne({
@@ -28,7 +28,7 @@ const CreateTourGuide = async (req, res) => {
     }
 
     // Create a new tour guide
-    const tourg = await TourGuideModel.create({ username, email, password, mobile, yearsOfExperience, previousWork });
+    const tourg = await TourGuideModel.create({ firstName, lastName, username, email, password, mobile, yearsOfExperience, previousWork });
     res.status(201).send(tourg);
   } catch (error) {
     console.log(error);
@@ -66,7 +66,7 @@ const getOneTourGuide = async (req, res) => {
 // Update a tour guide
 const updateTourGuide = async (req, res) => {
   try {
-    const { username, email, password, mobile, yearsOfExperience, previousWork } = req.body;
+    const { firstName, lastName, username, email, password, mobile, yearsOfExperience, previousWork } = req.body;
     //const hashed = hashPassword(password);
 
 
@@ -80,7 +80,7 @@ const updateTourGuide = async (req, res) => {
         }
       }
 
-    const updateData = {  email, password, mobile, yearsOfExperience, previousWork };
+    const updateData = {  firstName, lastName, email, password, mobile, yearsOfExperience, previousWork };
 
     Object.keys(updateData).forEach(key => {
       if (updateData[key] === undefined) {

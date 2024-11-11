@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itineraries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+        .itinerary-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .itinerary-item h3 {
+            margin: 0;
+        }
+        .itinerary-item ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .itinerary-item li {
+            margin-bottom: 8px;
+        }
+        .share-button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        .share-button:hover {
+            background-color: #218838;
+        }
+        .share-link {
+            display: none;
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Itineraries</h2>
+    <div id="itinerariesList"></div>
+</div>
+
+<script>
+    async function fetchItineraries() {
+        try {
+            const response = await fetch('http://localhost:5000/api/tourist/itineraries/getItineraries'); // Adjust API endpoint as needed
+            if (response.ok) {
+                const data = await response.json();
+                displayItineraries(data.itinerary);
+            } else {
+                console.error("Failed to fetch itineraries");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    function displayItineraries(itineraries) {
+        const listContainer = document.getElementById('itinerariesList');
+        listContainer.innerHTML = ''; // Clear previous items
+
+        itineraries.forEach(itinerary => {
+            const itineraryItem = document.createElement('div');
+            itineraryItem.classList.add('itinerary-item');
+
+            itineraryItem.innerHTML = `
+                <h3>${itinerary.Name}</h3>
+                <p><strong>Duration:</strong> ${itinerary.duration}</p>
+                <p><strong>Language:</strong> ${itinerary.language}</p>
+                <p><strong>Price:</strong> $${itinerary.price.toFixed(2)}</p>
+                <p><strong>Timeline:</strong> ${itinerary.timeLine}</p>
+                
+                <h4>Activities</h4>
+                <ul>
+                    ${itinerary.activities.map(activity => `<li>${activity}</li>`).join('')}
+                </ul>
+                
+                <h4>Locations to Visit</h4>
+                <ul>
+                    ${itinerary.locationsToVisit.map(location => `<li>${location}</li>`).join('')}
+                </ul>
+
+                <p><strong>Available Dates:</strong> ${itinerary.availableDates.join(', ')}</p>
+                <p><strong>Available Times:</strong> ${itinerary.availableTimes.join(', ')}</p>
+
+                <button class="share-button" onclick="shareItinerary('${itinerary._id}')">Share</button>
+                <p class="share-link" id="shareLink-${itinerary._id}">http://localhost:5000/api/tourist/itineraries/getItinerary/${itinerary._id}</p>
+            `;
+
+            listContainer.appendChild(itineraryItem);
+        });
+    }
+
+    function shareItinerary(itineraryId) {
+        const shareLinkElement = document.getElementById(`shareLink-${itineraryId}`);
+        shareLinkElement.style.display = 'block'; // Show the share link
+
+        // Optionally copy the link to clipboard
+        navigator.clipboard.writeText(shareLinkElement.textContent)
+            .then(() => {
+                alert("Link copied to clipboard!");
+            })
+            .catch(err => {
+                console.error("Could not copy text: ", err);
+            });
+    }
+
+    // Fetch itineraries on page load
+    fetchItineraries();
+</script>
+
+</body>
+</html>

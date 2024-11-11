@@ -185,6 +185,26 @@ const getMyActivities = async (req, res) => {
     }
 }
 
+const getActivity = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid activity ID format." });
+        }
+
+        const activity = await activityModel.findById(id);
+
+        if (!activity) {
+            return res.status(404).json({ message: "Activity not found." });
+        }
+
+        res.status(200).json(activity);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching activity", error: error.message });
+    }
+}
+
 
 export default {
     addCategory,
@@ -194,5 +214,6 @@ export default {
     filterActivities,
     sortActivities,
     viewActivities,
-    getMyActivities
+    getMyActivities,
+    getActivity
 }

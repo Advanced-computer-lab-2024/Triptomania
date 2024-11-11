@@ -67,6 +67,8 @@ router.put("/itinerary/editItinerary/:id", itineraryController.editItinerary);
  */
 router.get("/itinerary/getItinerary/:id", itineraryController.getItinerary);
 
+
+
 /**
  * @swagger
  * /api/tourGuide/itinerary/getItineraries:

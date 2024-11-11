@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Tour Guide & Itinerary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Rate Your Tour Guide</h1>
+    <form id="ratingForm">
+        <label for="itineraryId">Select Itinerary:</label>
+        <select id="itineraryId" name="itineraryId" required>
+            <option value="" disabled selected>Select an itinerary</option>
+        </select>
+
+        <label for="touristId">Your Tourist ID:</label>
+        <input type="text" id="touristId" name="touristId" required>
+
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+        <button type="submit">Submit Rating</button>
+        <div class="error" id="error" style="display: none;"></div>
+        <div class="success" id="success" style="display: none;"></div>
+    </form>
+
+    <h1>Rate Your Itinerary</h1>
+    <form id="itineraryRatingForm">
+        <label for="itineraryIdForRating">Select Itinerary:</label>
+        <select id="itineraryIdForRating" name="itineraryIdForRating" required>
+            <option value="" disabled selected>Select an itinerary</option>
+        </select>
+
+        <label for="touristIdForItinerary">Your Tourist ID:</label>
+        <input type="text" id="touristIdForItinerary" name="touristIdForItinerary" required>
+
+        <label for="ratingForItinerary">Rating (1-5):</label>
+        <input type="number" id="ratingForItinerary" name="ratingForItinerary" min="1" max="5" required>
+
+        <button type="submit">Submit Itinerary Rating</button>
+        <div class="error" id="itineraryError" style="display: none;"></div>
+        <div class="success" id="itinerarySuccess" style="display: none;"></div>
+    </form>
+</div>
+
+<script>
+    // Function to fetch itineraries and populate the dropdown
+    async function fetchItineraries() {
+        try {
+            const response = await fetch('http://localhost:5000/api/tourGuide/itinerary/getItineraries', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const itineraries = await response.json();
+
+            if (!response.ok) {
+                throw new Error(itineraries.error || 'Failed to load itineraries');
+            }
+
+            const itinerarySelect = document.getElementById('itineraryId');
+            const itinerarySelectForRating = document.getElementById('itineraryIdForRating');
+            itineraries.itinerary.forEach(itinerary => {
+                const option = document.createElement('option');
+                option.value = itinerary._id;
+                option.textContent = itinerary.Name;
+                itinerarySelect.appendChild(option);
+                itinerarySelectForRating.appendChild(option.cloneNode(true)); // Clone option for second dropdown
+            });
+        } catch (error) {
+            console.error("Error fetching itineraries:", error);
+            document.getElementById('error').innerText = error.message;
+            document.getElementById('error').style.display = 'block';
+        }
+    }
+
+    document.getElementById('ratingForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent the form from submitting the default way
+
+        const itineraryId = document.getElementById('itineraryId').value;
+        const touristId = document.getElementById('touristId').value;
+        const rating = document.getElementById('rating').value;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/tourist/rateTourGuide/${touristId}`, {
+                method: 'PUT', // Change to PUT
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ itineraryId, rating }),
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Error submitting rating');
+            }
+
+            // Display the success message and average rating
+            document.getElementById('success').innerText = `Rating submitted successfully. Average Rating: ${result.averageRating.toFixed(2)}`;
+            document.getElementById('success').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+
+            // Clear the form
+            document.getElementById('ratingForm').reset();
+        } catch (error) {
+            document.getElementById('error').innerText = error.message;
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('success').style.display = 'none';
+        }
+    });
+
+    document.getElementById('itineraryRatingForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent the form from submitting the default way
+
+        const itineraryId = document.getElementById('itineraryIdForRating').value;
+        const touristId = document.getElementById('touristIdForItinerary').value;
+        const rating = document.getElementById('ratingForItinerary').value;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/tourist/rateItinerary/${touristId}`, {
+                method: 'PUT', // Change to PUT
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ itineraryId, rating }),
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || 'Error submitting itinerary rating');
+            }
+
+            // Display the success message and average rating
+            document.getElementById('itinerarySuccess').innerText = `Rating submitted successfully. Average Rating: ${result.averageRating.toFixed(2)}`;
+            document.getElementById('itinerarySuccess').style.display = 'block';
+            document.getElementById('itineraryError').style.display = 'none';
+
+            // Clear the form
+            document.getElementById('itineraryRatingForm').reset();
+        } catch (error) {
+            document.getElementById('itineraryError').innerText = error.message;
+            document.getElementById('itineraryError').style.display = 'block';
+            document.getElementById('itinerarySuccess').style.display = 'none';
+        }
+    });
+
+    // Fetch itineraries on page load
+    window.onload = fetchItineraries;
+</script>
+
+</body>
+</html>

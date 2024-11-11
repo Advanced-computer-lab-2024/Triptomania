@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 const Schema = mongoose.Schema;
 
 const SellerSchema = new Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true},
     password: { type: String, required: true },
@@ -19,7 +21,6 @@ const SellerSchema = new Schema({
       type: Boolean,
       default: false
     }
-    
 }, {timestamps:true});
 
 SellerSchema.pre('save', async function(next){

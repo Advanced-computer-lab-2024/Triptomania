@@ -44,6 +44,8 @@ router.post('/activities/addCategory', activityController.addCategory);
  */
 router.get('/activities/getCategories', activityController.getCategories);
 
+router.get('/activities/getActivities', activityController.viewActivities);
+
 /**
  * @swagger
  * /api/admin/activities/editCategory/{id}:

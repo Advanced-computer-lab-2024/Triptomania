@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View My Complaints</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 600px; margin: auto; padding: 20px; }
+    h2 { text-align: center; }
+    .input-group { margin: 10px 0; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"] { width: 100%; padding: 8px; box-sizing: border-box; }
+    .fetch-btn { width: 100%; padding: 10px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .fetch-btn:hover { background-color: #45a049; }
+    .error-message, .no-complaints { color: red; text-align: center; margin-top: 10px; }
+    .complaints-list { list-style-type: none; padding: 0; }
+    .complaint-item { background: #f9f9f9; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+    .complaint-title { font-weight: bold; }
+    .complaint-date { font-size: 0.9em; color: #555; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>View My Complaints</h2>
+  <form id="complaintForm">
+    <div class="input-group">
+      <label for="touristId">Enter Your Tourist ID:</label>
+      <input type="text" id="touristId" name="touristId" required>
+    </div>
+    <button type="submit" class="fetch-btn">Fetch Complaints</button>
+    <div id="errorMessage" class="error-message"></div>
+  </form>
+
+  <div id="complaintsSection">
+    <h3>Your Complaints</h3>
+    <ul id="complaintsList" class="complaints-list"></ul>
+    <div id="noComplaints" class="no-complaints"></div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('complaintForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const errorMessage = document.getElementById('errorMessage');
+    const complaintsList = document.getElementById('complaintsList');
+    const noComplaints = document.getElementById('noComplaints');
+    errorMessage.textContent = ''; // Clear previous error messages
+    complaintsList.innerHTML = ''; // Clear previous complaints
+    noComplaints.textContent = ''; // Clear no complaints message
+
+    const touristId = document.getElementById('touristId').value.trim();
+
+    if (!touristId) {
+      errorMessage.textContent = 'Tourist ID is required.';
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/tourist/complaint/viewMyComplaints/${touristId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        errorMessage.textContent = `Error: ${errorResult.error}`;
+        return;
+      }
+
+      const result = await response.json();
+      const complaints = result.complaints;
+
+      if (!complaints || complaints.length === 0) {
+        noComplaints.textContent = 'No complaints found.';
+      } else {
+        complaints.forEach(complaint => {
+          const complaintItem = document.createElement('li');
+          complaintItem.className = 'complaint-item';
+
+          const complaintTitle = document.createElement('div');
+          complaintTitle.className = 'complaint-title';
+          complaintTitle.textContent = complaint.title;
+
+          const complaintDate = document.createElement('div');
+          complaintDate.className = 'complaint-date';
+          complaintDate.textContent = `Date: ${new Date(complaint.date).toLocaleDateString()}`;
+
+          const complaintBody = document.createElement('div');
+          complaintBody.textContent = `Description: ${complaint.body}`;
+
+          const complaintStatus = document.createElement('div');
+          complaintStatus.textContent = `Status: ${complaint.status}`;
+
+          const complaintReply = document.createElement('div');
+          complaintReply.textContent = `Reply: ${complaint.reply || "No reply yet"}`;
+
+          complaintItem.appendChild(complaintTitle);
+          complaintItem.appendChild(complaintDate);
+          complaintItem.appendChild(complaintBody);
+          complaintItem.appendChild(complaintStatus);
+          complaintItem.appendChild(complaintReply);
+
+          complaintsList.appendChild(complaintItem);
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching complaints:', error);
+      errorMessage.textContent = 'An error occurred while fetching your complaints. Please try again later.';
+    }
+  });
+</script>
+
+</body>
+</html>

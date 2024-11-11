@@ -12,7 +12,7 @@ import productModel from '../../models/product.js';
 // Create a new seller
 const CreateSeller = async (req, res) => {
   try {
-    const { username, email, password, mobile, description } = req.body;
+    const { firstName, lastName, username, email, password, mobile, description } = req.body;
 
     // Check if the username or email already exists
     const existingSeller = await SellerModel.findOne({
@@ -28,6 +28,8 @@ const CreateSeller = async (req, res) => {
 
     // Create new seller
     const seller = await SellerModel.create({
+      firstName, 
+      lastName,
       username,
       email,
       password,
@@ -72,9 +74,9 @@ const getSeller = async (req, res) => {
 // Update a seller
 const updateSeller = async (req, res) => {
   try {
-    const { username, email, password, mobile, description } = req.body;
+    const { firstName, lastName, username, email, password, mobile, description } = req.body;
     //const hashed = hashPassword(password);
-    const updateData = { username, email, password, mobile, description };
+    const updateData = { firstName, lastName, username, email, password, mobile, description };
 
     // Check if the email already exists
     if (email) {

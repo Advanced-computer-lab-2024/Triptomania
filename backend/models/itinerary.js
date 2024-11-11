@@ -2,90 +2,88 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const itinerarySchema = new Schema({
-    Name:
-    {
+    Name: {
         type: String,
         required: true,
     },
-    activities:
-    {
+    activities: {
         type: [String],
         required: true,
     },
-    locationsToVisit:
-    {
+    locationsToVisit: {
         type: [String],
         required: true,
     },
-    timeLine:
-    {
-        type: String, 
-        required: true,
-    },
-    duration:
-    {
+    timeLine: {
         type: String,
         required: true,
     },
-    language:
-    {
+    duration: {
         type: String,
         required: true,
     },
-    price: 
-    {
+    language: {
+        type: String,
+        required: true,
+    },
+    price: {
         type: Number,
         required: true,
     },
-    availableDates:
-    {
+    availableDates: {
         type: [String],
         required: true,
     },
-    availableTimes:
-    {
+    availableTimes: {
         type: [String],
         required: true,
     },
-    accesibility:
-    {
+    accesibility: {
         type: [String],
     },
-    pickUp:
-    {
+    pickUp: {
         type: String,  // Pickup location
         required: true,
     },
-    dropOff:
-    {
+    dropOff: {
         type: String, // Dropoff location
         required: true,
     },
-    bookingMade:
-    {
+    bookingMade: {
         type: [mongoose.Types.ObjectId],
         default: []
     },
     preferenceTags: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'preferencetags',
+        ref: 'PreferenceTag', // Adjust the model name as needed
         required: false,
     }],
-    End_date:
-    {
+    Start_date: {
+        type: Date,
+        required: true,
+        default: Date.now // Automatically sets the current date
+    },    
+    End_date: {
         type: String, // DD/MM/YYYY Date type
         required: true,
     },
-    Tags:
-    {
+    Tags: {
         type: [String], // Array of tags for filtering
         default: [],
     },
-    creatorId: 
-    {
+    creatorId: {
         type: mongoose.Types.ObjectId,
         required: true,
     },
+    comments: {
+        type: [String],
+        default: [],
+    },
+    ratings: [{
+        touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
+        rating: { type: Number, min: 0, max: 5, required: true }
+    }],
+    averageRating: { type: Number, default: 0 },
     isActivated: 
     {
         type: Boolean,

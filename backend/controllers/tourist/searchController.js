@@ -1,48 +1,61 @@
 import Place from '../../models/historicalPlace.js';
 import Activity from '../../models/activity.js';
 import Itinerary from '../../models/itinerary.js';
+import PreferenceTag from '../../models/preferenceTag.js';
+import Tag from '../../models/tag.js';
 
-// Search for museums, activities, or itineraries by name, category, or tag
 export const search = async (req, res) => {
     try {
-        const { query } = req.body; // search term
-        console.log('Search query:', query); // Log the search query
+        const query = req.body?.query?.trim(); // search term
+        console.log('Search query:', query);
 
         if (!query) {
             return res.status(400).json({ error: 'Query is required' });
         }
 
-        // Search by name, category, or tag in places
+        // Step 1: Find matching tags and preference tags by name
+        console.log('Searching for matching tags...');
+        const matchedTags = await Tag.find({ name: { $regex: query, $options: 'i' } });
+        console.log('Matched tags:', matchedTags);
+
+        const matchedPreferenceTags = await PreferenceTag.find({ PreferenceTagName: { $regex: query, $options: 'i' } });
+        console.log('Matched preference tags:', matchedPreferenceTags);
+
+        const tagIds = matchedTags.map(tag => tag._id);
+        const preferenceTagIds = matchedPreferenceTags.map(tag => tag._id);
+
+        // Step 2: Search places by Name, Category, or matching Tag IDs
+        console.log('Searching for places...');
         const places = await Place.find({
             $or: [
                 { Name: { $regex: query, $options: 'i' } },
                 { Category: { $regex: query, $options: 'i' } },
-                { Tags: { $in: [new RegExp(query, 'i')] } }
+                { Tags: { $in: tagIds } } // Filter by matching Tag IDs
             ]
-        });
+        })//.populate('Tags'); // Ensure Tags are populated
 
         console.log('Places found:', places.length);
 
-        // Search by name, category, or tag in activities
+        // Step 3: Search activities by name, category, or matching Preference Tag IDs
+        console.log('Searching for activities...');
         const activities = await Activity.find({
             $or: [
-                { name: { $regex: query, $options: 'i' } },    // Search by name, case-insensitive
-                { category: { $regex: query, $options: 'i' } }, // Search by category
-                // Since tags is a string, we use a simple regex to search within the string
-                { tags: { $regex: new RegExp(query, 'i') } }   // Search within tags string
+              { name: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search for name
+              { description: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search for description
+              { location: { $regex: new RegExp(query, 'i') } } // Case-insensitive search for location
             ]
-        });
+          });
 
         console.log('Activities found:', activities.length);
-        console.log('Activities:', activities);  // Log the actual activities to see the data
 
-        // Search by name, category, or tag in itineraries
+        // Step 4: Search itineraries by Name or matching Preference Tag IDs
+        console.log('Searching for itineraries...');
         const itineraries = await Itinerary.find({
             $or: [
-                { Name: { $regex: query, $options: 'i' } },     // Search by itinerary name
-                { Tags: { $in: [new RegExp(query, 'i')] } }     // Search within tags
+                { Name: { $regex: query, $options: 'i' } },
+                { preferenceTags: { $in: preferenceTagIds } } // Filter by matching PreferenceTag IDs
             ]
-        });
+        })//.populate('preferenceTags'); // Ensure preferenceTags are populated
 
         console.log('Itineraries found:', itineraries.length);
 
@@ -64,7 +77,7 @@ export const search = async (req, res) => {
         res.status(200).json(results);
 
     } catch (error) {
-        console.error('Error in search function:', error); // Log the error
+        console.error('Error in search function:', error);
         res.status(500).json({ error: 'Error occurred while searching' });
     }
 };

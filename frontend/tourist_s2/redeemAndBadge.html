@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Points</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Redeem Points</h1>
+    
+    <label for="touristId">Tourist ID:</label>
+    <input type="text" id="touristId" placeholder="Enter tourist ID">
+    
+    <button id="redeemPointsButton">Redeem</button>
+
+    <p id="statusMessage"></p>
+
+    <h3>Tourist Info:</h3>
+    <p><strong>Wallet Balance: </strong><span id="walletBalance">N/A</span></p>
+    <p><strong>Remaining Points: </strong><span id="remainingPoints">N/A</span></p>
+    <p><strong>Badge: </strong><span id="badge">N/A</span></p>
+
+    <script>
+        const redeemPointsButton = document.getElementById('redeemPointsButton');
+        const statusMessage = document.getElementById('statusMessage');
+        const walletBalance = document.getElementById('walletBalance');
+        const remainingPoints = document.getElementById('remainingPoints');
+        const badge = document.getElementById('badge');
+        const touristIdInput = document.getElementById('touristId');
+
+        // Fetch tourist info when the page is loaded (before redeeming)
+        function fetchTouristInfo(touristId) {
+            if (!touristId) {
+                return;
+            }
+
+            // Fetch tourist info from the server
+            fetch(`http://localhost:5000/api/tourist/getOneTourist/${touristId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch tourist information');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Tourist Info:', data);
+
+                    // Display the current tourist info
+                    walletBalance.textContent = data.wallet.toFixed(2);  // Show wallet with 2 decimal places
+                    remainingPoints.textContent = data.points;
+                    badge.textContent = data.badge;
+                })
+                .catch(error => {
+                    console.error('Error fetching tourist info:', error);
+                    statusMessage.textContent = 'Error fetching tourist info. Please check the ID and try again.';
+                });
+        }
+
+        // Redeem points and update tourist info
+        function redeemPoints() {
+    const touristId = touristIdInput.value.trim();
+    if (!touristId) {
+        statusMessage.textContent = 'Please enter a valid Tourist ID';
+        return;
+    }
+
+    statusMessage.textContent = 'Processing redeem request...';
+    console.log('Redeeming points for ID:', touristId);
+
+    // Redeem points API call
+    fetch(`http://localhost:5000/api/tourist/redeem/${touristId}`, {
+        method: 'PUT',
+    })
+    .then(response => {
+        console.log('Redeem Response:', response.status);
+        if (!response.ok) {
+            // If the response isn't successful, parse the error message from the backend
+            return response.json().then(errorData => {
+                throw new Error(errorData.message || 'Failed to redeem points');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Redeem Result:', data);
+
+        // Use the backend's message directly
+        statusMessage.textContent = data.message;
+
+        // Fetch the updated tourist information after redeeming points
+        fetchTouristInfo(touristId);
+    })
+    .catch(error => {
+        // Use the backend's error message (or a generic fallback)
+        statusMessage.textContent = `Error: ${error.message}`;
+    });
+}
+
+
+        // Event listener for redeem points button
+        redeemPointsButton.addEventListener('click', redeemPoints);
+
+        // Event listener for tourist ID input field to fetch info as soon as it's entered
+        touristIdInput.addEventListener('input', () => {
+            const touristId = touristIdInput.value.trim();
+            fetchTouristInfo(touristId);  // Fetch tourist info whenever the ID is entered
+        });
+    </script>
+</body>
+</html>

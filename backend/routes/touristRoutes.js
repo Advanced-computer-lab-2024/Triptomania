@@ -6,6 +6,7 @@ import touristController from '../controllers/tourist/touristController.js';
 import productController from '../controllers/shared/productController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
+import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 import sharedController from '../controllers/shared/sharedController.js';
 
 const router = express.Router();
@@ -101,6 +102,16 @@ router.get("/itineraries/getItineraries/:id", itineraryController.getItineraries
  */
 router.post('/addTourist', touristController.CreateTourist);
 
+router.put('/redeem/:id', touristController.redeemPoints);
+
+router.get('/chooseCategory/:id', touristController.chooseCategory);
+
+router.put('/bookActivity/:activityId', touristController.bookActivity);
+
+router.put('/bookItinerary/:itineraryId', touristController.bookItinerary);
+
+router.put('/badge/:_id', touristController.badge);
+
 /**
  * @swagger
  * /api/tourist/updateTourist:
@@ -135,7 +146,7 @@ router.get('/getTourist', touristController.getTourist);
  *       200:
  *         description: Details of the specified tourist
  */
-router.get('/getOneTourist', touristController.getOneTourist);
+router.get('/getOneTourist/:id', touristController.getOneTourist);
 
 /**
  * @swagger
@@ -220,6 +231,169 @@ router.get("/product/filterProducts", productController.filterProducts);
  *         description: Sorted list of products
  */
 router.get("/product/sortProducts", productController.sortProducts);
+/**
+ * @swagger
+ * /api/tourist/rateTourGuide/{touristId}:
+ *   post:
+ *     summary: Rate a tour guide after completing a tour
+ *     tags: [Tourist]
+ *     parameters:
+ *       - in: path
+ *         name: touristId
+ *         required: true
+ *         description: The ID of the tourist giving the rating
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               itineraryId:
+ *                 type: string
+ *                 description: The ID of the itinerary for which the tour guide is being rated
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 maximum: 5
+ *                 description: The rating value (0 to 5)
+ *     responses:
+ *       200:
+ *         description: Successfully rated the tour guide
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating submitted successfully."
+ *                 averageRating:
+ *                   type: number
+ *                   format: float
+ *                   description: The new average rating for the tour guide
+ *       400:
+ *         description: Invalid input, such as rating out of range or itinerary expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid rating value or itinerary has expired."
+ *       404:
+ *         description: Tour guide or itinerary not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Tour guide or itinerary not found."
+ */
+router.put('/rateTourGuide/:touristId', touristController.rateTourGuide);
+/**
+ * @swagger
+ * /api/tourist/rateItinerary/{touristId}:
+ *   put:
+ *     summary: Rate an itinerary after completing the tour
+ *     tags: [Tourist]
+ *     parameters:
+ *       - in: path
+ *         name: touristId
+ *         required: true
+ *         description: The ID of the tourist giving the rating
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               itineraryId:
+ *                 type: string
+ *                 description: The ID of the itinerary being rated
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 maximum: 5
+ *                 description: The rating value (0 to 5)
+ *     responses:
+ *       200:
+ *         description: Successfully rated the itinerary
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Rating submitted successfully."
+ *                 averageRating:
+ *                   type: number
+ *                   format: float
+ *                   description: The new average rating for the itinerary
+ *       400:
+ *         description: Invalid input, such as rating out of range or itinerary expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid rating value or itinerary has expired."
+ *       404:
+ *         description: Itinerary not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Itinerary not found."
+ */
+
+router.put('/rateItinerary/:touristId', touristController.rateItinerary);
+
+router.put('/rateActivity/:touristId', touristController.rateActivity);//youssef
+
+router.put('/processPayment/:_id', touristController.processPayment);
+
+router.put('/rateProduct/:touristId',touristController.rateProduct);
+
+router.post("/comment/:id", touristController.addComment);
+
+router.post("/product/reviews/:id", touristController.reviewProduct);
+
+router.post('/complaint/addComplaint/:touristId', touristController.fileComplaint);
+
+router.get('/complaint/viewMyComplaints/:touristId', touristController.viewMyComplaints);
+
+router.put('/selectTouristPreferences/:touristId', touristController.choosePreferences);
+
+router.put('/cancelBooking/:touristId', touristController.cancelBooking);
+
+router.get('/activities/getActivities', activityController.viewActivities);
+
+router.get('/activities/getActivity/:id', activityController.getActivity);
+
+router.get('/itineraries/getItineraries', itineraryController.getItineraries);
+
+router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
+
+router.get('/getHistoricalPlaces', historicalPlaceController.getHistoricalPlaces);
+
+router.get('/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
 
 router.put('/changePassword/:id/:type', sharedController.changePassword);
 

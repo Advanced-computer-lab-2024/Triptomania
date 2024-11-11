@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Activity and Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Rate an Activity</h1>
+    <form id="activityRatingForm">
+        <label for="activityId">Select Activity:</label>
+        <select id="activityId" name="activityId" required>
+            <option value="" disabled selected>Select an activity</option>
+        </select>
+
+        <label for="touristId">Your Tourist ID:</label>
+        <input type="text" id="touristId" name="touristId" required>
+
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+        <button type="submit">Submit Activity Rating</button>
+        <div class="error" id="activityError" style="display: none;"></div>
+        <div class="success" id="activitySuccess" style="display: none;"></div>
+    </form>
+</div>
+
+<div class="container">
+    <h2>Rate a Product</h2>
+    <form id="productRatingForm">
+        <label for="productId">Select Product:</label>
+        <select id="productId" name="productId" required>
+            <option value="" disabled selected>Select a product</option>
+        </select>
+
+        <label for="touristIdProduct">Your Tourist ID:</label>
+        <input type="text" id="touristIdProduct" name="touristIdProduct" required>
+
+        <label for="productRating">Rating (1-5):</label>
+        <input type="number" id="productRating" name="productRating" min="1" max="5" required>
+
+        <button type="submit">Submit Product Rating</button>
+        <div class="error" id="productError" style="display: none;"></div>
+        <div class="success" id="productSuccess" style="display: none;"></div>
+    </form>
+</div>
+
+<script>
+    // Fetch and populate activities
+    async function fetchActivities() {
+        try {
+            const response = await fetch('http://localhost:5000/api/admin/activities/getActivities');
+            const activities = await response.json();
+            const activitySelect = document.getElementById('activityId');
+            activities.forEach(activity => {
+                const option = document.createElement('option');
+                option.value = activity._id;
+                option.textContent = activity.name;
+                activitySelect.appendChild(option);
+            });
+        } catch (error) {
+            document.getElementById('activityError').innerText = 'Failed to load activities';
+            document.getElementById('activityError').style.display = 'block';
+        }
+    }
+
+    // Adjusted fetchProducts function to display product names correctly
+    async function fetchProducts() {
+        try {
+            const response = await fetch('http://localhost:5000/api/seller/product/viewProducts');
+            const products = await response.json();
+            const productSelect = document.getElementById('productId');
+            productSelect.innerHTML = '<option value="" disabled selected>Select a product</option>'; // Clear existing options
+
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product._id;
+                option.textContent = product.Name; // Ensure correct field for product name
+                productSelect.appendChild(option);
+            });
+        } catch (error) {
+            document.getElementById('productError').innerText = 'Failed to load products';
+            document.getElementById('productError').style.display = 'block';
+        }
+    }
+
+    // Rate activity
+    document.getElementById('activityRatingForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const activityId = document.getElementById('activityId').value;
+        const touristId = document.getElementById('touristId').value;
+        const rating = document.getElementById('rating').value;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/tourist/rateActivity/${touristId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ activityId, rating }),
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+
+            document.getElementById('activitySuccess').innerText = `Activity rated successfully. Average Rating: ${result.averageRating.toFixed(2)}`;
+            document.getElementById('activitySuccess').style.display = 'block';
+            document.getElementById('activityError').style.display = 'none';
+            document.getElementById('activityRatingForm').reset();
+        } catch (error) {
+            document.getElementById('activityError').innerText = error.message;
+            document.getElementById('activityError').style.display = 'block';
+            document.getElementById('activitySuccess').style.display = 'none';
+        }
+    });
+
+    // Rate product
+    document.getElementById('productRatingForm').addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const productId = document.getElementById('productId').value;
+        const touristId = document.getElementById('touristIdProduct').value;
+        const rating = document.getElementById('productRating').value;
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/tourist/rateProduct/${touristId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId, rating }),
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+
+            document.getElementById('productSuccess').innerText = `Product rated successfully. Average Rating: ${result.averageRating.toFixed(2)}`;
+            document.getElementById('productSuccess').style.display = 'block';
+            document.getElementById('productError').style.display = 'none';
+            document.getElementById('productRatingForm').reset();
+        } catch (error) {
+            document.getElementById('productError').innerText = error.message;
+            document.getElementById('productError').style.display = 'block';
+            document.getElementById('productSuccess').style.display = 'none';
+        }
+    });
+
+    // Fetch activities and products on page load
+    window.onload = function() {
+        fetchActivities();
+        fetchProducts();
+    };
+</script>
+
+</body>
+</html>

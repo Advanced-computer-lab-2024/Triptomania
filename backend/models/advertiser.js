@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 const Schema =mongoose.Schema;
 
 const AdvertiserSchema = new Schema({
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -23,6 +25,7 @@ const AdvertiserSchema = new Schema({
       default: false
     }
 });
+
 
 AdvertiserSchema.pre('save', async function(next){
     const advertiser = this;
