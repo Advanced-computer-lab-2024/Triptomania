@@ -8,20 +8,20 @@
     <style>
         /* Add this CSS to make the itinerary section scrollable */
         #itinerariesSection {
-            max-height: 400px; /* Adjust this value as needed */
-            overflow-y: auto;  /* Enables vertical scrolling */
-            border: 1px solid #ccc; /* Optional: Adds a border */
-            padding: 10px; /* Optional: Adds some padding */
-            margin-top: 20px; /* Optional: Adds spacing above */
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
         }
 
         /* Style for individual itinerary items */
         .itinerary-item {
             padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #e0e0e0; /* Optional: Adds a border to each item */
-            border-radius: 5px; /* Optional: Adds rounded corners */
-            background-color: #f9f9f9; /* Optional: Light background color */
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
@@ -29,7 +29,15 @@
     <header>
         <h1>Itinerary Management</h1>
         <button id="addItineraryButton">Add New Itinerary</button>
-        <button id="getMyItinerariesButton">Get My Itineraries</button> <!-- New button -->
+        <button id="getMyItinerariesButton">Get My Itineraries</button>
+        <label for="currencySelect">Choose Currency:</label>
+        <select id="currencySelect">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+            <!-- Add more currencies as needed -->
+        </select>
     </header>
     <main>
         <section id="itinerariesSection">
@@ -40,7 +48,7 @@
 
     <script src="app.js"></script>
     <script>
-        // Redirect to Add Itinerary page (if needed)
+        // Redirect to Add Itinerary page
         document.getElementById("addItineraryButton").addEventListener("click", function() {
             window.location.href = "addItinerary.html";
         });
