@@ -3,7 +3,6 @@ import productController from '../controllers/shared/productController.js';
 import sharedController from '../controllers/shared/sharedController.js';
 import express from 'express';
 import multer from "multer";
-import sharedController from "../controllers/shared/sharedController.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
