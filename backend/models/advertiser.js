@@ -19,17 +19,9 @@ const AdvertiserSchema = new Schema({
     acceptedTerms: { type: Boolean, default: false },
     profilePicture: {type: String, required: false, default: 'none'},
     deleteAccount:{
-<<<<<<< HEAD
-    type: Boolean,
-    default: false
-    
-  }
-
-=======
       type: Boolean,
       default: false
     }
->>>>>>> dc4b1eb54e78d3cb9ed67d98314ff5df06b79e13
 });
 
 AdvertiserSchema.pre('save', async function(next){

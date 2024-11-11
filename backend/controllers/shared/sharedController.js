@@ -470,9 +470,7 @@ export const requestAccountDeletion = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
-export default { requestAccountDeletion, changePassword };
-=======
+
 export default {
     changePassword,
     uploadDocuments,
@@ -484,4 +482,3 @@ export default {
     requestAccountDeletion,
     changePassword
 }
->>>>>>> dc4b1eb54e78d3cb9ed67d98314ff5df06b79e13

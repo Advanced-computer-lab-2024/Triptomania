@@ -58,9 +58,6 @@ const touristSchema = new Schema({
       type: String,
     },
   ],
-<<<<<<< HEAD
-}, { timestamps: true }); 
-=======
   transportationBookings: [
     {
       type: Object
@@ -71,7 +68,6 @@ const touristSchema = new Schema({
     default: false
   }
 }, { timestamps: true });
->>>>>>> dc4b1eb54e78d3cb9ed67d98314ff5df06b79e13
 
 touristSchema.pre('save', async function(next){
   const tourist = this;
