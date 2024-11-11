@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function updateStatus(complaintId, newStatus) {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin'/complaints/updateStatus/${complaintId}`, {
-                method: 'PATCH',
+            const response = await fetch(`http://localhost:5000/api/admin/complaints/updateStatus/${complaintId}`, {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
             });
