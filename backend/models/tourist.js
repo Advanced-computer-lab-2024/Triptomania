@@ -54,6 +54,11 @@ const touristSchema = new Schema({
       type: String,
     },
   ],
+  transportationBookings: [
+    {
+      type: Object
+    }
+  ],
 }, { timestamps: true });
 
 touristSchema.pre('save', async function(next){

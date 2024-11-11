@@ -380,7 +380,7 @@ const bookFlight = async (req, res) => {
     const bookingResponse = await amadeus.booking.flightOrders.post(bookingData);
 
     await userModel.findByIdAndUpdate(id, { $push: { flightBookings: bookingResponse.data.id } });
-    
+
     // Return the booking response
     return res.status(201).json(bookingResponse.data);
 
@@ -534,11 +534,20 @@ const bookTransportation = async (req, res) => {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    const tourist = await userModel.findById(id);
+    const transportationData = {
+      origin: origin,
+      destination: destination,
+      travelDate: travelDate,
+      travelTime: travelTime,
+      travelType: travelType
+    };
+
+    await userModel.findByIdAndUpdate(id, { $push: { transportationBookings: transportationData } }, {new: true});
+    res.status(200).json({message: "transportation added successfully"});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
 
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, getHotels, getHotelOffers, bookHotel, searchFlights, getFlightDetails, bookFlight };
+export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, getHotels, getHotelOffers, bookHotel, searchFlights, getFlightDetails, bookFlight, bookTransportation };
