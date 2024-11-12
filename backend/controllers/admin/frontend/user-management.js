@@ -68,15 +68,25 @@ const displayPendingUsers = (pendingUsers) => {
                 const userCard = document.createElement('div');
                 userCard.classList.add('user-card');
 
-                // Display user details (including ID, acceptTerms status)
+                // Create HTML for user details
+                let documentsLinks = "";
+                if (Array.isArray(user.documents)) {
+                    documentsLinks = user.documents.map(doc => 
+                        `<a href="${doc}" target="_blank">${doc}</a>`
+                    ).join(", ");
+                } else if (user.documents) {
+                    documentsLinks = `<a href="${user.documents}" target="_blank">${user.documents}</a>`;
+                }
+
                 const userInfo = `
                     <strong>ID:</strong> ${user._id} <br>
                     <strong>Username:</strong> ${user.username} <br>
                     <strong>Email:</strong> ${user.email} <br>
                     <strong>Status:</strong> ${user.status} <br>
                     <strong>Accept Terms:</strong> ${user.acceptedTerms ? 'Yes' : 'No'} <br>
-                    <strong>Documents:</strong> ${user.documents} <br>
+                    <strong>Documents:</strong> ${documentsLinks} <br>
                 `;
+
                 userCard.innerHTML = userInfo;
                 categorySection.appendChild(userCard);
             });
@@ -85,6 +95,7 @@ const displayPendingUsers = (pendingUsers) => {
         }
     });
 };
+
 
 async function acceptUser(event) {
     event.preventDefault();
