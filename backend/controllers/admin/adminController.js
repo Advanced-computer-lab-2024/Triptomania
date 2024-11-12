@@ -119,6 +119,9 @@ const deleteAccount = async (req, res) => {
         // Depending on the type, delete the appropriate account
         switch (type) {
             case "tourist":
+                if (!await checkValidity(id)) {
+                    return res.status(400).json({ message: "Tourist has active bookings or itineraries" });
+                }
                 deletedAccount = await touristModel.findByIdAndDelete(id); // Add await and capture result
                 break;
             case "tourGuide":
@@ -160,7 +163,7 @@ const checkValidity = async (touristId) => {
     }
 
     // Check if there are any hotel or flight bookings
-    if (tourist.hotelBookings.length > 0 || tourist.flightBookings.length > 0) {
+    if (tourist.hotelBookings.length > 0 || tourist.flightBookings.length > 0 || tourist.transportationBookings.length > 0) {
         return false; // Return false if there are any bookings
     } 
 
