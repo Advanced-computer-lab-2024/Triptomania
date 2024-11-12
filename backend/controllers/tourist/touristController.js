@@ -12,7 +12,7 @@ import axios from 'axios';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
-  const { username, email, password, mobile, nationality, DOB, job_Student/*, wallet*/ } = req.body
+  const { firstName, lastName, username, email, password, mobile, nationality, DOB, job_Student/*, wallet*/ } = req.body
 
   try {
     // Check for existing user by username or email

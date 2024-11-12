@@ -387,7 +387,9 @@ router.get('/activities/getActivities', activityController.viewActivities);
 
 router.get('/activities/getActivity/:id', activityController.getActivity);
 
-router.get('/itineraries/getItineraries', itineraryController.getItineraries);
+router.get('/itineraries/getItineraries/:id', itineraryController.getItineraries);
+
+router.get('/itineraries/viewItineraries', itineraryController.viewItineraries);
 
 router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
 

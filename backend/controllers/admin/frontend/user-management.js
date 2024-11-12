@@ -75,6 +75,7 @@ const displayPendingUsers = (pendingUsers) => {
                     <strong>Email:</strong> ${user.email} <br>
                     <strong>Status:</strong> ${user.status} <br>
                     <strong>Accept Terms:</strong> ${user.acceptedTerms ? 'Yes' : 'No'} <br>
+                    <strong>Documents:</strong> ${user.documents} <br>
                 `;
                 userCard.innerHTML = userInfo;
                 categorySection.appendChild(userCard);

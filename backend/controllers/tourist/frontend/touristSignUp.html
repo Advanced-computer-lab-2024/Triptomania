@@ -79,6 +79,16 @@
     <h2>Tourist Signup</h2>
     <form id="signupForm">
       <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+      </div>
+
+      <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required>
       </div>
@@ -95,7 +105,7 @@
       
       <div class="form-group">
         <label for="mobile">Mobile</label>
-        <input type="number" id="mobile" name="mobile" required>
+        <input type="text" id="mobile" name="mobile" required>
       </div>
       
       <div class="form-group">
@@ -113,11 +123,6 @@
         <input type="text" id="job_Student" name="job_Student" required>
       </div>
 
-     <!-- <div class="form-group">
-        <label for="wallet">Wallet (optional)</label>
-        <input type="number" id="wallet" name="wallet">
-      </div> -->
-
       <!-- Error message container -->
       <div class="error-message" id="errorMessage"></div>
 
@@ -133,6 +138,8 @@
       document.getElementById('errorMessage').textContent = '';
 
       const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
         username: document.getElementById('username').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
@@ -140,11 +147,10 @@
         nationality: document.getElementById('nationality').value,
         DOB: document.getElementById('DOB').value,
         job_Student: document.getElementById('job_Student').value,
-      //  wallet: document.getElementById('wallet').value || 0
       };
 
       try {
-        const response = await fetch('http://localhost:5000/api/tourist/addTourist', {  // Adjust to your backend route
+        const response = await fetch('http://localhost:5000/api/tourist/addTourist', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -158,12 +164,10 @@
           // Redirect or perform other actions
         } else {
           const errorData = await response.json();
-          // Display backend error in the error message div
           document.getElementById('errorMessage').textContent = errorData.message || 'Signup failed. Please try again.';
         }
       } catch (error) {
         console.error('Error:', error);
-        // Display any general errors in the error message div
         document.getElementById('errorMessage').textContent = 'An error occurred. Please try again later.';
       }
     });

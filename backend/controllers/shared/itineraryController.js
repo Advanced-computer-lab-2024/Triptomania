@@ -3,14 +3,15 @@ import itineraryModel from '../../models/itinerary.js';
 
 const getItineraries = async (req, res) => { 
   try {
-    // Assuming user ID is available in req.user.id
-    const {id} = req.params;
+    // Assuming user ID is available in req.params.id
+    const { id } = req.params;
 
     // Retrieve itineraries based on `isActivated` and `bookingMade`
     const itineraries = await itineraryModel.find({
+      isFlagged: false,
       $or: [
-        {isFlagged: false, isActivated: true}, // Public itineraries
-        { isFlagged: false,bookingMade: id } // Private itineraries where the user has a booking
+        { isActivated: true },               // Public itineraries
+        { bookingMade: { $in: [id] } }        // Private itineraries where `bookingMade` contains `id`
       ]
     });
 
@@ -25,7 +26,6 @@ const getItineraries = async (req, res) => {
     });
   }
 };
-
 
 const viewItineraries = async (req, res) => { 
   try {

@@ -65,10 +65,10 @@
 <script>
     async function fetchItineraries() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourist/itineraries/getItineraries'); // Adjust API endpoint as needed
+            const response = await fetch('http://localhost:5000/api/tourist/itineraries/viewItineraries'); // Adjust API endpoint as needed
             if (response.ok) {
                 const data = await response.json();
-                displayItineraries(data.itinerary);
+                displayItineraries(data.itineraries);
             } else {
                 console.error("Failed to fetch itineraries");
             }
