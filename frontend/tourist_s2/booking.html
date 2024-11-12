@@ -70,7 +70,7 @@
     <script>
         // API endpoints
         const activitiesUrl = 'http://localhost:5000/api/admin/activities/getActivities';
-        const itinerariesUrl = 'http://localhost:5000/api/tourGuide/itinerary/getItineraries';
+        const itinerariesUrl = 'http://localhost:5000/api/tourist/itineraries/viewItineraries';
         const bookActivityUrl = 'http://localhost:5000/api/tourist/bookActivity';
         const bookItineraryUrl = 'http://localhost:5000/api/tourist/bookItinerary';
 
@@ -92,14 +92,13 @@
         fetch(itinerariesUrl)
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched Itineraries:', data); // Debugging
         const itineraryDropdown = document.getElementById('itineraryDropdown');
         
         // Clear any previous options
         itineraryDropdown.innerHTML = '<option value="">-- Select Itinerary --</option>';
 
-        if (Array.isArray(data.itinerary)) {
-            data.itinerary.forEach(itinerary => {
+        if (Array.isArray(data.itineraries)) {
+            data.itineraries.forEach(itinerary => {
                 const option = document.createElement('option');
                 option.value = itinerary._id;  // Use the itinerary ID as the option's value
                 option.textContent = itinerary.Name;  // Only display the 'Name' in the dropdown

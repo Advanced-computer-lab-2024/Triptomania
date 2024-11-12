@@ -74,19 +74,14 @@
     async function fetchItems() {
         try {
             const [productsResponse, itinerariesResponse, activitiesResponse] = await Promise.all([
-                fetch('http://localhost:5000/api/seller/product/viewProducts'),
-                fetch('http://localhost:5000/api/tourGuide/itinerary/getItineraries'),
+                fetch('http://localhost:5000/api/tourist/product/viewProducts'),
+                fetch('http://localhost:5000/api/tourist/itineraries/viewItineraries'),
                 fetch('http://localhost:5000/api/admin/activities/getActivities')
             ]);
 
             const products = await productsResponse.json();
             const itineraries = await itinerariesResponse.json();
             const activities = await activitiesResponse.json();
-
-            // Log the response data to debug
-            console.log("Products:", products);
-            console.log("Itineraries:", itineraries);
-            console.log("Activities:", activities);
 
             const itemSelect = document.getElementById('itemSelect');
 
@@ -107,7 +102,7 @@
 
             // Add products, itineraries, and activities to the dropdown
             addItemsToDropdown(products, 'Product');
-            addItemsToDropdown(itineraries.itinerary, 'Itinerary');  // Access the 'itinerary' field
+            addItemsToDropdown(itineraries.itineraries, 'Itinerary');  // Access the 'itinerary' field
             addItemsToDropdown(activities, 'Activity');
         } catch (error) {
             document.getElementById('responseMessage').innerText = 'Error loading items: ' + error.message;

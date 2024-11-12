@@ -101,7 +101,7 @@
     // Function to fetch itineraries and populate the dropdown
     async function fetchItineraries() {
         try {
-            const response = await fetch('http://localhost:5000/api/tourGuide/itinerary/getItineraries', {
+            const response = await fetch('http://localhost:5000/api/tourist/itineraries/viewItineraries', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +116,7 @@
 
             const itinerarySelect = document.getElementById('itineraryId');
             const itinerarySelectForRating = document.getElementById('itineraryIdForRating');
-            itineraries.itinerary.forEach(itinerary => {
+            itineraries.itineraries.forEach(itinerary => {
                 const option = document.createElement('option');
                 option.value = itinerary._id;
                 option.textContent = itinerary.Name;

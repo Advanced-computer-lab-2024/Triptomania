@@ -332,7 +332,7 @@ export const rateTourGuide = async (req, res) => {
 
     // Check if the tourist completed the itinerary by checking bookingMade
     if (!itinerary.bookingMade.includes(touristId)) {
-      return res.status(403).json({ error: 'You have not booked this itinerary' });
+      return res.status(403).json({ error: 'You have not booked an itinerary with this tour guide' });
     }
 
     // Check if the itinerary has ended by comparing the end date with the current date
