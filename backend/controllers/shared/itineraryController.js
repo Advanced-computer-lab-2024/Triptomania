@@ -76,7 +76,7 @@ const getItinerary = async (req, res) => {
 
 const addItinerary = async (req, res) => {
   try {
-    const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff,  Start_date, End_date, Tags, creatorId, preferenceTags } = req.body;
+    let { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff,  Start_date, End_date, Tags, creatorId, preferenceTags } = req.body;
 
     // // Check that parameters are not empty
     // if (!Name || !activities || !locationsToVisit || !timeLine || !duration || !language || !price || !availableDates || !availableTimes || !pickUp || !dropOff || !bookingMade || !creatorId) {
