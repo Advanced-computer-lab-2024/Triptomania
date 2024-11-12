@@ -78,7 +78,7 @@
             lastName: 'Smith',
             username: 'smithbob',
             email: 'm@example.com',
-            mobile: '4485225',
+            mobile: '011111111',
             nationality: '',
             DOB: '1985-02-05',
             job_Student: '',
@@ -106,6 +106,7 @@
             e.preventDefault();
 
             const data = {
+                username: document.getElementById('username').value,
                 firstName: document.getElementById('firstName').value,
                 lastName: document.getElementById('lastName').value,
                 email: document.getElementById('email').value,
