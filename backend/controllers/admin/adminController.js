@@ -255,9 +255,5 @@ export default {
     addTourismGovernor,
     flagItinerary,
     viewProductsAdmin,
-    getUsers ,
-    checkValidity,
-    
- 
-
+    getUsers
 }
