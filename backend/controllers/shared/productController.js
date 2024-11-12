@@ -217,7 +217,7 @@ const filterProducts = async (req, res) => {
        const sortOrder = order === 'high' ? -1 : 1; // -1 for descending, 1 for ascending
 
        
-       const products = await productModel.find().sort({ Ratings: sortOrder });
+       const products = await productModel.find().sort({ averageRating: sortOrder });
 
        if (products.length === 0) {
            return res.status(404).json({ message: 'No products found.' });

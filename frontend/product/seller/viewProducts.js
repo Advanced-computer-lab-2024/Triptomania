@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to display products with styling
     function displayProducts(products) {
+        console.log(products);
         productList.innerHTML = ''; // Clear existing products
         const selectedCurrency = currencySelect.value;  // Get selected currency
         products.forEach(product => {
@@ -47,11 +48,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check for product image (if it's valid Base64)
             let imageHtml;
-            if (product.Picture && isBase64(product.Picture)) {
-                imageHtml = `<img src="data:image/jpeg;base64,${product.Picture}" alt="${product.Name}" class="product-image">`;
-            } else {
-                imageHtml = `<p>No picture added</p>`;
-            }
+            // if (product.Picture && isBase64(product.Picture)) {
+            //     imageHtml = `<img src="data:image/jpeg;base64,${product.Picture}" alt="${product.Name}" class="product-image">`;
+            // } else {
+            //     imageHtml = `<p>No picture added</p>`;
+            // }
+            imageHtml = `<p>No picture added</p>`;
 
             // Add product details along with the image
             productElement.innerHTML = `
@@ -60,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p style="margin: 5px 0; color: #555;">${product.Description}</p>
                 <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: ${selectedCurrency} ${convertedPrice}</p>
                 <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
-                <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
+                <p style="font-size: 0.9em; color: #888;">Ratings: ${product.averageRating}</p>
                 <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
                 <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>
                 <p style="font-size: 0.9em; color: #888;">Quantity: ${product.Quantity}</p>

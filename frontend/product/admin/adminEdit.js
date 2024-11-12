@@ -16,13 +16,18 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     let currentCurrency = 'USD'; // Default to USD
+    let currentSort = ''; // Track the current sort state to avoid re-triggering fetch
 
     // Function to fetch all products
     async function fetchProducts() {
         try {
             const response = await fetch('http://localhost:5000/api/admin/product/viewProducts'); // View all products API
             const products = await response.json();
-            displayProducts(products);
+            if (Array.isArray(products)) {
+                displayProducts(products);
+            } else {
+                console.error('Products data is not an array:', products);
+            }
         } catch (error) {
             console.error('Error fetching products:', error);
         }
@@ -48,21 +53,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check for product image (if it's valid Base64)
             let imageHtml;
-            if (product.Picture && isBase64(product.Picture)) {
-                imageHtml = `<img src="data:image/jpeg;base64,${product.Picture}" alt="${product.Name}" class="product-image">`;
+            // if (product.Picture && isBase64(product.Picture)) {
+            //     imageHtml = `<img src="data:image/jpeg;base64,${product.Picture}" alt="${product.Name}" class="product-image">`;
+            // } else {
+            //     imageHtml = `<p>No picture added</p>`;
+            // }
+            imageHtml = `<p>No picture added</p>`;
+
+            // Create the reviews section by iterating over the Reviews array
+            let reviewsHtml = '';
+            if (product.Reviews && product.Reviews.length > 0) {
+                product.Reviews.forEach(review => {
+                    reviewsHtml += `<p style="font-size: 0.9em; color: #555;">Review: ${review}</p>`;
+                });
             } else {
-                imageHtml = `<p>No picture added</p>`;
+                reviewsHtml = `<p style="font-size: 0.9em; color: #555;">No reviews yet</p>`;
             }
 
-            // Add product details along with the image
+            // Add product details along with the image and reviews
             productElement.innerHTML = `
                 ${imageHtml}
                 <h2 style="font-size: 1.5em; color: #333; margin-bottom: 10px;">${product.Name}</h2>
                 <p style="margin: 5px 0; color: #555;">${product.Description}</p>
                 <p style="font-weight: bold; color: #007BFF; font-size: 1.2em;">Price: ${currentCurrency} ${convertedPrice}</p>
                 <p style="font-size: 0.9em; color: #888;">Seller: ${product.Seller}</p>
-                <p style="font-size: 0.9em; color: #888;">Ratings: ${product.Ratings}</p>
-                <p style="font-size: 0.9em; color: #888;">Reviews: ${product.Reviews}</p>
+                <p style="font-size: 0.9em; color: #888;">Ratings: ${product.averageRating}</p>
+                ${reviewsHtml} <!-- Reviews will be inserted here -->
                 <p style="font-size: 0.9em; color: #888;">Sales: ${product.Sales}</p>
                 <p style="font-size: 0.9em; color: #888;">Quantity: ${product.Quantity}</p>
                 <button class="archive-button" data-id="${product._id}" style="display: inline-block; margin-top: 10px; background-color: #007BFF; color: white; padding: 10px 15px; border-radius: 5px; border: none; cursor: pointer;">
@@ -131,7 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const response = await fetch(`http://localhost:5000/api/admin/product/searchProducts?Name=${query}`); // Search API
             const products = await response.json();
-            displayProducts(products);
+            if (Array.isArray(products)) {
+                displayProducts(products);
+            } else {
+                console.error('Products data is not an array:', products);
+            }
         } catch (error) {
             console.error('Error searching products:', error);
         }
@@ -145,25 +165,51 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Event listener for sorting select
     sortSelect.addEventListener('change', async function () {
-        if (sortSelect.value === 'high') {
-            await fetchSortedProducts("high");
-        } else if (sortSelect.value === 'low') {
-            await fetchSortedProducts("low");
+        if (sortSelect.value !== "") {
+            currentSort = sortSelect.value; // Update the current sort value
+            fetchSortedProducts(currentSort); // Fetch sorted products
         } else {
-            await fetchProducts();
+            currentSort = ''; // Reset the current sort value
+            fetchProducts(); // Fetch all products
         }
     });
 
-    // Function to fetch sorted products
-    async function fetchSortedProducts(order) {
+    // Function to fetch and display sorted products
+    async function fetchSortedProducts(sortOrder) {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/product/sortProducts?order=${order}`);
+            const response = await fetch(`http://localhost:5000/api/admin/product/sortProducts?order=${sortOrder}`);
             const products = await response.json();
-            displayProducts(products);
+            if (Array.isArray(products)) {
+                displayProducts(products);
+            } else {
+                console.error('Sorted products data is not an array:', products);
+            }
         } catch (error) {
             console.error('Error fetching sorted products:', error);
         }
     }
+
+    // Function to filter products by price
+    async function filterProducts(min, max) {
+        try {
+            const response = await fetch(`http://localhost:5000/api/seller/product/filterProducts?minPrice=${min}&maxPrice=${max}`);
+            const products = await response.json();
+            if (Array.isArray(products)) {
+                displayProducts(products);
+            } else {
+                console.error('Filtered products data is not an array:', products);
+            }
+        } catch (error) {
+            console.error('Error filtering products:', error);
+        }
+    }
+
+    // Event listener for filter button
+    filterButton.addEventListener('click', function () {
+        const min = parseFloat(minPrice.value) || 0; // Default to 0 if empty
+        const max = parseFloat(maxPrice.value) || Infinity; // Default to Infinity if empty
+        filterProducts(min, max);
+    });
 
     // Initial fetch of products
     fetchProducts();
