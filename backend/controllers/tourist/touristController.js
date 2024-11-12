@@ -1019,11 +1019,6 @@ const bookHotel = async (req, res) => {
       return res.status(404).json({ message: 'No tourist found' });
     }
 
-    // Split user name into first and last names
-    const nameParts = (tourist.username || '').split(' ');
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts[1] || 'Doe';
-
     // Step 1: Fetch a valid access token
     const accessToken = await getValidAccessToken();
 
@@ -1064,8 +1059,8 @@ const bookHotel = async (req, res) => {
           {
             tid: 1,
             title: 'MR',
-            firstName: firstName || 'Bob',  // Use firstName from tourist data
-            lastName: lastName || 'Doe',  // Use lastName from tourist data
+            firstName: tourist.firstName || 'Bob',  // Use firstName from tourist data
+            lastName: tourist.lastName || 'Doe',  // Use lastName from tourist data
             phone: tourist.mobile,
             email: tourist.email
           }
@@ -1183,8 +1178,8 @@ const bookFlight = async (req, res) => {
             id: "1",
             dateOfBirth: '1982-01-16',
             name: {
-              firstName: tourist.username || "BOB",
-              lastName: "SMITH",
+              firstName: tourist.firstName || "BOB",
+              lastName: tourist.lastName || "SMITH",
             },
             gender: "MALE",
             contact: {
