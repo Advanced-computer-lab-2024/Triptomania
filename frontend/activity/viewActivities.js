@@ -24,6 +24,7 @@ async function fetchActivities() {
             throw new Error('Failed to fetch activities');
         }
         const activities = await response.json();
+        lastFetchedActivities = activities;
         displayActivities(activities); // Default display in USD
     } catch (error) {
         document.getElementById('responseMessage').textContent = "Error loading activities: " + error.message;
@@ -32,7 +33,6 @@ async function fetchActivities() {
 
 // Display activities with the selected currency conversion
 function displayActivities(activities, currency = "USD") {
-    lastFetchedActivities = activities; // Store for later conversions
     const activityList = document.getElementById('activityList');
     activityList.innerHTML = ''; // Clear previous activities
 
@@ -78,8 +78,7 @@ async function deleteActivity(id) {
             throw new Error('Failed to delete activity');
         }
 
-        // Refresh the activities list after deletion
-        fetchActivities();
+        fetchActivities(); // Refresh the activities list after deletion
         document.getElementById('responseMessage').textContent = "Activity deleted successfully.";
     } catch (error) {
         document.getElementById('responseMessage').textContent = "Error deleting activity: " + error.message;
@@ -94,6 +93,49 @@ function editActivity(id) {
 // Redirect to add activity page
 document.getElementById('addActivityButton').addEventListener('click', function() {
     window.location.href = 'addActivity.html'; // Redirect to add activity page
+});
+
+// Filter activities
+document.getElementById('filterButton').addEventListener('click', async function() {
+    const budget = document.getElementById('budgetFilter').value;
+    const date = document.getElementById('dateFilter').value;
+    const category = document.getElementById('categoryFilter').value;
+    const ratings = document.getElementById('ratingsFilter').value;
+
+    const filters = new URLSearchParams();
+
+    if (budget) filters.append('budget', budget);
+    if (date) filters.append('date', date);
+    if (category) filters.append('category', category);
+    if (ratings) filters.append('ratings', ratings);
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/tourist/activity/filterActivities?${filters}`);
+        if (!response.ok) throw new Error("Failed to filter activities");
+        
+        const activities = await response.json();
+        displayActivities(activities); // Show filtered activities
+    } catch (error) {
+        document.getElementById('responseMessage').textContent = "Error filtering activities: " + error.message;
+    }
+});
+
+// Sort activities
+document.getElementById('sortButton').addEventListener('click', async function() {
+    const sortBy = document.getElementById('sortBySelect').value;
+    const order = document.getElementById('sortOrderSelect').value;
+
+    const params = new URLSearchParams({ sortBy, order });
+
+    try {
+        const response = await fetch(`http://localhost:5000/api/tourist/activity/sortActivities?${params}`);
+        if (!response.ok) throw new Error("Failed to sort activities");
+
+        const activities = await response.json();
+        displayActivities(activities); // Show sorted activities
+    } catch (error) {
+        document.getElementById('responseMessage').textContent = "Error sorting activities: " + error.message;
+    }
 });
 
 // Load activities when the page is loaded

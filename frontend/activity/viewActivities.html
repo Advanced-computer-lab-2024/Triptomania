@@ -21,10 +21,42 @@
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
                 <option value="JPY">JPY</option>
-                <!-- Add more currencies as needed -->
             </select>
             <button id="addActivityButton">Add New Activity</button>
         </div>
+
+        <!-- Filter Form -->
+        <div class="filter-container">
+            <label for="budgetFilter">Max Budget:</label>
+            <input type="number" id="budgetFilter" placeholder="Enter max budget">
+
+            <label for="dateFilter">Date:</label>
+            <input type="date" id="dateFilter">
+
+            <label for="categoryFilter">Category:</label>
+            <input type="text" id="categoryFilter" placeholder="Enter category">
+
+            <label for="ratingsFilter">Minimum Ratings:</label>
+            <input type="number" step="0.1" id="ratingsFilter" placeholder="Enter minimum ratings">
+
+            <button id="filterButton">Filter</button>
+        </div>
+
+        <!-- Sort Form -->
+        <div class="sort-container">
+            <label for="sortBySelect">Sort By:</label>
+            <select id="sortBySelect">
+                <option value="price">Price</option>
+                <option value="ratings">Ratings</option>
+            </select>
+            <label for="sortOrderSelect">Order:</label>
+            <select id="sortOrderSelect">
+                <option value="low">Low to High</option>
+                <option value="high">High to Low</option>
+            </select>
+            <button id="sortButton">Sort</button>
+        </div>
+
         <div id="activityList"></div>
         <div id="responseMessage"></div>
     </div>
