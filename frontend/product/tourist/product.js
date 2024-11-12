@@ -76,7 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // } else {
             //     imageHtml = `<p>No picture added</p>`;
             // }
-            imageHtml = `<p>No picture added</p>`;
+            try {
+                imageHtml = `<img src="data:image/jpeg;base64,${product.Picture}" alt="${product.Name}" class="product-image">`;
+            } catch (error) {
+                imageHtml = `<p>No picture added</p>`;
+            }
 
             // Convert price to selected currency
             const convertedPrice = convertCurrency(product.Price, 'USD', currentCurrency);
