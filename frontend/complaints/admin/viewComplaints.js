@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
             statusDropdown.classList.add('status-dropdown');
             statusDropdown.style.display = 'none';
 
+            const receivedOption = document.createElement('option');
+            receivedOption.value = 'received';
+            receivedOption.textContent = 'received';
+
             const pendingOption = document.createElement('option');
             pendingOption.value = 'pending';
             pendingOption.textContent = 'Pending';
@@ -52,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             resolvedOption.value = 'resolved';
             resolvedOption.textContent = 'Resolved';
 
-            statusDropdown.append(pendingOption, resolvedOption);
+            statusDropdown.append(receivedOption,pendingOption, resolvedOption);
 
 
             
