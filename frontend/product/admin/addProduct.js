@@ -14,7 +14,7 @@ document.getElementById('addProductForm').addEventListener('submit', async (even
 
     try {
         // Send POST request to the backend API
-        const response = await fetch('http://localhost:5000/api/admin/product/addProduct', { //api
+        const response = await fetch('http://localhost:5000/api/admin/product/addProduct', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,14 +22,26 @@ document.getElementById('addProductForm').addEventListener('submit', async (even
             body: JSON.stringify(productData) // Convert form data to JSON
         });
 
-        // Handle response from the server
         if (response.ok) {
+            const responseData = await response.json(); // Parse the response as JSON
+            console.log(responseData); // Log the entire response to check its structure
+        
+            const productId = responseData.product._id; // Extract the product ID from the product object
+        
+            if (!productId) {
+                alert('Product ID not found in the response.');
+                return; // Stop execution if the product ID is not found
+            }
+            
             alert('Product added successfully');
+            // Redirect to the upload picture page with the product ID as a query parameter
+            window.location.href = `uploadPicture.html?productId=${productId}`;
         } else {
             const errorData = await response.json();
             console.error('Error:', errorData);
             alert('Error adding product. Check console for details.');
         }
+        
     } catch (error) {
         console.error('Fetch error:', error);
         alert('Error adding product. Check console for details.');

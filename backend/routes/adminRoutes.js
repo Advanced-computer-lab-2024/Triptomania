@@ -10,6 +10,9 @@ import advertiserController from '../controllers/advertiser/advertiserController
 import sharedController from '../controllers/shared/sharedController.js';
 import complaintsController from '../controllers/admin/complaintsController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
+import multer from "multer";
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const router = express.Router();
 
@@ -343,5 +346,36 @@ router.put('/flagitinerary/:id',adminController.flagItinerary);
  *         description: List of itineraries
  */
 router.get("/itineraries/getItineraries/:id", itineraryController.viewItineraries);
+
+
+/**
+ * @swagger
+ * /api/seller/product/uploadPicture/{id}:
+ *   post:
+ *     summary: Upload a picture for a product
+ *     tags: [Seller]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the product to upload a picture for
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Product picture uploaded successfully
+ */
+router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
+
+
 export default router;
  
