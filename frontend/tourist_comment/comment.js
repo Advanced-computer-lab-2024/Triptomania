@@ -13,6 +13,7 @@ document.getElementById("submitCommentBtn").addEventListener("click", async () =
   }
 
   try {
+    console.log(type, touristId, comment, typeId);
     const response = await fetch(`http://localhost:5000/api/tourist/comment/${typeId}`, {
       method: "POST",
       headers: {

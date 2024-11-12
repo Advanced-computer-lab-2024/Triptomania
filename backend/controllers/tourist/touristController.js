@@ -231,15 +231,17 @@ const addComment = async (req, res) => {
       case "tourGuide":
         
         const tourGuideCheck = await itineraryModel.find({ creatorId: id });
+        let tourGuideid;
         tourGuideCheck.forEach(async (itinerary) => {
           if (itinerary.bookingMade.includes(touristId)) {
             if (currentDate < itinerary.End_date) {
               return res.status(403).json({ error: 'You can only comment after the tour date' });
+            } else {
+              tourGuideid = itinerary.creatorId;
             }
-          }
-        });    
+          }
+        }); 
         
-        const tourGuideid = tourGuideCheck.creatorId;
         addedComment = await tourguide.findByIdAndUpdate(
           tourGuideid,
           { $push: { comments: comment } },
