@@ -122,7 +122,7 @@
     // Adjusted fetchProducts function to display product names correctly
     async function fetchProducts() {
         try {
-            const response = await fetch('http://localhost:5000/api/seller/product/viewProducts');
+            const response = await fetch('http://localhost:5000/api/tourist/product/viewProducts');
             const products = await response.json();
             const productSelect = document.getElementById('productId');
             productSelect.innerHTML = '<option value="" disabled selected>Select a product</option>'; // Clear existing options

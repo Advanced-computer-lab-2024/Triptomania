@@ -229,15 +229,15 @@ const addComment = async (req, res) => {
         break;
 
       case "tourGuide":
-        // Checks if tourist was with this tour guide
-        const tourGuideCheck = await itineraryModel.findById(id);
-        if (!tourGuideCheck.bookingMade.includes(touristId)) {
-            return res.status(403).json({ error: 'You must participate with this tour guide to leave a comment' });
-        }
-
-        if (currentDate < itineraryModel.End_date) {
-          return res.status(403).json({ error: 'You can only comment after the itinerary date.' });
-        }
+        
+        const tourGuideCheck = await itineraryModel.find({ creatorId: id });
+        tourGuideCheck.forEach(async (itinerary) => {
+          if (itinerary.bookingMade.includes(touristId)) {
+            if (currentDate < itinerary.End_date) {
+              return res.status(403).json({ error: 'You can only comment after the tour date' });
+            }
+          }
+        });    
         
         const tourGuideid = tourGuideCheck.creatorId;
         addedComment = await tourguide.findByIdAndUpdate(
