@@ -267,7 +267,7 @@ const getMyItineraries = async (req, res) => {
 
 const sortItineraries = async (req, res) => {
   try {
-      const { order, sortBy } = req.body;
+      const { order, sortBy } = req.query;
 
       // Validate 'order'
       if (!order || (order !== 'high' && order !== 'low')) {
@@ -275,7 +275,7 @@ const sortItineraries = async (req, res) => {
       }
 
       // Validate 'sortBy' for at least price, duration, or both
-      if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('duration'))) {
+      if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('ratings'))) {
           return res.status(400).json({ message: "Invalid sort option. Use 'price', 'duration', or both." });
       }
 
@@ -287,8 +287,8 @@ const sortItineraries = async (req, res) => {
       if (sortBy.includes('price')) {
           sortOption.price = sortOrder; // Add sorting by price
       }
-      if (sortBy.includes('duration')) {
-          sortOption.duration = sortOrder; // Add sorting by duration
+      if (sortBy.includes('ratings')) {
+          sortOption.ratings = sortOrder; // Add sorting by duration
       }
 
       // Fetch and sort itineraries
@@ -336,7 +336,7 @@ const sortItineraries = async (req, res) => {
           if (language) filters.language = language; 
   
           // Fetch the filtered itineraries
-          const filteredItineraries = await Itinerary.find(filters).sort({ availableDates: 1 }); 
+          const filteredItineraries = await itineraryModel.find(filters).sort({ availableDates: 1 }); 
   
           // Handle case where no itineraries are found
           if (filteredItineraries.length === 0) {

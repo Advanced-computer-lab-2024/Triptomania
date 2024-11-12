@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Itineraries</title>
+    <link rel="stylesheet" href="viewItineraries.css">
+</head>
+<body>
+    <header>
+        <h1>Itinerary Management</h1>
+        <p>View and Manage Your Itineraries</p>
+    </header>
+
+    <div class="container">
+        <h2>Upcoming Itineraries</h2>
+
+        <!-- Filter Form -->
+        <div class="filter-container">
+            <label for="budgetFilter">Max Budget:</label>
+            <input type="number" id="budgetFilter" placeholder="Enter max budget">
+
+            <label for="dateFilter">Date:</label>
+            <input type="date" id="dateFilter">
+
+            <!-- <label for="preferencesFilter">Preferences:</label>
+            <select id="preferencesFilter" multiple>
+                <option value="historic">Historic Areas</option>
+                <option value="beaches">Beaches</option>
+                <option value="family">Family-Friendly</option>
+                <option value="shopping">Shopping</option>
+            </select> -->
+
+            <label for="languageFilter">Language:</label>
+            <input type="text" id="languageFilter" placeholder="Enter preferred language">
+
+            <button id="filterButton">Filter</button>
+        </div>
+
+        <!-- Sort Form -->
+        <div class="sort-container">
+            <label for="sortBySelect">Sort By:</label>
+            <select id="sortBySelect">
+                <option value="price">Price</option>
+                <option value="ratings">Ratings</option>
+            </select>
+            <label for="sortOrderSelect">Order:</label>
+            <select id="sortOrderSelect">
+                <option value="low">Low to High</option>
+                <option value="high">High to Low</option>
+            </select>
+            <button id="sortButton">Sort</button>
+        </div>
+
+        <div id="itineraryList"></div>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script src="viewItineraries.js"></script>
+</body>
+</html>
