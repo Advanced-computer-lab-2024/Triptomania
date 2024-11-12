@@ -49,13 +49,14 @@ const itinerarySchema = new Schema({
         type: String, // Dropoff location
         required: true,
     },
-    bookingMade: {
-        type: [mongoose.Types.ObjectId],
-        default: []
-    },
+    bookingMade: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tourist',
+        required: false,
+    }],
     preferenceTags: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'PreferenceTag', // Adjust the model name as needed
+        ref: 'PreferenceTag',
         required: false,
     }],
     Start_date: {
