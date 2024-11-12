@@ -41,18 +41,18 @@ function displayItineraries(itineraries) {
 document.getElementById('filterButton').addEventListener('click', async function () {
     const budget = document.getElementById('budgetFilter').value;
     const date = document.getElementById('dateFilter').value;
-    // const preferences = document.getElementById('preferencesFilter').selectedOptions;
+    const preferences = document.getElementById('preferencesFilter').selectedOptions;
     const language = document.getElementById('languageFilter').value;
 
-    // const preferencesArray = [];
-    // for (let option of preferences) {
-    //     preferencesArray.push(option.value);
-    // }
+    const preferencesArray = [];
+    for (let option of preferences) {
+        preferencesArray.push(option.value);
+    }
 
     const filters = new URLSearchParams();
     if (budget) filters.append('budget', budget);
     if (date) filters.append('date', date);
-    // if (preferencesArray.length) filters.append('preferences', preferencesArray.join(','));
+    if (preferencesArray.length) filters.append('preferences', preferencesArray.join(','));
     if (language) filters.append('language', language);
 
     try {
