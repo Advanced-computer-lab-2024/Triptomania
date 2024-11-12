@@ -111,6 +111,7 @@ document.getElementById('activityForm').addEventListener('submit', async functio
         document.getElementById('responseMessage').textContent = result.error;
 
         if (response.status === 201) {
+            alert("Activity added successfully!");
             document.getElementById('activityForm').reset();
         }
     } catch (error) {
