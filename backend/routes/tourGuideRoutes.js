@@ -27,7 +27,7 @@ const router = express.Router();
  *       200:
  *         description: Itinerary added successfully
  */
-router.post("/itinerary/addItinerary", itineraryController.addItinerary);
+router.post("/itinerary/addItinerary", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.addItinerary);
 
 /**
  * @swagger
@@ -46,7 +46,7 @@ router.post("/itinerary/addItinerary", itineraryController.addItinerary);
  *       200:
  *         description: Itinerary edited successfully
  */
-router.put("/itinerary/editItinerary/:id", itineraryController.editItinerary);
+router.put("/itinerary/editItinerary/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.editItinerary);
 
 /**
  * @swagger
@@ -65,7 +65,7 @@ router.put("/itinerary/editItinerary/:id", itineraryController.editItinerary);
  *       200:
  *         description: Itinerary details
  */
-router.get("/itinerary/getItinerary/:id", itineraryController.getItinerary);
+router.get("/itinerary/getItinerary/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.getItinerary);
 
 
 
@@ -79,7 +79,7 @@ router.get("/itinerary/getItinerary/:id", itineraryController.getItinerary);
  *       200:
  *         description: List of itineraries
  */
-router.get("/itinerary/viewItineraries", itineraryController.viewItineraries);
+router.get("/itinerary/viewItineraries", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.viewItineraries);
 
 /**
  * @swagger
@@ -98,7 +98,7 @@ router.get("/itinerary/viewItineraries", itineraryController.viewItineraries);
  *       200:
  *         description: List of itineraries created by the user
  */
-router.get("/itinerary/getMyItineraries/:creatorId", itineraryController.getMyItineraries);
+router.get("/itinerary/getMyItineraries/:creatorId", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.getMyItineraries);
 
 /**
  * @swagger
@@ -117,7 +117,7 @@ router.get("/itinerary/getMyItineraries/:creatorId", itineraryController.getMyIt
  *       200:
  *         description: Itinerary deleted successfully
  */
-router.delete("/itinerary/deleteItinerary/:id", itineraryController.deleteItinerary);
+router.delete("/itinerary/deleteItinerary/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.deleteItinerary);
 
 /**
  * @swagger
@@ -129,7 +129,7 @@ router.delete("/itinerary/deleteItinerary/:id", itineraryController.deleteItiner
  *       200:
  *         description: Tour guide added successfully
  */
-router.post('/addTourguide', tourGuideController.CreateTourGuide);
+router.post('/addTourguide', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.CreateTourGuide);
 
 /**
  * @swagger
@@ -141,7 +141,7 @@ router.post('/addTourguide', tourGuideController.CreateTourGuide);
  *       200:
  *         description: Tour guide updated successfully
  */
-router.put('/updateTourguide', tourGuideController.updateTourGuide);
+router.put('/updateTourguide', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.updateTourGuide);
 
 /**
  * @swagger
@@ -153,17 +153,17 @@ router.put('/updateTourguide', tourGuideController.updateTourGuide);
  *       200:
  *         description: Tour guide information retrieved successfully
  */
-router.get('/getTourguide', tourGuideController.getTourGuide);
+router.get('/getTourguide', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.getTourGuide);
 
 
-router.put('/changePassword/:id/:type', sharedController.changePassword);
+router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.changePassword);
 
-router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadDocument/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.acceptTerms);
 
 
-router.put('/activate/itinerary', tourGuideController.toggleItineraryStatus);
-router.put("/request/delete",sharedController.requestAccountDeletion);
+router.put('/activate/itinerary', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.toggleItineraryStatus);
+router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.requestAccountDeletion);
 
 export default router;

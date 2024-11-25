@@ -26,7 +26,7 @@ const router = express.Router();
  *       200:
  *         description: Seller created successfully
  */
-router.post('/addSeller', sellerController.CreateSeller);
+router.post('/addSeller', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.CreateSeller);
 
 /**
  * @swagger
@@ -38,7 +38,7 @@ router.post('/addSeller', sellerController.CreateSeller);
  *       200:
  *         description: Seller updated successfully
  */
-router.put('/updateSeller', sellerController.updateSeller);
+router.put('/updateSeller', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.updateSeller);
 
 /**
  * @swagger
@@ -50,7 +50,7 @@ router.put('/updateSeller', sellerController.updateSeller);
  *       200:
  *         description: Seller retrieved successfully
  */
-router.get('/getSeller', sellerController.getSeller);
+router.get('/getSeller', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.getSeller);
 
 /**
  * @swagger
@@ -62,7 +62,7 @@ router.get('/getSeller', sellerController.getSeller);
  *       200:
  *         description: Product added successfully
  */
-router.post("/product/addProduct", productController.addProduct);
+router.post("/product/addProduct", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.addProduct);
 
 /**
  * @swagger
@@ -81,7 +81,7 @@ router.post("/product/addProduct", productController.addProduct);
  *       200:
  *         description: Product edited successfully
  */
-router.put("/product/editProduct/:id", productController.editProduct);
+router.put("/product/editProduct/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.editProduct);
 
 /**
  * @swagger
@@ -93,7 +93,7 @@ router.put("/product/editProduct/:id", productController.editProduct);
  *       200:
  *         description: List of products
  */
-router.get("/product/viewProducts/:id", sellerController.viewProducts);
+router.get("/product/viewProducts/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.viewProducts);
 
 /**
  * @swagger
@@ -105,7 +105,7 @@ router.get("/product/viewProducts/:id", sellerController.viewProducts);
  *       200:
  *         description: Search results for products
  */
-router.get("/product/searchProducts", productController.searchProduct);
+router.get("/product/searchProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.searchProduct);
 
 /**
  * @swagger
@@ -117,7 +117,7 @@ router.get("/product/searchProducts", productController.searchProduct);
  *       200:
  *         description: Filtered products list
  */
-router.get("/product/filterProducts", productController.filterProducts);
+router.get("/product/filterProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.filterProducts);
 
 /**
  * @swagger
@@ -129,7 +129,7 @@ router.get("/product/filterProducts", productController.filterProducts);
  *       200:
  *         description: Sorted products list
  */
-router.get("/product/sortProducts", productController.sortProducts);
+router.get("/product/sortProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.sortProducts);
 
 /**
  * @swagger
@@ -157,19 +157,19 @@ router.get("/product/sortProducts", productController.sortProducts);
  *       200:
  *         description: Product picture uploaded successfully
  */
-router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
+router.post("/product/uploadPicture/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), upload.single('file'), productController.uploadPicture);
 
-router.put('/changePassword/:id', sharedController.changePassword);
+router.put('/changePassword/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.changePassword);
 
-router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadDocument/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/uploadProfilePicture/:id/:type', upload.single('file'), sharedController.uploadProfilePicture);
+router.put('/uploadProfilePicture/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), upload.single('file'), sharedController.uploadProfilePicture);
 
-router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.acceptTerms);
 
 
-router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
+router.patch('/product/archive/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.toggleArchiveStatus); //minus swagger
 
-router.put("/request/delete",sharedController.requestAccountDeletion);
+router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.requestAccountDeletion);
 
 export default router;

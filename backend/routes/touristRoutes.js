@@ -28,7 +28,7 @@ const router = express.Router();
  *       200:
  *         description: Search results based on the query
  */
-router.post('/search', search.search);
+router.post('/search', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), search.search);
 
 /**
  * @swagger
@@ -40,7 +40,7 @@ router.post('/search', search.search);
  *       200:
  *         description: List of upcoming activities
  */
-router.get('/upcoming', viewUpcoming.viewUpcoming);
+router.get('/upcoming', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), viewUpcoming.viewUpcoming);
 
 /**
  * @swagger
@@ -52,7 +52,7 @@ router.get('/upcoming', viewUpcoming.viewUpcoming);
  *       200:
  *         description: Filtered results by tags
  */
-router.get('/filterByTag', filterByTag.filterByTag);
+router.get('/filterByTag', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), filterByTag.filterByTag);
 
 /**
  * @swagger
@@ -64,7 +64,7 @@ router.get('/filterByTag', filterByTag.filterByTag);
  *       200:
  *         description: Filtered list of itineraries
  */
-router.get('/filterItineraries', itineraryController.filterItineraries);
+router.get('/filterItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.filterItineraries);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ router.get('/filterItineraries', itineraryController.filterItineraries);
  *       200:
  *         description: Sorted list of itineraries
  */
-router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
+router.get('/itineraries/sortItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.sortItineraries);
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
  *       200:
  *         description: List of itineraries
  */
-router.get("/itineraries/getItineraries/:id", itineraryController.getItineraries);
+router.get("/itineraries/getItineraries/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
 
 /**
  * @swagger
@@ -100,17 +100,17 @@ router.get("/itineraries/getItineraries/:id", itineraryController.getItineraries
  *       200:
  *         description: Tourist added successfully
  */
-router.post('/addTourist', touristController.CreateTourist);
+router.post('/addTourist', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.CreateTourist);
 
-router.put('/redeem/:id', touristController.redeemPoints);
+router.put('/redeem/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.redeemPoints);
 
-router.get('/chooseCategory/:id', touristController.chooseCategory);
+router.get('/chooseCategory/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.chooseCategory);
 
-router.put('/bookActivity/:activityId', touristController.bookActivity);
+router.put('/bookActivity/:activityId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookActivity);
 
-router.put('/bookItinerary/:itineraryId', touristController.bookItinerary);
+router.put('/bookItinerary/:itineraryId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookItinerary);
 
-router.put('/badge/:_id', touristController.badge);
+router.put('/badge/:_id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.badge);
 
 /**
  * @swagger
@@ -122,7 +122,7 @@ router.put('/badge/:_id', touristController.badge);
  *       200:
  *         description: Tourist updated successfully
  */
-router.put('/updateTourist', touristController.UpdateTourist);
+router.put('/updateTourist', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.UpdateTourist);
 
 /**
  * @swagger
@@ -134,7 +134,7 @@ router.put('/updateTourist', touristController.UpdateTourist);
  *       200:
  *         description: List of all tourists
  */
-router.get('/getTourist', touristController.getTourist);
+router.get('/getTourist', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getTourist);
 
 /**
  * @swagger
@@ -146,7 +146,7 @@ router.get('/getTourist', touristController.getTourist);
  *       200:
  *         description: Details of the specified tourist
  */
-router.get('/getOneTourist/:id', touristController.getOneTourist);
+router.get('/getOneTourist/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getOneTourist);
 
 /**
  * @swagger
@@ -158,7 +158,7 @@ router.get('/getOneTourist/:id', touristController.getOneTourist);
  *       200:
  *         description: Sorted list of activities
  */
-router.get("/activity/sortActivities", activityController.sortActivities);
+router.get("/activity/sortActivities", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.sortActivities);
 
 /**
  * @swagger
@@ -170,7 +170,7 @@ router.get("/activity/sortActivities", activityController.sortActivities);
  *       200:
  *         description: List of all activities
  */
-router.get("/activity/viewActivities", activityController.viewActivities);
+router.get("/activity/viewActivities", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.viewActivities);
 
 /**
  * @swagger
@@ -182,7 +182,7 @@ router.get("/activity/viewActivities", activityController.viewActivities);
  *       200:
  *         description: Filtered list of activities
  */
-router.get("/activity/filterActivities", activityController.filterActivities);
+router.get("/activity/filterActivities", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.filterActivities);
 
 /**
  * @swagger
@@ -194,7 +194,7 @@ router.get("/activity/filterActivities", activityController.filterActivities);
  *       200:
  *         description: List of all products
  */
-router.get("/product/viewProducts", productController.viewProducts);
+router.get("/product/viewProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), productController.viewProducts);
 
 /**
  * @swagger
@@ -206,7 +206,7 @@ router.get("/product/viewProducts", productController.viewProducts);
  *       200:
  *         description: Search results for products
  */
-router.get("/product/searchProducts", productController.searchProduct);
+router.get("/product/searchProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), productController.searchProduct);
 
 /**
  * @swagger
@@ -218,7 +218,7 @@ router.get("/product/searchProducts", productController.searchProduct);
  *       200:
  *         description: Filtered list of products
  */
-router.get("/product/filterProducts", productController.filterProducts);
+router.get("/product/filterProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), productController.filterProducts);
 
 /**
  * @swagger
@@ -230,7 +230,7 @@ router.get("/product/filterProducts", productController.filterProducts);
  *       200:
  *         description: Sorted list of products
  */
-router.get("/product/sortProducts", productController.sortProducts);
+router.get("/product/sortProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), productController.sortProducts);
 /**
  * @swagger
  * /api/tourist/rateTourGuide/{touristId}:
@@ -296,7 +296,7 @@ router.get("/product/sortProducts", productController.sortProducts);
  *                   type: string
  *                   example: "Tour guide or itinerary not found."
  */
-router.put('/rateTourGuide/:touristId', touristController.rateTourGuide);
+router.put('/rateTourGuide/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.rateTourGuide);
 /**
  * @swagger
  * /api/tourist/rateItinerary/{touristId}:
@@ -363,56 +363,56 @@ router.put('/rateTourGuide/:touristId', touristController.rateTourGuide);
  *                   example: "Itinerary not found."
  */
 
-router.put('/rateItinerary/:touristId', touristController.rateItinerary);
+router.put('/rateItinerary/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.rateItinerary);
 
-router.put('/rateActivity/:touristId', touristController.rateActivity);//youssef
+router.put('/rateActivity/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.rateActivity);//youssef
 
-router.put('/processPayment/:_id', touristController.processPayment);
+router.put('/processPayment/:_id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.processPayment);
 
-router.put('/rateProduct/:touristId',touristController.rateProduct);
+router.put('/rateProduct/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.rateProduct);
 
-router.post("/comment/:id", touristController.addComment);
+router.post("/comment/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addComment);
 
-router.post("/product/reviews/:id", touristController.reviewProduct);
+router.post("/product/reviews/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.reviewProduct);
 
-router.post('/complaint/addComplaint/:touristId', touristController.fileComplaint);
+router.post('/complaint/addComplaint/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.fileComplaint);
 
-router.get('/complaint/viewMyComplaints/:touristId', touristController.viewMyComplaints);
+router.get('/complaint/viewMyComplaints/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewMyComplaints);
 
-router.put('/selectTouristPreferences/:touristId', touristController.choosePreferences);
+router.put('/selectTouristPreferences/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.choosePreferences);
 
-router.put('/cancelBooking/:touristId', touristController.cancelBooking);
+router.put('/cancelBooking/:touristId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.cancelBooking);
 
-router.get('/activities/getActivities', activityController.viewActivities);
+router.get('/activities/getActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.viewActivities);
 
-router.get('/activities/getActivity/:id', activityController.getActivity);
+router.get('/activities/getActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.getActivity);
 
-router.get('/itineraries/getItineraries/:id', itineraryController.getItineraries);
+router.get('/itineraries/getItineraries/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
 
-router.get('/itineraries/viewItineraries', itineraryController.viewItineraries);
+router.get('/itineraries/viewItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.viewItineraries);
 
-router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
+router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItinerary);
 
-router.get('/getHistoricalPlaces', historicalPlaceController.getHistoricalPlaces);
+router.get('/getHistoricalPlaces', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlaces);
 
-router.get('/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
+router.get('/getHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlace);
 
-router.put('/changePassword/:id/:type', sharedController.changePassword);
+router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.changePassword);
 
-router.get('/getHotels', touristController.getHotels);
+router.get('/getHotels', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getHotels);
 
-router.get('/getHotelOffers', touristController.getHotelOffers);
+router.get('/getHotelOffers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getHotelOffers);
 
-router.post('/bookHotel/:id', touristController.bookHotel)
+router.post('/bookHotel/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookHotel)
 
-router.post('/searchFlights', touristController.searchFlights);
+router.post('/searchFlights', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.searchFlights);
 
-router.get('/getFlightDetails/:flightOfferId', touristController.getFlightDetails);
+router.get('/getFlightDetails/:flightOfferId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getFlightDetails);
 
-router.post('/bookFlight/:id', touristController.bookFlight);
+router.post('/bookFlight/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookFlight);
 
-router.post('/bookTransportation/:id', touristController.bookTransportation);
+router.post('/bookTransportation/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookTransportation);
 
-router.put("/request/delete",sharedController.requestAccountDeletion);
+router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.requestAccountDeletion);
 
 export default router;
