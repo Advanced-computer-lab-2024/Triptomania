@@ -417,7 +417,7 @@ const acceptTerms = async (req, res) => {
     }
 };
 
-export const requestAccountDeletion = async (req, res) => {
+const requestAccountDeletion = async (req, res) => {
     try {
         const { id } = req.query; // Extracting id from query parameters
 
@@ -470,15 +470,13 @@ export const requestAccountDeletion = async (req, res) => {
     }
 };
 
-
 export default {
     changePassword,
     uploadDocuments,
     uploadProfilePicture,
-    acceptUser, 
+    acceptUser,
     rejectUser,
     getPendingUsers,
     acceptTerms,
-    requestAccountDeletion,
-    changePassword
+    requestAccountDeletion
 }
