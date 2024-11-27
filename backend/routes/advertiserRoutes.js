@@ -48,7 +48,7 @@ router.put('/updateAdvertiser', advertiserController.updateAdvertiser);
  *       200:
  *         description: Advertiser retrieved successfully
  */
-router.get('/getAdvertiser', advertiserController.getAdvertiser);
+router.get('/getAdvertiser', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.getAdvertiser);
 
 /**
  * @swagger
@@ -60,7 +60,7 @@ router.get('/getAdvertiser', advertiserController.getAdvertiser);
  *       200:
  *         description: Activity added successfully
  */
-router.post('/activity/addActivity', advertiserController.addActivity);
+router.post('/activity/addActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.addActivity);
 
 /**
  * @swagger
@@ -79,7 +79,7 @@ router.post('/activity/addActivity', advertiserController.addActivity);
  *       200:
  *         description: Activity edited successfully
  */
-router.put('/activity/editActivity/:id', advertiserController.editActivity);
+router.put('/activity/editActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.editActivity);
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ router.put('/activity/editActivity/:id', advertiserController.editActivity);
  *       200:
  *         description: List of activities
  */
-router.get('/activity/viewActivities', advertiserController.viewActivities);
+router.get('/activity/viewActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewActivities);
 
 /**
  * @swagger
@@ -110,7 +110,7 @@ router.get('/activity/viewActivities', advertiserController.viewActivities);
  *       200:
  *         description: Activity deleted successfully
  */
-router.delete('/activity/deleteActivity/:id', advertiserController.deleteActvivty);
+router.delete('/activity/deleteActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.deleteActvivty);
 
 /**
  * @swagger
@@ -129,14 +129,14 @@ router.delete('/activity/deleteActivity/:id', advertiserController.deleteActvivt
  *       200:
  *         description: List of activities created by the advertiser
  */
-router.get('/activity/viewMyActivities/:creatorId', advertiserController.viewMyActivities);
+router.get('/activity/viewMyActivities/:creatorId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewMyActivities);
 
-router.put('/changePassword/:id/:type', sharedController.changePassword);
+router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.changePassword);
 
-router.put('/uploadDocument/:id/:type', upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadDocument/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/accept-terms/:type/:id', sharedController.acceptTerms);
+router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.acceptTerms);
 
-router.put("/request/delete",sharedController.requestAccountDeletion);
+router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.requestAccountDeletion);
 
 export default router;

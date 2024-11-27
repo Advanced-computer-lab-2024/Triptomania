@@ -10,6 +10,7 @@ import advertiserController from '../controllers/advertiser/advertiserController
 import sharedController from '../controllers/shared/sharedController.js';
 import complaintsController from '../controllers/admin/complaintsController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 import multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -33,7 +34,7 @@ const router = express.Router();
  *       200:
  *         description: Activity category added successfully
  */
-router.post('/activities/addCategory', activityController.addCategory);
+router.post('/activities/addCategory', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.addCategory);
 
 /**
  * @swagger
@@ -45,9 +46,9 @@ router.post('/activities/addCategory', activityController.addCategory);
  *       200:
  *         description: List of activity categories
  */
-router.get('/activities/getCategories', activityController.getCategories);
+router.get('/activities/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.getCategories);
 
-router.get('/activities/getActivities', activityController.viewActivities);
+router.get('/activities/getActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.viewActivities);
 
 /**
  * @swagger
@@ -66,7 +67,7 @@ router.get('/activities/getActivities', activityController.viewActivities);
  *       200:
  *         description: Activity category updated successfully
  */
-router.put('/activities/editCategory/:id', activityController.editCategory);
+router.put('/activities/editCategory/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.editCategory);
 
 /**
  * @swagger
@@ -85,7 +86,7 @@ router.put('/activities/editCategory/:id', activityController.editCategory);
  *       200:
  *         description: Activity category deleted successfully
  */
-router.delete('/activities/deleteCategory/:id', activityController.deleteCategory);
+router.delete('/activities/deleteCategory/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.deleteCategory);
 
 /**
  * @swagger
@@ -97,7 +98,7 @@ router.delete('/activities/deleteCategory/:id', activityController.deleteCategor
  *       200:
  *         description: Preference tag added successfully
  */
-router.post('/tags/addPreferenceTag', preferenceTagController.addPreferenceTag);
+router.post('/tags/addPreferenceTag', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), preferenceTagController.addPreferenceTag);
 
 /**
  * @swagger
@@ -109,7 +110,7 @@ router.post('/tags/addPreferenceTag', preferenceTagController.addPreferenceTag);
  *       200:
  *         description: List of preference tags
  */
-router.get('/tags/getPreferenceTags', preferenceTagController.getPreferenceTags);
+router.get('/tags/getPreferenceTags', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), preferenceTagController.getPreferenceTags);
 
 /**
  * @swagger
@@ -128,7 +129,7 @@ router.get('/tags/getPreferenceTags', preferenceTagController.getPreferenceTags)
  *       200:
  *         description: Preference tag updated successfully
  */
-router.put('/tags/editPreferenceTag/:id', preferenceTagController.editPreferenceTag);
+router.put('/tags/editPreferenceTag/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), preferenceTagController.editPreferenceTag);
 
 /**
  * @swagger
@@ -147,7 +148,7 @@ router.put('/tags/editPreferenceTag/:id', preferenceTagController.editPreference
  *       200:
  *         description: Preference tag deleted successfully
  */
-router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePreferenceTag);
+router.delete('/tags/deletePreferenceTag/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), preferenceTagController.deletePreferenceTag);
 
 /**
  * @swagger
@@ -159,7 +160,7 @@ router.delete('/tags/deletePreferenceTag/:id', preferenceTagController.deletePre
  *       200:
  *         description: Admin added successfully
  */
-router.post('/addAdmin', adminController.addAdmin);
+router.post('/addAdmin', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.addAdmin);
 
 /**
  * @swagger
@@ -171,7 +172,7 @@ router.post('/addAdmin', adminController.addAdmin);
  *       200:
  *         description: Account deleted successfully
  */
-router.delete('/deleteAccount', adminController.deleteAccount);
+router.delete('/deleteAccount', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.deleteAccount);
 
 /**
  * @swagger
@@ -183,7 +184,7 @@ router.delete('/deleteAccount', adminController.deleteAccount);
  *       200:
  *         description: Tourism governor added successfully
  */
-router.post('/addTourismGovernor', adminController.addTourismGovernor);
+router.post('/addTourismGovernor', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.addTourismGovernor);
 
 /**
  * @swagger
@@ -195,7 +196,7 @@ router.post('/addTourismGovernor', adminController.addTourismGovernor);
  *       200:
  *         description: Product added successfully
  */
-router.post("/product/addProduct", productController.addProduct);
+router.post("/product/addProduct", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.addProduct);
 
 /**
  * @swagger
@@ -214,7 +215,7 @@ router.post("/product/addProduct", productController.addProduct);
  *       200:
  *         description: Product edited successfully
  */
-router.put("/product/editProduct/:id", productController.editProduct);
+router.put("/product/editProduct/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.editProduct);
 
 /**
  * @swagger
@@ -226,7 +227,7 @@ router.put("/product/editProduct/:id", productController.editProduct);
  *       200:
  *         description: List of products
  */
-router.get("/product/viewProducts", adminController.viewProductsAdmin);
+router.get("/product/viewProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.viewProductsAdmin);
 
 /**
  * @swagger
@@ -238,7 +239,7 @@ router.get("/product/viewProducts", adminController.viewProductsAdmin);
  *       200:
  *         description: Search results for products
  */
-router.get("/product/searchProducts", productController.searchProduct);
+router.get("/product/searchProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.searchProduct);
 
 /**
  * @swagger
@@ -250,7 +251,7 @@ router.get("/product/searchProducts", productController.searchProduct);
  *       200:
  *         description: Filtered products list
  */
-router.get("/product/filterProducts", productController.filterProducts);
+router.get("/product/filterProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.filterProducts);
 
 /**
  * @swagger
@@ -262,9 +263,9 @@ router.get("/product/filterProducts", productController.filterProducts);
  *       200:
  *         description: Sorted products list
  */
-router.get("/product/sortProducts", productController.sortProducts);
+router.get("/product/sortProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.sortProducts);
 
-router.patch('/product/archive/:id', productController.toggleArchiveStatus); //minus swagger
+router.patch('/product/archive/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.toggleArchiveStatus); //minus swagger
 
 /**
  * @swagger
@@ -276,7 +277,7 @@ router.patch('/product/archive/:id', productController.toggleArchiveStatus); //m
  *       200:
  *         description: List of tourists
  */
-router.get('/getTourists', touristController.getTourist);
+router.get('/getTourists', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), touristController.getTourist);
 
 /**
  * @swagger
@@ -288,7 +289,7 @@ router.get('/getTourists', touristController.getTourist);
  *       200:
  *         description: List of sellers
  */
-router.get('/getSellers', sellerController.getSeller);
+router.get('/getSellers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sellerController.getSeller);
 
 /**
  * @swagger
@@ -300,7 +301,7 @@ router.get('/getSellers', sellerController.getSeller);
  *       200:
  *         description: List of tour guides
  */
-router.get('/getTourGuides', tourGuideController.getTourGuide);
+router.get('/getTourGuides', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), tourGuideController.getTourGuide);
 
 /**
  * @swagger
@@ -312,28 +313,43 @@ router.get('/getTourGuides', tourGuideController.getTourGuide);
  *       200:
  *         description: List of advertisers
  */
-router.get('/getAdvertisers', advertiserController.getAdvertiser);
+router.get('/getAdvertisers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), advertiserController.getAdvertiser);
 
-router.put('/changePassword/:id/:type', sharedController.changePassword);
+router.put(
+    '/changePassword/:id/:type',
+    (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']),
+    sharedController.changePassword
+);
 
+router.put(
+    '/acceptUser/:id/:type',
+    (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']),
+    sharedController.acceptUser
+);
 
-router.put('/acceptUser/:id/:type', sharedController.acceptUser);
+router.put(
+    '/rejectUser/:id/:type',
+    (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']),
+    sharedController.rejectUser
+);
 
-router.put('/rejectUser/:id/:type', sharedController.rejectUser);
+router.get(
+    '/pending-users',
+    (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']),
+    sharedController.getPendingUsers
+);
 
-router.get('/pending-users', sharedController.getPendingUsers);
+router.get('/complaints/viewComplaints', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.viewComplaints);
+router.get('/complaints/viewComplaint/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.viewComplaintDetails);
+router.put('/complaints/updateStatus/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.updateComplaintStatus);
+router.get('/complaints/sortComplaints', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.sortComplaintsByDate);
+router.get('/complaints/filterComplaints', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.filterComplaintsByStatus);
+router.put('/complaints/replyToComplaint/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.replyToComplaint);
 
-router.get('/complaints/viewComplaints',complaintsController.viewComplaints);
-router.get('/complaints/viewComplaint/:id',complaintsController.viewComplaintDetails);
-router.put('/complaints/updateStatus/:id',complaintsController.updateComplaintStatus);
-router.get('/complaints/sortComplaints',complaintsController.sortComplaintsByDate);
-router.get('/complaints/filterComplaints',complaintsController.filterComplaintsByStatus);
-router.put('/complaints/replyToComplaint/:id',complaintsController.replyToComplaint);
-
-router.get('/getusersrequestdelete',adminController.getUsers);
+router.get('/getusersrequestdelete', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getUsers);
 //router.delete('/deleteTouristAccount/:id',adminController.deleteTouristAccount)
 
-router.put('/flagitinerary/:id',adminController.flagItinerary);
+router.put('/flagitinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.flagItinerary);
 
 /**
  * @swagger
@@ -345,7 +361,7 @@ router.put('/flagitinerary/:id',adminController.flagItinerary);
  *       200:
  *         description: List of itineraries
  */
-router.get("/itineraries/getItineraries/:id", itineraryController.viewItineraries);
+router.get("/itineraries/getItineraries/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), itineraryController.viewItineraries);
 
 
 /**
@@ -374,8 +390,7 @@ router.get("/itineraries/getItineraries/:id", itineraryController.viewItinerarie
  *       200:
  *         description: Product picture uploaded successfully
  */
-router.post("/product/uploadPicture/:id", upload.single('file'), productController.uploadPicture);
+router.post("/product/uploadPicture/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), upload.single('file'), productController.uploadPicture);
 
 
 export default router;
- 

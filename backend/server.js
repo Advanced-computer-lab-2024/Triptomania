@@ -9,7 +9,10 @@ import touristRoutes from './routes/touristRoutes.js';
 import tourGuideRoutes from './routes/tourGuideRoutes.js';
 import advertiserRoutes from './routes/advertiserRoutes.js';
 import tourismGovernorRoutes from './routes/tourismGovernorRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import guestRoutes from './routes/guestRoutes.js';
 import { swaggerUi, swaggerDocs } from './config/swagger.js'; // Import Swagger setup
+import cookieParser from 'cookie-parser';
 
 dotenv.config(); 
 
@@ -18,6 +21,7 @@ const app = express();
 
 // Enable express to parse JSON
 app.use(cors());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('controllers'));
@@ -56,3 +60,5 @@ app.use('/api/tourist', touristRoutes); // Tourist-related routes
 app.use('/api/advertiser', advertiserRoutes); // Advertiser-related routes
 app.use('/api/tourismGovernor', tourismGovernorRoutes); // Tourism governor routes
 app.use('/api/tourGuide', tourGuideRoutes); // Tour guide routes
+app.use('/api/auth', authRoutes); // Authentication routes
+app.use('/api/guest', guestRoutes); // Authentication routes
