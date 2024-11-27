@@ -12,6 +12,7 @@ import tourismGovernorRoutes from './routes/tourismGovernorRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import guestRoutes from './routes/guestRoutes.js';
 import { swaggerUi, swaggerDocs } from './config/swagger.js'; // Import Swagger setup
+import cookieParser from 'cookie-parser';
 
 dotenv.config(); 
 
@@ -20,6 +21,7 @@ const app = express();
 
 // Enable express to parse JSON
 app.use(cors());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('controllers'));
