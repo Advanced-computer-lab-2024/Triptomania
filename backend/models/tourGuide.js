@@ -29,7 +29,13 @@ const UserSchema = new Schema({
     deleteAccount:{
       type: Boolean,
       default: false
-    }
+    },
+    resetToken: {
+        type: String,
+    },
+    resetTokenExpiration: {
+        type: Date,
+    },
 },{timestamps:true});
 
 UserSchema.pre('save', async function (next) {

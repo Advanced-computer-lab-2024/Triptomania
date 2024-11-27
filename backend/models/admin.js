@@ -18,7 +18,17 @@ const adminSchema = new Schema({
     type: {
         type: String,
         default: 'admin'  // Default value for the type field
-    }
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    resetToken: {
+        type: String,
+    },
+    resetTokenExpiration: {
+        type: Date,
+    },
 });
 
 adminSchema.pre('save', async function (next) {

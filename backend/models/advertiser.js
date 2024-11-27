@@ -23,7 +23,13 @@ const AdvertiserSchema = new Schema({
     deleteAccount:{
       type: Boolean,
       default: false
-    }
+    },
+    resetToken: {
+        type: String,
+    },
+    resetTokenExpiration: {
+        type: Date,
+    },
 });
 
 

@@ -18,6 +18,16 @@ const tourismGovernorSchema = new Schema({
     type: {
         type: String,
         default: 'tourismGovernor'  // Default value for the type field
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    resetToken: {
+        type: String,
+    },
+    resetTokenExpiration: {
+        type: Date,
     }
 });
 
