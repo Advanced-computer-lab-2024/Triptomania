@@ -1482,6 +1482,103 @@ const addDeliveryAdress = async (req, res) => {
   }
 }
 
+const addProductToWishlist = async (req, res) => {
+  try {
+    const { id } = req.params; // User ID
+    const { productId } = req.body; // Product ID
+
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Find the user
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the product is already in the wishlist
+    const isAlreadyInWishlist = user.whishlist.some(
+      (item) => item.productId.toString() === productId
+    );
+
+    if (isAlreadyInWishlist) {
+      return res.status(400).json({ error: 'Product is already in the wishlist' });
+    }
+
+    // Add the product to the wishlist
+    user.whishlist.push(productId);
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Product added to wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getWishlist = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ wishlist: user.whishlist });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const getCart = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const removeProductFromWishlist = async (req, res) => {
+  try {
+    const { id } = req.params; // User ID
+    const { productId } = req.body; // Product ID
+
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+
+    // Use the $pull operator to remove the product from the wishlist
+    const user = await userModel.findByIdAndUpdate(
+      id, 
+      { $pull: { whishlist: productId } }, // Pull the productId from the wishlist array
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Product removed from wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Export all functions using ES module syntax
 export default {
   CreateTourist,
@@ -1515,5 +1612,9 @@ export default {
   addProductToCart,
   removeProductFromCart,
   changeCartQuantity,
-  addDeliveryAdress
+  addDeliveryAdress,
+  addProductToWishlist,
+  getWishlist,
+  getCart,
+  removeProductFromWishlist,
 };

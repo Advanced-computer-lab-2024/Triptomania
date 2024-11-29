@@ -429,6 +429,14 @@ router.post("/cart/changeQuantity/:id", (req, res, next) => authMiddleware.verif
 
 router.put("/addDeliveryAddress/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addDeliveryAdress);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.saveFCMToken);
+
+router.get('/cart/getCart/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getCart);
+
+router.get('/wishlist/getWishlist/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getWishlist);
+
+router.post('/wishlist/addProduct/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addProductToWishlist);
+
+router.post('/wishlist/removeProduct/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.removeProductFromWishlist);
 
 export default router;
