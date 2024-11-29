@@ -96,6 +96,25 @@ const touristSchema = new Schema({
   resetTokenExpiration: {
       type: Date,
   },
+  cart: [
+    Object
+  ],
+  whishlist: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  ],
+  deliveryAddresses: [
+    Object
+  ],
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    }
+  ],
+  fcmToken: {
+      type: String
+  }
 }, { timestamps: true });
 
 touristSchema.pre('save', async function (next) {

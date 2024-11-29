@@ -30,6 +30,9 @@ const AdvertiserSchema = new Schema({
     resetTokenExpiration: {
         type: Date,
     },
+    fcmToken: {
+        type: String
+    }
 });
 
 

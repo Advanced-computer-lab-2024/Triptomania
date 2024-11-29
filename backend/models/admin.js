@@ -29,6 +29,9 @@ const adminSchema = new Schema({
     resetTokenExpiration: {
         type: Date,
     },
+    fcmToken: {
+        type: String
+    }
 });
 
 adminSchema.pre('save', async function (next) {

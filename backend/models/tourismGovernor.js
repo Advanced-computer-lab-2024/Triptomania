@@ -28,6 +28,9 @@ const tourismGovernorSchema = new Schema({
     },
     resetTokenExpiration: {
         type: Date,
+    },
+    fcmToken: {
+        type: String
     }
 });
 
