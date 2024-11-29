@@ -2,6 +2,7 @@ import express from 'express';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 import tourismGovernor from '../controllers/tourismGovernor/tourismGovernorController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -189,5 +190,7 @@ router.put('/updateTag', (req, res, next) => authMiddleware.verifyToken(req, res
 router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), sharedController.changePassword);
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), sharedController.requestAccountDeletion);
+
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
 
 export default router;

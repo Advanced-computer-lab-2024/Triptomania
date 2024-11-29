@@ -346,7 +346,7 @@ router.get('/complaints/sortComplaints', (req, res, next) => authMiddleware.veri
 router.get('/complaints/filterComplaints', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.filterComplaintsByStatus);
 router.put('/complaints/replyToComplaint/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), complaintsController.replyToComplaint);
 
-router.get('/getusersrequestdelete', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getUsers);
+router.get('/getusersrequestdelete', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getDeleteUsers);
 //router.delete('/deleteTouristAccount/:id',adminController.deleteTouristAccount)
 
 router.put('/flagitinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.flagItinerary);
@@ -392,5 +392,10 @@ router.get("/itineraries/getItineraries/:id", (req, res, next) => authMiddleware
  */
 router.post("/product/uploadPicture/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), upload.single('file'), productController.uploadPicture);
 
+router.post("/addPromoCode", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), upload.single('file'), adminController.createPromoCode);
+
+router.get('/getUsers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getUsers);
+
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
 
 export default router;

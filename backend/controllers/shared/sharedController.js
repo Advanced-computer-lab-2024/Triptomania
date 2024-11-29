@@ -10,6 +10,15 @@ import firebase from '../../config/firebase.js';
 import { v4 as uuidv4 } from 'uuid';
 import { fileTypeFromBuffer } from 'file-type';
 
+const userCollections = {
+    admin: adminModel,
+    advertiser: advertiserModel,
+    seller: sellerModel,
+    tourGuide: tourGuideModel,
+    tourismGovernor: tourismGovernorModel,
+    tourist: touristModel,
+};
+
 async function hashPassword(password) {
     try {
         const saltRounds = 10;
@@ -470,6 +479,28 @@ const requestAccountDeletion = async (req, res) => {
     }
 };
 
+const saveFCMToken = async (req, res) => {
+    try {
+        const { userId, type, token } = req.body;
+        
+        const userModel = userCollections[type];
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({error: 'User not found'});
+        }
+
+        user.fcmToken = token;
+        await user.save();
+
+        res.status(200).json({message: 'Token saved successfully'});
+
+    } catch (error) {
+        console.error("Error saving token:", error);
+        res.status(500).json({message: 'Something went wrong'});
+    }
+};
+
 export default {
     changePassword,
     uploadDocuments,
@@ -478,5 +509,6 @@ export default {
     rejectUser,
     getPendingUsers,
     acceptTerms,
-    requestAccountDeletion
+    requestAccountDeletion,
+    saveFCMToken
 }

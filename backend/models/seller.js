@@ -27,6 +27,9 @@ const SellerSchema = new Schema({
     resetTokenExpiration: {
         type: Date,
     },
+    fcmToken: {
+        type: String
+    }
 }, {timestamps:true});
 
 SellerSchema.pre('save', async function(next){

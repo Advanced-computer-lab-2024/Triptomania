@@ -2,6 +2,7 @@ import express from 'express';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
 import sharedController from '../controllers/shared/sharedController.js';
 import multer from 'multer';
+import authMiddleware from '../middleware/authMiddleware.js';
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -138,5 +139,7 @@ router.put('/uploadDocument/:id/:type', (req, res, next) => authMiddleware.verif
 router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.acceptTerms);
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.requestAccountDeletion);
+
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
 
 export default router;
