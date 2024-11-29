@@ -173,6 +173,6 @@ router.patch('/product/archive/:id', (req, res, next) => authMiddleware.verifyTo
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.requestAccountDeletion);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.saveFCMToken);
 
 export default router;

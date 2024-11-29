@@ -191,6 +191,6 @@ router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verif
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), sharedController.requestAccountDeletion);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), sharedController.saveFCMToken);
 
 export default router;

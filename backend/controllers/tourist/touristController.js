@@ -7,6 +7,7 @@ import itineraryModel from '../../models/itinerary.js';
 import productModel from '../../models/product.js';
 import complaintModel from '../../models/complaint.js';
 import activityCategoryModel from '../../models/activityCategory.js';
+import orderModel from '../../models/order.js';
 import { amadeus, getAccessToken } from '../../config/amadeus.js';
 import axios from 'axios';
 
@@ -1482,6 +1483,35 @@ const addDeliveryAdress = async (req, res) => {
   }
 }
 
+const viewOrders = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ orders: user.orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const viewOrderDetails = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await orderModel.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(200).json({ order: order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 const addProductToWishlist = async (req, res) => {
   try {
     const { id } = req.params; // User ID
@@ -1613,6 +1643,8 @@ export default {
   removeProductFromCart,
   changeCartQuantity,
   addDeliveryAdress,
+  viewOrders,
+  viewOrderDetails,
   addProductToWishlist,
   getWishlist,
   getCart,

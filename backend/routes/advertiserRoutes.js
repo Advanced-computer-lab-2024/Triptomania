@@ -140,6 +140,6 @@ router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyT
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.requestAccountDeletion);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.saveFCMToken);
 
 export default router;

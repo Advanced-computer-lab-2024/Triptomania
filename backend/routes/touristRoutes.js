@@ -431,6 +431,10 @@ router.put("/addDeliveryAddress/:id", (req, res, next) => authMiddleware.verifyT
 
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.saveFCMToken);
 
+router.get('/orders/viewOrders/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewOrders);
+
+router.get('/orders/viewOrderDetails/:orderId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewOrderDetails);
+
 router.get('/cart/getCart/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getCart);
 
 router.get('/wishlist/getWishlist/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getWishlist);
