@@ -1,0 +1,62 @@
+/* src/components/Header.css */
+
+/* Define the primary and secondary colors as CSS variables */
+:root {
+    --primary-color: #36827f; /* Primary color */
+    --secondary-color: #54a7a4; /* Secondary color */
+  }
+
+  .header {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 0px;
+  }
+  
+  .container {
+    max-width: 7xl;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .nav-link {
+    color: black; /* gray-500 */
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: var(--secondary-color); /* gray-900 */
+    text-decoration: underline;
+  }
+  
+  .brand {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: "Dancing Script", cursive;
+    font-size: 25px;
+
+  }
+  
+  .signin-btn,
+  .signup-btn {
+    color: var(--primary-color) ; /* Use primary color for the button text */
+    border: 1px solid var(--primary-color); /* Optional: Add a border with the primary color */
+}
+  
+  .signin-btn:hover,
+  .signup-btn:hover {
+    background-color: var(--secondary-color) !important; /* Use secondary color on hover */
+    color: white; /* Ensure the text color changes to white on hover */
+  }
+  
+  /* Additional styles for the signup button */
+  .signup-btn {
+    margin-left: 2rem;
+    background-color: var(--primary-color)!important; /* Use primary color for background */
+    color: white; /* Ensure the text is white by default */
+  }
+  
+
+  
