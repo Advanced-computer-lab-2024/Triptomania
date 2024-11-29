@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './login.css';
+import styles from './login.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -27,11 +27,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
+    <div className={styles['login-container']}>
+      <div className={styles['login-box']}>
         <h1>Triptomania</h1>
         <form onSubmit={handleLogin}>
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <input
               type="text"
               value={username}
@@ -40,7 +40,7 @@ const LoginPage = () => {
               placeholder="Enter your username"
             />
           </div>
-          <div className="form-group">
+          <div className={styles['form-group']}>
             <input
               type="password"
               value={password}
@@ -49,12 +49,12 @@ const LoginPage = () => {
               placeholder="Enter your password"
             />
           </div>
-          <div className="form-group flex-container">
+          <div className={`${styles['form-group']} ${styles['flex-container']}`}>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
               required
-              className="dropdown-menu"
+              className={styles['dropdown-menu']}
             >
               <option value="" disabled>Select user type</option>
               <option value="admin">Admin</option>
@@ -65,16 +65,16 @@ const LoginPage = () => {
               <option value="tourist">Tourist</option>
             </select>
             <p
-              className="forgot-password"
+              className={styles['forgot-password']}
               onClick={() => navigate('/reset-password')}
             >
               Forgot Password?
             </p>
           </div>
-          {error && <p className="error-message">{error}</p>}
-          <button type="submit" className="login-button">Login</button>
+          {error && <p className={styles['error-message']}>{error}</p>}
+          <button type="submit" className={styles['login-button']}>Login</button>
           <p
-            className="signup-button"
+            className={styles['signup-button']}
             // Uncomment below if you want to enable navigation
             // onClick={() => navigate('/sign-up')}
           >
