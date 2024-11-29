@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPin, Calendar, Search } from 'lucide-react'
 import { Header } from '../components/Header';  // Adjust the path based on your folder structure
+import '../index.css'
+
 
 export default function LandingPage() {
   return (

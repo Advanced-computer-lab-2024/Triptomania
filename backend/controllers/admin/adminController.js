@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import adminModel from '../../models/admin.js';
 import tourismGovernorModel from '../../models/tourismGovernor.js';
-
+import promoCodeModel from '../../models/promoCode.js';
 import touristModel from '../../models/tourist.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
@@ -189,7 +189,8 @@ const checkValidity = async (touristId) => {
     // If no bookings and no upcoming itineraries or activities, return true
     return true;
 }
-const getUsers = async (req, res) => {
+
+const getDeleteUsers = async (req, res) => {
     try {
         const deletedTourists = await touristModel.find({ deleteAccount: true });
         console.log('Deleted Tourists:', deletedTourists); // Log the result
@@ -246,8 +247,75 @@ const getUsers = async (req, res) => {
     }
 }
 
+const createPromoCode = async (req, res) => {
+    const { code, discount, expiryDate } = req.body;
 
+    if (!code || !discount || !expiryDate) {
+        return res.status(400).json({ message: "Please fill in all fields" });
+    }
 
+    try {
+        const promoCode = new promoCodeModel({
+            code,
+            discount,
+            expiryDate
+        });
+
+        await promoCode.save();
+
+        res.status(201).json({ message: "Promo code created successfully" });
+    } catch (error) {
+        console.error("Error creating promo code:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+};
+
+const getUsers = async (req, res) => {
+    try {
+        // Fetch users from all collections
+        const tourists = await touristModel.find();
+        const tourGuides = await tourGuideModel.find();
+        const advertisers = await advertiserModel.find();
+        const sellers = await sellerModel.find();
+        const tourismGovernors = await tourismGovernorModel.find();
+
+        // Combine all users into a single array
+        const users = [
+            ...tourists,
+            ...tourGuides,
+            ...advertisers,
+            ...sellers,
+            ...tourismGovernors,
+        ];
+
+        // Calculate total users
+        const totalUsers = users.length;
+
+        // Group users by month of creation
+        const usersByMonth = users.reduce((acc, user) => {
+            const createdAt = user.createdAt;
+            if (createdAt) {
+                const date = new Date(createdAt);
+                if (!isNaN(date)) {
+                    const monthKey = date.toISOString().slice(0, 7); // Format as YYYY-MM
+                    acc[monthKey] = (acc[monthKey] || 0) + 1;
+                }
+            }
+            return acc;
+        }, {});
+
+        // Format response
+        const response = {
+            totalUsers,
+            newUsersByMonth: usersByMonth,
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        console.error("Error retrieving users:", error);
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+};
 
 export default {
     addAdmin,
@@ -255,5 +323,7 @@ export default {
     addTourismGovernor,
     flagItinerary,
     viewProductsAdmin,
+    getDeleteUsers,
+    createPromoCode,
     getUsers
 }

@@ -36,6 +36,9 @@ const UserSchema = new Schema({
     resetTokenExpiration: {
         type: Date,
     },
+    fcmToken: {
+        type: String
+    }
 },{timestamps:true});
 
 UserSchema.pre('save', async function (next) {

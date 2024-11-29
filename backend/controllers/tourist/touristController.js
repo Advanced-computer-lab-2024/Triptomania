@@ -58,9 +58,9 @@ const getTourist = async (req, res) => {
 // Get one tourist
 
 const getOneTourist = async (req, res) => {
-  const { id } = req.params; 
+  const { id } = req.params;
   try {
-   
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid tourist ID format' });
     }
@@ -68,12 +68,12 @@ const getOneTourist = async (req, res) => {
     // Find the tourist by ID
     const tourist = await userModel.findById(id);
 
-    
+
     if (!tourist) {
       return res.status(404).json({ message: 'Tourist not found' });
     }
 
-    
+
     return res.status(200).json(tourist);
   } catch (error) {
     console.error('Error getting tourist:', error);
@@ -108,7 +108,7 @@ const UpdateTourist = async (req, res) => {
       wallet: wallet !== undefined ? wallet : existingTourist.wallet,
       points: points !== undefined ? points : existingTourist.points
     };
-    
+
 
     // Remove undefined fields (optional as we've handled undefined values)
     Object.keys(updateData).forEach(key => {
@@ -180,11 +180,11 @@ const redeemPoints = async (req, res) => {
     // Save the updated tourist details
     await tourist.save();
 
-    res.status(200).json({ 
-      message: "Wallet and badge updated successfully", 
-      wallet: tourist.wallet, 
-      remainingPoints: tourist.points, 
-      badge: tourist.badge 
+    res.status(200).json({
+      message: "Wallet and badge updated successfully",
+      wallet: tourist.wallet,
+      remainingPoints: tourist.points,
+      badge: tourist.badge
     });
   } catch (error) {
     res.status(500).json({ message: "Error updating wallet and badge", error: error.message });
@@ -216,7 +216,7 @@ const addComment = async (req, res) => {
           return res.status(403).json({ error: 'You must participate in the activity to comment it' });
         }
 
-        
+
         if (currentDate < activityCheck.date) {
           return res.status(403).json({ error: 'You can only comment after the activity date.' });
         }
@@ -229,7 +229,7 @@ const addComment = async (req, res) => {
         break;
 
       case "tourGuide":
-        
+
         const tourGuideCheck = await itineraryModel.find({ creatorId: id });
         let tourGuideid;
         tourGuideCheck.forEach(async (itinerary) => {
@@ -240,8 +240,8 @@ const addComment = async (req, res) => {
               tourGuideid = itinerary.creatorId;
             }
           }
-        }); 
-        
+        });
+
         addedComment = await tourguide.findByIdAndUpdate(
           tourGuideid,
           { $push: { comments: comment } },
@@ -864,11 +864,11 @@ const choosePreferences = async (req, res) => {
 
   try {
     // Verify the tourist exists
-    const tourist = await userModel.findByIdAndUpdate(touristId, { $set: {preferences: preferences} }, { new: true });
+    const tourist = await userModel.findByIdAndUpdate(touristId, { $set: { preferences: preferences } }, { new: true });
     if (!tourist) {
       return res.status(404).json({ error: 'Tourist not found' });
     }
-    
+
     res.status(200).json({ message: 'Preferences updated successfully', tourist: tourist });
   }
   catch (error) {
@@ -892,12 +892,12 @@ export const cancelBooking = async (req, res) => {
 
     // Validate if the touristId is a valid ObjectId
     if (!touristId || !mongoose.Types.ObjectId.isValid(touristId)) {
-        return res.status(400).json({ message: "Invalid tourist ID format or missing tourist ID" });
+      return res.status(400).json({ message: "Invalid tourist ID format or missing tourist ID" });
     }
 
     // Validate if the itemId is a valid ObjectId
     if (!itemId || !mongoose.Types.ObjectId.isValid(itemId)) {
-        return res.status(400).json({ message: "Invalid item ID format or missing item ID" });
+      return res.status(400).json({ message: "Invalid item ID format or missing item ID" });
     }
 
     // Search for the item in itineraryModel first
@@ -906,19 +906,19 @@ export const cancelBooking = async (req, res) => {
 
     // If it's not found in the itinerary, try finding it in the activityModel
     if (!item) {
-        item = await activityModel.findById(itemId);
-        itemType = item ? 'activity' : itemType;
+      item = await activityModel.findById(itemId);
+      itemType = item ? 'activity' : itemType;
     }
 
     // If the item is not found, return an error
     if (!item) {
-        return res.status(404).json({ message: `Item with ID ${itemId} not found` });
+      return res.status(404).json({ message: `Item with ID ${itemId} not found` });
     }
 
     // Ensure the touristId is in the bookingMade array
     const bookingIndex = item.bookingMade.indexOf(touristId);
     if (bookingIndex === -1) {
-        return res.status(400).json({ message: `Tourist with ID ${touristId} did not book this item` });
+      return res.status(400).json({ message: `Tourist with ID ${touristId} did not book this item` });
     }
 
     // Get the date of the item (activity or itinerary)
@@ -926,7 +926,7 @@ export const cancelBooking = async (req, res) => {
 
     // Ensure cancellation is happening at least 48 hours before the event
     if (!isCancellationAllowed(itemDate)) {
-        return res.status(400).json({ message: `Cancellation window has passed. You can cancel up to 48 hours before the start of the ${itemType}` });
+      return res.status(400).json({ message: `Cancellation window has passed. You can cancel up to 48 hours before the start of the ${itemType}` });
     }
 
     // Remove the booking from the bookingMade array
@@ -1366,17 +1366,154 @@ const bookTransportation = async (req, res) => {
       travelType: travelType
     };
 
-    await userModel.findByIdAndUpdate(id, { $push: { transportationBookings: transportationData } }, {new: true});
-    res.status(200).json({message: "transportation added successfully"});
+    await userModel.findByIdAndUpdate(id, { $push: { transportationBookings: transportationData } }, { new: true });
+    res.status(200).json({ message: "transportation added successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
 
+const addProductToCart = async (req, res) => {
+  try {
+    const { id } = req.params; // User ID
+    const { productId, quantity } = req.body; // Product ID and Quantity
+
+    if (!productId || !quantity) {
+      return res.status(400).json({ error: 'Product ID and quantity are required' });
+    }
+
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Find the user's cart
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the product already exists in the cart
+    const existingCartItem = user.cart.find(item => item.productId.toString() === productId);
+
+    let tempProd;
+    let quan = 0;
+    if (existingCartItem) {
+      tempProd = user.cart.pull({ productId: productId });
+      quan = tempProd[0].quantity;
+      user.cart.pop({ productId: productId });
+    }
+
+    user.cart.push({ productId: productId, quantity: quantity + quan });
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Product added to cart successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const removeProductFromCart = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { productId } = req.body;
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+    await userModel.findByIdAndUpdate(id, { $pull: { cart: { productId: productId } } },
+      { new: true });
+    res.status(200).json({ message: "product removed from cart successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const changeCartQuantity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { productId, quantity } = req.body;
+    if (!productId || !quantity) {
+      return res.status(400).json({ error: 'Product ID and quantity are required' });
+    }
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    const cartItem = {
+      productId: productId,
+      quantity: quantity
+    };
+    await userModel.findByIdAndUpdate(id, { $pull: { cart: { productId: productId } } },
+      { new: true });
+    await userModel.findByIdAndUpdate(id, { $push: { cart: cartItem } }, {
+      new:
+        true
+    });
+    res.status(200).json({ message: "cart quantity updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const addDeliveryAdress = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { address, city, state, zip } = req.body;
+    if (!address || !city || !state || !zip) {
+      return res.status(400).json({ error: 'Address, city, state and zip are required' });
+    }
+    const deliveryAddress = {
+      address: address,
+      city: city,
+      state: state,
+      zip: zip
+    };
+    await userModel.findByIdAndUpdate(id, { $push: { deliveryAddresses: deliveryAddress } }, { new: true });
+    res.status(200).json({ message: "delivery address added successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
 
 // Export all functions using ES module syntax
-export default { CreateTourist, getTourist, getOneTourist, UpdateTourist, getHotels, getHotelOffers, bookHotel, searchFlights, getFlightDetails, bookFlight, bookTransportation, redeemPoints, chooseCategory, bookActivity, bookItinerary, addComment, reviewProduct, rateTourGuide, rateItinerary, rateActivity, badge, processPayment, rateProduct, updateBadge, fileComplaint, viewMyComplaints, choosePreferences,cancelBooking };
-
-
-
+export default {
+  CreateTourist,
+  getTourist,
+  getOneTourist,
+  UpdateTourist,
+  getHotels,
+  getHotelOffers,
+  bookHotel,
+  searchFlights,
+  getFlightDetails,
+  bookFlight,
+  bookTransportation,
+  redeemPoints,
+  chooseCategory,
+  bookActivity,
+  bookItinerary,
+  addComment,
+  reviewProduct,
+  rateTourGuide,
+  rateItinerary,
+  rateActivity,
+  badge,
+  processPayment,
+  rateProduct,
+  updateBadge,
+  fileComplaint,
+  viewMyComplaints,
+  choosePreferences,
+  cancelBooking,
+  addProductToCart,
+  removeProductFromCart,
+  changeCartQuantity,
+  addDeliveryAdress
+};

@@ -8,6 +8,8 @@ import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import paymentController from '../controllers/services/paymentController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -414,5 +416,19 @@ router.post('/bookFlight/:id', (req, res, next) => authMiddleware.verifyToken(re
 router.post('/bookTransportation/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookTransportation);
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.requestAccountDeletion);
+
+router.post("/cart/checkoutCart", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.checkoutCart);
+
+router.post("/cart/cancelOrder/:orderId", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelOrder);
+
+router.post("/cart/addProduct/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addProductToCart);
+
+router.post("/cart/removeProduct/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.removeProductFromCart);
+
+router.post("/cart/changeQuantity/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.changeCartQuantity);
+
+router.put("/addDeliveryAddress/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addDeliveryAdress);
+
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
 
 export default router;

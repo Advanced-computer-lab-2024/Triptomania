@@ -153,9 +153,6 @@ const forgotPassword = async (req, res) => {
         user.resetTokenExpiration = Date.now() + 5 * 60 * 1000; // 5 minutes
         await user.save();
 
-        console.log('OTP:', otp);
-        console.log(user.email);
-
         const sender = {
             name: 'Triptomania',
             email: 'triptomania.app@gmail.com',
