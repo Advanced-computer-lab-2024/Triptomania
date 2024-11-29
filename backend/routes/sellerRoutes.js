@@ -3,6 +3,7 @@ import productController from '../controllers/shared/productController.js';
 import sharedController from '../controllers/shared/sharedController.js';
 import express from 'express';
 import multer from "multer";
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -171,5 +172,7 @@ router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyT
 router.patch('/product/archive/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.toggleArchiveStatus); //minus swagger
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.requestAccountDeletion);
+
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
 
 export default router;
