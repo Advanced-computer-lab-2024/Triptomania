@@ -167,6 +167,6 @@ router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyT
 router.put('/activate/itinerary', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.toggleItineraryStatus);
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.requestAccountDeletion);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.saveFCMToken);
 
 export default router;
