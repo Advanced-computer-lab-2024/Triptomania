@@ -194,10 +194,10 @@ const redeemPoints = async (req, res) => {
 
 
 
-
+//TODO : Update this method functionality
 const addComment = async (req, res) => {
-  const { type, comment, touristId } = req.body; // Get the type and comment from the request body
-  const id = req.user._id;
+  const { type, comment, id } = req.body; // Get the type and comment from the request body
+  const touristId = req.user._id;
 
   try {
     const currentDate = new Date();
@@ -289,8 +289,8 @@ const addComment = async (req, res) => {
 
 // Add review to a product
 const reviewProduct = async (req, res) => {
-  const { review, touristId } = req.body; // Get the review from the request body
-  const id = req.user._id;
+  const { review, id } = req.body; // Get the review from the request body
+  const touristId = req.user._id;
 
   try {
     // Find the product by ID

@@ -6,6 +6,8 @@ import orderModel from '../../models/order.js';
 import promoCodeModel from '../../models/promoCode.js';
 import sellerModel from '../../models/seller.js';
 import adminModel from '../../models/admin.js';
+import activityModel from '../../models/activity.js';
+import itineraryModel from '../../models/itinerary.js';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
 
 dotenv.config();
@@ -18,9 +20,11 @@ const transactionalEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const checkoutCart = async (req, res) => {
-    const { userId, paymentMethod, address, promoCode } = req.body;
+    const userId = req.user._id;
 
-    if (!userId || !paymentMethod || address < 0) {
+    const { paymentMethod, address, promoCode } = req.body;
+
+    if (!paymentMethod || address < 0) {
         return res.status(400).json({ error: 'Missing required fields: userId, paymentMethod, address' });
     }
 
@@ -391,15 +395,259 @@ const notifyOutOfStock = async (product) => {
 
 const payForEvent = async (req, res) => {
     try {
-        const { userId, paymentMethod, eventType, eventId, promoCode } = req.body;
-        
+        const userId = req.user._id;
+
+        const { paymentMethod, eventType, eventId, promoCode } = req.body;
+
+        if (!paymentMethod || !eventType || !eventId) {
+            return res.status(400).json({ error: 'Missing required fields: userId, paymentMethod, eventType, eventId' });
+        }
+
+        const user = await touristModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const models = {
+            activity: activityModel,
+            itinerary: itineraryModel
+        }
+
+        const eventModel = models[eventType];
+
+        const event = await eventModel.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Check if the user has already booked this event
+        if (event.bookingMade.includes(userId)) {
+            return res.status(400).json({ error: 'You have already booked this event' });
+        }
+
+        let discount = 0;
+
+        let promo = null;
+
+        if (promoCode) {
+            promo = await promoCodeModel.findOne({ code: promoCode });
+            if (!promo) {
+                return res.status(404).json({ error: 'Promo code not found' });
+            }
+
+            if (new Date(promo.expiryDate) < Date.now()) {
+                return res.status(400).json({ error: 'Promo code has expired' });
+            }
+
+            discount = promo.discount;
+        }
+
+        let message = "";
+        let paymentIntent;
+        let originalAmount = event.Price;
+        let discountAmount = originalAmount * discount / 100;
+        let totalAmount = originalAmount - discountAmount;
+
+        if (paymentMethod === 'wallet') {
+            if (user.wallet >= totalAmount) {
+                user.wallet -= totalAmount;
+                await user.save();
+                message = 'Payment successful. Event booked.';
+            } else {
+                return res.status(400).json({ error: 'Insufficient wallet balance' });
+            }
+        } else if (paymentMethod === 'card') {
+            // Convert totalAmount to cents
+            const amountInCents = totalAmount * 100;
+
+            // Create a PaymentIntent with Stripe
+            paymentIntent = await stripe.paymentIntents.create({
+                amount: amountInCents,
+                currency: 'usd',
+                payment_method_types: ['card'],
+                payment_method: 'pm_card_visa',
+                confirm: true, // Automatically confirm the payment
+            });
+
+            message = 'Payment successful. Event booked.';
+        }
+
+        let eventMap;
+        if (eventType === 'activity') {
+            eventMap = {
+                eventType: eventType,
+                eventId: eventId,
+                originalPrice: originalAmount,
+                discountAmount: discountAmount,
+                finalPrice: totalAmount,
+                promoCode: promo ? promo.code : null,
+                date: event.date
+            }
+            user.activities.push(eventMap);
+            await user.save();
+        } else if (eventType === 'itinerary') {
+            eventMap = {
+                eventType: eventType,
+                eventId: eventId,
+                originalPrice: originalAmount,
+                discountAmount: discountAmount,
+                finalPrice: totalAmount,
+                promoCode: promo ? promo.code : null,
+                date: event.Start_date
+            }
+            user.itineraries.push(eventMap);
+            await user.save();
+        }
+
+        event.bookingMade.push(userId);
+        await event.save();
+
+        res.status(200).json({
+            success: true,
+            message,
+            event: eventMap,
+            ...(paymentIntent && { paymentIntent })
+        });
+
+        await sendEventInvoice(eventMap, userId, eventType).catch((error) => {
+            console.error('Error sending invoice:', error);
+        });
     } catch (error) {
         console.error('Error processing payment:', error.message);
         res.status(500).json({ error: error.message });
     }
 }
 
+const sendEventInvoice = async (event, userId, type) => {
+    try {
+        const user = await touristModel.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        let promo = null;
+
+        if (event.promoCode !== null) {
+            promo = await promoCodeModel.findById(event.promoCode);
+        }
+
+        const sender = {
+            name: 'Triptomania',
+            email: 'triptomania.app@gmail.com',
+        };
+
+        const recipients = [
+            { email: user.email },
+            { email: 'nnnh7240@gmail.com' }
+        ];
+
+        const now = new Date(event.date);
+
+        // Extract the day, month, and year
+        const day = now.getDate(); // Day of the month (1-31)
+        const month = now.getMonth() + 1; // Month (0-11, so add 1)
+        const year = now.getFullYear(); // Full year
+
+        const emailContent = {
+            sender,
+            to: recipients,
+            templateId: 6, // Replace with your Brevo template ID
+            params: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                bookingType: type,
+                bookingDate: `${day}-${month}-${year}`,
+                currency: 'USD',
+                originalPrice: event.originalAmount,
+                promoCode: promo ? promo.code : null,
+                discountAmount: event.discountAmount,
+                finalPrice: event.finalPrice,
+                currentYear: new Date().getFullYear()
+            }
+        };
+
+        const response = await transactionalEmailApi.sendTransacEmail(emailContent);
+        console.log(response);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const cancelEvent = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { eventType, eventId } = req.body;
+
+        const user = await touristModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const models = {
+            activity: activityModel,
+            itinerary: itineraryModel
+        }
+
+        const eventModel = models[eventType];
+
+        const event = await eventModel.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Check if the user has already booked this event
+        if (!event.bookingMade.includes(userId)) {
+            return res.status(400).json({ error: 'You didn\'t book this event to cancel it' });
+        }
+
+        let refundAmount = 0;
+
+        if (eventType === 'activity') {
+            const activityIndex = user.activities.findIndex(a => a.activityId === eventId);
+
+            if (activityIndex === -1) {
+                return res.status(400).json({ error: 'This activity is not in your bookings' });
+            }
+
+            refundAmount = user.activities[activityIndex].finalPrice;
+
+            // Remove the activity from user's activities
+            user.activities.splice(activityIndex, 1);
+        } else if (eventType === 'itinerary') {
+            const itineraryIndex = user.itineraries.findIndex(i => i.itineraryId === eventId);
+
+            if (itineraryIndex === -1) {
+                return res.status(400).json({ error: 'This itinerary is not in your bookings' });
+            }
+
+            refundAmount = user.itineraries[itineraryIndex].finalPrice;
+
+            // Remove the itinerary from user's itineraries
+            user.itineraries.splice(itineraryIndex, 1);
+        }
+
+        // Remove the user from event.bookingMade
+        event.bookingMade = event.bookingMade.filter(id => id.toString() !== userId.toString());
+
+        // Save the changes to the user and event
+        user.wallet += refundAmount;
+        await user.save();
+        await event.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Event booking canceled successfully'
+        });
+    } catch (error) {
+        console.error('Error unbooking event:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
 export default {
     checkoutCart,
-    cancelOrder
+    cancelOrder,
+    payForEvent,
+    cancelEvent
 }

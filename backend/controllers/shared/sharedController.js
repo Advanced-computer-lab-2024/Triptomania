@@ -396,7 +396,10 @@ const requestAccountDeletion = async (req, res) => {
 
 const saveFCMToken = async (req, res) => {
     try {
-        const { userId, type, token } = req.body;
+        const type = req.user.type;
+        const userId = req.user._id;
+
+        const { token } = req.body;
 
         const userModel = userCollections[type];
 
