@@ -121,6 +121,16 @@ const touristSchema = new Schema({
   activities: [
     Object
   ],
+  bookmarkedActivities: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    }
+  ],
+  bookmarkedItineraries: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+    }
+  ]
 }, { timestamps: true });
 
 touristSchema.pre('save', async function (next) {

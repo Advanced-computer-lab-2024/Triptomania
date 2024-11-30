@@ -1609,6 +1609,195 @@ const removeProductFromWishlist = async (req, res) => {
   }
 };
 
+const getUpcomingActivities = async (req, res) => {
+  try {
+    const id = req.user._id;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const upcomingActivities = user.activities.filter(activity => new Date(activity.date) > new Date());
+
+    res.status(200).json({ upcomingActivities });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const getUpcomingItineraries = async (req, res) => {
+  try {
+    const id = req.user._id;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const upcomingItineraries = user.itineraries.filter(itinerary => new Date(itinerary.date) > new Date());
+
+    res.status(200).json({ upcomingItineraries });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const getPastActivities = async (req, res) => {
+  try {
+    const id = req.user._id;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const pastActivities = user.activities.filter(activity => new Date(activity.date) <= new Date());
+
+    res.status(200).json({ pastActivities });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const getPastItineraries = async (req, res) => {
+  try {
+    const id = req.user._id;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const pastItineraries = user.itineraries.filter(itinerary => new Date(itinerary.date) <= new Date());
+
+    res.status(200).json({ pastItineraries });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const bookmarkEvent = async (req, res) => {
+  try {
+    const { eventId, eventType } = req.body;
+    const id = req.user._id;
+
+    if (!eventId || !eventType) {
+      return res.status(400).json({ error: 'Event ID and Type are required' });
+    }
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (eventType === 'activity') {
+      const activity = await activityModel.findById(eventId);
+      if (!activity) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+
+      if (user.bookmarkedActivities.includes(eventId)) {
+        return res.status(400).json({ error: 'Activity already bookmarked' });
+      }
+
+      user.bookmarkedActivities.push(eventId);
+    } else if (eventType === 'itinerary') {
+      const itinerary = await itineraryModel.findById(eventId);
+      if (!itinerary) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+
+      if (user.bookmarkedItineraries.includes(eventId)) {
+        return res.status(400).json({ error: 'Itinerary already bookmarked' });
+      }
+
+      user.bookmarkedItineraries.push(eventId);
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: 'Event bookmarked successfully' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const unbookmarkEvent = async (req, res) => {
+  try {
+    const { eventId, eventType } = req.body;
+    const id = req.user._id;
+
+    if (!eventId || !eventType) {
+      return res.status(400).json({ error: 'Event ID and Type are required' });
+    }
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (eventType === 'activity') {
+      const activity = await activityModel.findById(eventId);
+      if (!activity) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+
+      if (!user.bookmarkedActivities.includes(eventId)) {
+        return res.status(400).json({ error: 'Activity is not bookmarked' });
+      }
+
+      user.bookmarkedActivities.pull(eventId);
+    } else if (eventType === 'itinerary') {
+      const itinerary = await itineraryModel.findById(eventId);
+      if (!itinerary) {
+        return res.status(404).json({ error: 'Activity not found' });
+      }
+
+      if (user.bookmarkedItineraries.includes(eventId)) {
+        return res.status(400).json({ error: 'Itinerary already bookmarked' });
+      }
+      
+      user.bookmarkedItineraries.pull(eventId);
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: 'Event unbookmarked successfully' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const getBookmarkedEvents = async (req, res) => {
+  try {
+    const id = req.user._id;
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const activities = user.bookmarkedActivities;
+    const itineraries = user.bookmarkedItineraries;
+
+    const bookmarkedEvents = [...activities, ...itineraries];
+
+    res.status(200).json({ bookmarkEvents: bookmarkedEvents });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 // Export all functions using ES module syntax
 export default {
   CreateTourist,
@@ -1649,4 +1838,11 @@ export default {
   getWishlist,
   getCart,
   removeProductFromWishlist,
+  getUpcomingActivities,
+  getUpcomingItineraries,
+  getPastActivities,
+  getPastItineraries,
+  bookmarkEvent,
+  unbookmarkEvent,
+  getBookmarkedEvents
 };

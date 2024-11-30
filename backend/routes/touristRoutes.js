@@ -445,4 +445,18 @@ router.post('/events/payForEvent', (req, res, next) => authMiddleware.verifyToke
 
 router.post('/events/cancelEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelEvent);
 
+router.get('/getUpcomingActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getUpcomingActivities);
+
+router.get('/getUpcomingItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getUpcomingItineraries);
+
+router.get('/getPastActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getPastActivities);
+
+router.get('/getPastItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getPastItineraries);
+
+router.post('/events/bookmarkEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookmarkEvent);
+
+router.get('/events/getBookmarkedEvents', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getBookmarkedEvents);
+
+router.put('/events/unbookmarkEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.unbookmarkEvent);
+
 export default router;
