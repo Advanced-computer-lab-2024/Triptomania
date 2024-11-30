@@ -417,7 +417,6 @@ const saveFCMToken = async (req, res) => {
 };
 
 export default {
-    changePassword,
     uploadDocuments,
     uploadProfilePicture,
     acceptUser,
