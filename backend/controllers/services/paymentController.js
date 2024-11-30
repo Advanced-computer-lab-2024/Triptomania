@@ -644,6 +644,60 @@ const cancelEvent = async (req, res) => {
     }
 };
 
+const sendEventCancellation = async (event, userId, type) => {
+    try {
+        const user = await touristModel.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        let promo = null;
+
+        if (event.promoCode !== null) {
+            promo = await promoCodeModel.findById(event.promoCode);
+        }
+
+        const sender = {
+            name: 'Triptomania',
+            email: 'triptomania.app@gmail.com',
+        };
+
+        const recipients = [
+            { email: user.email },
+            { email: 'nnnh7240@gmail.com' }
+        ];
+
+        const now = new Date(event.date);
+
+        // Extract the day, month, and year
+        const day = now.getDate(); // Day of the month (1-31)
+        const month = now.getMonth() + 1; // Month (0-11, so add 1)
+        const year = now.getFullYear(); // Full year
+
+        const emailContent = {
+            sender,
+            to: recipients,
+            templateId: 6, // Replace with your Brevo template ID
+            params: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                bookingType: type,
+                bookingDate: `${day}-${month}-${year}`,
+                currency: 'USD',
+                originalPrice: event.originalAmount,
+                promoCode: promo ? promo.code : null,
+                discountAmount: event.discountAmount,
+                finalPrice: event.finalPrice,
+                currentYear: new Date().getFullYear()
+            }
+        };
+
+        const response = await transactionalEmailApi.sendTransacEmail(emailContent);
+        console.log(response);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 export default {
     checkoutCart,
