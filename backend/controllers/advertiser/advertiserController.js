@@ -147,8 +147,7 @@ const updateAdvertiser = async (req, res) => {
  
   const editActivity = async (req, res) => {
     try {
-       const { id } = req.params;
-       const {name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen } = req.body;
+       const { id, name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen } = req.body;
  
        if (!mongoose.Types.ObjectId.isValid(id)) {
           return res.status(400).json({ message: "Invalid booking ID format." });
@@ -189,7 +188,7 @@ const updateAdvertiser = async (req, res) => {
  
   const deleteActvivty = async (req, res) => {
     try {
-       const { id } = req.params;
+       const { id } = req.body;
  
        if (!mongoose.Types.ObjectId.isValid(id)) {
           return res.status(400).json({ message: "Invalid booking ID format." });
@@ -211,7 +210,7 @@ const updateAdvertiser = async (req, res) => {
 
 
 const viewMyActivities = async (req, res) => {
-   const { creatorId } = req.params; // Extract creatorId from request parameters
+   const creatorId = req.user._id;
 
    try {
       const activities = await activityModel.find({ creatorId: creatorId });

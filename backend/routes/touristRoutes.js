@@ -90,7 +90,7 @@ router.get('/itineraries/sortItineraries', (req, res, next) => authMiddleware.ve
  *       200:
  *         description: List of itineraries
  */
-router.get("/itineraries/getItineraries/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
+router.get("/itineraries/getItineraries", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
 
 /**
  * @swagger
@@ -387,19 +387,17 @@ router.put('/cancelBooking', (req, res, next) => authMiddleware.verifyToken(req,
 
 router.get('/activities/getActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.viewActivities);
 
-router.get('/activities/getActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.getActivity);
+router.get('/activities/getActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.getActivity);
 
-router.get('/itineraries/getItineraries/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
+router.get('/itineraries/getItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
 
 router.get('/itineraries/viewItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.viewItineraries);
 
-router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItinerary);
+router.get('/itineraries/getItinerary', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItinerary);
 
 router.get('/getHistoricalPlaces', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlaces);
 
-router.get('/getHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlace);
-
-router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.changePassword);
+router.get('/getHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlace);
 
 router.get('/getHotels', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getHotels);
 
@@ -419,7 +417,7 @@ router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req
 
 router.post("/cart/checkoutCart", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.checkoutCart);
 
-router.post("/cart/cancelOrder/:orderId", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelOrder);
+router.post("/cart/cancelOrder", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelOrder);
 
 router.post("/cart/addProduct", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addProductToCart);
 
@@ -429,6 +427,18 @@ router.post("/cart/changeQuantity", (req, res, next) => authMiddleware.verifyTok
 
 router.put("/addDeliveryAddress", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addDeliveryAdress);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.saveFCMToken);
+
+router.get('/orders/viewOrders', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewOrders);
+
+router.get('/orders/viewOrderDetails', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewOrderDetails);
+
+router.get('/cart/getCart', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getCart);
+
+router.get('/wishlist/getWishlist', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getWishlist);
+
+router.post('/wishlist/addProduct', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addProductToWishlist);
+
+router.post('/wishlist/removeProduct', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.removeProductFromWishlist);
 
 export default router;

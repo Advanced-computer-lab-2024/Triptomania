@@ -95,8 +95,7 @@ const filterComplaintsByStatus = async (req, res) => {
 
 const updateComplaintStatus = async (req, res) => {
     try {
-        const { id } = req.params; 
-        const { status } = req.body; 
+        const { id, status } = req.body; 
 
         
         if (!status || !['pending', 'resolved'].includes(status)) {
@@ -125,7 +124,7 @@ const updateComplaintStatus = async (req, res) => {
 
 // view details of a selected complaint by ID
 const viewComplaintDetails = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.body;
 
     try {
         // Validate the complaint ID
@@ -149,8 +148,7 @@ const viewComplaintDetails = async (req, res) => {
 };
 
  const replyToComplaint = async (req, res) => {
-    const { id } = req.params;
-    const { reply } = req.body;
+    const { id, reply } = req.body;
 
     if (!reply) {
         return res.status(400).json({ message: "Reply content is required." });

@@ -3,8 +3,7 @@ import itineraryModel from '../../models/itinerary.js';
 
 const getItineraries = async (req, res) => { 
   try {
-    // Assuming user ID is available in req.params.id
-    const { id } = req.params;
+    const id = req.user._id;
 
     // Retrieve itineraries based on `isActivated` and `bookingMade`
     const itineraries = await itineraryModel.find({
@@ -47,7 +46,7 @@ const viewItineraries = async (req, res) => {
 
 
 const getItinerary = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({
@@ -152,7 +151,7 @@ const addItinerary = async (req, res) => {
 
 const editItinerary = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
     // Check if the provided ID is valid
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -213,7 +212,7 @@ const editItinerary = async (req, res) => {
 
 const deleteItinerary = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({
         status: false,
@@ -241,7 +240,7 @@ const deleteItinerary = async (req, res) => {
 }
 
 const getMyItineraries = async (req, res) => {
-  const { creatorId } = req.params; // Extract creatorId from request parameters
+  const creatorId = req.user._id;
 
   try {
       const itineraries = await itineraryModel.find({ creatorId: creatorId });

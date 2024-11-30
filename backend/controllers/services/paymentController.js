@@ -79,12 +79,12 @@ const checkoutCart = async (req, res) => {
             product.Quantity -= item.quantity;
             product.Purchasers.push(userId);
             product.Sales += tempAmount;
-            if (product.quantity === 0) {
+            await product.save();
+            if (product.Quantity === 0) {
                 await notifyOutOfStock(product).catch((error) => {
                     console.error('Error sending out-of-stock email:', error);
                 });
             }
-            await product.save();
         }
 
         let discountAmount = totalAmount * discount / 100;
@@ -156,7 +156,7 @@ const checkoutCart = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     try {
-        const { orderId } = req.params;
+        const { orderId } = req.body;
 
         const order = await orderModel.findById(orderId);
         if (!order) {
@@ -369,20 +369,11 @@ const notifyOutOfStock = async (product) => {
             email: 'triptomania.app@gmail.com',
         };
 
-        const now = new Date(Date.now());
-
-        // Extract the day, month, and year
-        const day = now.getDate(); // Day of the month (1-31)
-        const month = now.getMonth() + 1; // Month (0-11, so add 1)
-        const year = now.getFullYear(); // Full year
-
         const emailContent = {
             sender,
             to: recipients,
             templateId: 4, // Replace with your Brevo template ID
             params: {
-                firstName: seller.firstName, // Assuming seller has firstName
-                lastName: seller.lastName, // Assuming seller has lastName
                 productName: product.Name,
                 productId: product.id,
                 price: product.Price,
