@@ -9,7 +9,15 @@ import advertiserModel from '../../models/advertiser.js';
 import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
 import productModel from '../../models/product.js'; // Import the product model
 import activityModel from '../../models/activity.js'; 
+import dotenv from 'dotenv';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 
+dotenv.config();
+
+const client = SibApiV3Sdk.ApiClient.instance;
+const apiKey = client.authentications['api-key'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
+const transactionalEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 const addAdmin = async (req, res) => {
     const { adminName, adminUsername, adminPassword } = req.body;
@@ -84,6 +92,8 @@ const flagItinerary = async (req, res) => {
       
         // Preserve the creatorId and save the itinerary
         await ItineraryModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
+
+        await sendEmail(itinerary); // Send an email to the tour guide
   
         return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
     } catch (error) {
@@ -314,6 +324,52 @@ const getUsers = async (req, res) => {
     } catch (error) {
         console.error("Error retrieving users:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+};
+
+const sendEmail = async (itinerary) => {
+    try {
+        // Fetch the seller and check if user exists
+        const tourGuide = await tourGuideModel.findById(itinerary.creatorId);
+        if (!tourGuide) {
+            throw new Error('Tour guide not found');
+        }
+
+        // Add the seller's email to recipients
+        const recipients = [
+            { email: tourGuide.email },
+        ];
+
+        // Prepare the email content
+        const sender = {
+            name: 'Triptomania',
+            email: 'triptomania.app@gmail.com',
+        };
+
+        const now = new Date(Date.now());
+
+        // Extract the day, month, and year
+        const day = now.getDate(); // Day of the month (1-31)
+        const month = now.getMonth() + 1; // Month (0-11, so add 1)
+        const year = now.getFullYear(); // Full year
+
+        const emailContent = {
+            sender,
+            to: recipients,
+            templateId: 5, // Replace with your Brevo template ID
+            params: {
+                itineraryTitle: itinerary.Name,
+                itineraryDate: `${day}-${month}-${year}`,
+                itineraryId: itinerary.id,
+                currentYear: new Date().getFullYear()
+            }
+        };
+
+        // Send the email using Brevo transactional API
+        const response = await transactionalEmailApi.sendTransacEmail(emailContent);
+        console.log(response);
+    } catch (error) {
+        console.error(error);
     }
 };
 
