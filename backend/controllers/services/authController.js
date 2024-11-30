@@ -134,7 +134,8 @@ const logout = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-    const { type, id } = req.params;
+    const type = req.user.type;
+    const id = req.user._id;
 
     // Validate type
     const userModel = userCollections[type];
@@ -179,7 +180,8 @@ const forgotPassword = async (req, res) => {
 }
 
 const verifyOTP = async (req, res) => {
-    const { type, id } = req.params;
+    const type = req.user.type;
+    const id = req.user._id;
     const { otp } = req.body;
     const userModel = userCollections[type];
     if (!userModel) return res.status(400).send('Invalid user type');
@@ -204,4 +206,68 @@ const verifyOTP = async (req, res) => {
     }
 }
 
-export default { login, refreshToken, logout, forgotPassword, verifyOTP };
+async function hashPassword(password) {
+    try {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return hashedPassword;
+    } catch (error) {
+        console.error("Error hashing password:", error);
+        throw new Error('Failed to hash password');
+    }
+}
+
+const changePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword, confirmPassword } = req.body;
+        const type = req.user.type;
+        const id = req.user._id;
+
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid account ID format." });
+        }
+
+        // Check if newPassword and confirmPassword match
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: "Passwords do not match" });
+        }
+
+        // Check if newPassword meets minimum length
+        if (newPassword.length < 8) {
+            return res.status(400).json({ message: "Password must be at least 8 characters long" });
+        }
+
+        // Check if newPassword is different from oldPassword
+        if (newPassword === oldPassword) {
+            return res.status(400).json({ message: "New password must be different from the old password" });
+        }
+
+        const userModel = userCollections[type];
+
+        // Retrieve the account based on ID and type
+        let account = await userModel.findById(id);
+
+        if (!account) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        // Verify the old password
+        const isMatch = await bcrypt.compare(oldPassword, account.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect old password" });
+        }
+
+        // Hash the new password
+        const hashedPassword = await hashPassword(newPassword);
+
+        await userModel.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
+
+        res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+        console.error("Error changing password:", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+export default { login, refreshToken, logout, forgotPassword, verifyOTP, changePassword };

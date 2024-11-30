@@ -41,8 +41,7 @@ const getPreferenceTags = async (req, res) => {
 
 const editPreferenceTag = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { preferenceTagName, preferenceTagDescription } = req.body;
+        const { id, preferenceTagName, preferenceTagDescription } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid preference tag ID format." });
@@ -66,7 +65,7 @@ const editPreferenceTag = async (req, res) => {
 
 const deletePreferenceTag = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid preference tag ID format." });

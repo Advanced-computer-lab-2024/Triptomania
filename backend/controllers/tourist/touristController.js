@@ -7,6 +7,7 @@ import itineraryModel from '../../models/itinerary.js';
 import productModel from '../../models/product.js';
 import complaintModel from '../../models/complaint.js';
 import activityCategoryModel from '../../models/activityCategory.js';
+import orderModel from '../../models/order.js';
 import { amadeus, getAccessToken } from '../../config/amadeus.js';
 import axios from 'axios';
 
@@ -58,7 +59,7 @@ const getTourist = async (req, res) => {
 // Get one tourist
 
 const getOneTourist = async (req, res) => {
-  const { id } = req.params;
+  const id = req.user._id;
   try {
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -142,7 +143,7 @@ const UpdateTourist = async (req, res) => {
 
 const redeemPoints = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).send({ message: 'Invalid ID format' });
@@ -196,7 +197,7 @@ const redeemPoints = async (req, res) => {
 
 const addComment = async (req, res) => {
   const { type, comment, touristId } = req.body; // Get the type and comment from the request body
-  const { id } = req.params; // Get the ID from the URL parameter
+  const id = req.user._id;
 
   try {
     const currentDate = new Date();
@@ -289,7 +290,7 @@ const addComment = async (req, res) => {
 // Add review to a product
 const reviewProduct = async (req, res) => {
   const { review, touristId } = req.body; // Get the review from the request body
-  const { id } = req.params; // Get the product ID from the URL parameters
+  const id = req.user._id;
 
   try {
     // Find the product by ID
@@ -321,7 +322,7 @@ const reviewProduct = async (req, res) => {
 /////////////////////////////////////////////////////////////////
 export const rateTourGuide = async (req, res) => {
   const { itineraryId, rating } = req.body; // Get itineraryId and rating from request body
-  const touristId = req.params.touristId; // Get touristId from URL parameters
+  const touristId = req.user._id;
 
   try {
     // Verify if the tourist exists
@@ -383,7 +384,7 @@ export const rateTourGuide = async (req, res) => {
 const chooseCategory = async (req, res) => { //frontend will be list of categories once tourist click on 
   // specific category all details of it appears
   try {
-    const { id } = req.params;
+    const id = req.user._id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid category ID format." });
@@ -407,8 +408,8 @@ const chooseCategory = async (req, res) => { //frontend will be list of categori
 
 // Method for booking an activity
 const bookActivity = async (req, res) => {
-  const { activityId } = req.params;
-  const { _id } = req.body;
+  const { activityId } = req.body;
+  const _id = req.user._id;
 
   try {
     // Check if the activity exists
@@ -450,8 +451,8 @@ const bookActivity = async (req, res) => {
 
 
 const bookItinerary = async (req, res) => {
-  const { itineraryId } = req.params;
-  const { _id } = req.body;
+  const { itineraryId } = req.body;
+  const _id = req.user._id;
 
   try {
     // Check if the activity exists
@@ -491,7 +492,7 @@ const bookItinerary = async (req, res) => {
 };
 
 const badge = async (req, res) => {
-  const { _id } = req.params;
+  const _id = req.user._id;
 
   try {
 
@@ -537,7 +538,7 @@ const badge = async (req, res) => {
 //////////////////////////////////////////////////////////////////////
 export const rateItinerary = async (req, res) => {
   const { itineraryId, rating } = req.body;
-  const touristId = req.params.touristId;
+  const touristId = req.user._id;
 
   try {
     // Verify if the tourist (user) exists
@@ -590,7 +591,7 @@ export const rateItinerary = async (req, res) => {
 
 async function rateActivity(req, res) {
   const { activityId, rating } = req.body;
-  const touristId = req.params.touristId;
+  const touristId = req.user._id;
 
   // Check if all required fields are provided
   if (!activityId || rating === undefined || !touristId) {
@@ -653,7 +654,7 @@ async function rateActivity(req, res) {
 
 //////////////////////////////////////////////////////////////////////
 const processPayment = async (req, res) => {
-  const { _id } = req.params; // Tourist ID
+  const _id = req.user._id;
   const { itemId } = req.body; // Item ID
 
   try {
@@ -765,7 +766,7 @@ const updateBadge = async (tourist) => {
 /////////////////////////////////////////////////////////////////////////////////////////
 const rateProduct = async (req, res) => {
   const { productId, rating } = req.body; // Extract productId and rating from request body
-  const touristId = req.params.touristId; // Extract touristId from request parameters
+  const touristId = req.user._id;
 
   // Check if all required fields are provided
   if (!productId || rating === undefined || !touristId) {
@@ -821,7 +822,7 @@ const rateProduct = async (req, res) => {
 
 const fileComplaint = async (req, res) => {
   const { title, body } = req.body;
-  const { touristId } = req.params;
+  const touristId = req.user._id;
 
   console.log(touristId);
 
@@ -848,7 +849,7 @@ const fileComplaint = async (req, res) => {
 
 const viewMyComplaints = async (req, res) => {
   try {
-    const { touristId } = req.params;
+    const touristId = req.user._id;
 
     const complaints = await complaintModel.find({ touristId });
 
@@ -860,7 +861,7 @@ const viewMyComplaints = async (req, res) => {
 
 const choosePreferences = async (req, res) => {
   const { preferences } = req.body;
-  const { touristId } = req.params;
+  const touristId = req.user._id;
 
   try {
     // Verify the tourist exists
@@ -887,7 +888,7 @@ const isCancellationAllowed = (eventDate) => {
 // Cancel booking for either Activity or Itinerary
 export const cancelBooking = async (req, res) => {
   try {
-    const touristId = req.params.touristId;  // Correctly capture the touristId from the URL
+    const touristId = req.user._id;
     const { itemId } = req.body;             // Capture itemId from the request body
 
     // Validate if the touristId is a valid ObjectId
@@ -1007,7 +1008,7 @@ async function getValidAccessToken() {
 }
 
 const bookHotel = async (req, res) => {
-  const { id } = req.params;
+  const id = req.user._id;
   const { offerId, payment } = req.body;
 
   if (!offerId || !payment) {
@@ -1133,7 +1134,7 @@ const searchFlights = async (req, res) => {
 
 const getFlightDetails = async (req, res) => {
   try {
-    const { flightOfferId } = req.params; // Get flight offer ID from the URL parameters
+    const { flightOfferId } = req.body; // Get flight offer ID from the URL parameters
 
     if (!flightOfferId) {
       return res.status(400).json({ error: 'Flight offer ID is required' });
@@ -1162,7 +1163,7 @@ const getFlightDetails = async (req, res) => {
 const bookFlight = async (req, res) => {
   try {
     const { flight_offer, documents } = req.body;
-    const { id } = req.params;
+    const id = req.user._id;
     // Validate the required fields
     if (!flight_offer) {
       return res.status(400).json({ error: 'Missing required parameters for booking' });
@@ -1351,7 +1352,7 @@ const bookFlight = async (req, res) => {
 
 const bookTransportation = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const { origin, destination, travelDate, travelTime, travelType } = req.body;
 
     if (!origin || !destination || !travelDate || !travelTime || !travelType) {
@@ -1376,7 +1377,7 @@ const bookTransportation = async (req, res) => {
 
 const addProductToCart = async (req, res) => {
   try {
-    const { id } = req.params; // User ID
+    const id = req.user._id;
     const { productId, quantity } = req.body; // Product ID and Quantity
 
     if (!productId || !quantity) {
@@ -1419,7 +1420,7 @@ const addProductToCart = async (req, res) => {
 
 const removeProductFromCart = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const { productId } = req.body;
     if (!productId) {
       return res.status(400).json({ error: 'Product ID is required' });
@@ -1435,7 +1436,7 @@ const removeProductFromCart = async (req, res) => {
 
 const changeCartQuantity = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const { productId, quantity } = req.body;
     if (!productId || !quantity) {
       return res.status(400).json({ error: 'Product ID and quantity are required' });
@@ -1463,7 +1464,7 @@ const changeCartQuantity = async (req, res) => {
 
 const addDeliveryAdress = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const { address, city, state, zip } = req.body;
     if (!address || !city || !state || !zip) {
       return res.status(400).json({ error: 'Address, city, state and zip are required' });
@@ -1481,6 +1482,132 @@ const addDeliveryAdress = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+const viewOrders = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ orders: user.orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const viewOrderDetails = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    const order = await orderModel.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(200).json({ order: order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const addProductToWishlist = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const { productId } = req.body; // Product ID
+
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+
+    const product = await productModel.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Find the user
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Check if the product is already in the wishlist
+    const isAlreadyInWishlist = user.whishlist.some(
+      (item) => item.productId.toString() === productId
+    );
+
+    if (isAlreadyInWishlist) {
+      return res.status(400).json({ error: 'Product is already in the wishlist' });
+    }
+
+    // Add the product to the wishlist
+    user.whishlist.push(productId);
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Product added to wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getWishlist = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ wishlist: user.whishlist });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const getCart = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ cart: user.cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const removeProductFromWishlist = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const { productId } = req.body; // Product ID
+
+    if (!productId) {
+      return res.status(400).json({ error: 'Product ID is required' });
+    }
+
+    // Use the $pull operator to remove the product from the wishlist
+    const user = await userModel.findByIdAndUpdate(
+      id, 
+      { $pull: { whishlist: productId } }, // Pull the productId from the wishlist array
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Product removed from wishlist successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Export all functions using ES module syntax
 export default {
@@ -1515,5 +1642,11 @@ export default {
   addProductToCart,
   removeProductFromCart,
   changeCartQuantity,
-  addDeliveryAdress
+  addDeliveryAdress,
+  viewOrders,
+  viewOrderDetails,
+  addProductToWishlist,
+  getWishlist,
+  getCart,
+  removeProductFromWishlist,
 };

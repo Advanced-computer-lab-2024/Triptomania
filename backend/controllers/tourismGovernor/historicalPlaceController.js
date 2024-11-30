@@ -17,7 +17,7 @@ const getHistoricalPlaces = async (req, res) => {
 }
 
 const getHistoricalPlace = async (req, res) => {
-    const { id } = req.params;
+    const { id } = req.body;
     try {
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({
@@ -113,9 +113,8 @@ const addHistoricalPlace = async (req, res) => {
 }
 
 const editHistoricalPlace = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices } = req.body;
+    try {;
+        const { id, Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).json({
                 status: false,
@@ -138,7 +137,7 @@ const editHistoricalPlace = async (req, res) => {
 
 const deleteHistoricalPlace = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).json({
                 status: false,
@@ -159,7 +158,7 @@ const deleteHistoricalPlace = async (req, res) => {
 }
 
 const getMyHistoricalPlaces = async (req, res) => {
-    const { creatorId } = req.params; // Extract creatorId from request parameters
+    const creatorId = req.user._id;
 
     try {
         const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId });
