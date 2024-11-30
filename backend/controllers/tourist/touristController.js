@@ -1485,7 +1485,7 @@ const addDeliveryAdress = async (req, res) => {
 
 const viewOrders = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const user = await userModel.findById(id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -1499,7 +1499,7 @@ const viewOrders = async (req, res) => {
 
 const viewOrderDetails = async (req, res) => {
   try {
-    const { orderId } = req.params;
+    const { orderId } = req.body;
     const order = await orderModel.findById(orderId);
 
     if (!order) {
@@ -1514,7 +1514,7 @@ const viewOrderDetails = async (req, res) => {
 
 const addProductToWishlist = async (req, res) => {
   try {
-    const { id } = req.params; // User ID
+    const id = req.user._id;
     const { productId } = req.body; // Product ID
 
     if (!productId) {
@@ -1556,7 +1556,7 @@ const addProductToWishlist = async (req, res) => {
 
 const getWishlist = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const user = await userModel.findById(id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -1570,7 +1570,7 @@ const getWishlist = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.user._id;
     const user = await userModel.findById(id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -1584,7 +1584,7 @@ const getCart = async (req, res) => {
 
 const removeProductFromWishlist = async (req, res) => {
   try {
-    const { id } = req.params; // User ID
+    const id = req.user._id;
     const { productId } = req.body; // Product ID
 
     if (!productId) {

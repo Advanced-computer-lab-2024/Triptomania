@@ -44,7 +44,7 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
 
 const uploadPicture = async (req, res) => {
    try {
-       const { id } = req.params;
+       const { id } = req.body;
 
        // Check if a file is uploaded
        if (!req.file) {
@@ -76,9 +76,7 @@ const uploadPicture = async (req, res) => {
 
  const editProduct = async (req, res) => {
    try {
-      // Extract the product ID from the request parameters
-      const { id } = req.params;
-      const { Name,Description, Price, Seller, Quantity, Reviews, Ratings } = req.body;
+      const { id, Name,Description, Price, Seller, Quantity, Reviews, Ratings } = req.body;
 
       // Validate if the id is a valid MongoDB ObjectId
       if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -232,7 +230,7 @@ const filterProducts = async (req, res) => {
 };
 
 const toggleArchiveStatus = async (req, res) => {
-   const { id } = req.params;
+   const { id } = req.body;
 
    try {
        // Validate the product ID

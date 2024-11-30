@@ -156,7 +156,7 @@ const checkoutCart = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     try {
-        const { orderId } = req.params;
+        const { orderId } = req.body;
 
         const order = await orderModel.findById(orderId);
         if (!order) {

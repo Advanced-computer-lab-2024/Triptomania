@@ -42,7 +42,7 @@ router.get('/getHistoricalPlaces', (req, res, next) => authMiddleware.verifyToke
  *       200:
  *         description: Details of the historical place
  */
-router.get('/getHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.getHistoricalPlace);
+router.get('/getHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.getHistoricalPlace);
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.post('/addHistoricalPlace', (req, res, next) => authMiddleware.verifyToke
  *       200:
  *         description: Historical place updated successfully
  */
-router.put('/editHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.editHistoricalPlace);
+router.put('/editHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.editHistoricalPlace);
 
 /**
  * @swagger
@@ -92,7 +92,7 @@ router.put('/editHistoricalPlace/:id', (req, res, next) => authMiddleware.verify
  *       200:
  *         description: List of historical places created by the user
  */
-router.get('/getMyHistoricalPlaces/:creatorId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.getMyHistoricalPlaces);
+router.get('/getMyHistoricalPlaces', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.getMyHistoricalPlaces);
 
 /**
  * @swagger
@@ -111,7 +111,7 @@ router.get('/getMyHistoricalPlaces/:creatorId', (req, res, next) => authMiddlewa
  *       200:
  *         description: Historical place deleted successfully
  */
-router.delete('/deleteHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.deleteHistoricalPlace);
+router.delete('/deleteHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.deleteHistoricalPlace);
 
 /**
  * @swagger
@@ -130,7 +130,7 @@ router.delete('/deleteHistoricalPlace/:id', (req, res, next) => authMiddleware.v
  *       200:
  *         description: Tag added to historical place successfully
  */
-router.put('/addTagToHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), tourismGovernor.addTagToHistoricalPlace);
+router.put('/addTagToHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), tourismGovernor.addTagToHistoricalPlace);
 
 /**
  * @swagger
@@ -173,7 +173,7 @@ router.get('/getTags', (req, res, next) => authMiddleware.verifyToken(req, res, 
  *       200:
  *         description: Tag deleted successfully
  */
-router.delete('/deleteTag/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), tourismGovernor.deleteTag);
+router.delete('/deleteTag', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), tourismGovernor.deleteTag);
 
 /**
  * @swagger
@@ -186,8 +186,6 @@ router.delete('/deleteTag/:id', (req, res, next) => authMiddleware.verifyToken(r
  *         description: Tag updated successfully
  */
 router.put('/updateTag', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), tourismGovernor.updateTag);
-
-router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), sharedController.changePassword);
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), sharedController.requestAccountDeletion);
 
