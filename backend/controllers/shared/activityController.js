@@ -169,7 +169,7 @@ const sortActivities = async (req, res) => {
 
 const getActivity = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid activity ID format." });

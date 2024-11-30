@@ -21,4 +21,10 @@ router.get('/itineraries/filterItineraries', itineraryController.filterItinerari
 
 router.get('/historicalPlaces/filterHistoricalPlaces', filterController.filterByTag);
 
+router.get('/activities/getActivity/:id', activityController.getActivity);
+
+router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
+
+router.get('/historicalPlaces/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
+
 export default router;

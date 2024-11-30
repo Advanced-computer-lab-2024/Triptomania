@@ -17,7 +17,7 @@ const getHistoricalPlaces = async (req, res) => {
 }
 
 const getHistoricalPlace = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({

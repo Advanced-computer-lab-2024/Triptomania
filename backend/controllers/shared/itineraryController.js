@@ -46,7 +46,7 @@ const viewItineraries = async (req, res) => {
 
 
 const getItinerary = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({
