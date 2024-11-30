@@ -441,4 +441,8 @@ router.post('/wishlist/addProduct', (req, res, next) => authMiddleware.verifyTok
 
 router.post('/wishlist/removeProduct', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.removeProductFromWishlist);
 
+router.post('/events/payForEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.payForEvent);
+
+router.post('/events/cancelEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelEvent);
+
 export default router;

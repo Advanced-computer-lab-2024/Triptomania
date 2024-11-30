@@ -444,7 +444,7 @@ const payForEvent = async (req, res) => {
 
         let message = "";
         let paymentIntent;
-        let originalAmount = event.Price;
+        let originalAmount = event.price;
         let discountAmount = originalAmount * discount / 100;
         let totalAmount = originalAmount - discountAmount;
 
@@ -475,6 +475,7 @@ const payForEvent = async (req, res) => {
         let eventMap;
         if (eventType === 'activity') {
             eventMap = {
+                name: event.name,
                 eventType: eventType,
                 eventId: eventId,
                 originalPrice: originalAmount,
@@ -487,6 +488,7 @@ const payForEvent = async (req, res) => {
             await user.save();
         } else if (eventType === 'itinerary') {
             eventMap = {
+                name: event.Name,
                 eventType: eventType,
                 eventId: eventId,
                 originalPrice: originalAmount,
@@ -513,8 +515,8 @@ const payForEvent = async (req, res) => {
             console.error('Error sending invoice:', error);
         });
     } catch (error) {
-        console.error('Error processing payment:', error.message);
-        res.status(500).json({ error: error.message });
+        console.error('Error processing payment:', error);
+        res.status(500).json({ error: error });
     }
 }
 
@@ -555,10 +557,11 @@ const sendEventInvoice = async (event, userId, type) => {
             params: {
                 firstName: user.firstName,
                 lastName: user.lastName,
+                eventName: event.name,
                 bookingType: type,
                 bookingDate: `${day}-${month}-${year}`,
                 currency: 'USD',
-                originalPrice: event.originalAmount,
+                originalPrice: event.originalPrice,
                 promoCode: promo ? promo.code : null,
                 discountAmount: event.discountAmount,
                 finalPrice: event.finalPrice,
@@ -601,26 +604,33 @@ const cancelEvent = async (req, res) => {
         }
 
         let refundAmount = 0;
+        let eventMap = null;
 
         if (eventType === 'activity') {
-            const activityIndex = user.activities.findIndex(a => a.activityId === eventId);
+            const activityIndex = user.activities.findIndex(a => a.eventId === eventId);
 
             if (activityIndex === -1) {
                 return res.status(400).json({ error: 'This activity is not in your bookings' });
             }
 
-            refundAmount = user.activities[activityIndex].finalPrice;
+            // Get the activity object before removing it
+            eventMap = user.activities[activityIndex];
+
+            refundAmount = eventMap.finalPrice;
 
             // Remove the activity from user's activities
             user.activities.splice(activityIndex, 1);
         } else if (eventType === 'itinerary') {
-            const itineraryIndex = user.itineraries.findIndex(i => i.itineraryId === eventId);
+            const itineraryIndex = user.itineraries.findIndex(i => i.eventId === eventId);
 
             if (itineraryIndex === -1) {
                 return res.status(400).json({ error: 'This itinerary is not in your bookings' });
             }
 
-            refundAmount = user.itineraries[itineraryIndex].finalPrice;
+            // Get the itinerary object before removing it
+            eventMap = user.itineraries[itineraryIndex];
+
+            refundAmount = eventMap.finalPrice;
 
             // Remove the itinerary from user's itineraries
             user.itineraries.splice(itineraryIndex, 1);
@@ -636,7 +646,13 @@ const cancelEvent = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Event booking canceled successfully'
+            message: 'Event booking canceled successfully',
+            eventDetails: eventMap, // Return the removed object
+            refundAmount
+        });
+
+        await sendEventCancellation(eventMap, userId, eventType).catch((error) => {
+            console.error('Error sending invoice:', error);
         });
     } catch (error) {
         console.error('Error unbooking event:', error.message);
@@ -644,17 +660,12 @@ const cancelEvent = async (req, res) => {
     }
 };
 
+
 const sendEventCancellation = async (event, userId, type) => {
     try {
         const user = await touristModel.findById(userId);
         if (!user) {
             throw new Error('User not found');
-        }
-
-        let promo = null;
-
-        if (event.promoCode !== null) {
-            promo = await promoCodeModel.findById(event.promoCode);
         }
 
         const sender = {
@@ -677,17 +688,17 @@ const sendEventCancellation = async (event, userId, type) => {
         const emailContent = {
             sender,
             to: recipients,
-            templateId: 6, // Replace with your Brevo template ID
+            templateId: 7, // Replace with your Brevo template ID
             params: {
                 firstName: user.firstName,
                 lastName: user.lastName,
+                eventType: type,
+                eventName: event.name,
                 bookingType: type,
                 bookingDate: `${day}-${month}-${year}`,
                 currency: 'USD',
-                originalPrice: event.originalAmount,
-                promoCode: promo ? promo.code : null,
-                discountAmount: event.discountAmount,
-                finalPrice: event.finalPrice,
+                originalPrice: event.originalPrice,
+                refundedAmount: event.finalPrice,
                 currentYear: new Date().getFullYear()
             }
         };
