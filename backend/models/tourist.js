@@ -114,7 +114,13 @@ const touristSchema = new Schema({
   ],
   fcmToken: {
       type: String
-  }
+  },
+  itineraries: [
+    Object
+  ],
+  activities: [
+    Object
+  ],
 }, { timestamps: true });
 
 touristSchema.pre('save', async function (next) {

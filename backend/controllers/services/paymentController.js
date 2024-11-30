@@ -145,7 +145,7 @@ const checkoutCart = async (req, res) => {
             ...(paymentIntent && { paymentIntent })
         });
 
-        await sendInvoice(tempOrder).catch((error) => {
+        await sendProductInvoice(tempOrder).catch((error) => {
             console.error('Error sending invoice:', error);
         });
     } catch (error) {
@@ -211,7 +211,7 @@ const cancelOrder = async (req, res) => {
 
 }
 
-const sendInvoice = async (order) => {
+const sendProductInvoice = async (order) => {
     try {
         const user = await touristModel.findById(order.touristId);
         if (!user) {
@@ -397,6 +397,16 @@ const notifyOutOfStock = async (product) => {
         console.error(error);
     }
 };
+
+const payForEvent = async (req, res) => {
+    try {
+        const { userId, paymentMethod, eventType, eventId, promoCode } = req.body;
+        
+    } catch (error) {
+        console.error('Error processing payment:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+}
 
 export default {
     checkoutCart,
