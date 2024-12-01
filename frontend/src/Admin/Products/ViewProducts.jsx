@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import './ViewProducts.css';
 import { Header } from '../../components/Header2';
 import { DollarSign, Star, Tag, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,8 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
+import Loading from "@/components/Loading"; // Import the Loading component
+import './ViewProducts.css';
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);
@@ -18,6 +19,7 @@ const ViewProducts = () => {
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sortOrder, setSortOrder] = useState('high');
+  const [loading, setLoading] = useState(true); // Track loading state
   const navigate = useNavigate();
 
   const handleAddToCartClick = (productId) => {
@@ -34,20 +36,22 @@ const ViewProducts = () => {
       const response = await axiosInstance.get('http://localhost:5000/api/admin/product/viewProducts');
       setAllProducts(response.data);
       setProducts(response.data);
+      setLoading(false);  // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching all products:', error);
+      setLoading(false);  // Ensure loading is false even on error
     }
   };
 
   const fetchFilteredProducts = async () => {
     try {
       const params = {};
-      
+
       if (priceRange[0] > 0 || priceRange[1] < 1000) {
         params.minPrice = priceRange[0];
         params.maxPrice = priceRange[1];
       }
-      
+
       if (selectedRating) params.rating = selectedRating;
       if (selectedCategory) params.category = selectedCategory;
 
@@ -85,13 +89,21 @@ const ViewProducts = () => {
     fetchSortedProducts(value);
   };
 
+  const isBase64 = (str) => {
+    try {
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
+  };
+
   return (
     <div className="view-products">
       <Header />
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
-          
+
           <div className="mb-4">
             <Label>Price Range</Label>
             <Slider
@@ -135,8 +147,6 @@ const ViewProducts = () => {
             </RadioGroup>
           </div>
 
-         
-
           <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
         </aside>
         <main className="products">
@@ -153,45 +163,54 @@ const ViewProducts = () => {
               Search
             </Button>
           </div>
-          {products.length > 0 ? (
-            products.map((product) => (
-              <div className="product-card" key={product._id}>
-                <div className="product-image-container">
-                  <img
-                    src={product.image || 'https://via.placeholder.com/300x200'}
-                    alt={product.Name}
-                    className="product-image"
-                  />
-                </div>
-                <div className="product-details">
-                  <div className="product-header">
-                    <h2 className="product-title">{product.Name}</h2>
-                    <div className="product-rating">
-                      <Star className="icon" />
-                      <span>{product.averageRating || 'N/A'}</span>
+
+          {loading ? (
+            <Loading />  // Show loading while fetching data
+          ) : (
+            products.length > 0 ? (
+              products.map((product) => (
+                <div className="product-card" key={product._id}>
+                  <div className="product-image-container">
+                    <img
+                      src={
+                        isBase64(product.Picture)
+                          ? `data:image/jpeg;base64,${product.Picture}`
+                          : product.image || 'https://via.placeholder.com/300x200'
+                      }
+                      alt={product.Name}
+                      className="product-image"
+                    />
+                  </div>
+                  <div className="product-details">
+                    <div className="product-header">
+                      <h2 className="product-title">{product.Name}</h2>
+                      <div className="product-rating">
+                        <Star className="icon" />
+                        <span>{product.averageRating || 'N/A'}</span>
+                      </div>
+                    </div>
+                    <p className="product-description">{product.description}</p>
+                    <div className="product-info">
+                      <p>
+                        <Tag className="icon" />
+                        {product.category || 'N/A'}
+                      </p>
+                    </div>
+                    <div className="product-footer">
+                      <p className="product-price">
+                        <DollarSign className="icon" />
+                        {product.Price.toFixed(2)} USD
+                      </p>
+                      <Button className="add-to-cart-button" onClick={() => handleAddToCartClick(product._id)}>
+                        Add to Cart
+                      </Button>
                     </div>
                   </div>
-                  <p className="product-description">{product.description}</p>
-                  <div className="product-info">
-                    <p>
-                      <Tag className="icon" />
-                      {product.category || 'N/A'}
-                    </p>
-                  </div>
-                  <div className="product-footer">
-                    <p className="product-price">
-                      <DollarSign className="icon" />
-                      {product.Price.toFixed(2)} USD
-                    </p>
-                    <Button className="add-to-cart-button" onClick={() => handleAddToCartClick(product._id)}>
-                      Add to Cart
-                    </Button>
-                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p>No products found.</p>
+              ))
+            ) : (
+              <p>No products found.</p>
+            )
           )}
         </main>
       </div>
@@ -200,4 +219,3 @@ const ViewProducts = () => {
 };
 
 export default ViewProducts;
-
