@@ -37,7 +37,7 @@ router.post('/addAdvertiser', advertiserController.createAdvertiser);
  *       200:
  *         description: Advertiser updated successfully
  */
-router.put('/updateAdvertiser', advertiserController.updateAdvertiser);
+router.put('/updateAdvertiser', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.updateAdvertiser);
 
 /**
  * @swagger
@@ -132,9 +132,9 @@ router.delete('/activity/deleteActivity', (req, res, next) => authMiddleware.ver
  */
 router.get('/activity/viewMyActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewMyActivities);
 
-router.put('/uploadDocument', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadDocument', upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/uploadProfilePicture', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), upload.single('file'), sharedController.uploadProfilePicture);
+router.put('/uploadProfilePicture', upload.single('file'), sharedController.uploadProfilePicture);
 
 router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.acceptTerms);
 

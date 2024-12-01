@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Switch } from "@/components/ui/switch"
-import './AddActivity.css';
+import './addActivity.css';
 
 const AddActivity = () => {
     const [activity, setActivity] = useState({
