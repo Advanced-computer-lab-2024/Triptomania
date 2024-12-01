@@ -21,7 +21,7 @@ const LoginPage = () => {
       });
       alert('Login successful!');
       console.log('User data:', response.data);
-      navigate('/admin/products/viewproducts');
+      navigate('/advertiser/addActivity');
     } catch (err) {
       setError('Invalid login credentials. Please try again.');
     }
@@ -68,7 +68,7 @@ const LoginPage = () => {
               </select>
               <p
                 className={styles['forgot-password']}
-                onClick={() => navigate('/reset-password')}
+                onClick={() => navigate('/auth/requestOtp')}
               >
                 Forgot Password?
               </p>
