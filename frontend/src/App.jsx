@@ -21,7 +21,7 @@ import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
 import SellerSignUp from './Pages/SellerSignUp.jsx';
 import FileComplaint from './Tourist/Complaints/fileComplaint.jsx'
-
+import ViewProductsTourist from './Tourist/Products/ViewProducts.jsx'
 const App = () => {
   return (
     <Routes>
@@ -46,6 +46,8 @@ const App = () => {
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
+      <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
+
     </Routes>
   );
 };
