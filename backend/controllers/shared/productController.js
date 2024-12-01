@@ -1,6 +1,5 @@
 // admin.js (Using ES Modules)
 import productModel from '../../models/product.js';
-import multer from 'multer';
 import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId validation
 
  const addProduct = async (req, res) => {
@@ -280,5 +279,6 @@ export default{
    filterProducts,
    sortProducts,
    uploadPicture,
-   toggleArchiveStatus
+   toggleArchiveStatus,
+   getProductSales
 }

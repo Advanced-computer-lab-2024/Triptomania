@@ -167,11 +167,12 @@ router.put('/uploadProfilePicture', upload.single('file'), sharedController.uplo
 
 router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.acceptTerms);
 
-
 router.patch('/product/archive', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.toggleArchiveStatus); //minus swagger
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.requestAccountDeletion);
 
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.saveFCMToken);
+
+router.get('/product/getProductSales', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.getProductSales);
 
 export default router;

@@ -95,6 +95,9 @@ const itinerarySchema = new Schema({
         type: Boolean,
         default: false,
     },
+    sales: [
+      Object
+    ]
 },  { timestamps: true });
 const Itinerary = mongoose.model('Itinerary', itinerarySchema);
 export default Itinerary;

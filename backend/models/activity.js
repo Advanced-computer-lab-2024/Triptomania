@@ -61,6 +61,9 @@ const activitySchema = new Schema({
         type: [String],
     default: [],
   },
+  sales: [
+    Object
+  ]
 }, { timestamps: true });
 
 const Activity = mongoose.model('Activity', activitySchema);

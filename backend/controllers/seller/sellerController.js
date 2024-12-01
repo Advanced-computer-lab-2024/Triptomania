@@ -40,6 +40,7 @@ const CreateSeller = async (req, res) => {
     res.status(201).send(seller);
   } catch (error) {
     console.log(error);
+    res.status(500).send({ message: 'Error creating seller' });
   }
 };
 
