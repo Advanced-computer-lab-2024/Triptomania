@@ -21,7 +21,7 @@ const LoginPage = () => {
       });
       alert('Login successful!');
       console.log('User data:', response.data);
-      navigate('/viewProducts');
+      navigate('/advertiser/activities');
     } catch (err) {
       setError('Invalid login credentials. Please try again.');
     }
