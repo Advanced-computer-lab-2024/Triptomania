@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance';
 import './ViewProducts.css';
 import { Header } from '../../components/Header2';
 import { DollarSign, Star, Tag, Search } from 'lucide-react';
@@ -31,7 +31,7 @@ const ViewProducts = () => {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/product/viewProducts');
+      const response = await axiosInstance.get('http://localhost:5000/api/admin/product/viewProducts');
       setAllProducts(response.data);
       setProducts(response.data);
     } catch (error) {
@@ -51,7 +51,7 @@ const ViewProducts = () => {
       if (selectedRating) params.rating = selectedRating;
       if (selectedCategory) params.category = selectedCategory;
 
-      const response = await axios.get('http://localhost:5000/api/admin/product/filterProducts', { params });
+      const response = await axiosInstance.get('http://localhost:5000/api/admin/product/filterProducts', { params });
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching filtered products:', error);
@@ -60,7 +60,7 @@ const ViewProducts = () => {
 
   const fetchSortedProducts = async (order) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/admin/product/sortProducts`);
+      const response = await axiosInstance.get(`http://localhost:5000/api/admin/product/sortProducts`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching sorted products:', error);
@@ -69,7 +69,7 @@ const ViewProducts = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/admin/product/searchProducts`);
+      const response = await axiosInstance.get(`http://localhost:5000/api/admin/product/searchProducts`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error searching products:', error);

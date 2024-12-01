@@ -62,15 +62,18 @@ const login = async (req, res) => {
 
         // Set tokens as cookies
         res.cookie('token', token, {
-            httpOnly: true, // Makes cookie inaccessible to JavaScript on the client-side
-            secure: process.env.NODE_ENV === 'production', // Ensures cookie is only sent over HTTPS in production
+            httpOnly: true,
+            secure: false,
             maxAge: 2 * 60 * 60 * 1000, // 2 hours
+            sameSite: 'lax', // For cross-origin cookies
         });
+        
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            sameSite: 'lax', // For cross-origin cookies
         });
 
         res.status(200).json({ message: "Login successful" });

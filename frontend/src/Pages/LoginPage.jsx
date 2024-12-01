@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance';
 import '../index.css';
 import styles from './login.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axiosInstance.post('http://localhost:5000/api/auth/login', {
         username,
         password,
         type, 
