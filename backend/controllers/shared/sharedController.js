@@ -5,7 +5,6 @@ import tourismGovernorModel from '../../models/tourismGovernor.js';
 import sellerModel from '../../models/seller.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
-import bcrypt from 'bcryptjs';
 import firebase from '../../config/firebase.js';
 import { v4 as uuidv4 } from 'uuid';
 import { fileTypeFromBuffer } from 'file-type';
@@ -19,98 +18,10 @@ const userCollections = {
     tourist: touristModel,
 };
 
-async function hashPassword(password) {
-    try {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        return hashedPassword;
-    } catch (error) {
-        console.error("Error hashing password:", error);
-        throw new Error('Failed to hash password');
-    }
-}
-
-const changePassword = async (req, res) => {
-    try {
-        const { oldPassword, newPassword, confirmPassword } = req.body;
-        const { id, type } = req.params;
-
-        // Validate if the ID is a valid MongoDB ObjectId
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid account ID format." });
-        }
-
-        // Check if newPassword and confirmPassword match
-        if (newPassword !== confirmPassword) {
-            return res.status(400).json({ message: "Passwords do not match" });
-        }
-
-        // Check if newPassword meets minimum length
-        if (newPassword.length < 8) {
-            return res.status(400).json({ message: "Password must be at least 8 characters long" });
-        }
-
-        // Check if newPassword is different from oldPassword
-        if (newPassword === oldPassword) {
-            return res.status(400).json({ message: "New password must be different from the old password" });
-        }
-
-        // Define a variable to hold the user account
-        let account;
-        let model;
-
-        // Select the appropriate model based on the type
-        switch (type) {
-            case "tourist":
-                model = touristModel;
-                break;
-            case "tourGuide":
-                model = tourGuideModel;
-                break;
-            case "seller":
-                model = sellerModel;
-                break;
-            case "advertiser":
-                model = advertiserModel;
-                break;
-            case "tourismGovernor":
-                model = tourismGovernorModel;
-                break;
-            case "admin":
-                model = adminModel;
-                break;
-            default:
-                return res.status(400).json({ message: "Invalid type" });
-        }
-
-        // Retrieve the account based on ID and type
-        account = await model.findById(id);
-
-        if (!account) {
-            return res.status(404).json({ message: "Account not found" });
-        }
-
-        // Verify the old password
-        const isMatch = await bcrypt.compare(oldPassword, account.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Incorrect old password" });
-        }
-
-        // Hash the new password
-        const hashedPassword = await hashPassword(newPassword);
-
-        await model.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
-
-        res.status(200).json({ message: "Password changed successfully" });
-    } catch (error) {
-        console.error("Error changing password:", error);
-        res.status(500).json({ message: "Something went wrong" });
-    }
-}
-
 const uploadDocuments = async (req, res) => {
     try {
-        const { id, type } = req.params;
+        const type = req.user.type;
+        const id = req.user._id;
         const file = req.file; // Get file from request
 
         if (!file) {
@@ -162,7 +73,8 @@ const uploadDocuments = async (req, res) => {
 
 const uploadProfilePicture = async (req, res) => {
     try {
-        const { id, type } = req.params;
+        const type = req.user.type;
+        const id = req.user._id;
         const file = req.file; // Get file from request
 
         if (!file) {
@@ -253,7 +165,8 @@ async function upload(fileBuffer, fileName, type) {
 
 const acceptUser = async (req, res) => {
     try {
-        const { id, type } = req.params;
+        const type = req.user.type;
+        const id = req.user._id;
 
         // Map user type to the corresponding model
         const userModels = {
@@ -292,7 +205,8 @@ const acceptUser = async (req, res) => {
 
 const rejectUser = async (req, res) => {
     try {
-        const { id, type } = req.params;
+        const type = req.user.type;
+        const id = req.user._id;
 
         // Map user type to the corresponding model
         const userModels = {
@@ -362,7 +276,8 @@ const getPendingUsers = async (req, res) => {
 const acceptTerms = async (req, res) => {
     try {
         // Extract id and type from the route parameters
-        const { id, type } = req.params;
+        const type = req.user.type;
+        const id = req.user._id;
 
         // Log the ID and type to verify the values are coming through correctly
         console.log(`Received ID: ${id}`);
@@ -481,28 +396,30 @@ const requestAccountDeletion = async (req, res) => {
 
 const saveFCMToken = async (req, res) => {
     try {
-        const { userId, type, token } = req.body;
-        
+        const type = req.user.type;
+        const userId = req.user._id;
+
+        const { token } = req.body;
+
         const userModel = userCollections[type];
 
         const user = await userModel.findById(userId);
         if (!user) {
-            return res.status(404).json({error: 'User not found'});
+            return res.status(404).json({ error: 'User not found' });
         }
 
         user.fcmToken = token;
         await user.save();
 
-        res.status(200).json({message: 'Token saved successfully'});
+        res.status(200).json({ message: 'Token saved successfully' });
 
     } catch (error) {
         console.error("Error saving token:", error);
-        res.status(500).json({message: 'Something went wrong'});
+        res.status(500).json({ message: 'Something went wrong' });
     }
 };
 
 export default {
-    changePassword,
     uploadDocuments,
     uploadProfilePicture,
     acceptUser,

@@ -5,17 +5,15 @@ import Tag from '../../models/tag.js';
 // Function to add tags to an existing historical place
 export const addTagToHistoricalPlace = async (req, res) => {
     try {
-        const { id } = req.params; // Historical place ID
-        const trimmedId = id.trim(); // Trim whitespace/newline characters
-        const { newTagId } = req.body; // Tag ID to be searched
+        const { id, newTagId } = req.body; // Tag ID to be searched
 
         // Validate ObjectId format
-        if (!mongoose.isValidObjectId(trimmedId)) {
+        if (!mongoose.isValidObjectId(id)) {
             return res.status(400).json({ message: 'Invalid historical place ID' });
         }
 
         // Find the historical place by its ID
-        const historicalPlace = await HistoricalPlace.findById(trimmedId);
+        const historicalPlace = await HistoricalPlace.findById(id);
         if (!historicalPlace) {
             return res.status(404).json({
                 message: 'Historical place not found'
@@ -87,7 +85,7 @@ export const addTag = async (req, res) => {
 // Function to get all tags or a specific tag
 export const getTags = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         // If an ID is provided, fetch that specific tag
         if (id) {
@@ -112,8 +110,7 @@ export const getTags = async (req, res) => {
 // Function to update an existing tag
 export const updateTag = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { name } = req.body;
+        const { id, name } = req.body;
 
         // Check that the name is provided
         if (!name) {
@@ -146,7 +143,7 @@ export const updateTag = async (req, res) => {
     // Function to delete a tag
     export const deleteTag = async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.body;
     
             // Find the tag by its ID
             const tag = await Tag.findById(id);

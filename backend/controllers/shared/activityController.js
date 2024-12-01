@@ -43,8 +43,7 @@ const getCategories = async (req, res) => {
 
 const editCategory = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { categoryName, categoryDescription } = req.body;
+        const { id, categoryName, categoryDescription } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid category ID format." });
@@ -68,7 +67,7 @@ const editCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid category ID format." });
@@ -168,23 +167,6 @@ const sortActivities = async (req, res) => {
   }
 };
 
-const getMyActivities = async (req, res) => {
-    try {
-        const { userId } = req.params;
-    
-        const activities = await activityModel.find({ userId });
-    
-        if (activities.length === 0) {
-            return res.status(404).json({ message: 'No activities found for this user.' });
-        }
-    
-        res.status(200).json(activities);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error fetching activities', error: error.message });
-    }
-}
-
 const getActivity = async (req, res) => {
     try {
         const { id } = req.params;
@@ -214,6 +196,5 @@ export default {
     filterActivities,
     sortActivities,
     viewActivities,
-    getMyActivities,
     getActivity
 }

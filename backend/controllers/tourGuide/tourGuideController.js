@@ -111,7 +111,7 @@ export const addTour = async (req, res) => {
         return res.status(400).json({ message: "Price must be a positive number." });
      }
 
-     const newTour = new tourGuideModel({
+     const newTour = new TourGuideModel({
         activities,
         locationsToVisit,
         timeline,
@@ -135,7 +135,7 @@ export const addTour = async (req, res) => {
 
 export const getTours = async (req, res) => {
   try {
-     const tours = await tourGuideModel.find().sort({ createdAt: -1 }); 
+     const tours = await TourGuideModel.find().sort({ createdAt: -1 }); 
      res.status(200).json(tours);
   } catch (error) {
      res.status(500).json({ message: "Error fetching tours", error: error.message });
@@ -144,8 +144,7 @@ export const getTours = async (req, res) => {
 
 export const editTour = async (req, res) => {
   try {
-     const { id } = req.params;
-     const { activities, locationsToVisit, timeline, duration, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation } = req.body;
+     const { id, activities, locationsToVisit, timeline, duration, language, price, availableDates, availableTimes, accessibility, pickUpLocation, dropOffLocation } = req.body;
 
      if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: "Invalid tour ID format." });
@@ -155,7 +154,7 @@ export const editTour = async (req, res) => {
         return res.status(400).json({ message: "At least one field must be provided for update." });
      }
 
-     const updatedTour = await tourGuideModel.findOneAndUpdate(
+     const updatedTour = await TourGuideModel.findOneAndUpdate(
         { _id: id }, 
         {
            $set: {
@@ -187,13 +186,13 @@ export const editTour = async (req, res) => {
 
 export const deleteTour = async (req, res) => {
   try {
-     const { id } = req.params;
+     const { id } = req.body;
 
      if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: "Invalid tour ID format." });
      }
 
-     const deletedTour = await tourGuideModel.findByIdAndDelete(id);
+     const deletedTour = await TourGuideModel.findByIdAndDelete(id);
 
      if (!deletedTour) {
         return res.status(404).json({ message: "Tour not found" });

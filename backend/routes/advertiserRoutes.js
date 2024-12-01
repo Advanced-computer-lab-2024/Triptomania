@@ -80,7 +80,7 @@ router.post('/activity/addActivity', (req, res, next) => authMiddleware.verifyTo
  *       200:
  *         description: Activity edited successfully
  */
-router.put('/activity/editActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.editActivity);
+router.put('/activity/editActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.editActivity);
 
 /**
  * @swagger
@@ -111,7 +111,7 @@ router.get('/activity/viewActivities', (req, res, next) => authMiddleware.verify
  *       200:
  *         description: Activity deleted successfully
  */
-router.delete('/activity/deleteActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.deleteActvivty);
+router.delete('/activity/deleteActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.deleteActvivty);
 
 /**
  * @swagger
@@ -130,16 +130,16 @@ router.delete('/activity/deleteActivity/:id', (req, res, next) => authMiddleware
  *       200:
  *         description: List of activities created by the advertiser
  */
-router.get('/activity/viewMyActivities/:creatorId', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewMyActivities);
+router.get('/activity/viewMyActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewMyActivities);
 
-router.put('/changePassword/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.changePassword);
+router.put('/uploadDocument', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/uploadDocument/:id/:type', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadProfilePicture', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), upload.single('file'), sharedController.uploadProfilePicture);
 
-router.put('/accept-terms/:type/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.acceptTerms);
+router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.acceptTerms);
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.requestAccountDeletion);
 
-router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.saveFCMToken);
 
 export default router;

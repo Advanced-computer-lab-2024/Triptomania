@@ -28,7 +28,7 @@ const CreateSeller = async (req, res) => {
 
     // Create new seller
     const seller = await SellerModel.create({
-      firstName, 
+      firstName,
       lastName,
       username,
       email,
@@ -50,7 +50,7 @@ const CreateSeller = async (req, res) => {
 const getOneSeller = async (req, res) => {
   try {
     //const {  username, email, password, mobile, nationality,job_Student } = req.body;
-    const seller = await SellerModel.find({username});
+    const seller = await SellerModel.find({ username });
     return res.status(200).send(seller);
   } catch (error) {
     console.log(error);
@@ -90,7 +90,7 @@ const updateSeller = async (req, res) => {
     // Update seller data
     const seller = await SellerModel.findOneAndUpdate(
       { username }, // Find by username
-      updateData , // Update data
+      updateData, // Update data
       { new: true } // Return the updated document
     );
 
@@ -106,21 +106,21 @@ const updateSeller = async (req, res) => {
 
 const viewProducts = async (req, res) => {
   try {
-     const {id} = req.params;
+    const id = req.user._id;
 
-     //filter by the seller's ID
-     const products = await productModel.find({ 
-        Seller: id, // Filter products added by the logged-in seller
-     });
+    //filter by the seller's ID
+    const products = await productModel.find({
+      Seller: id, // Filter products added by the logged-in seller
+    });
 
-     res.status(200).json(products);
+    res.status(200).json(products);
   } catch (error) {
-     console.log(error);
-     res.status(500).json({ message: 'Error retrieving products', error });
+    console.log(error);
+    res.status(500).json({ message: 'Error retrieving products', error });
   }
 };
 
 /////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateSeller, getSeller, updateSeller, getOneSeller,viewProducts};
+export default { CreateSeller, getSeller, updateSeller, getOneSeller, viewProducts };
