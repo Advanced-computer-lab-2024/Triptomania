@@ -4,6 +4,7 @@ import LoginPage from './Pages/LoginPage'; // LoginPage component
 import ResetPassword from './components/ResetPassword'; // ResetPassword component
 import LandingPage from './Pages/LandingPage';
 import ViewActivities from './Tourist/Activities/ViewActivities';
+import TouristHomeScreen from './Tourist/TouristHomeScreen';
 
 import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
 import ActivityDetails from './Guest/Details/ActivityDetails';
@@ -19,10 +20,11 @@ import GetHotels from './Tourist/HotelBooking/GetHotels'
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
+      {/*<Route path="/" element={<LandingPage />} />*/}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/activities" element={<ViewActivities />} />
+      <Route path="/" element={<TouristHomeScreen />} />
 
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
