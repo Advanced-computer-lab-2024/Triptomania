@@ -21,6 +21,8 @@ import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
 import SellerSignUp from './Pages/SellerSignUp.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
+import FileComplaint from './Tourist/Complaints/fileComplaint.jsx'
+import ViewProductsTourist from './Tourist/Products/ViewProducts.jsx'
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
@@ -51,6 +53,8 @@ const App = () => {
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
+      <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
+      <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />

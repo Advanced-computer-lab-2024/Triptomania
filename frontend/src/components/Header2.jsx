@@ -16,18 +16,18 @@ export function Header() {
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/" className="brand">
+            <a href="/tourist/home" className="brand">
               TripTomania
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/" className="nav-link">Home</a>
+            <a href="/tourist/home" className="nav-link">Home</a>
             <a href="/activities" className="nav-link">Activities</a>
             <a href="/itineraries" className="nav-link">Itineraries</a>
             <a href="/historical-places" className="nav-link">Historical Places</a>
-            <a href="/products" className="nav-link">Products</a>
+            <a href="/tourist/products/viewproducts" className="nav-link">Products</a>
             <a href="/flights" className="nav-link">Flights</a>
-            <a href="/hotels" className="nav-link">Hotels</a>
+            <a href="/tourist/hotelBooking/getHotels" className="nav-link">Hotels</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/notifications" className="icon-link">
