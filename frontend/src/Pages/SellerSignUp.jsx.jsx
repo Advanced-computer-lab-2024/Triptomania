@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './SellerSignUp.css'; // Use consistent styling
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '@/axiosInstance';
 
 const SellerSignUp = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const SellerSignUp = () => {
       console.log('Sending seller signup data:', formData);
 
       // Ensure no extra headers are sent
-      const response = await axios.post(
-        'http://localhost:5000/api/seller/createSeller',
+      const response = await axiosInstance.post(
+        '/api/seller/addSeller',
         formData,
         {
           headers: { 'Content-Type': 'application/json' }, // Ensure only necessary headers are included

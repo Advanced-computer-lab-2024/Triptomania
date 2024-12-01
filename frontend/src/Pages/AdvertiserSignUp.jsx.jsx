@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance.js';
 import './AdvertiserSignUp.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const AdvertiserSignUp = () => {
 
     try {
       console.log('Sending advertiser signup data:', formData);
-      const response = await axios.post('http://localhost:5000/api/advertiser/addAdvertiser', formData);
+      const response = await axiosInstance.post('/api/advertiser/addAdvertiser', formData);
 
       console.log('Signup response:', response);
       setSuccess(true); // Display success message

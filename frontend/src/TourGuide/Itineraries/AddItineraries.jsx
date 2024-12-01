@@ -82,12 +82,9 @@ const AddItinerary = () => {
         }
 
         try {
-            const response = await fetch('/api/advertiser/activity/addItinerary', {
-                method: 'POST',
-                body: formDataToSend,
-            });
+            const response = await axiosInstance.post('/api/tourGuide/itinerary/addItinerary', formDataToSend);
             const data = await response.json();
-            if (response.ok) {
+            if (response.status === 201) {
                 alert('Itinerary added successfully!');
                 setFormData({
                     Name: '',

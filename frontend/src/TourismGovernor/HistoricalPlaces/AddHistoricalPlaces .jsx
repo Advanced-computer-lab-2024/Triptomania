@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import './AddHistoricalPlaces.css';
+import axiosInstance from '@/axiosInstance';
 
 const AddHistoricalPlace = () => {
     const [formData, setFormData] = useState({
@@ -54,12 +55,9 @@ const AddHistoricalPlace = () => {
         }
 
         try {
-            const response = await fetch('/api/historical-places', {
-                method: 'POST',
-                body: formDataToSend,
-            });
+            const response = await axiosInstance.post('/api/tourismGovernor/addHistoricalPlace', formDataToSend);
             const data = await response.json();
-            if (response.ok) {
+            if (response.status === 201) {
                 alert('Historical place added successfully!');
                 setFormData({
                     Name: '',

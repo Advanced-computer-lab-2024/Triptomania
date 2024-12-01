@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import './AddProduct.css';
+import axiosInstance from '@/axiosInstance';
 
 const AddProduct = () => {
     const [formData, setFormData] = useState({
@@ -42,12 +43,9 @@ const AddProduct = () => {
         }
 
         try {
-            const response = await fetch('/api/products', {
-                method: 'POST',
-                body: formDataToSend,
-            });
+            const response = await axiosInstance.post('/api/seller/product/addProduct', formDataToSend);
             const data = await response.json();
-            if (response.ok) {
+            if (response.status === 201) {
                 alert(data.message);
                 setFormData({
                     Name: '',

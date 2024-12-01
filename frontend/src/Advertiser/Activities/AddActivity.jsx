@@ -28,7 +28,7 @@ const AddActivity = () => {
     useEffect(() => {
         const fetchMapKey = async () => {
             try {
-                const response = await axiosInstance.get('http://localhost:5000/api/maps-key');
+                const response = await axiosInstance.get('/api/maps-key');
                 setMapKey(response.data.apiKey);
             } catch (error) {
                 console.error('Error fetching the Google Maps API key:', error);
@@ -98,7 +98,7 @@ const AddActivity = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post('http://localhost:5000/api/advertiser/activity/addActivity', activity);
+            const response = await axiosInstance.post('/api/advertiser/activity/addActivity', activity);
             if (response.status === 201) {
                 alert("Activity added successfully!");
                 setActivity({ 

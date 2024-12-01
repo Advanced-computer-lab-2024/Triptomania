@@ -55,8 +55,8 @@ const RequestOtpPage = () => {
                 <option value="admin">Admin</option>
                 <option value="advertiser">Advertiser</option>
                 <option value="seller">Seller</option>
-                <option value="tour-guide">Tour Guide</option>
-                <option value="tourism-governor">Tourism Governor</option>
+                <option value="tourGuide">Tour Guide</option>
+                <option value="tourismGovernor">Tourism Governor</option>
                 <option value="tourist">Tourist</option>
               </select>
             </div>
