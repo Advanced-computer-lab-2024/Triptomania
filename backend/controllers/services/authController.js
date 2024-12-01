@@ -62,15 +62,18 @@ const login = async (req, res) => {
 
         // Set tokens as cookies
         res.cookie('token', token, {
-            httpOnly: true, // Makes cookie inaccessible to JavaScript on the client-side
-            secure: process.env.NODE_ENV === 'production', // Ensures cookie is only sent over HTTPS in production
+            httpOnly: true,
+            secure: false,
             maxAge: 2 * 60 * 60 * 1000, // 2 hours
+            sameSite: 'lax', // For cross-origin cookies
         });
+        
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            sameSite: 'lax', // For cross-origin cookies
         });
 
         res.status(200).json({ message: "Login successful" });
@@ -133,9 +136,8 @@ const logout = async (req, res) => {
     }
 };
 
-const forgotPassword = async (req, res) => {
-    const type = req.user.type;
-    const id = req.user._id;
+const requestOtp = async (req, res) => {
+    const { username, type } = req.body;
 
     // Validate type
     const userModel = userCollections[type];
@@ -143,7 +145,7 @@ const forgotPassword = async (req, res) => {
 
     try {
         // Check if the user exists
-        const user = await userModel.findOne({ _id: id });
+        const user = await userModel.findOne({ username: username });
         if (!user) return res.status(404).send('User not found');
 
         // Generate OTP
@@ -180,15 +182,13 @@ const forgotPassword = async (req, res) => {
 }
 
 const verifyOTP = async (req, res) => {
-    const type = req.user.type;
-    const id = req.user._id;
-    const { otp } = req.body;
+    const { otp, type, username } = req.body;
     const userModel = userCollections[type];
     if (!userModel) return res.status(400).send('Invalid user type');
 
     try {
         // Check if the user exists
-        const user = await userModel.findOne({ _id: id });
+        const user = await userModel.findOne({ username: username });
         if (!user) return res.status(404).send('User not found');
 
         // Check if the OTP is correct
@@ -258,10 +258,8 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ message: "Incorrect old password" });
         }
 
-        // Hash the new password
-        const hashedPassword = await hashPassword(newPassword);
-
-        await userModel.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
+        account.password = newPassword;
+        await account.save();
 
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
@@ -270,4 +268,37 @@ const changePassword = async (req, res) => {
     }
 }
 
-export default { login, refreshToken, logout, forgotPassword, verifyOTP, changePassword };
+const changeForgotPassword = async (req, res) => {
+    try {
+        const { newPassword, type, username } = req.body;
+
+        // Check if newPassword meets minimum length
+        if (newPassword.length < 8) {
+            return res.status(400).json({ message: "Password must be at least 8 characters long" });
+        }
+
+        const userModel = userCollections[type];
+
+        // Retrieve the account based on ID and type
+        let account = await userModel.findOne({ username: username });
+
+        if (!account) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        const isMatch = await bcrypt.compare(newPassword, account.password);
+        if (isMatch) {
+            return res.status(400).json({ message: "New password can not be the same as the old password" });
+        }
+
+        account.password = newPassword;
+        await account.save();
+
+        res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+        console.error("Error changing password:", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+export default { login, refreshToken, logout, requestOtp, verifyOTP, changePassword, changeForgotPassword };

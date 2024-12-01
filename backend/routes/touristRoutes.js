@@ -102,7 +102,7 @@ router.get("/itineraries/getItineraries", (req, res, next) => authMiddleware.ver
  *       200:
  *         description: Tourist added successfully
  */
-router.post('/addTourist', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.CreateTourist);
+router.post('/addTourist', touristController.CreateTourist);
 
 router.put('/redeem', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.redeemPoints);
 
@@ -440,5 +440,23 @@ router.get('/wishlist/getWishlist', (req, res, next) => authMiddleware.verifyTok
 router.post('/wishlist/addProduct', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addProductToWishlist);
 
 router.post('/wishlist/removeProduct', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.removeProductFromWishlist);
+
+router.post('/events/payForEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.payForEvent);
+
+router.post('/events/cancelEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelEvent);
+
+router.get('/getUpcomingActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getUpcomingActivities);
+
+router.get('/getUpcomingItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getUpcomingItineraries);
+
+router.get('/getPastActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getPastActivities);
+
+router.get('/getPastItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getPastItineraries);
+
+router.post('/events/bookmarkEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookmarkEvent);
+
+router.get('/events/getBookmarkedEvents', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getBookmarkedEvents);
+
+router.put('/events/unbookmarkEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.unbookmarkEvent);
 
 export default router;

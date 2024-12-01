@@ -130,7 +130,7 @@ router.delete("/itinerary/deleteItinerary", (req, res, next) => authMiddleware.v
  *       200:
  *         description: Tour guide added successfully
  */
-router.post('/addTourguide', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.CreateTourGuide);
+router.post('/addTourguide', tourGuideController.CreateTourGuide);
 
 /**
  * @swagger
@@ -156,9 +156,9 @@ router.put('/updateTourguide', (req, res, next) => authMiddleware.verifyToken(re
  */
 router.get('/getTourguide', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), tourGuideController.getTourGuide);
 
-router.put('/uploadDocument', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadDocument', upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/uploadProfilePicture', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), upload.single('file'), sharedController.uploadProfilePicture);
+router.put('/uploadProfilePicture', upload.single('file'), sharedController.uploadProfilePicture);
 
 router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.acceptTerms);
 

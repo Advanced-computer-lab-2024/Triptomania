@@ -1,0 +1,71 @@
+/* Define the primary and secondary colors as CSS variables */
+:root {
+    --primary-color: #36827f; /* Primary color */
+    --secondary-color: #54a7a4; /* Secondary color */
+}
+
+/* Styles for the header */
+.header {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 0px;
+}
+
+.container {
+    max-width: 7xl;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Navigation links */
+.nav-link {
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Brand styles */
+.brand {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: "Dancing Script", cursive;
+    font-size: 25px;
+}
+
+/* Button styles */
+.signin-btn,
+.signup-btn {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.signin-btn:hover,
+.signup-btn:hover {
+    background-color: var(--secondary-color) !important;
+    color: white;
+}
+
+.signup-btn {
+    margin-left: 2rem;
+    background-color: var(--primary-color)!important;
+    color: white;
+}
+
+.icon-link {
+    display: flex;
+    align-items: center;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.icon-link:hover {
+    color: var(--primary-color);
+}
+

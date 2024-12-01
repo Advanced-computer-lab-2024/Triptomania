@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&display=swap');
+
+:root {
+  --primary-color: #36827f;
+  --secondary-color: #54a7a4;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #fffaf0;
+}
+
+.otp-box {
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 410px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 35px !important;
+  margin-top: 0px !important;
+  font-family: "Dancing Script", cursive;
+  font-size: 45px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.otp-input {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 24px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-family: "Edu AU VIC WA NT Guides", sans-serif;
+}
+
+.otp-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.verify-button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.verify-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.back-button {
+  margin-top: 10px;
+  color: var(--primary-color);
+  cursor: pointer;
+  text-decoration: underline;
+  text-align: center;
+}
+
+.back-button:hover {
+  color: var(--secondary-color);
+}

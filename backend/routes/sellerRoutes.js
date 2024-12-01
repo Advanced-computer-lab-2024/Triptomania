@@ -27,7 +27,7 @@ const router = express.Router();
  *       200:
  *         description: Seller created successfully
  */
-router.post('/addSeller', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.CreateSeller);
+router.post('/addSeller', sellerController.CreateSeller);
 
 /**
  * @swagger
@@ -160,9 +160,9 @@ router.get("/product/sortProducts", (req, res, next) => authMiddleware.verifyTok
  */
 router.post("/product/uploadPicture", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), upload.single('file'), productController.uploadPicture);
 
-router.put('/uploadDocument', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), upload.single('file'), sharedController.uploadDocuments);
+router.put('/uploadDocument', upload.single('file'), sharedController.uploadDocuments);
 
-router.put('/uploadProfilePicture', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), upload.single('file'), sharedController.uploadProfilePicture);
+router.put('/uploadProfilePicture', upload.single('file'), sharedController.uploadProfilePicture);
 
 router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.acceptTerms);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance';
 import './ViewActivities.css';
 import { Header } from '../../components/Header';
 import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
@@ -36,7 +36,7 @@ const ViewActivities = () => {
 
   const fetchAllActivities = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/guest/activities/viewActivities');
+      const response = await axiosInstance.get('http://localhost:5000/api/guest/activities/viewActivities');
       setAllActivities(response.data); // Store all activities
       setActivities(response.data); // Initially show all activities
     } catch (error) {
@@ -59,7 +59,7 @@ const ViewActivities = () => {
       if (selectedCategory) params.category = selectedCategory;
       if (selectedRating) params.ratings = selectedRating;
   
-      const response = await axios.get('http://localhost:5000/api/guest/activities/filterActivities', {
+      const response = await axiosInstance.get('http://localhost:5000/api/guest/activities/filterActivities', {
         params: params, // Send only parameters that are set
       });
   
@@ -75,7 +75,7 @@ const fetchSortedActivities = async (sortOrder) => {
       sortOrder: sortOrder,
     };
 
-    const response = await axios.get('http://localhost:5000/api/guest/activities/sortActivities', {
+    const response = await axiosInstance.get('http://localhost:5000/api/guest/activities/sortActivities', {
       params: params,
     });
     setActivities(response.data); // Update activities with the sorted results

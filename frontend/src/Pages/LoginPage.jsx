@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance';
 import '../index.css';
 import styles from './login.module.css';
 import { useNavigate } from 'react-router-dom';
@@ -14,14 +14,14 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axiosInstance.post('/api/auth/login', {
         username,
         password,
         type, 
       });
       alert('Login successful!');
       console.log('User data:', response.data);
-      navigate('/viewProducts');
+      navigate('/tourist/hotelBooking/getHotels');
     } catch (err) {
       setError('Invalid login credentials. Please try again.');
     }
@@ -68,7 +68,7 @@ const LoginPage = () => {
               </select>
               <p
                 className={styles['forgot-password']}
-                onClick={() => navigate('/reset-password')}
+                onClick={() => navigate('/auth/requestOtp')}
               >
                 Forgot Password?
               </p>
