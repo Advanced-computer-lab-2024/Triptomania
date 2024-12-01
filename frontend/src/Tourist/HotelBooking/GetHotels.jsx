@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance.js';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
@@ -22,9 +22,7 @@ const GetHotels = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('/api/tourist/getHotels', {
-        params: { city }, // Passing the city as a query parameter
-      });
+      const response = await axiosInstance.get(`/api/tourist/getHotels?city=${city}`);
       const data = response.data;
       if (data.hotels) {
         setHotels(data.hotels);
