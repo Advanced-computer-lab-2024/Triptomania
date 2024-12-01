@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/axiosInstance';
 import './ViewActivities.css';
 import { Header } from '../../components/Header';
 import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
@@ -18,88 +18,124 @@ import { useNavigate } from 'react-router-dom';
 
 const ViewActivities = () => {
   const [activities, setActivities] = useState([]);
-  const [allActivities, setAllActivities] = useState([]); // Store all activities
+  const [allActivities, setAllActivities] = useState([]);
+  const [categories, setCategories] = useState([]); // Dynamic categories
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState(null);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const navigate = useNavigate();  // Initialize navigate function
+  const [sortOrder, setSortOrder] = useState('low');
+  const [sortBy, setSortBy] = useState('price');
+  const navigate = useNavigate();
 
   const handleSignInClick = () => {
-    navigate("/login");  // Navigate to the Login page on button click
+    navigate("/login");
   };
+
   useEffect(() => {
-    fetchAllActivities(); // Fetch all activities when the component mounts
+    fetchAllActivities();
+    fetchCategories(); // Fetch categories dynamically
   }, []);
 
   const fetchAllActivities = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/guest/activities/viewActivities');
-      setAllActivities(response.data); // Store all activities
-      setActivities(response.data); // Initially show all activities
+      const response = await axiosInstance.get('/api/guest/activities/viewActivities');
+      setAllActivities(response.data);
+      setActivities(response.data);
     } catch (error) {
       console.error('Error fetching all activities:', error);
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axiosInstance.get('/api/guest/activities/getCategories');
+      setCategories(response.data); // Dynamically populate categories
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   const fetchFilteredActivities = async () => {
     try {
-      const params = {};
-  
-      // Send both min and max values for the price range
+      let apiLink = '/api/guest/activities/filterActivities';
       if (priceRange[0] > 0 || priceRange[1] < 1000) {
-        params.minPrice = priceRange[0];  // Minimum price
-        params.maxPrice = priceRange[1];  // Maximum price
+        let minPrice = priceRange[0];
+        let maxPrice = priceRange[1];
+        apiLink += `?minPrice=${minPrice}&maxPrice=${maxPrice}`;
       }
-  
-      // Add the selected date, category, and rating to the params if set
-      if (selectedDate) params.date = selectedDate.toISOString();
-      if (selectedCategory) params.category = selectedCategory;
-      if (selectedRating) params.ratings = selectedRating;
-  
-      const response = await axios.get('http://localhost:5000/api/guest/activities/filterActivities', {
-        params: params, // Send only parameters that are set
-      });
-  
-      setActivities(response.data); // Update activities with the filtered results
+      if (selectedDate) {
+        apiLink += `?date=${selectedDate}`;
+      }
+      if (selectedCategory) {
+        apiLink += `?category=${selectedCategory}`;
+      }
+      if (selectedRating) {
+        apiLink += `?ratings=${selectedRating}`;
+      }
+
+      const response = await axiosInstance.get(apiLink);
+
+      setActivities(response.data);
     } catch (error) {
       console.error('Error fetching filtered activities:', error);
     }
-};
+  };
 
-const fetchSortedActivities = async (sortOrder) => {
-  try {
-    const params = {
-      sortOrder: sortOrder,
-    };
-
-    const response = await axios.get('http://localhost:5000/api/guest/activities/sortActivities', {
-      params: params,
-    });
-    setActivities(response.data); // Update activities with the sorted results
-  } catch (error) {
-    console.error('Error fetching sorted activities:', error);
-  }
-};
-  
+  const fetchSortedActivities = async () => {
+    try {
+      let apiLink = '/api/guest/activities/sortActivities';
+      if (sortBy && sortOrder) {
+        apiLink += `?sortBy=${sortBy}`;
+        apiLink += `&order=${sortOrder}`;
+      }
+      const response = await axiosInstance.get(apiLink);
+      setActivities(response.data);
+    } catch (error) {
+      console.error('Error fetching sorted activities:', error);
+    }
+  };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    // Optionally trigger search logic based on search term
   };
 
   const handleFilterClick = () => {
-    fetchFilteredActivities(); // Trigger the filter API when the button is clicked
+    fetchFilteredActivities();
   };
 
-  const handleSortChange = (value) => {
-    setSortOrder(value);
-    fetchSortedActivities(value); // Trigger the sort API when the value changes
+  const handleFilterReset = () => {
+    // Reset all filters
+    setSelectedDate(null);
+    setPriceRange([0, 1000]);
+    setSelectedRating('');
+    setSelectedCategory('');
+    setSearchTerm('');
+
+    fetchAllActivities();
   };
- 
- 
+
+  const handleSortClick = () => {
+    fetchSortedActivities();
+  };
+
+  const handleSortReset = () => {
+    // Reset all filters
+    setSortBy('price');
+    setSortOrder('low');
+    fetchAllActivities();
+  };
+
+  const handleSortByChange = (value) => {
+    setSortBy(value);
+    fetchSortedActivities();
+  };
+
+  const handleSortOrderChange = (value) => {
+    setSortOrder(value);
+    fetchSortedActivities();
+  };
 
   return (
     <div className="view-activities">
@@ -107,7 +143,7 @@ const fetchSortedActivities = async (sortOrder) => {
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
-          
+
           <div className="mb-4">
             <Label>Date</Label>
             <Popover>
@@ -156,33 +192,56 @@ const fetchSortedActivities = async (sortOrder) => {
               ))}
             </RadioGroup>
           </div>
+
           <div className="mb-4">
             <Label>Sort by</Label>
-
-            <RadioGroup value={sortOrder} onValueChange={handleSortChange}>
+            <RadioGroup value={sortBy} onValueChange={handleSortByChange}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="asc" id="sort-asc" />
+                <RadioGroupItem value="price" id="sort-price" />
+                <Label htmlFor="sort-price">Price</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="rating" id="sort-rating" />
+                <Label htmlFor="sort-rating">Rating</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <div className="mb-4">
+            <Label>Order</Label>
+            <RadioGroup value={sortOrder} onValueChange={handleSortOrderChange}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="low" id="sort-asc" />
                 <Label htmlFor="sort-asc">Lowest to Highest</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="desc" id="sort-desc" />
+                <RadioGroupItem value="high" id="sort-desc" />
                 <Label htmlFor="sort-desc">Highest to Lowest</Label>
               </div>
             </RadioGroup>
           </div>
+
           <div className="mb-4">
             <Label>Category</Label>
-            <RadioGroup value={selectedCategory} onValueChange={setSelectedCategory}>
-              {['Adventure', 'Relaxation', 'Cultural', 'Food & Drink'].map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <RadioGroupItem value={category} id={`category-${category}`} />
-                  <Label htmlFor={`category-${category}`}>{category}</Label>
-                </div>
-              ))}
-            </RadioGroup>
+            {categories.length > 0 ? (
+              <RadioGroup value={selectedCategory} onValueChange={setSelectedCategory}>
+                {categories.map((category) => (
+                  <div key={category._id} className="flex items-center space-x-2">
+                    <RadioGroupItem value={category._id} id={`category-${category._id}`} />
+                    <Label htmlFor={`category-${category._id}`}>{category.CategoryName}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            ) : (
+              <p>Loading categories...</p>
+            )}
           </div>
 
-          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button> {/* Filter Button */}
+          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
+          <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
+          <Button onClick={handleSortClick} className="mt-4">Apply Sort</Button>
+          <br></br>
+          <Button onClick={handleSortReset} className="mt-4">Reset Sort</Button>
         </aside>
         <main className="activities">
           <div className="search-bar mb-4">
@@ -224,13 +283,13 @@ const fetchSortedActivities = async (sortOrder) => {
                     </p>
                     <p>
                       <TagIcon className="icon" />
-                      {activity.category?.name || 'N/A'}
+                      {categories.find(c => c._id === activity.category)?.CategoryName || 'N/A'}
                     </p>
                   </div>
                   <div className="activity-footer">
                     <p className="activity-price">${activity.price.toFixed(2)} USD</p>
                     <Button className="book-button" onClick={handleSignInClick}>
-                    Book Activity
+                      Book Activity
                     </Button>
                   </div>
                 </div>
