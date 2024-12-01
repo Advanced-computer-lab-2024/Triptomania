@@ -21,7 +21,26 @@ const LoginPage = () => {
       });
       alert('Login successful!');
       console.log('User data:', response.data);
-      navigate('/admin/products/viewProducts');
+      switch (type) {
+        case 'admin':
+          break;
+        case 'advertiser':
+          break;
+        case 'seller':
+          navigate('/Seller/SellerHomePage');
+          break;
+        case 'tourGuide':
+          break;
+        case 'tourismGovernor':
+          break;
+        case 'tourist':
+          navigate('/tourist/home');
+          break;
+        default:
+          navigate('/');
+          break;
+      }
+      // navigate('/admin/products/viewProducts');
     } catch (err) {
       setError('Invalid login credentials. Please try again.');
     }

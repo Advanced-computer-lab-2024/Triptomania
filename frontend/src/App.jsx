@@ -20,6 +20,7 @@ import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistorical
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
 import SellerSignUp from './Pages/SellerSignUp.jsx';
+import SellerHomePage from './Seller/SellerHomePage.jsx';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
       <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
+      <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
@@ -44,6 +46,7 @@ const App = () => {
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
+      <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
     </Routes>
   );
 };
