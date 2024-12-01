@@ -21,7 +21,7 @@ const LoginPage = () => {
       });
       alert('Login successful!');
       console.log('User data:', response.data);
-      navigate('/tourGuide/addItinerary');
+      navigate('/admin/products/viewProducts');
     } catch (err) {
       setError('Invalid login credentials. Please try again.');
     }

@@ -4,9 +4,8 @@ import LoginPage from './Pages/LoginPage'; // LoginPage component
 import SignUp from './Pages/SignUp';
 import ResetPassword from './components/ResetPassword'; // ResetPassword component
 import LandingPage from './Pages/LandingPage';
-import ViewActivities from './Tourist/Activities/ViewActivities';
 import TouristHomeScreen from './Tourist/TouristHomeScreen';
-
+import ViewActivities from './Guest/Activities/ViewActivities';
 import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
 import ActivityDetails from './Guest/Details/ActivityDetails';
 import HistoricalPlacesDetails from './Guest/Details/HistoricalPlacesDetails';
@@ -29,11 +28,8 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/activities" element={<ViewActivities />} />
-
       <Route path="/" element={<TouristHomeScreen />} />
-
-
+      <Route path="/guest/viewActivities" element={<ViewActivities />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
       <Route path="/historicalplaces/:id" element={<HistoricalPlacesDetails />} />

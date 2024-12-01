@@ -26,7 +26,7 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/activities" className="nav-link">Activities</a>
+            <a href="/guest/products/viewProducts" className="nav-link">Activities</a>
             <a href="#" className="nav-link">Historical places</a>
             <a href="#" className="nav-link">Itineraries</a>
           </nav>
