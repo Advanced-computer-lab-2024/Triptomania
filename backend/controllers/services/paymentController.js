@@ -72,43 +72,56 @@ const checkoutCart = async (req, res) => {
             if (!item.productId || !item.quantity) {
                 return res.status(400).json({ error: 'Invalid cart item structure. Each item must have an id and quantity.' });
             }
-        
+
             const product = await productModel.findById(item.productId);
             if (!product) {
                 return res.status(404).json({ error: 'Product not found' });
             }
-        
+
             products.push(item);
-        
+
             // Calculate amount for the current product
             const tempAmount = product.Price * item.quantity;
             totalAmount += tempAmount;
-        
+
             // Deduct quantity and update purchasers
             product.Quantity -= item.quantity;
-            product.Purchasers.push(userId);
-        
+            if (!product.Purchasers.includes(userId)) {
+                product.Purchasers.push(userId);
+            }
+
             // Update sales array
-            const existingSale = product.Sales.find(sale => sale.price === product.Price);
-            if (existingSale) {
-                existingSale.quantity += item.quantity;
+            const existingSaleIndex = product.Sales.findIndex(sale => sale.price === product.Price);
+            if (existingSaleIndex !== -1) {
+                // Calculate the updated quantity
+                const updatedQuantity = product.Sales[existingSaleIndex].quantity + item.quantity;
+
+                // Remove the existing sale entry
+                product.Sales.splice(existingSaleIndex, 1);
+
+                // Add a new sale entry with the updated quantity
+                product.Sales.push({
+                    price: product.Price,
+                    quantity: updatedQuantity
+                });
             } else {
+                // Add a new sale entry if no match is found
                 product.Sales.push({
                     price: product.Price,
                     quantity: item.quantity
                 });
             }
-        
+
             // Save the product
             await product.save();
-        
+
             // Notify if out of stock
             if (product.Quantity === 0) {
                 await notifyOutOfStock(product).catch((error) => {
                     console.error('Error sending out-of-stock email:', error);
                 });
             }
-        }        
+        }
 
         let discountAmount = totalAmount * discount / 100;
 
@@ -207,34 +220,44 @@ const cancelOrder = async (req, res) => {
             if (!item.productId || !item.quantity) {
                 return res.status(400).json({ error: 'Invalid product structure. Each item must have a productId and quantity.' });
             }
-        
+
             const product = await productModel.findById(item.productId);
             if (!product) {
-                return res.status(404).json({ error: 'Product not found' });
+                return res.status(404).json({ error: `Product with ID ${item.productId} not found.` });
             }
-        
-            // Increase product quantity
+
+            // Revert product quantity
             product.Quantity += item.quantity;
-        
+
             // Adjust sales array
-            const saleEntry = product.Sales.find(sale => sale.price === product.Price);
-            if (saleEntry) {
-                saleEntry.quantity -= item.quantity;
-                if (saleEntry.quantity <= 0) {
-                    // Remove the sale entry if quantity drops to zero
-                    product.Sales = product.Sales.filter(sale => sale.price !== product.Price);
+            const saleEntryIndex = product.Sales.findIndex(sale => sale.price === product.Price);
+
+            if (saleEntryIndex !== -1) {
+                // Calculate the updated quantity
+                const updatedQuantity = product.Sales[saleEntryIndex].quantity - item.quantity;
+
+                // Remove the existing sale entry
+                product.Sales.splice(saleEntryIndex, 1);
+
+                // Add a new sale entry only if the updated quantity is greater than zero
+                if (updatedQuantity > 0) {
+                    product.Sales.push({
+                        price: product.Price,
+                        quantity: updatedQuantity
+                    });
                 }
+            } else {
+                console.warn(`Sale entry for price ${product.Price} not found in product sales.`);
             }
-        
-            // Remove the user from the purchasers list if needed
-            const purchaserIndex = product.Purchasers.indexOf(user.id);
-            if (purchaserIndex !== -1) {
-                product.Purchasers.splice(purchaserIndex, 1);
+
+            // Remove the user from the purchasers list if applicable
+            if (product.Purchasers.includes(user.id)) {
+                product.Purchasers = product.Purchasers.filter(purchaserId => purchaserId !== user.id);
             }
-        
+
             // Save the updated product
             await product.save();
-        }        
+        }
 
         user.wallet += order.finalPrice;
         user.save();
