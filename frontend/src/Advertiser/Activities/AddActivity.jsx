@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, MapPin, DollarSign, Tag, Percent, User, Check } from 'lucide-react';
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import axiosInstance from '@/axiosInstance'; // Import the axiosInstance
 import './addActivity.css';
 
 const AddActivity = () => {
@@ -28,9 +28,8 @@ const AddActivity = () => {
     useEffect(() => {
         const fetchMapKey = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/maps-key');
-                const data = await response.json();
-                setMapKey(data.apiKey);
+                const response = await axiosInstance.get('http://localhost:5000/api/maps-key');
+                setMapKey(response.data.apiKey);
             } catch (error) {
                 console.error('Error fetching the Google Maps API key:', error);
             }
@@ -99,20 +98,17 @@ const AddActivity = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/advertiser/activity/addActivity', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(activity),
-            });
-
-            const result = await response.json();
-            if (response.ok) {
+            const response = await axiosInstance.post('http://localhost:5000/api/advertiser/activity/addActivity', activity);
+            if (response.status === 201) {
                 alert("Activity added successfully!");
-                setActivity({ ...activity, name: '', description: '', date: '', time: '', location: '', price: '', category: '', tags: [], specialDiscounts: 0, isBookingOpen: true, creatorId: '' });
+                setActivity({ 
+                    ...activity, 
+                    name: '', description: '', date: '', time: '', 
+                    location: '', price: '', category: '', tags: [], 
+                    specialDiscounts: 0, isBookingOpen: true, creatorId: '' 
+                });
             } else {
-                alert(result.error);
+                alert(response.data.error || "Error adding activity");
             }
         } catch (error) {
             console.error('Error adding activity:', error);
@@ -124,10 +120,10 @@ const AddActivity = () => {
             <h2>Add New Activity</h2>
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
-                    <Input type="text" name="name" class = "name"placeholder="Activity Name" value={activity.name} onChange={handleChange} required />
+                    <Input type="text" name="name" className="name" placeholder="Activity Name" value={activity.name} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
-                    <Textarea name="description" placeholder="Description" class = "description"value={activity.description} onChange={handleChange} required />
+                    <Textarea name="description" placeholder="Description" className="description" value={activity.description} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
                     <Calendar className="input-icon" />
@@ -156,7 +152,7 @@ const AddActivity = () => {
                 </div>
                 <div className="input-group">
                     <Percent className="input-icon" />
-                    <Input type="number" name="specialDiscounts" placeholder="Special Discounts" value={activity.specialDiscounts} onChange={handleChange}  min="0" />
+                    <Input type="number" name="specialDiscounts" placeholder="Special Discounts" value={activity.specialDiscounts} onChange={handleChange} min="0" />
                 </div>
                 <div className="input-group">
                     <User className="input-icon" />
@@ -170,7 +166,7 @@ const AddActivity = () => {
                     />
                     <label htmlFor="isBookingOpen">Is Booking Open?</label>
                 </div>
-                <Button type="submit" class = "buttonAdd">Add Activity</Button>
+                <Button type="submit" className="buttonAdd">Add Activity</Button>
             </form>
             <div id="responseMessage"></div>
         </div>
@@ -178,4 +174,3 @@ const AddActivity = () => {
 };
 
 export default AddActivity;
-

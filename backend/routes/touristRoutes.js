@@ -102,7 +102,7 @@ router.get("/itineraries/getItineraries", (req, res, next) => authMiddleware.ver
  *       200:
  *         description: Tourist added successfully
  */
-router.post('/addTourist', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.CreateTourist);
+router.post('/addTourist', touristController.CreateTourist);
 
 router.put('/redeem', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.redeemPoints);
 
