@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Calendar, Search } from 'lucide-react';
-import { Header } from '../components/Header';  // Adjust the path based on your folder structure
+import { Header } from '../components/Header2'
 import '../index.css';
 import image1 from '../assets/Images/1.png';
 import image2 from '../assets/Images/2.png';
@@ -16,7 +16,6 @@ import image7 from '../assets/Images/7.jpg';
 import image8 from '../assets/Images/8.jpg';
 import image9 from '../assets/Images/9.jpg';
 import { Link } from 'react-router-dom';
-import './LandingPage.css';
 
 function FeaturedItineraries() {
   const [itineraries, setItineraries] = useState([]);
@@ -53,7 +52,7 @@ function FeaturedItineraries() {
     }
   }
 
-  const featuredItineraries = itineraries.slice(0, 3);
+  const featuredItineraries = itineraries.slice(0, 5);
 
   return (
     <section className="py-12 px-4">
@@ -107,7 +106,7 @@ function FeaturedActivities() {
     fetchActivities();
   }, []);
 
-  const featuredActivities = activities.slice(0, 3);
+  const featuredActivities = activities.slice(0, 5);
 
   return (
     <section className="py-12 px-4 bg-gray-100">
@@ -177,7 +176,7 @@ function FeaturedHistoricalPlaces() {
     fetchHistoricalPlaces();
   }, []);
 
-  const featuredHistoricalPlaces = historicalPlaces.slice(0, 3);
+  const featuredHistoricalPlaces = historicalPlaces.slice(0, 5);
 
   return (
     <section className="py-12 px-4 bg-gray-100">
