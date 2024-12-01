@@ -2,17 +2,14 @@ import { useState } from 'react';
 import axiosInstance from '@/axiosInstance.js';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
-import { MapPin, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import './GetHotels.css'; // Import the global styles
+import { Star, MapPin } from 'lucide-react';
+import './GetHotels.css'; // Import custom styles
 
 const GetHotels = () => {
   const [city, setCity] = useState('');
-  const [hotels, setHotels] = useState([]);
+  const [responseData, setResponseData] = useState(null); // To store JSON response
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (!city) {
@@ -21,87 +18,79 @@ const GetHotels = () => {
     }
     setLoading(true);
     setError('');
+    setResponseData(null); // Clear previous results
     try {
       const response = await axiosInstance.get(`/api/tourist/getHotels?city=${city}`);
-      const data = response.data;
-      if (data.hotels) {
-        setHotels(data.hotels);
-      } else {
-        setError('No hotels found for the given city');
-      }
-    } catch (error) {
-      console.error('Error fetching hotels:', error);
+      setResponseData(response.data.hotels.result.data); // Store JSON response
+    } catch (err) {
+      console.error('Error fetching hotels:', err);
       setError('Failed to fetch hotels');
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative h-[500px]">
-        <img
-          src="/placeholder.svg?height=500&width=1920"
-          alt="Hero Background"
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Find Your Ideal Hotel</h1>
-          <p className="text-xl mb-8">Book hotels for your next adventure</p>
-          <div className="flex w-full max-w-md space-x-2">
-            <Input
-              placeholder="Enter City Name"
-              className="flex-grow"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-            />
-            <Button onClick={handleSearch}>
-              <Search className="mr-2 h-4 w-4" />
-              Search
-            </Button>
-          </div>
-          {error && <p className="text-red-500 mt-4">{error}</p>}
-        </div>
-      </section>
+  const isBase64 = (str) => {
+    try {
+      return btoa(atob(str)) === str;
+    } catch (err) {
+      return false;
+    }
+  };
 
-      {/* Hotel Results */}
-      {loading ? (
-        <div className="text-center mt-12">
-          <p className="text-xl">Loading hotels...</p>
+  return (
+    <div className="view-hotels">
+      <h1 className="header">Hotel Finder</h1>
+      <div className="search-container">
+        <div className="search-bar">
+          <Input
+            placeholder="Enter City Name"
+            className="search-input"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+          <Button className="search-button" onClick={handleSearch}>Search</Button>
         </div>
-      ) : (
-        <section className="py-12 px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center">Available Hotels</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {hotels.length > 0 ? (
-              hotels.map((hotel, index) => (
-                <Card key={index}>
-                  <CardHeader>
-                    <CardTitle>{hotel.name}</CardTitle>
-                    <CardDescription>{hotel.address}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <img
-                      src={hotel.imageUrl || "/placeholder.svg?height=200&width=400"}
-                      alt={hotel.name}
-                      className="w-full h-[200px] object-cover rounded-md"
-                    />
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <div className="flex items-center">
-                      <MapPin className="mr-2 h-4 w-4" />
-                      <span>{hotel.city}</span>
-                    </div>
-                    <Button onClick={() => navigate(`/hotel/${hotel.id}`)}>View Details</Button>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <p>No hotels found for the specified city.</p>
-            )}
-          </div>
-        </section>
+      </div>
+      {error && <p className="error-message">{error}</p>}
+      {loading && <p className="loading-message">Loading...</p>}
+      {responseData && (
+        <div className="hotels-container">
+          {responseData.map((hotel) => (
+            <div key={hotel.hotelId} className="hotel-card">
+              <div className="hotel-image-container">
+                <img
+                  src={
+                    isBase64(hotel.Picture)
+                      ? `data:image/jpeg;base64,${hotel.Picture}`
+                      : hotel.image || 'https://via.placeholder.com/300x200'
+                  }
+                  alt={hotel.name}
+                  className="hotel-image"
+                />
+              </div>
+              <div className="hotel-details">
+                <div className="hotel-header">
+                  <h2 className="hotel-title">{hotel.name}</h2>
+                  <div className="hotel-rating">
+                    <Star className="icon" />
+                    <span>{hotel.rating || 'N/A'}</span>
+                  </div>
+                </div>
+                <p className="hotel-description">Location: {hotel.geoCode.latitude}, {hotel.geoCode.longitude}</p>
+                <div className="hotel-info">
+                  <p>
+                    <MapPin className="icon" />
+                    {hotel.address.countryCode || 'N/A'}
+                  </p>
+                </div>
+                <div className="hotel-footer">
+                  <Button className="more-info-button">More Info</Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -11,6 +11,10 @@ export function Header() {
     const handleSignInClick = () => {
       navigate("/login");  // Navigate to the Login page on button click
     };
+
+    const handleSignUpClick = () => {
+      navigate("/signUp");  // Navigate to the Login page on button click
+    };
   return (
 
     <header className="header">
@@ -30,7 +34,7 @@ export function Header() {
           <Button variant="ghost" className="signin-btn" onClick={handleSignInClick}>
           Sign in
             </Button>
-            <Button className="signup-btn">
+            <Button className="signup-btn" onClick={handleSignUpClick}>
               Sign up
             </Button>
           </div>

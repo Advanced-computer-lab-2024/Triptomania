@@ -21,7 +21,7 @@ const LoginPage = () => {
       });
       alert('Login successful!');
       console.log('User data:', response.data);
-      navigate('/tourist/hotelBooking/getHotels');
+      navigate('/tourGuide/addItinerary');
     } catch (err) {
       setError('Invalid login credentials. Please try again.');
     }
@@ -62,8 +62,8 @@ const LoginPage = () => {
                 <option value="admin">Admin</option>
                 <option value="advertiser">Advertiser</option>
                 <option value="seller">Seller</option>
-                <option value="tour-guide">Tour Guide</option>
-                <option value="tourism-governor">Tourism Governor</option>
+                <option value="tourGuide">Tour Guide</option>
+                <option value="tourismGovernor">Tourism Governor</option>
                 <option value="tourist">Tourist</option>
               </select>
               <p
@@ -78,7 +78,7 @@ const LoginPage = () => {
             <p
               className={styles['signup-button']}
               // Uncomment below if you want to enable navigation
-              // onClick={() => navigate('/sign-up')}
+              onClick={() => navigate('/signUp')}
             >
               Don't have an account? Sign up
             </p>
