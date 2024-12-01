@@ -258,10 +258,8 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ message: "Incorrect old password" });
         }
 
-        // Hash the new password
-        const hashedPassword = await hashPassword(newPassword);
-
-        await userModel.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
+        account.password = newPassword;
+        await account.save();
 
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
@@ -288,16 +286,12 @@ const changeForgotPassword = async (req, res) => {
             return res.status(404).json({ message: "Account not found" });
         }
 
-        // Verify the old password
         const isMatch = await bcrypt.compare(newPassword, account.password);
         if (isMatch) {
             return res.status(400).json({ message: "New password can not be the same as the old password" });
         }
 
-        // Hash the new password
-        const hashedPassword = await hashPassword(newPassword);
-
-        acount.password = hashedPassword;
+        account.password = newPassword;
         await account.save();
 
         res.status(200).json({ message: "Password changed successfully" });
