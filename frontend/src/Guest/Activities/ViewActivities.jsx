@@ -25,7 +25,8 @@ const ViewActivities = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrder, setSortOrder] = useState('low');
+  const [sortBy, setSortBy] = useState('price');
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
@@ -58,18 +59,23 @@ const ViewActivities = () => {
 
   const fetchFilteredActivities = async () => {
     try {
-      const params = {};
+      let apiLink = '/api/guest/activities/filterActivities';
       if (priceRange[0] > 0 || priceRange[1] < 1000) {
-        params.minPrice = priceRange[0];
-        params.maxPrice = priceRange[1];
+        let minPrice = priceRange[0];
+        let maxPrice = priceRange[1];
+        apiLink += `?minPrice=${minPrice}&maxPrice=${maxPrice}`;
       }
-      if (selectedDate) params.date = selectedDate.toISOString();
-      if (selectedCategory) params.categoryId = selectedCategory; // Filter by category ID
-      if (selectedRating) params.ratings = selectedRating;
+      if (selectedDate) {
+        apiLink += `?date=${selectedDate}`;
+      }
+      if (selectedCategory) {
+        apiLink += `?category=${selectedCategory}`;
+      }
+      if (selectedRating) {
+        apiLink += `?ratings=${selectedRating}`;
+      }
 
-      const response = await axiosInstance.get('/api/guest/activities/filterActivities', {
-        params: params,
-      });
+      const response = await axiosInstance.get(apiLink);
 
       setActivities(response.data);
     } catch (error) {
@@ -77,11 +83,14 @@ const ViewActivities = () => {
     }
   };
 
-  const fetchSortedActivities = async (sortOrder) => {
+  const fetchSortedActivities = async () => {
     try {
-      const response = await axiosInstance.get('/api/guest/activities/sortActivities', {
-        params: { sortOrder },
-      });
+      let apiLink = '/api/guest/activities/sortActivities';
+      if (sortBy && sortOrder) {
+        apiLink += `?sortBy=${sortBy}`;
+        apiLink += `&order=${sortOrder}`;
+      }
+      const response = await axiosInstance.get(apiLink);
       setActivities(response.data);
     } catch (error) {
       console.error('Error fetching sorted activities:', error);
@@ -96,9 +105,36 @@ const ViewActivities = () => {
     fetchFilteredActivities();
   };
 
-  const handleSortChange = (value) => {
+  const handleFilterReset = () => {
+    // Reset all filters
+    setSelectedDate(null);
+    setPriceRange([0, 1000]);
+    setSelectedRating('');
+    setSelectedCategory('');
+    setSearchTerm('');
+
+    fetchAllActivities();
+  };
+
+  const handleSortClick = () => {
+    fetchSortedActivities();
+  };
+
+  const handleSortReset = () => {
+    // Reset all filters
+    setSortBy('price');
+    setSortOrder('low');
+    fetchAllActivities();
+  };
+
+  const handleSortByChange = (value) => {
+    setSortBy(value);
+    fetchSortedActivities();
+  };
+
+  const handleSortOrderChange = (value) => {
     setSortOrder(value);
-    fetchSortedActivities(value);
+    fetchSortedActivities();
   };
 
   return (
@@ -107,7 +143,7 @@ const ViewActivities = () => {
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
-          
+
           <div className="mb-4">
             <Label>Date</Label>
             <Popover>
@@ -159,13 +195,27 @@ const ViewActivities = () => {
 
           <div className="mb-4">
             <Label>Sort by</Label>
-            <RadioGroup value={sortOrder} onValueChange={handleSortChange}>
+            <RadioGroup value={sortBy} onValueChange={handleSortByChange}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="asc" id="sort-asc" />
+                <RadioGroupItem value="price" id="sort-price" />
+                <Label htmlFor="sort-price">Price</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="rating" id="sort-rating" />
+                <Label htmlFor="sort-rating">Rating</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <div className="mb-4">
+            <Label>Order</Label>
+            <RadioGroup value={sortOrder} onValueChange={handleSortOrderChange}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="low" id="sort-asc" />
                 <Label htmlFor="sort-asc">Lowest to Highest</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="desc" id="sort-desc" />
+                <RadioGroupItem value="high" id="sort-desc" />
                 <Label htmlFor="sort-desc">Highest to Lowest</Label>
               </div>
             </RadioGroup>
@@ -188,6 +238,10 @@ const ViewActivities = () => {
           </div>
 
           <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
+          <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
+          <Button onClick={handleSortClick} className="mt-4">Apply Sort</Button>
+          <br></br>
+          <Button onClick={handleSortReset} className="mt-4">Reset Sort</Button>
         </aside>
         <main className="activities">
           <div className="search-bar mb-4">
@@ -229,7 +283,7 @@ const ViewActivities = () => {
                     </p>
                     <p>
                       <TagIcon className="icon" />
-                      {categories.find(c => c._id === activity.categoryId)?.CategoryName || 'N/A'}
+                      {categories.find(c => c._id === activity.category)?.CategoryName || 'N/A'}
                     </p>
                   </div>
                   <div className="activity-footer">

@@ -104,7 +104,7 @@ const updateSeller = async (req, res) => {
   }
 };
 
-const viewProducts = async (req, res) => {
+const viewMyProducts = async (req, res) => {
   try {
     const id = req.user._id;
 
@@ -113,14 +113,30 @@ const viewProducts = async (req, res) => {
       Seller: id, // Filter products added by the logged-in seller
     });
 
-    res.status(200).json(products);
+    res.status(200).json({data: products});
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Error retrieving products', error });
   }
 };
 
+const viewProducts = async (req, res) => {
+  try {
+    const id = req.user._id
+    const products = await productModel.find({
+      $or: [
+          { Archive: false },
+          { Seller: id }
+      ]
+  });
+    res.status(200).json({data: products});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error retrieving products', error });
+  }
+}
+
 /////////////////////////////////////////////////////////////////
 
 // Export all functions using ES module syntax
-export default { CreateSeller, getSeller, updateSeller, getOneSeller, viewProducts };
+export default { CreateSeller, getSeller, updateSeller, getOneSeller, viewMyProducts, viewProducts };

@@ -94,6 +94,7 @@ router.put("/product/editProduct", (req, res, next) => authMiddleware.verifyToke
  *       200:
  *         description: List of products
  */
+router.get("/product/viewMyProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.viewMyProducts);
 router.get("/product/viewProducts", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sellerController.viewProducts);
 
 /**

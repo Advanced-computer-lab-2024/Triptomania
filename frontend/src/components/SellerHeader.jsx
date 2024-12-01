@@ -22,8 +22,8 @@ export function Header() {
           </div>
           <nav className="hidden md:flex space-x-10">
             <a href="/" className="nav-link">Home</a>
-            <a href="/products" className="nav-link">Products</a>
-            <a href="/flights" className="nav-link">My Products</a>
+            <a href="/Seller/ViewProducts" className="nav-link">Products</a>
+            <a href="/Seller/ViewMyProducts" className="nav-link">My Products</a>
             <a href="/hotels" className="nav-link">Sales</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">

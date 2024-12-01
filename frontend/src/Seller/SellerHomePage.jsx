@@ -4,17 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Calendar, Search } from 'lucide-react';
-import { Header } from '../components/SellerHeader'
+import { Header } from '../components/SellerHeader';
 import '../index.css';
 import image1 from '../assets/Images/1.png';
 import image2 from '../assets/Images/2.png';
 import image3 from '../assets/Images/3.jpg';
-import image4 from '../assets/Images/4.jpg';
-import image5 from '../assets/Images/5.jpg';
-import image6 from '../assets/Images/6.jpg';
-import image7 from '../assets/Images/7.jpg';
-import image8 from '../assets/Images/8.jpg';
-import image9 from '../assets/Images/9.jpg';
 import { Link } from 'react-router-dom';
 
 function FeaturedProducts() {
@@ -27,12 +21,8 @@ function FeaturedProducts() {
           "http://localhost:5000/api/seller/product/viewProducts"
         );
   
-        // Log the full response data to debug
-        console.log("Full Response Data:", response);
-  
-        // Check if the response contains a valid products array
-        if (response.data.products && Array.isArray(response.data.products)) {
-          setProducts(response.data.products);
+        if (Array.isArray(response.data.data)) {
+          setProducts(response.data.data); // Update state with the array of products
         } else {
           console.error("Invalid data format: products is not an array", response.data);
         }
@@ -43,8 +33,6 @@ function FeaturedProducts() {
   
     fetchProducts();
   }, []);
-  
-  
 
   function getImageForItinerary(index) {
     switch (index) {
@@ -59,17 +47,17 @@ function FeaturedProducts() {
     }
   }
 
-  const featuredProducts = products.slice(0, 5);
+  const featuredProducts = products.slice(0, 3);
 
   return (
     <section className="py-12 px-4">
-      <h2 className="text-3xl font-bold mb-6 text-center">Featured Itineraries</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center"> Products</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {featuredProducts.map((products, index) => (
-          <Card key={products._id}>
+        {featuredProducts.map((product, index) => (
+          <Card key={product._id}>
             <CardHeader>
-              <CardTitle>{products.Name}</CardTitle>
-              <CardDescription> {products.Description}</CardDescription>
+              <CardTitle>{product.Name}</CardTitle>
+              <CardDescription>{product.Description}</CardDescription>
             </CardHeader>
             <CardContent>
               <img src={getImageForItinerary(index)} alt="Itinerary Image" className="w-full h-[200px] object-cover rounded-md" />
@@ -77,11 +65,8 @@ function FeaturedProducts() {
             <CardFooter className="flex justify-between">
               <div className="flex items-center">
                 <Calendar className="mr-2 h-4 w-4" />
-                <span>{products.Ratings} </span>
+                <span>{product.Ratings}</span>
               </div>
-              {/*<Link to={`/itinerary/${itinerary._id}`}>
-                <Button>View Details</Button>
-              </Link>*/}
             </CardFooter>
           </Card>
         ))}
@@ -90,7 +75,79 @@ function FeaturedProducts() {
   );
 }
 
+function MyProducts() {
+  const [myProducts, setMyProducts] = useState([]);
+  {/*const { id } = useParams();*/}
 
+  useEffect(() => {
+    const fetchMyProducts = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `http://localhost:5000/api/seller/product/viewMyProducts`
+        );
+  
+        if (Array.isArray(response.data.data)) {
+          setMyProducts(response.data.data); // Update state with the user's products
+        } else {
+          console.error("Invalid data format: products is not an array", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user's products:", error);
+      }
+    };
+  
+    fetchMyProducts();
+  }, []);
+
+  function getImageForProduct(index) {
+    switch (index) {
+      case 0:
+        return image1;
+      case 1:
+        return image2;
+      case 2:
+        return image3;
+      default:
+        return image1;
+    }
+  }
+
+  const myProductsList = myProducts.slice(0, 3); // Display only 3 products for now
+
+  return (
+    <section className="py-12 px-4 bg-gray-50">
+      <h2 className="text-3xl font-bold mb-6 text-center">My Products</h2>
+      {myProducts.length === 0 ? (
+        <div className="text-center text-lg font-medium text-gray-500">
+          You don't have any products.
+        </div>
+      ) : (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {myProductsList.map((product, index) => (
+          <Card key={product._id}>
+            <CardHeader>
+              <CardTitle>{product.Name}</CardTitle>
+              <CardDescription>{product.Description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <img src={getImageForProduct(index)} alt="Product Image" className="w-full h-[200px] object-cover rounded-md" />
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <div className="flex items-center">
+                <Calendar className="mr-2 h-4 w-4" />
+                <span>{product.Ratings}</span>
+              </div>
+              <Link to={`/product/${product._id}`}>
+                <Button>View Details</Button>
+              </Link>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+      )}
+    </section>
+  );
+}
 
 export default function LandingPage() {
   return (
@@ -114,9 +171,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Featured products Section */}
+      {/* Featured Products Section */}
       <FeaturedProducts />
 
+      {/* My Products Section */}
+      <MyProducts />
     </div>
   );
 }

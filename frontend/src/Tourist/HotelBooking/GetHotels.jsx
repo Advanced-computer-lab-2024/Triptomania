@@ -3,7 +3,7 @@ import axiosInstance from '@/axiosInstance.js';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Star, MapPin } from 'lucide-react';
-import './GetHotels.css'; // Import custom styles
+import '../HotelBooking/GetHotels.css'; // Import custom styles
 
 const GetHotels = () => {
   const [city, setCity] = useState('');
@@ -84,8 +84,13 @@ const GetHotels = () => {
                     {hotel.address.countryCode || 'N/A'}
                   </p>
                 </div>
-                <div className="hotel-footer">
-                  <Button className="more-info-button">More Info</Button>
+                <div className="hotel-footer"> 
+                  <Button 
+                    className="more-info-button" 
+                    onClick={() => window.location.href = `/tourist/getHotelOffers?hotelId=${hotel.hotelId}`}
+                  >
+                    More Info
+                  </Button>
                 </div>
               </div>
             </div>
