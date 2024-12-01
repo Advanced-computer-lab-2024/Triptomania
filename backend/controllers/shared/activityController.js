@@ -92,13 +92,18 @@ const viewActivities = async (req, res) => {
 
  const filterActivities = async (req, res) => {
     try {
-        const { budget, date, category, ratings } = req.query;
+        const { minPrice, maxPrice, date, category, ratings } = req.query;
 
         // Initialize filter object
         const filters = {};
 
-        // Filter by budget
-        if (budget) filters.price = { $lte: budget }; 
+        if (minPrice && maxPrice) {
+            filters.price = { $gte: minPrice, $lte: maxPrice }; 
+        } else if (minPrice) {
+            filters.price = { $gte: minPrice }; 
+        } else if (maxPrice) {
+            filters.price = { $lte: maxPrice };
+        }
 
         // Filter by date
         if (date) filters.date = { $gte: new Date(date) }; 
@@ -112,7 +117,7 @@ const viewActivities = async (req, res) => {
         }
 
         // Filter by ratings
-        if (ratings) filters.ratings = { $gte: ratings }; 
+        if (ratings) filters.averageRating = { $gte: ratings }; 
 
         // Fetch filtered activities
         const filteredActivities = await activityModel.find(filters).sort({ date: 1 }); 
