@@ -1,29 +1,49 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom'; // Import routing components
 import LoginPage from './Pages/LoginPage'; // LoginPage component
+import SignUp from './Pages/SignUp';
 import ResetPassword from './components/ResetPassword'; // ResetPassword component
 import LandingPage from './Pages/LandingPage';
-import ViewActivities from './Tourist/Activities/ViewActivities';
+import TouristHomeScreen from './Tourist/TouristHomeScreen';
+import ViewActivities from './Guest/Activities/ViewActivities';
+import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
+import ActivityDetails from './Guest/Details/ActivityDetails';
+import HistoricalPlacesDetails from './Guest/Details/HistoricalPlacesDetails';
 import AddActivity from './Advertiser/Activities/AddActivity';
 import ViewProducts from './Admin/Products/ViewProducts';
 import RequestOtpPage from './Pages/auth/RequestOtp';
 import VerifyOtpPage from './Pages/auth/VerifyOtp';
 import NewPasswordPage from './Pages/auth/NewPassword';
 import GetHotels from './Tourist/HotelBooking/GetHotels'
+import AddProduct from './Seller/Product/AddProduct';
+import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
+import AddItinerary from './TourGuide/Itineraries/AddItineraries';
+import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
+import SellerSignUp from './Pages/SellerSignUp.jsx';
+
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/activities" element={<ViewActivities />} />
+      <Route path="/tourist/home" element={<TouristHomeScreen />} />
+      <Route path="/guest/viewActivities" element={<ViewActivities />} />
+      <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
+      <Route path="/activity/:id" element={<ActivityDetails />} />
+      <Route path="/historicalplaces/:id" element={<HistoricalPlacesDetails />} />
       <Route path="/advertiser/addActivity" element={<AddActivity />} />
+      <Route path="/seller/addProduct" element={<AddProduct />} />
+      <Route path="/tourismGovernor/addHistoricalPlaces" element={<AddHistoricalPlace />} />
+      <Route path="/tourGuide/addItinerary" element={<AddItinerary />} />
       <Route path="/admin/products/viewproducts" element = {<ViewProducts/>} />
       <Route path="/auth/requestOtp" element = {<RequestOtpPage/>} />
       <Route path="/auth/verifyOtp" element = {<VerifyOtpPage/>} />
       <Route path="/auth/newPassword" element = {<NewPasswordPage/>} />
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
-      {/* <Route path="/SignUp" element={<SignUp />} /> */}
+      <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
+      <Route path="/sellersign-up" element={<SellerSignUp />} />
     </Routes>
   );
 };

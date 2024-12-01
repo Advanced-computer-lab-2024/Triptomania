@@ -33,7 +33,7 @@ const ViewProducts = () => {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await axiosInstance.get('http://localhost:5000/api/admin/product/viewProducts');
+      const response = await axiosInstance.get('/api/admin/product/viewProducts');
       setAllProducts(response.data);
       setProducts(response.data);
       setLoading(false);  // Set loading to false when data is fetched
@@ -55,7 +55,7 @@ const ViewProducts = () => {
       if (selectedRating) params.rating = selectedRating;
       if (selectedCategory) params.category = selectedCategory;
 
-      const response = await axiosInstance.get('http://localhost:5000/api/admin/product/filterProducts', { params });
+      const response = await axiosInstance.get('api/admin/product/filterProducts', { params });
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching filtered products:', error);
@@ -71,14 +71,24 @@ const ViewProducts = () => {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (name) => {
+    if (!name) {
+      // If the search term is empty, fetch all products again
+      fetchAllProducts();
+      return;
+    }
+  
     try {
-      const response = await axiosInstance.get(`http://localhost:5000/api/admin/product/searchProducts`);
+      const response = await axiosInstance.get(`/api/admin/product/searchProducts`, {
+        params: { Name: name },
+      });
       setProducts(response.data);
     } catch (error) {
       console.error('Error searching products:', error);
     }
   };
+  
+  
 
   const handleFilterClick = () => {
     fetchFilteredProducts();
@@ -156,12 +166,14 @@ const ViewProducts = () => {
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              
               className="w-full"
             />
-            <Button onClick={handleSearch} className="ml-2">
-              <Search className="w-4 h-4 mr-2" />
-              Search
-            </Button>
+        <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
+    <Search className="w-4 h-4 mr-2" />
+  Search
+</Button>
+
           </div>
 
           {loading ? (
