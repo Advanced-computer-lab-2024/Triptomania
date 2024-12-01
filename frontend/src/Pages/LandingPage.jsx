@@ -16,6 +16,7 @@ import image7 from '../assets/Images/7.jpg';
 import image8 from '../assets/Images/8.jpg';
 import image9 from '../assets/Images/9.jpg';
 import { Link } from 'react-router-dom';
+import './LandingPage.css';
 
 function FeaturedItineraries() {
   const [itineraries, setItineraries] = useState([]);
