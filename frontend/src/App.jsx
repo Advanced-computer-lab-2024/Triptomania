@@ -24,11 +24,11 @@ import SellerSignUp from './Pages/SellerSignUp.jsx';
 const App = () => {
   return (
     <Routes>
-      {/*<Route path="/" element={<LandingPage />} />*/}
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={<TouristHomeScreen />} />
+      <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
