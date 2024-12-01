@@ -19,6 +19,7 @@ import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistorical
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
 import SellerSignUp from './Pages/SellerSignUp.jsx';
+import FileComplaint from './Tourist/Complaints/fileComplaint.jsx'
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
+      <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
     </Routes>
   );
 };
