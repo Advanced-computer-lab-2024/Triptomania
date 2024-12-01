@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom'; // Import routing components
 import LoginPage from './Pages/LoginPage'; // LoginPage component
+import SignUp from './Pages/SignUp';
 import ResetPassword from './components/ResetPassword'; // ResetPassword component
 import LandingPage from './Pages/LandingPage';
 import ViewActivities from './Tourist/Activities/ViewActivities';
@@ -15,12 +16,16 @@ import RequestOtpPage from './Pages/auth/RequestOtp';
 import VerifyOtpPage from './Pages/auth/VerifyOtp';
 import NewPasswordPage from './Pages/auth/NewPassword';
 import GetHotels from './Tourist/HotelBooking/GetHotels'
+import AddProduct from './Seller/Product/AddProduct';
+import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
+import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/activities" element={<ViewActivities />} />
 
@@ -29,6 +34,9 @@ const App = () => {
       <Route path="/historicalplaces/:id" element={<HistoricalPlacesDetails />} />
 
       <Route path="/advertiser/addActivity" element={<AddActivity />} />
+      <Route path="/seller/addProduct" element={<AddProduct />} />
+      <Route path="/tourismGovernor/addHistoricalPlaces" element={<AddHistoricalPlace />} />
+      <Route path="/tourGuide/addItinerary" element={<AddItinerary />} />
       <Route path="/admin/products/viewproducts" element = {<ViewProducts/>} />
       <Route path="/auth/requestOtp" element = {<RequestOtpPage/>} />
       <Route path="/auth/verifyOtp" element = {<VerifyOtpPage/>} />

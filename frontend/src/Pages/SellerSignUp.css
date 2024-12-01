@@ -15,14 +15,14 @@
 
 .signup-box {
   background: #ffffff;
-  padding: 30px 40px; /* Increased padding for better spacing */
+  padding: 30px 50px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 550px; /* Fixed width for white box */
+  width: 550px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Aligns elements at the top */
-  align-items: stretch; /* Ensures elements take full width */
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 h1 {
@@ -34,20 +34,27 @@ h1 {
 }
 
 .form-group {
-  width: 100%; /* Ensures inputs and dropdowns take full width */
+  width: 100%;
   margin-bottom: 15px;
 }
 
-input, select {
-  width: 100%; /* Full width for inputs and dropdown */
-  padding: 12px; /* Larger padding for readability */
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
   font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-sizing: border-box; /* Include padding in width */
+  box-sizing: border-box;
 }
 
-input:focus, select:focus {
+textarea {
+  resize: vertical;
+  height: 100px; /* Adjust as needed */
+}
+
+input:focus,
+textarea:focus {
   border-color: var(--primary-color);
   outline: none;
 }
@@ -56,33 +63,38 @@ input:focus, select:focus {
   color: red;
   font-size: 14px;
   text-align: center;
-  margin: 10px 0; /* Add spacing above and below */
+  margin-top: 10px;
+}
+
+.success-message {
+  text-align: center;
+  font-size: 16px;
+  color: var(--primary-color);
+  margin-top: 20px;
+}
+
+.login-link {
+  color: var(--secondary-color);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-link:hover {
+  color: var(--primary-color);
 }
 
 .signup-button {
-  width: 100%; /* Full width button */
-  padding: 14px; /* Larger padding for consistency */
+  width: 100%;
+  padding: 14px;
   font-size: 16px;
   background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px; /* Space above the button */
+  margin-top: 20px;
 }
 
 .signup-button:hover {
   background-color: var(--secondary-color);
-}
-
-.already-account {
-  text-align: center;
-  color: var(--primary-color);
-  cursor: pointer;
-  text-decoration: underline;
-  margin-top: 20px; /* Space above the link */
-}
-
-.already-account:hover {
-  color: var(--secondary-color);
 }
