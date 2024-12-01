@@ -255,7 +255,22 @@ const toggleArchiveStatus = async (req, res) => {
    }
 };
 
+const getProductSales = async (req, res) => {
+   try {
+      const { productId } = req.body;
 
+      const product = await productModel.findById(productId);
+      if (!product) {
+         return res.status(404).json({ message: 'Product not found' });
+      }
+
+      const sales = product.Sales;
+      res.status(200).json({ message: 'Product sales retrieved successfully', sales: sales });
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving product sales', error });
+   }
+}
 
 export default{
    addProduct,

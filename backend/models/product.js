@@ -43,10 +43,9 @@ Rating: [{
     required :false,
     default: false,  
   },
-  Sales:{
-    type: Number,
-    default:0,
-  }
+  Sales:[
+    Object  
+  ]
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
