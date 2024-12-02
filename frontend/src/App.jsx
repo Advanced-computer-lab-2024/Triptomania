@@ -38,6 +38,7 @@ import TourGuideHomePage from './TourGuide/TourGuideHomePage.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
 import SearchFlights from './Tourist/FlightBooking/searchFlights';
+import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 
 
 const App = () => {
@@ -82,7 +83,8 @@ const App = () => {
       <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} /> 
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
-    </Routes>
+      <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
+      </Routes>
   );
 };
 
