@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Calendar, Search } from 'lucide-react';
-import { Header } from '../components/Header2'
+import { Header } from '../components/HeaderTourist'
 import '../index.css';
 import image1 from '../assets/Images/1.png';
 import image2 from '../assets/Images/2.png';
