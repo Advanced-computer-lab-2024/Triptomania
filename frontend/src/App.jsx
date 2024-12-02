@@ -20,6 +20,8 @@ import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistorical
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp';
 import SellerSignUp from './Pages/SellerSignUp';
+import TouristSignUp from './Pages/TouristSignUp';
+import TourGuideSignUp from './Pages/TourGuideSignUp';
 import FileComplaint from './Tourist/Complaints/FileComplaint'
 import ViewProductsTourist from './Tourist/Products/ViewProducts';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
@@ -53,6 +55,8 @@ const App = () => {
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
+      <Route path="/touristsign-up" element={<TouristSignUp />} />
+      <Route path="/tourguidesign-up" element={<TourGuideSignUp />} />
       <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
       <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />

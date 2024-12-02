@@ -246,7 +246,7 @@ const handleArchiveToggle = async (productId, currentStatus) => {
                     <p className="product-description">{product.Description}</p>
                     <div className="product-info">
                       <p className="product-seller">
-                        <strong>Seller:</strong> {product.Seller || 'Unknown'}
+                        <strong>Seller:&nbsp;</strong> {product.Seller?.username || 'Unknown'}
                       </p>
                     </div>
                     <div className="product-footer">

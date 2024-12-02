@@ -32,9 +32,13 @@ const SignUp = () => {
       localStorage.setItem('advertiserData', JSON.stringify(formData));
       navigate('/advertisersign-up');
     }
-      else if(formData.type === 'admin'){
-        localStorage.setItem('adminData', JSON.stringify(formData));
-        navigate('/adminsign-up'); 
+      else if(formData.type === 'tourist'){
+        localStorage.setItem('touristData', JSON.stringify(formData));
+        navigate('/touristsign-up'); 
+      }
+      else if(formData.type === 'tour-guide'){
+        localStorage.setItem('tourGuideData', JSON.stringify(formData));
+        navigate('/tourguidesign-up'); 
       }
         else if(formData.type === 'seller'){
             localStorage.setItem('sellerData', JSON.stringify(formData));
@@ -116,11 +120,11 @@ const SignUp = () => {
               className="dropdown-menu"
             >
               <option value="" disabled>Select user type</option>
-              <option value="admin">Admin</option>
+              
               <option value="advertiser">Advertiser</option>
               <option value="seller">Seller</option>
               <option value="tour-guide">Tour Guide</option>
-              <option value="tourism-governor">Tourism Governor</option>
+              
               <option value="tourist">Tourist</option>
             </select>
           </div>

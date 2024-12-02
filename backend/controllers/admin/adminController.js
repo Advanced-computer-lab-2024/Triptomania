@@ -107,7 +107,7 @@ const flagItinerary = async (req, res) => {
 const viewProductsAdmin = async (req, res) => {
     try {
         // Exclude 'Quantity' field by setting it to 0
-        const products = await productModel.find();
+        const products = await productModel.find().populate('Seller', 'username');;
         res.status(200).json(products);
     } catch (error) {
         console.log(error);
