@@ -18,11 +18,22 @@ import GetHotels from './Tourist/HotelBooking/GetHotels'
 import AddProduct from './Seller/Product/AddProduct';
 import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
+<<<<<<< HEAD
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
 import SellerSignUp from './Pages/SellerSignUp.jsx';
 import FileComplaint from './Tourist/Complaints/fileComplaint.jsx'
 // import ViewProductsTourist from './Tourist/Products/ViewProducts.jsx'
+=======
+import AdvertiserSignUp from './Pages/AdvertiserSignUp';
+import SellerSignUp from './Pages/SellerSignUp';
+import FileComplaint from './Tourist/Complaints/FileComplaint'
+import ViewProductsTourist from './Tourist/Products/ViewProducts'
+>>>>>>> 3b619d16746cf3fb624f0c9bec67efa5d707bab2
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
+import SellerViewProducts from './Seller/SellerViewProducts.jsx';
+import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
+import SellerHomePage from './Seller/SellerHomePage.jsx';
+
 
 const App = () => {
   return (
@@ -31,6 +42,7 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
@@ -47,10 +59,12 @@ const App = () => {
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
+      <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
       {/* <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} /> */}
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
-
+      <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
+      <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
     </Routes>
   );
 };

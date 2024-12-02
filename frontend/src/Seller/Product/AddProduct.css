@@ -171,6 +171,8 @@ button[type="submit"]:active {
 /* Input type number styling */
 input[type="number"] {
     -moz-appearance: textfield;
+    -webkit-appearance: none; /* WebKit-based browsers */
+    appearance: none;
 }
 
 input[type="number"]::-webkit-outer-spin-button,
