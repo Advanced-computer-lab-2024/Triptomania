@@ -207,7 +207,7 @@ const ViewProducts = () => {
                         {product.category || 'N/A'}
                       </p>
                       <p className="product-seller">
-                        <strong>Seller:</strong> {product.Seller || 'Unknown'}
+                        <strong>Seller:&nbsp;</strong> {product.Seller?.username || 'Unknown'}
                       </p>
                     </div>
                     <div className="product-footer">

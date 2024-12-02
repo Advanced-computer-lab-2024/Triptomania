@@ -21,7 +21,7 @@ import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp';
 import SellerSignUp from './Pages/SellerSignUp';
 import FileComplaint from './Tourist/Complaints/FileComplaint'
-import ViewProductsTourist from './Tourist/Products/ViewProducts'
+// import ViewProductsTourist from './Tourist/Products/ViewProducts'
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
