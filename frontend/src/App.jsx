@@ -6,6 +6,7 @@ import ResetPassword from './components/ResetPassword'; // ResetPassword compone
 import LandingPage from './Pages/LandingPage';
 import TouristHomeScreen from './Tourist/TouristHomeScreen';
 import ViewActivities from './Guest/Activities/ViewActivities';
+import ViewItineraries from './Guest/Itineraries/ViewItineraries';
 import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
 import ActivityDetails from './Guest/Details/ActivityDetails';
 import HistoricalPlacesDetails from './Guest/Details/HistoricalPlacesDetails';
@@ -28,6 +29,7 @@ import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
+import BookHotel from './Tourist/HotelBooking/BookHotel';
 
 
 const App = () => {
@@ -40,6 +42,7 @@ const App = () => {
       <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
+      <Route path="/guest/viewItineraries" element={<ViewItineraries />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
       <Route path="/historicalplaces/:id" element={<HistoricalPlacesDetails />} />
@@ -62,6 +65,7 @@ const App = () => {
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
+      <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
 
     </Routes>
   );

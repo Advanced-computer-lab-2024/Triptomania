@@ -43,6 +43,8 @@ const checkoutCart = async (req, res) => {
 
         let promo = null;
 
+        const date = new Date();
+
         if (promoCode) {
             promo = await promoCodeModel.findOne({ code: promoCode });
             if (!promo) {
@@ -72,18 +74,36 @@ const checkoutCart = async (req, res) => {
             if (!item.productId || !item.quantity) {
                 return res.status(400).json({ error: 'Invalid cart item structure. Each item must have an id and quantity.' });
             }
+
             const product = await productModel.findById(item.productId);
             if (!product) {
                 return res.status(404).json({ error: 'Product not found' });
             }
+
             products.push(item);
-            let tempAmount = 0;
-            tempAmount = product.Price * item.quantity;
+
+            // Calculate amount for the current product
+            const tempAmount = product.Price * item.quantity;
             totalAmount += tempAmount;
+
+            // Deduct quantity and update purchasers
             product.Quantity -= item.quantity;
-            product.Purchasers.push(userId);
-            product.Sales += tempAmount;
+            if (!product.Purchasers.includes(userId)) {
+                product.Purchasers.push(userId);
+            }
+
+            product.SalesReport.push({
+                price: product.Price,
+                quantity: item.quantity,
+                date: date
+            });
+
+            product.Sales += item.quantity;
+
+            // Save the product
             await product.save();
+
+            // Notify if out of stock
             if (product.Quantity === 0) {
                 await notifyOutOfStock(product).catch((error) => {
                     console.error('Error sending out-of-stock email:', error);
@@ -131,7 +151,8 @@ const checkoutCart = async (req, res) => {
             paymentMethod,
             deliveryAddress: user.deliveryAddresses[address],
             promoCode: promo ? promo.id : null,
-            discountAmount: discountAmount
+            discountAmount: discountAmount,
+            date: date
         });
 
         // Clear the user's cart on successful payment
@@ -186,19 +207,39 @@ const cancelOrder = async (req, res) => {
 
         for (const item of order.products) {
             if (!item.productId || !item.quantity) {
-                return res.status(400).json({ error: 'Invalid cart item structure. Each item must have an id and quantity.' });
+                return res.status(400).json({ error: 'Invalid product structure. Each item must have a productId and quantity.' });
             }
+
             const product = await productModel.findById(item.productId);
             if (!product) {
-                return res.status(404).json({ error: 'Product not found' });
+                return res.status(404).json({ error: `Product with ID ${item.productId} not found.` });
             }
+
+            // Revert product quantity
             product.Quantity += item.quantity;
-            product.Sales -= item.quantity * product.Price;
-            product.Purchasers.pull(user.id);
-            product.save();
+
+            // Adjust sales array
+            const saleEntryIndex = product.SalesReport.findIndex(sale => sale.date === order.date);
+
+            if (saleEntryIndex !== -1) {
+                // Remove the existing sale entry
+                product.SalesReport.splice(saleEntryIndex, 1);
+            } else {
+                console.warn(`Sale entry for date ${order.date} not found in product sales.`);
+            }
+
+            product.Sales -= item.quantity;
+
+            // Remove the user from the purchasers list if applicable
+            if (product.Purchasers.includes(user.id)) {
+                product.Purchasers = product.Purchasers.filter(purchaserId => purchaserId !== user.id);
+            }
+
+            // Save the updated product
+            await product.save();
         }
 
-        user.wallet += order.price;
+        user.wallet += order.finalPrice;
         user.save();
 
         order.status = 'Cancelled';
@@ -255,7 +296,7 @@ const sendProductInvoice = async (order) => {
             { email: 'nnnh7240@gmail.com' }
         ];
 
-        const now = new Date(Date.now());
+        const now = new Date(order.date);
 
         // Extract the day, month, and year
         const day = now.getDate(); // Day of the month (1-31)
@@ -441,7 +482,7 @@ const payForEvent = async (req, res) => {
 
             discount = promo.discount;
         }
-
+        const date = new Date();
         let message = "";
         let paymentIntent;
         let originalAmount = event.price;
@@ -472,6 +513,14 @@ const payForEvent = async (req, res) => {
             message = 'Payment successful. Event booked.';
         }
 
+
+        // Add a new sale entry if no match is found
+        event.SalesReport.push({
+            price: event.Price,
+            quantity: 1,
+            date: date
+        });
+
         let eventMap;
         if (eventType === 'activity') {
             eventMap = {
@@ -482,7 +531,8 @@ const payForEvent = async (req, res) => {
                 discountAmount: discountAmount,
                 finalPrice: totalAmount,
                 promoCode: promo ? promo.code : null,
-                date: event.date
+                date: event.date,
+                paymentDate: date
             }
             user.activities.push(eventMap);
             await user.save();
@@ -495,7 +545,8 @@ const payForEvent = async (req, res) => {
                 discountAmount: discountAmount,
                 finalPrice: totalAmount,
                 promoCode: promo ? promo.code : null,
-                date: event.Start_date
+                date: event.Start_date,
+                paymentDate: date
             }
             user.itineraries.push(eventMap);
             await user.save();
@@ -634,6 +685,16 @@ const cancelEvent = async (req, res) => {
 
             // Remove the itinerary from user's itineraries
             user.itineraries.splice(itineraryIndex, 1);
+        }
+
+        // Adjust sales array
+        const saleEntryIndex = event.SalesReport.findIndex(sale => sale.date === event.paymentDate);
+
+        if (saleEntryIndex !== -1) {
+            // Remove the existing sale entry
+            event.SalesReport.splice(saleEntryIndex, 1);
+        } else {
+            console.warn(`Sale entry for date ${event.paymentDate} not found in event sales.`);
         }
 
         // Remove the user from event.bookingMade

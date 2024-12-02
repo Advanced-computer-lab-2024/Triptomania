@@ -75,6 +75,7 @@ const getItinerary = async (req, res) => {
 
 const addItinerary = async (req, res) => {
   try {
+<<<<<<< HEAD
     let { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff,  Start_date, End_date, Tags, creatorId, preferenceTags } = req.body;
 
    
@@ -82,6 +83,12 @@ const addItinerary = async (req, res) => {
       preferenceTags = [];
     }
     const newItinerary = new itineraryModel({ Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, Start_date, End_date, Tags, creatorId, preferenceTags });
+=======
+    const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff,  Start_date, End_date, preferenceTags } = req.body;
+    const creatorId = req.user._id;
+    
+    const newItinerary = new itineraryModel({ Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff, Start_date, End_date, creatorId, preferenceTags });
+>>>>>>> 0215c431edfe5db8df9c7b3c0bef001cfc7e06ce
     await newItinerary.save();
     res.status(201).json({
       status: true,

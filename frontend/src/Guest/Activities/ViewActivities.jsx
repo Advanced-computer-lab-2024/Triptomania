@@ -60,19 +60,25 @@ const ViewActivities = () => {
   const fetchFilteredActivities = async () => {
     try {
       let apiLink = '/api/guest/activities/filterActivities';
+      let queryParams = [];
+
       if (priceRange[0] > 0 || priceRange[1] < 1000) {
         let minPrice = priceRange[0];
         let maxPrice = priceRange[1];
-        apiLink += `?minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        queryParams.push(`minPrice=${minPrice}&maxPrice=${maxPrice}`);
       }
       if (selectedDate) {
-        apiLink += `?date=${selectedDate}`;
+        queryParams.push(`date=${selectedDate}`);
       }
       if (selectedCategory) {
-        apiLink += `?category=${selectedCategory}`;
+        queryParams.push(`category=${selectedCategory}`);
       }
       if (selectedRating) {
-        apiLink += `?ratings=${selectedRating}`;
+        queryParams.push(`ratings=${selectedRating}`);
+      }
+
+      if (queryParams.length > 0) {
+        apiLink += '?' + queryParams.join('&');
       }
 
       const response = await axiosInstance.get(apiLink);

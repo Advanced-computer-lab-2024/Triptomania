@@ -417,7 +417,7 @@ router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req
 
 router.post("/cart/checkoutCart", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.checkoutCart);
 
-router.post("/cart/cancelOrder", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelOrder);
+router.post("/orders/cancelOrder", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), paymentController.cancelOrder);
 
 router.post("/cart/addProduct", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addProductToCart);
 

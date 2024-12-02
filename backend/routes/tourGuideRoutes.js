@@ -2,6 +2,7 @@ import express from 'express';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import tourGuideController from '../controllers/tourGuide/tourGuideController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import reportsController from '../controllers/services/reportsController.js';
 import multer from 'multer';
 import authMiddleware from '../middleware/authMiddleware.js';
 
@@ -167,5 +168,9 @@ router.put('/activate/itinerary', (req, res, next) => authMiddleware.verifyToken
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.requestAccountDeletion);
 
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.saveFCMToken);
+
+router.get('/getTouristCount', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), reportsController.generateTouristCountPDF);
+
+router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), reportsController.generateRevenuePDF);
 
 export default router;

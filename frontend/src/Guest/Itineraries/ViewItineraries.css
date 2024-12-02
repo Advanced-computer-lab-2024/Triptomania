@@ -1,0 +1,142 @@
+.view-itineraries {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .content {
+    display: flex;
+    flex: 1;
+  }
+  
+  .filters {
+    width: 250px;
+    padding: 20px;
+    border-right: 1px solid #e0e0e0;
+  }
+  
+  .itineraries {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .itinerary-card {
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+  
+  .itinerary-image-container {
+    width: 300px;
+    flex-shrink: 0;
+  }
+  
+  .itinerary-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .itinerary-details {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.itinerary-header {
+    display: flex;
+    justify-content: flex-start; /* Ensures alignment to the left */
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 10px; /* Adds space between elements */
+}
+  
+ 
+.itinerary-title {
+    font-size: 1.5rem;
+    margin: 0;
+    text-align: left; /* Ensures text starts at the left */
+    flex: 1;
+}
+  .itinerary-rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .itinerary-description {
+    margin-bottom: 15px;
+  }
+  
+  .itinerary-info {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Space between items */
+    margin-bottom: 15px;
+  }
+  
+  .itinerary-info p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+  
+  .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+  }
+  
+  .itinerary-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+  }
+  
+  .itinerary-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #36827f;
+  }
+  
+  .book-button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .book-button:hover {
+    background-color: #54a7a4;
+  }
+  
+  /* Style the search bar */
+  .search-bar {
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 10px 0; /* Space between header and search bar */
+  }
+  
+  .search-input {
+    width: 50%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  
+  .search-input:focus {
+    border-color: #36827f;
+    box-shadow: 0 0 5px rgba(54, 130, 127, 0.4);
+  }
+  
