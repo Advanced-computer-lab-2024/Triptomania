@@ -18,7 +18,7 @@ const ViewProducts = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('high');
+  const [sortOrder, setSortOrder] = useState('');
   const [loading, setLoading] = useState(true); // Track loading state
   const navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const ViewProducts = () => {
 
   const fetchSortedProducts = async (order) => {
     try {
-      const response = await axiosInstance.get(`http://localhost:5000/api/admin/product/sortProducts`);
+      const response = await axiosInstance.get(`api/admin/product/sortProducts`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching sorted products:', error);
@@ -201,11 +201,14 @@ const ViewProducts = () => {
                         <span>{product.averageRating || 'N/A'}</span>
                       </div>
                     </div>
-                    <p className="product-description">{product.description}</p>
+                    <p className="product-description">{product.Description}</p>
                     <div className="product-info">
                       <p>
                         <Tag className="icon" />
                         {product.category || 'N/A'}
+                      </p>
+                      <p className="product-seller">
+                        <strong>Seller:</strong> {product.Seller || 'Unknown'}
                       </p>
                     </div>
                     <div className="product-footer">
