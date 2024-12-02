@@ -37,6 +37,8 @@ import TourismGovernorMyItirenaries from './TourismGovernor/GovernorMyItirenarie
 import TourGuideHomePage from './TourGuide/TourGuideHomePage.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
+import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
+import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
 import SearchFlights from './Tourist/FlightBooking/searchFlights';
 import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 
@@ -82,6 +84,8 @@ const App = () => {
       <Route path="/Governor/MyItirenaries" element={<TourismGovernorMyItirenaries />} />
       <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} /> 
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
+      <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
+      <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
       <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
       </Routes>
