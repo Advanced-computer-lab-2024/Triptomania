@@ -40,6 +40,7 @@ const itinerarySchema = new Schema({
     },
     accesibility: {
         type: [String],
+        required: true,
     },
     pickUp: {
         type: String,  // Pickup location
@@ -67,10 +68,6 @@ const itinerarySchema = new Schema({
     End_date: {
         type: String, // DD/MM/YYYY Date type
         required: true,
-    },
-    Tags: {
-        type: [String], // Array of tags for filtering
-        default: [],
     },
     creatorId: {
         type: mongoose.Types.ObjectId,
