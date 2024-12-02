@@ -13,6 +13,7 @@ const productSchema = new Schema({
   },
   Seller: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'Seller',
     required: true,
   },
   Price: {
@@ -43,10 +44,13 @@ Rating: [{
     required :false,
     default: false,  
   },
-  Sales:{
+  Sales: {
     type: Number,
-    default:0,
-  }
+    default: 0
+  },
+  SalesReport: [
+    Object
+  ]
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

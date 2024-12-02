@@ -40,6 +40,7 @@ const CreateSeller = async (req, res) => {
     res.status(201).send(seller);
   } catch (error) {
     console.log(error);
+    res.status(500).send({ message: 'Error creating seller' });
   }
 };
 
@@ -122,6 +123,7 @@ const viewMyProducts = async (req, res) => {
 
 const viewProducts = async (req, res) => {
   try {
+    const id = req.user._id
     const products = await productModel.find({
       $or: [
           { Archive: false },

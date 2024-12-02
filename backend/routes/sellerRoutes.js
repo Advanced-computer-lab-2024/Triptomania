@@ -1,6 +1,7 @@
 import sellerController from "../controllers/seller/sellerController.js";
 import productController from '../controllers/shared/productController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import reportsController from '../controllers/services/reportsController.js';
 import express from 'express';
 import multer from "multer";
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -167,11 +168,14 @@ router.put('/uploadProfilePicture', upload.single('file'), sharedController.uplo
 
 router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.acceptTerms);
 
-
 router.patch('/product/archive', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.toggleArchiveStatus); //minus swagger
 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.requestAccountDeletion);
 
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.saveFCMToken);
+
+router.get('/product/getProductSales', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.getProductSales);
+
+router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), reportsController.generateRevenuePDF);
 
 export default router;

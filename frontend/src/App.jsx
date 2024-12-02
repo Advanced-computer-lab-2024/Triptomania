@@ -6,6 +6,7 @@ import ResetPassword from './components/ResetPassword'; // ResetPassword compone
 import LandingPage from './Pages/LandingPage';
 import TouristHomeScreen from './Tourist/TouristHomeScreen';
 import ViewActivities from './Guest/Activities/ViewActivities';
+import ViewItineraries from './Guest/Itineraries/ViewItineraries';
 import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
 import ActivityDetails from './Guest/Details/ActivityDetails';
 import HistoricalPlacesDetails from './Guest/Details/HistoricalPlacesDetails';
@@ -18,10 +19,18 @@ import GetHotels from './Tourist/HotelBooking/GetHotels'
 import AddProduct from './Seller/Product/AddProduct';
 import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
-import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
-import SellerSignUp from './Pages/SellerSignUp.jsx';
+import AdvertiserSignUp from './Pages/AdvertiserSignUp';
+import SellerSignUp from './Pages/SellerSignUp';
+import TouristSignUp from './Pages/TouristSignUp';
+import TourGuideSignUp from './Pages/TourGuideSignUp';
+import FileComplaint from './Tourist/Complaints/FileComplaint'
+import ViewProductsTourist from './Tourist/Products/ViewProducts';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
+import SellerViewProducts from './Seller/SellerViewProducts.jsx';
+import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
+import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
+
 
 const App = () => {
   return (
@@ -30,8 +39,10 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
+      <Route path="/guest/viewItineraries" element={<ViewItineraries />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
       <Route path="/historicalplaces/:id" element={<HistoricalPlacesDetails />} />
@@ -46,9 +57,17 @@ const App = () => {
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
+      <Route path="/touristsign-up" element={<TouristSignUp />} />
+      <Route path="/tourguidesign-up" element={<TourGuideSignUp />} />
+      <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
+      <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
+      <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
+      <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
+      <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
-      </Routes>
+
+    </Routes>
   );
 };
 
