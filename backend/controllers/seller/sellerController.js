@@ -123,6 +123,7 @@ const viewMyProducts = async (req, res) => {
 
 const viewProducts = async (req, res) => {
   try {
+    const id = req.user._id
     const products = await productModel.find({
       $or: [
           { Archive: false },

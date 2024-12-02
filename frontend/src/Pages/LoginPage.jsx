@@ -23,18 +23,19 @@ const LoginPage = () => {
       console.log('User data:', response.data);
       switch (type) {
         case 'admin':
-          navigate('/admin/products/viewProducts');
+          navigate('/admin/products/viewproducts');
           break;
         case 'advertiser':
           break;
         case 'seller':
           break;
         case 'tourGuide':
+          navigate('/tourGuide/addItinerary');
           break;
         case 'tourismGovernor':
           break;
         case 'tourist':
-          navigate('/tourist/home');
+          navigate('/tourist/viewProducts');
           break;
         default:
           navigate('/');

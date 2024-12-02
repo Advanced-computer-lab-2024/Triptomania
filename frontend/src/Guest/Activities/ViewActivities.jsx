@@ -25,8 +25,8 @@ const ViewActivities = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('low');
-  const [sortBy, setSortBy] = useState('price');
+  const [sortOrder, setSortOrder] = useState('');
+  const [sortBy, setSortBy] = useState('');
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
@@ -122,8 +122,8 @@ const ViewActivities = () => {
 
   const handleSortReset = () => {
     // Reset all filters
-    setSortBy('price');
-    setSortOrder('low');
+    setSortBy('');
+    setSortOrder('');
     fetchAllActivities();
   };
 
