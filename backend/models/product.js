@@ -43,8 +43,12 @@ Rating: [{
     required :false,
     default: false,  
   },
-  Sales:[
-    Object  
+  Sales: {
+    type: Number,
+    default: 0
+  },
+  SalesReport: [
+    Object
   ]
 }, { timestamps: true });
 

@@ -19,7 +19,7 @@ import AddProduct from './Seller/Product/AddProduct';
 import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
-import SellerSignUp from './Pages/SellerSignUp.jsx';
+// import SellerSignUp from './Pages/SellerSignUp.jsx';
 
 const App = () => {
   return (
@@ -43,7 +43,7 @@ const App = () => {
       <Route path="/auth/newPassword" element = {<NewPasswordPage/>} />
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
-      <Route path="/sellersign-up" element={<SellerSignUp />} />
+      {/* <Route path="/sellersign-up" element={<SellerSignUp />} /> */}
     </Routes>
   );
 };

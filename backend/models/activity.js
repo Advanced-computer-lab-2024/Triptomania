@@ -61,7 +61,7 @@ const activitySchema = new Schema({
         type: [String],
     default: [],
   },
-  sales: [
+  SalesReport: [
     Object
   ]
 }, { timestamps: true });

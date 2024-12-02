@@ -11,6 +11,7 @@ import sharedController from '../controllers/shared/sharedController.js';
 import complaintsController from '../controllers/admin/complaintsController.js';
 import itineraryController from '../controllers/shared/itineraryController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
+import reportsController from '../controllers/services/reportsController.js';
 import multer from "multer";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -390,5 +391,7 @@ router.post("/addPromoCode", (req, res, next) => authMiddleware.verifyToken(req,
 router.get('/getUsers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getUsers);
 
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.saveFCMToken);
+
+router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), reportsController.generateRevenuePDF);
 
 export default router;

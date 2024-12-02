@@ -95,7 +95,7 @@ const itinerarySchema = new Schema({
         type: Boolean,
         default: false,
     },
-    sales: [
+    SalesReport: [
       Object
     ]
 },  { timestamps: true });
