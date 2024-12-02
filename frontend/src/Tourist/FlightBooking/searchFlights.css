@@ -1,0 +1,119 @@
+.search-flights {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .header {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .search-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .search-input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    background-color: Black;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: #00b383;
+  }
+  
+  .error-message,
+  .loading-message {
+    text-align: center;
+    color: red;
+  }
+  
+  .flights-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .flight-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .flight-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .flight-header {
+    font-size: 1.5rem;
+    padding: 10px;
+    background-color: white;
+    border-bottom: 1px solid white;
+  }
+  
+  .flight-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .flight-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+  }
+  
+  .flight-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d6a4f;
+  }
+  
+  .more-info-button {
+    padding: 8px 16px;
+    background-color: Black;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .more-info-button:hover {
+    background-color: #218838;
+  }
+  
