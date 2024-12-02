@@ -30,7 +30,6 @@ import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 
-
 const App = () => {
   return (
     <Routes>
@@ -64,7 +63,6 @@ const App = () => {
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
-
     </Routes>
   );
 };

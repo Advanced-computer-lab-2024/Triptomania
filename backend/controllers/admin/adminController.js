@@ -43,7 +43,7 @@ const addAdmin = async (req, res) => {
 
 
 const addTourismGovernor = async (req, res) => {
-    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword } = req.body;
+    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword, email } = req.body;
 
     // Validate required fields
     if (!tourismGovernorName || !tourismGovernorUsername || !tourismGovernorPassword) {
@@ -55,7 +55,8 @@ const addTourismGovernor = async (req, res) => {
         const tourismGovernor = new tourismGovernorModel({
             name: tourismGovernorName,
             username: tourismGovernorUsername,
-            password: tourismGovernorPassword
+            password: tourismGovernorPassword,
+            email
         });
 
         // Save the new tourism governor to the database

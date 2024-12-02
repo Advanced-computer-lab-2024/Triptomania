@@ -3,6 +3,7 @@ import advertiserController from '../controllers/advertiser/advertiserController
 import sharedController from '../controllers/shared/sharedController.js';
 import multer from 'multer';
 import authMiddleware from '../middleware/authMiddleware.js';
+import reportsController from '../controllers/services/reportsController.js';
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -141,5 +142,9 @@ router.put('/accept-terms', (req, res, next) => authMiddleware.verifyToken(req, 
 router.put("/request/delete", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.requestAccountDeletion);
 
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.saveFCMToken);
+
+router.get('/getTouristCount', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), reportsController.generateTouristCountPDF);
+
+router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), reportsController.generateRevenuePDF);
 
 export default router;
