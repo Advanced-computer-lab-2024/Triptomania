@@ -21,11 +21,12 @@ import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp';
 import SellerSignUp from './Pages/SellerSignUp';
 import FileComplaint from './Tourist/Complaints/FileComplaint'
-import ViewProductsTourist from './Tourist/Products/ViewProducts'
+import ViewProductsTourist from './Tourist/Products/ViewProducts';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
+import ViewItineraries from './Guest/Itineraries/ViewItineraries';
 
 
 const App = () => {
@@ -54,10 +55,12 @@ const App = () => {
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
-      {/* <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} /> */}
+      <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
+      <Route path="/guest/ViewItineraries" element={<ViewItineraries />} />
+
     </Routes>
   );
 };

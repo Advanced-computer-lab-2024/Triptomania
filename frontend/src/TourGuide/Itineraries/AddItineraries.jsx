@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { 
     BookText, 
-    Calendar, 
-    Clock, 
+    FileText, 
+    Activity, 
     MapPin, 
-    DollarSign, 
+    Timer, 
+    Clock, 
     Languages, 
-    Tag, 
-    Timer,
-    Activity,
-    Car,
-    Tags,
-    Image,
-    FileText, // Added this import
-    Import
+    DollarSign, 
+    Calendar, 
+    Car, 
+    Image 
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,24 +20,22 @@ import axiosInstance from '@/axiosInstance';
 
 const AddItinerary = () => {
     const [formData, setFormData] = useState({
-        Name: '',
-        Description: '',
+        title: '',
+        description: '',
         activities: [],
         locationsToVisit: [],
-        timeLine: '',
+        timeline: '',
         duration: '',
         language: '',
         price: '',
         availableDates: [],
         availableTimes: [],
-        accessibility: [],
-        pickUp: '',
-        dropOff: '',
-        Start_date: '',
-        End_date: '',
-        Tags: [],
-        Image: null,
-        preferenceTags: []
+        accessibility: '', 
+        pickUpLocation: '',
+        dropOffLocation: '',
+        image: null,
+        tags: [],
+        preferenceTags: [] // Added preference tags
     });
 
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -61,7 +56,7 @@ const AddItinerary = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData({ ...formData, Image: file });
+            setFormData({ ...formData, image: file });
             const fileReader = new FileReader();
             fileReader.onload = () => {
                 setPreviewUrl(fileReader.result);
@@ -73,45 +68,51 @@ const AddItinerary = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formDataToSend = new FormData();
-        for (const key in formData) {
+        
+        // Append all form data to FormData object
+        Object.keys(formData).forEach(key => {
             if (Array.isArray(formData[key])) {
                 formDataToSend.append(key, JSON.stringify(formData[key]));
+            } else if (key === 'image' && formData[key]) {
+                formDataToSend.append('image', formData[key]);
             } else {
                 formDataToSend.append(key, formData[key]);
             }
-        }
+        });
 
         try {
-            const response = await axiosInstance.post('/api/tourGuide/itinerary/addItinerary', formDataToSend);
-            const data = await response.json();
+            const response = await axiosInstance.post('/api/tourGuide/itinerary/addItinerary', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
             if (response.status === 201) {
                 alert('Itinerary added successfully!');
+                // Reset form
                 setFormData({
-                    Name: '',
-                    Description: '',
+                    title: '',
+                    description: '',
                     activities: [],
                     locationsToVisit: [],
-                    timeLine: '',
+                    timeline: '',
                     duration: '',
                     language: '',
                     price: '',
                     availableDates: [],
                     availableTimes: [],
-                    accessibility: [],
-                    pickUp: '',
-                    dropOff: '',
-                    Start_date: '',
-                    End_date: '',
-                    Tags: [],
-                    Image: null,
+                    accessibility: '',
+                    pickUpLocation: '',
+                    dropOffLocation: '',
+                    image: null,
+                    tags: [],
                     preferenceTags: []
                 });
                 setPreviewUrl(null);
-            } else {
-                alert(data.error);
             }
         } catch (error) {
             console.error('Error adding itinerary:', error);
+            alert('Error adding itinerary. Please try again.');
         }
     };
 
@@ -123,9 +124,9 @@ const AddItinerary = () => {
                     <BookText className="input-icon" />
                     <Input 
                         type="text" 
-                        name="Name" 
-                        placeholder="Itinerary Name" 
-                        value={formData.Name}
+                        name="title" 
+                        placeholder="Itinerary Title" 
+                        value={formData.title}
                         onChange={handleChange} 
                         required 
                     />
@@ -134,9 +135,9 @@ const AddItinerary = () => {
                 <div className="input-group">
                     <FileText className="input-icon" />
                     <Textarea 
-                        name="Description" 
+                        name="description" 
                         placeholder="Itinerary Description" 
-                        value={formData.Description}
+                        value={formData.description}
                         onChange={handleChange} 
                         required 
                     />
@@ -170,9 +171,9 @@ const AddItinerary = () => {
                     <Timer className="input-icon" />
                     <Input 
                         type="text" 
-                        name="timeLine" 
+                        name="timeline" 
                         placeholder="Timeline" 
-                        value={formData.timeLine}
+                        value={formData.timeline}
                         onChange={handleChange} 
                         required 
                     />
@@ -217,57 +218,71 @@ const AddItinerary = () => {
                 <div className="input-group">
                     <Calendar className="input-icon" />
                     <Input 
-                        type="date" 
-                        name="Start_date" 
-                        value={formData.Start_date}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Calendar className="input-icon" />
-                    <Input 
-                        type="date" 
-                        name="End_date" 
-                        value={formData.End_date}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Car className="input-icon" />
-                    <Input 
                         type="text" 
-                        name="pickUp" 
-                        placeholder="Pick Up Location" 
-                        value={formData.pickUp}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Car className="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="dropOff" 
-                        placeholder="Drop Off Location" 
-                        value={formData.dropOff}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Tags className="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="Tags" 
-                        placeholder="Tags (comma separated)" 
-                        value={formData.Tags.join(',')}
+                        name="availableDates" 
+                        placeholder="Available Dates (comma separated)" 
+                        value={formData.availableDates.join(',')}
                         onChange={handleArrayInput} 
+                        required 
+                    />
+                </div>
+
+                <div className="input-group">
+                    <Clock className="input-icon" />
+                    <Input 
+                        type="text" 
+                        name="availableTimes" 
+                        placeholder="Available Times (comma separated)" 
+                        value={formData.availableTimes.join(',')}
+                        onChange={handleArrayInput} 
+                        required 
+                    />
+                </div>
+
+                <div className="input-group">
+                    <Car className="input-icon" />
+                    <Input 
+                        type="text" 
+                        name="pickUpLocation" 
+                        placeholder="Pick Up Location" 
+                        value={formData.pickUpLocation}
+                        onChange={handleChange} 
+                        required 
+                    />
+                </div>
+
+                <div className="input-group">
+                    <Car className="input-icon" />
+                    <Input 
+                        type="text" 
+                        name="dropOffLocation" 
+                        placeholder="Drop Off Location" 
+                        value={formData.dropOffLocation}
+                        onChange={handleChange} 
+                        required 
+                    />
+                </div>
+
+                <div className="input-group">
+                    <BookText className="input-icon" />
+                    <Input 
+                        type="text" 
+                        name="tags" 
+                        placeholder="Tags (comma separated)" 
+                        value={formData.tags.join(',')}
+                        onChange={handleArrayInput} 
+                    />
+                </div>
+
+                <div className="input-group">
+                    <BookText className="input-icon" />
+                    <Input 
+                        type="text" 
+                        name="accessibility" 
+                        placeholder="Accessibility details" 
+                        value={formData.accessibility}
+                        onChange={handleChange} 
+                        required 
                     />
                 </div>
 
@@ -277,7 +292,7 @@ const AddItinerary = () => {
                         <Input 
                             type="file" 
                             id="itinerary-image"
-                            name="Image" 
+                            name="image" 
                             accept="image/*" 
                             onChange={handleFileChange} 
                             className="file-input"
