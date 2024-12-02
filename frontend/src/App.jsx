@@ -21,6 +21,7 @@ import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
 import SellerSignUp from './Pages/SellerSignUp.jsx';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
+import BookHotel from './Tourist/HotelBooking/BookHotel';
 
 const App = () => {
   return (
@@ -46,8 +47,8 @@ const App = () => {
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
-
-    </Routes>
+      <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
+      </Routes>
   );
 };
 
