@@ -18,11 +18,10 @@ import GetHotels from './Tourist/HotelBooking/GetHotels'
 import AddProduct from './Seller/Product/AddProduct';
 import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
-import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
-import SellerSignUp from './Pages/SellerSignUp.jsx';
-import SellerHomePage from './Seller/SellerHomePage.jsx';
-import FileComplaint from './Tourist/Complaints/fileComplaint.jsx'
-import ViewProductsTourist from './Tourist/Products/ViewProducts.jsx'
+import AdvertiserSignUp from './Pages/AdvertiserSignUp';
+import SellerSignUp from './Pages/SellerSignUp';
+import FileComplaint from './Tourist/Complaints/FileComplaint'
+import ViewProductsTourist from './Tourist/Products/ViewProducts'
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';

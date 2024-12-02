@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 import Loading from "@/components/Loading"; // Import the Loading component
 import './ViewProducts.css';
+import '../../index.css';
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);
@@ -201,7 +202,7 @@ const ViewProducts = () => {
                         <span>{product.averageRating || 'N/A'}</span>
                       </div>
                     </div>
-                    <p className="product-description">{product.description}</p>
+                    <p className="product-description">{product.Description}</p>
                     <div className="product-info">
                       <p>
                         <Tag className="icon" />
