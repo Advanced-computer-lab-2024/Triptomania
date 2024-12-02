@@ -28,6 +28,7 @@ const LoginPage = () => {
         case 'advertiser':
           break;
         case 'seller':
+          navigate('/Seller/SellerHomePage');
           break;
         case 'tourGuide':
           navigate('/tourGuide/addItinerary');

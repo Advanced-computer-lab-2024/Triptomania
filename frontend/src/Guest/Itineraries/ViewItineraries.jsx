@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewItineraries.css';
 import { Header } from '../../components/Header';
-import { CalendarIcon, MapPinIcon } from 'lucide-react';
+import { CalendarIcon, MapPinIcon, TagIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
+import Loading from '@/components/Loading'; // Import the loading component
 
 const ViewItineraries = () => {
   const [itineraries, setItineraries] = useState([]);
@@ -23,23 +24,30 @@ const ViewItineraries = () => {
   const [budgetRange, setBudgetRange] = useState([0, 5000]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [preferences, setPreferences] = useState([]);
+  const [preferenceTags, setPreferenceTags] = useState([]); // State for preference tags
+  const [loading, setLoading] = useState(false); // State for loading indicator
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllItineraries();
+    fetchPreferenceTags(); // Fetch preference tags on component mount
   }, []);
 
   const fetchAllItineraries = async () => {
+    setLoading(true); // Show loading indicator while fetching itineraries
     try {
       const response = await axiosInstance.get('/api/guest/itineraries/viewItineraries');
       setAllItineraries(response.data.itineraries || []);
       setItineraries(response.data.itineraries || []);
     } catch (error) {
       console.error('Error fetching itineraries:', error.response?.data || error.message);
+    } finally {
+      setLoading(false); // Hide loading indicator once data is fetched
     }
   };
 
   const fetchFilteredItineraries = async () => {
+    setLoading(true); // Show loading indicator while fetching filtered itineraries
     try {
       const filters = {
         budgetMin: budgetRange[0],
@@ -61,6 +69,17 @@ const ViewItineraries = () => {
       setItineraries(response.data.itineraries || []);
     } catch (error) {
       console.error('Error fetching filtered itineraries:', error.response?.data || error.message);
+    } finally {
+      setLoading(false); // Hide loading indicator once data is fetched
+    }
+  };
+
+  const fetchPreferenceTags = async () => {
+    try {
+      const response = await axiosInstance.get('/api/guest/itineraries/getTags');
+      setPreferenceTags(response.data || []);
+    } catch (error) {
+      console.error('Error fetching preference tags:', error.response?.data || error.message);
     }
   };
 
@@ -132,13 +151,13 @@ const ViewItineraries = () => {
           <div className="mb-4">
             <Label>Preferences</Label>
             <div className="flex flex-wrap gap-2">
-              {['Historic Areas', 'Beaches', 'Family-Friendly', 'Shopping'].map((preference) => (
+              {preferenceTags.map((preference) => (
                 <Button
-                  key={preference}
-                  variant={preferences.includes(preference) ? 'primary' : 'outline'}
-                  onClick={() => handlePreferencesChange(preference)}
+                  key={preference._id}
+                  variant={preferences.includes(preference.PreferenceTagName) ? 'primary' : 'outline'}
+                  onClick={() => handlePreferencesChange(preference.PreferenceTagName)}
                 >
-                  {preference}
+                  {preference.PreferenceTagName}
                 </Button>
               ))}
             </div>
@@ -177,7 +196,10 @@ const ViewItineraries = () => {
               className="w-full"
             />
           </div>
-          {itineraries.length > 0 ? (
+
+          {loading ? (
+            <Loading /> // Display loading component while fetching itineraries
+          ) : itineraries.length > 0 ? (
             itineraries.map((itinerary) => (
               <div className="itinerary-card" key={itinerary._id}>
                 <div className="itinerary-image-container">
@@ -201,6 +223,19 @@ const ViewItineraries = () => {
                       <MapPinIcon className="icon" />
                       {itinerary.locationsToVisit?.[0] || 'Location not available'}
                     </p>
+                    <p>
+                      <TagIcon className="icon" />
+                      {itinerary.preferenceTags
+                        ?.map((tagId) => {
+                          console.log('Iterating over tagId:', tagId);
+                          const tag = preferenceTags.find(c => c._id === tagId);
+                          console.log('Found tag:', tag);  // Check if tag is found correctly
+                          return tag ? tag.PreferenceTagName : null;
+                        })
+                        .filter((tagName) => tagName)  // Filter out any null or undefined values
+                        .join(', ') || 'N/A'}
+                    </p>
+
                   </div>
                   <div className="itinerary-footer">
                     <p className="itinerary-price">${itinerary.price} USD</p>

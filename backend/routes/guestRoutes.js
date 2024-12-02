@@ -3,11 +3,14 @@ import itineraryController from '../controllers/shared/itineraryController.js';
 import activityController from '../controllers/shared/activityController.js';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 import filterController from '../controllers/shared/filterController.js';
+import preferenceTagController from '../controllers/admin/preferenceTagController.js';
 
 
 const router = express.Router();
 
 router.get('/itineraries/viewItineraries', itineraryController.viewItineraries);
+
+router.get('/itineraries/getTags', preferenceTagController.getPreferenceTags);
 
 router.get('/activities/viewActivities', activityController.viewActivities);
 
