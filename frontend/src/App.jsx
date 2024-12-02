@@ -25,6 +25,7 @@ import ViewProductsTourist from './Tourist/Products/ViewProducts'
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
+import SellerHomePage from './Seller/SellerHomePage.jsx';
 
 
 const App = () => {
