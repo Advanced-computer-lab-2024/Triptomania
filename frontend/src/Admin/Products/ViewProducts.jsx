@@ -56,7 +56,7 @@ const ViewProducts = () => {
       if (selectedRating) params.rating = selectedRating;
       if (selectedCategory) params.category = selectedCategory;
 
-      const response = await axiosInstance.get('api/admin/product/filterProducts', { params });
+      const response = await axiosInstance.get('/api/admin/product/filterProducts', { params });
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching filtered products:', error);
@@ -65,7 +65,7 @@ const ViewProducts = () => {
 
   const fetchSortedProducts = async (order) => {
     try {
-      const response = await axiosInstance.get(`http://localhost:5000/api/admin/product/sortProducts`);
+      const response = await axiosInstance.get(`/api/admin/product/sortProducts`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching sorted products:', error);
@@ -78,7 +78,7 @@ const ViewProducts = () => {
       fetchAllProducts();
       return;
     }
-  
+
     try {
       const response = await axiosInstance.get(`/api/admin/product/searchProducts`, {
         params: { Name: name },
@@ -88,8 +88,6 @@ const ViewProducts = () => {
       console.error('Error searching products:', error);
     }
   };
-  
-  
 
   const handleFilterClick = () => {
     fetchFilteredProducts();
@@ -167,13 +165,13 @@ const ViewProducts = () => {
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              
+
               className="w-full"
             />
-        <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
-    <Search className="w-4 h-4 mr-2" />
-  Search
-</Button>
+            <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
+              <Search className="w-4 h-4 mr-2" />
+              Search
+            </Button>
 
           </div>
 
