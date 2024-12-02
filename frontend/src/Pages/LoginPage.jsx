@@ -26,13 +26,16 @@ const LoginPage = () => {
           navigate('/admin/products/viewproducts');
           break;
         case 'advertiser':
+        navigate('/AdvertiserHomePage');
           break;
         case 'seller':
+          navigate('/Seller/SellerHomePage');
           break;
         case 'tourGuide':
-          navigate('/tourGuide/addItinerary');
+        navigate('/TourGuideHomePage');
           break;
         case 'tourismGovernor':
+          navigate('/GovernerHomePage');
           break;
         case 'tourist':
           navigate('/tourist/searchFlights');

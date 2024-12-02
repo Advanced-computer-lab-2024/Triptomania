@@ -4,7 +4,8 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
 
  const addProduct = async (req, res) => {
    try {
-      const {Name,Description, Price, Seller, Ratings, Reviews, Quantity } = req.body;
+      const {Name,Description, Price, Ratings, Reviews, Quantity } = req.body;
+      const Seller = req.user._id;
 
       if (!Name || !Description || !Price || !Seller || !Quantity) {
          return res.status(400).json({ message: "All required fields must be provided." });
@@ -157,25 +158,14 @@ const searchProduct = async (req, res) => {
 
 const filterProducts = async (req, res) => {
    try {
-       const { minPrice, maxPrice } = req.query;
+       const { minPrice, maxPrice, averageRating } = req.query;
 
-       // Ensure both minPrice and maxPrice are defined and are valid numbers
        const min = minPrice ? Number(minPrice) : null;
        const max = maxPrice ? Number(maxPrice) : null;
 
-       // Validate price values
-       if (
-           (min === null && max === null) || 
-           (min < 0) || 
-           (max < 0) || 
-           (isNaN(min) && minPrice !== undefined) || 
-           (isNaN(max) && maxPrice !== undefined)
-       ) {
-           return res.status(400).json({ message: "Please provide valid price values." });
-       }
-
        let filter = {};
-       // Build the filter based on the provided min and max prices
+
+       // Price range filter
        if (min !== null && max !== null) {
            filter.Price = { $gte: min, $lte: max };
        } else if (min !== null) {
@@ -184,21 +174,28 @@ const filterProducts = async (req, res) => {
            filter.Price = { $lte: max };
        }
 
-       // Query the products with the constructed filter
-       const products = await productModel.find(filter);
-
-       // If no products are found, return a 404 response
-       if (products.length === 0) {
-           return res.status(404).json({ message: 'No products found within the specified price range.' });
+       // Handle averageRating filter
+       if (averageRating) {
+           const rating = Number(averageRating); // Ensure it's a number
+           if (isNaN(rating)) {
+               return res.status(400).json({ message: "Invalid rating value" });
+           }
+           filter.averageRating = { $gte: rating }; // Assuming averageRating is a numeric field in DB
        }
 
-       // Return the filtered products
+       const products = await productModel.find(filter);
+
+       if (products.length === 0) {
+           return res.status(404).json({ message: 'No products found with the given filters.' });
+       }
+
        res.status(200).json(products);
    } catch (error) {
        console.log(error);
-       res.status(500).json({ message: 'Error filtering products by price', error: error.message });
+       res.status(500).json({ message: 'Error filtering products', error: error.message });
    }
 };
+
 
 
  const sortProducts = async (req, res) => {

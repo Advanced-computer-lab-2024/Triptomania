@@ -75,6 +75,7 @@ const getItinerary = async (req, res) => {
 
 const addItinerary = async (req, res) => {
   try {
+
     const { Name, activities, locationsToVisit, timeLine, duration, language, price, availableDates, availableTimes, accesibility, pickUp, dropOff,  Start_date, End_date, preferenceTags } = req.body;
     const creatorId = req.user._id;
     
