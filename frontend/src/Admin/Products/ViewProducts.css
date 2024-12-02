@@ -102,7 +102,17 @@
     align-items: center;
   }
   
-  .add-to-cart-button {
+  .archive-button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  #filter {
     padding: 10px 20px;
     background-color: black;
     color: white;
@@ -112,10 +122,28 @@
     transition: background-color 0.3s;
   }
   
-  .add-to-cart-button:hover {
-    background-color: #54a7a4;
+  #search {
+    padding: 10px 20px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+    margin-bottom: 5px;
   }
   
+  .archive-button:hover {
+    background-color: #54a7a4;
+  }
+  #filter:hover{
+    background-color: #54a7a4 !important;
+  }
+  #search:hover{
+    background-color: #54a7a4 !important;
+  }
   .search-bar {
     display: flex;
     align-items: center;

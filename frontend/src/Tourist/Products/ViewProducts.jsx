@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { Header } from '../../components/Header2';
+import { Header } from '../../components/HeaderTourist';
 import { DollarSign, Star, Tag, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -181,7 +181,7 @@ const ViewProducts = () => {
                 </div>
             </RadioGroup>
         </div>
-          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
+          <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
         </aside>
         <main className="products">
           <div className="search-bar mb-4">
@@ -193,8 +193,8 @@ const ViewProducts = () => {
 
               className="w-full"
             />
-            <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
-              <Search className="w-4 h-4 mr-2" />
+            <Button onClick={() => handleSearch(searchTerm)}  id='search' >
+              <Search />
               Search
             </Button>
 
@@ -235,7 +235,7 @@ const ViewProducts = () => {
                     <div className="product-footer">
                       <p className="product-price">
                         <DollarSign className="icon" />
-                        {product.Price.toFixed(2)} USD
+                        {product.Price.toFixed(2)}
                       </p>
                       <Button className="add-to-cart-button" onClick={() => handleAddToCartClick(product._id)}>
                         Add to Cart

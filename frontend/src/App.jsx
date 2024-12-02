@@ -28,7 +28,6 @@ import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
-import ViewItineraries from './Guest/Itineraries/ViewItineraries';
 
 
 const App = () => {
@@ -63,7 +62,6 @@ const App = () => {
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
-      <Route path="/guest/ViewItineraries" element={<ViewItineraries />} />
 
     </Routes>
   );

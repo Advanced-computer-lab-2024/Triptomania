@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { Header } from '../../components/Header2';
+import { Header } from '../../components/HeaderAdmin';
 import { DollarSign, Star, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -200,7 +200,7 @@ const handleArchiveToggle = async (productId, currentStatus) => {
             </RadioGroup>
           </div>
 
-          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
+          <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
         </aside>
 
         <main className="products">
@@ -212,7 +212,7 @@ const handleArchiveToggle = async (productId, currentStatus) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full"
             />
-            <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
+            <Button onClick={() => handleSearch(searchTerm)} id="search">
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
@@ -248,17 +248,23 @@ const handleArchiveToggle = async (productId, currentStatus) => {
                       <p className="product-seller">
                         <strong>Seller:&nbsp;</strong> {product.Seller?.username || 'Unknown'}
                       </p>
+                      <p className="product-quantity">
+                        <strong>Quantity:&nbsp;</strong> {product.Quantity || 'Unknown'}
+                      </p>
+                      <p className="product-quantity">
+                        <strong>Sales:&nbsp;</strong> {product.Sales}
+                      </p>
                     </div>
                     <div className="product-footer">
                       <p className="product-price">
                         <DollarSign className="icon" />
-                        {product.Price.toFixed(2)} USD
+                        {product.Price.toFixed(2)} 
                       </p>
                       <Button
                         className="archive-button"
                         onClick={() => handleArchiveToggle(product._id, product.status)}
                       >
-                        {product.status === 'archived' ? 'Unarchive' : 'Archive'}
+                        {product.Archive === true ? 'Unarchive' : 'Archive'}
                       </Button>
                     </div>
                   </div>
