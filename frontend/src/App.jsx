@@ -39,6 +39,8 @@ import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
 import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
 import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
+import SearchFlights from './Tourist/FlightBooking/searchFlights';
+
 
 const App = () => {
   return (
@@ -83,6 +85,7 @@ const App = () => {
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
       <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
       <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
+      <Route path="/tourist/searchFlights" element={<SearchFlights />} />
     </Routes>
   );
 };
