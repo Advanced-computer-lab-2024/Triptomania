@@ -25,8 +25,8 @@ const ViewActivities = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedRating, setSelectedRating] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('low');
-  const [sortBy, setSortBy] = useState('price');
+  const [sortOrder, setSortOrder] = useState('');
+  const [sortBy, setSortBy] = useState('');
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
@@ -60,19 +60,25 @@ const ViewActivities = () => {
   const fetchFilteredActivities = async () => {
     try {
       let apiLink = '/api/guest/activities/filterActivities';
+      let queryParams = [];
+
       if (priceRange[0] > 0 || priceRange[1] < 1000) {
         let minPrice = priceRange[0];
         let maxPrice = priceRange[1];
-        apiLink += `?minPrice=${minPrice}&maxPrice=${maxPrice}`;
+        queryParams.push(`minPrice=${minPrice}&maxPrice=${maxPrice}`);
       }
       if (selectedDate) {
-        apiLink += `?date=${selectedDate}`;
+        queryParams.push(`date=${selectedDate}`);
       }
       if (selectedCategory) {
-        apiLink += `?category=${selectedCategory}`;
+        queryParams.push(`category=${selectedCategory}`);
       }
       if (selectedRating) {
-        apiLink += `?ratings=${selectedRating}`;
+        queryParams.push(`ratings=${selectedRating}`);
+      }
+
+      if (queryParams.length > 0) {
+        apiLink += '?' + queryParams.join('&');
       }
 
       const response = await axiosInstance.get(apiLink);
@@ -122,8 +128,8 @@ const ViewActivities = () => {
 
   const handleSortReset = () => {
     // Reset all filters
-    setSortBy('price');
-    setSortOrder('low');
+    setSortBy('');
+    setSortOrder('');
     fetchAllActivities();
   };
 

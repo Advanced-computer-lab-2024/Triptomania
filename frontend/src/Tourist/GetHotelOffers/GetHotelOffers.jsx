@@ -10,7 +10,6 @@ const GetHotelOffers = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [apiResponse, setApiResponse] = useState(null);
   const hotelId = new URLSearchParams(location.search).get('hotelId');
 
   useEffect(() => {
@@ -28,8 +27,7 @@ const GetHotelOffers = () => {
         });
 
         console.log('API Response:', response.data);
-        setApiResponse(response.data);
-        setOffers(response.data.offers || []);
+        setOffers(response.data.offers || []); // Ensure offers is always an array
       } catch (err) {
         console.error('Error fetching hotel offers:', err);
         if (err.response) {
@@ -51,6 +49,10 @@ const GetHotelOffers = () => {
 
     fetchHotelOffers();
   }, [hotelId]);
+
+  const handleBookNow = (offerId) => {
+    navigate(`/tourist/bookHotel/${offerId}`);
+  };
 
   return (
     <div className="hotel-offers-container">
@@ -102,7 +104,9 @@ const GetHotelOffers = () => {
                       ? `Cancel by ${roomOffer.policies.cancellations[0].deadline} for a fee of ${roomOffer.policies.cancellations[0].amount}`
                       : 'No free cancellation'}
                   </p>
-                  <Button className="book-button">Book Now</Button>
+                 <Button className="book-now-button" onClick={() => handleBookNow(roomOffer.id)}>
+                    Book Now
+                  </Button>
                 </div>
               ))}
             </div>
@@ -114,4 +118,3 @@ const GetHotelOffers = () => {
 };
 
 export default GetHotelOffers;
-  

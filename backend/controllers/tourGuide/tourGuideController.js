@@ -28,7 +28,7 @@ const CreateTourGuide = async (req, res) => {
     }
 
     // Create a new tour guide
-    const tourg = await TourGuideModel.create({ firstName: 'Tour', lastName: 'Guide', username, email, password, mobile: '012012012012', yearsOfExperience: 5, previousWork: 'Tour guide at XYZ' });
+    const tourg = await TourGuideModel.create({ firstName, lastName, username, email, password, mobile , yearsOfExperience , previousWork });
     res.status(201).send(tourg);
   } catch (error) {
     console.log(error);

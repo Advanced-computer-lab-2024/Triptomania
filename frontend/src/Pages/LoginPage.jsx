@@ -38,7 +38,7 @@ const LoginPage = () => {
           navigate('/GovernerHomePage');
           break;
         case 'tourist':
-          navigate('/tourist/home');
+          navigate('/tourist/viewProducts');
           break;
         default:
           navigate('/');

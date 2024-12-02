@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { Header } from '../../components/Header2';
+import { Header } from '../../components/HeaderTourist';
 import { DollarSign, Star, Tag, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 import Loading from "@/components/Loading"; // Import the Loading component
 import './ViewProducts.css';
+import '../../index.css';
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);
@@ -17,8 +18,7 @@ const ViewProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedRating, setSelectedRating] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('high');
+  const [sortOrder, setSortOrder] = useState('');
   const [loading, setLoading] = useState(true); // Track loading state
   const navigate = useNavigate();
 
@@ -45,31 +45,46 @@ const ViewProducts = () => {
 
   const fetchFilteredProducts = async () => {
     try {
-      const params = {};
+        const params = {};
 
-      if (priceRange[0] > 0 || priceRange[1] < 1000) {
-        params.minPrice = priceRange[0];
-        params.maxPrice = priceRange[1];
+        // Add price range filters
+        if (priceRange[0] > 0 || priceRange[1] < 1000) {
+            params.minPrice = priceRange[0];
+            params.maxPrice = priceRange[1];
+        }
+
+        // Add average rating filter
+        if (selectedRating) {
+            params.averageRating = selectedRating;
+        }
+
+        // Send API request with query parameters
+        const response = await axiosInstance.get('/api/tourist/product/filterProducts', { params });
+        setProducts(response.data);
+    } catch (error) {
+        console.error('Error fetching filtered products:', error);
+    }
+};
+
+
+ 
+
+  
+ const fetchSortedProducts = async (order) => {
+  try {
+      if (!order) {
+          // Fetch unsorted products if order is null
+          return fetchProducts();
       }
 
-      if (selectedRating) params.rating = selectedRating;
-      if (selectedCategory) params.category = selectedCategory;
-
-      const response = await axiosInstance.get('api/admin/product/filterProducts', { params });
+      const response = await axiosInstance.get(`/api/tourist/product/sortProducts`, {
+          params: { order },
+      });
       setProducts(response.data);
-    } catch (error) {
-      console.error('Error fetching filtered products:', error);
-    }
-  };
-
-  const fetchSortedProducts = async (order) => {
-    try {
-      const response = await axiosInstance.get(`http://localhost:5000/api/admin/product/sortProducts`);
-      setProducts(response.data);
-    } catch (error) {
+  } catch (error) {
       console.error('Error fetching sorted products:', error);
-    }
-  };
+  }
+};
 
   const handleSearch = async (name) => {
     if (!name) {
@@ -77,7 +92,7 @@ const ViewProducts = () => {
       fetchAllProducts();
       return;
     }
-  
+
     try {
       const response = await axiosInstance.get(`/api/admin/product/searchProducts`, {
         params: { Name: name },
@@ -87,17 +102,15 @@ const ViewProducts = () => {
       console.error('Error searching products:', error);
     }
   };
-  
-  
 
   const handleFilterClick = () => {
     fetchFilteredProducts();
   };
 
-  const handleSortChange = (value) => {
-    setSortOrder(value);
-    fetchSortedProducts(value);
-  };
+  const handleSortChange = (newSortOrder) => {
+    setSortOrder(newSortOrder); 
+    fetchSortedProducts(newSortOrder); 
+};
 
   const isBase64 = (str) => {
     try {
@@ -130,34 +143,45 @@ const ViewProducts = () => {
           </div>
 
           <div className="mb-4">
-            <Label>Rating</Label>
-            <RadioGroup value={selectedRating} onValueChange={setSelectedRating}>
-              {[5, 4, 3, 2, 1].map((rating) => (
-                <div key={rating} className="flex items-center space-x-2">
-                  <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} />
-                  <Label htmlFor={`rating-${rating}`}>
-                    {rating} {rating === 1 ? 'star' : 'stars'} & up
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
+  <Label>Average Rating</Label>
+  <RadioGroup value={selectedRating} onValueChange={setSelectedRating}>
+  {[5, 4, 3, 2, 1].map((rating) => (
+    <div key={rating} className="flex items-center space-x-2">
+      <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} />
+      <Label htmlFor={`rating-${rating}`}>
+        {rating} {rating === 1 ? 'star' : 'stars'} & up
+      </Label>
+    </div>
+  ))}
+</RadioGroup>
 
-          <div className="mb-4">
+</div>
+
+
+     <div className="mb-4">
             <Label>Sort by</Label>
-            <RadioGroup value={sortOrder} onValueChange={handleSortChange}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="high" id="sort-high" />
-                <Label htmlFor="sort-high">Highest to Lowest Rating</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="low" id="sort-low" />
-                <Label htmlFor="sort-low">Lowest to Highest Rating</Label>
-              </div>
+            <RadioGroup value={sortOrder} onValueChange={() => {}}>
+                <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                        value="high"
+                        id="sort-high"
+                        checked={sortOrder === 'high'}
+                        onClick={() => handleSortChange('high')}
+                    />
+                    <Label htmlFor="sort-high">Highest to Lowest Rating</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                        value="low"
+                        id="sort-low"
+                        checked={sortOrder === 'low'}
+                        onClick={() => handleSortChange('low')}
+                    />
+                    <Label htmlFor="sort-low">Lowest to Highest Rating</Label>
+                </div>
             </RadioGroup>
-          </div>
-
-          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
+        </div>
+          <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
         </aside>
         <main className="products">
           <div className="search-bar mb-4">
@@ -166,13 +190,13 @@ const ViewProducts = () => {
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              
+
               className="w-full"
             />
-        <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
-    <Search className="w-4 h-4 mr-2" />
-  Search
-</Button>
+            <Button onClick={() => handleSearch(searchTerm)}  id='search' >
+              <Search />
+              Search
+            </Button>
 
           </div>
 
@@ -201,17 +225,17 @@ const ViewProducts = () => {
                         <span>{product.averageRating || 'N/A'}</span>
                       </div>
                     </div>
-                    <p className="product-description">{product.description}</p>
+                    <p className="product-description">{product.Description}</p>
                     <div className="product-info">
-                      <p>
-                        <Tag className="icon" />
-                        {product.category || 'N/A'}
+                  
+                      <p className="product-seller">
+                        <strong>Seller:</strong> {product.Seller || 'Unknown'}
                       </p>
                     </div>
                     <div className="product-footer">
                       <p className="product-price">
                         <DollarSign className="icon" />
-                        {product.Price.toFixed(2)} USD
+                        {product.Price.toFixed(2)}
                       </p>
                       <Button className="add-to-cart-button" onClick={() => handleAddToCartClick(product._id)}>
                         Add to Cart

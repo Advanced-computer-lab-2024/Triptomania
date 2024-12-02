@@ -6,6 +6,7 @@ import ResetPassword from './components/ResetPassword'; // ResetPassword compone
 import LandingPage from './Pages/LandingPage';
 import TouristHomeScreen from './Tourist/TouristHomeScreen';
 import ViewActivities from './Guest/Activities/ViewActivities';
+import ViewItineraries from './Guest/Itineraries/ViewItineraries';
 import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
 import ActivityDetails from './Guest/Details/ActivityDetails';
 import HistoricalPlacesDetails from './Guest/Details/HistoricalPlacesDetails';
@@ -18,11 +19,12 @@ import GetHotels from './Tourist/HotelBooking/GetHotels'
 import AddProduct from './Seller/Product/AddProduct';
 import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
-import AdvertiserSignUp from './Pages/AdvertiserSignUp.jsx';
-import SellerSignUp from './Pages/SellerSignUp.jsx';
-import SellerHomePage from './Seller/SellerHomePage.jsx';
-import FileComplaint from './Tourist/Complaints/fileComplaint.jsx'
-import ViewProductsTourist from './Tourist/Products/ViewProducts.jsx'
+import AdvertiserSignUp from './Pages/AdvertiserSignUp';
+import SellerSignUp from './Pages/SellerSignUp';
+import TouristSignUp from './Pages/TouristSignUp';
+import TourGuideSignUp from './Pages/TourGuideSignUp';
+import FileComplaint from './Tourist/Complaints/FileComplaint'
+import ViewProductsTourist from './Tourist/Products/ViewProducts';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
 import SellerViewProducts from './Seller/SellerViewProducts.jsx';
 import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
@@ -33,6 +35,9 @@ import AdvertiserMyActivities from './Advertiser/MyActivities.jsx';
 import TourismGovernorAllItirenaries from './TourismGovernor/GovernorAllItirenaries.jsx';
 import TourismGovernorMyItirenaries from './TourismGovernor/GovernorMyItirenaries.jsx';
 import TourGuideHomePage from './TourGuide/TourGuideHomePage.jsx';
+import SellerHomePage from './Seller/SellerHomePage.jsx';
+import BookHotel from './Tourist/HotelBooking/BookHotel';
+
 
 const App = () => {
   return (
@@ -44,6 +49,7 @@ const App = () => {
       <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
+      <Route path="/guest/viewItineraries" element={<ViewItineraries />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
       <Route path="/historicalplaces/:id" element={<HistoricalPlacesDetails />} />
@@ -58,6 +64,8 @@ const App = () => {
       <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
+      <Route path="/touristsign-up" element={<TouristSignUp />} />
+      <Route path="/tourguidesign-up" element={<TourGuideSignUp />} />
       <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
       <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
@@ -71,6 +79,7 @@ const App = () => {
       <Route path="/Governor/AllItirenaries" element={<TourismGovernorAllItirenaries/>} /> 
       <Route path="/Governor/MyItirenaries" element={<TourismGovernorMyItirenaries />} />
       <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} /> 
+      <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
     </Routes>
   );
 };

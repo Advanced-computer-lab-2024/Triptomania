@@ -43,7 +43,7 @@ const addAdmin = async (req, res) => {
 
 
 const addTourismGovernor = async (req, res) => {
-    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword } = req.body;
+    const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword, email } = req.body;
 
     // Validate required fields
     if (!tourismGovernorName || !tourismGovernorUsername || !tourismGovernorPassword) {
@@ -55,7 +55,8 @@ const addTourismGovernor = async (req, res) => {
         const tourismGovernor = new tourismGovernorModel({
             name: tourismGovernorName,
             username: tourismGovernorUsername,
-            password: tourismGovernorPassword
+            password: tourismGovernorPassword,
+            email
         });
 
         // Save the new tourism governor to the database
@@ -107,7 +108,7 @@ const flagItinerary = async (req, res) => {
 const viewProductsAdmin = async (req, res) => {
     try {
         // Exclude 'Quantity' field by setting it to 0
-        const products = await productModel.find();
+        const products = await productModel.find().populate('Seller', 'username');;
         res.status(200).json(products);
     } catch (error) {
         console.log(error);
