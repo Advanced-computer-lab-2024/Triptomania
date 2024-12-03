@@ -37,7 +37,7 @@ import TourismGovernorMyItirenaries from './TourismGovernor/GovernorMyItirenarie
 import TourGuideHomePage from './TourGuide/TourGuideHomePage.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
-
+import AdminHomePage from './Admin/AdminHomePage';
 
 const App = () => {
   return (
@@ -80,6 +80,7 @@ const App = () => {
       <Route path="/Governor/MyItirenaries" element={<TourismGovernorMyItirenaries />} />
       <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} /> 
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
+      <Route path="/admin/adminHomePage" element={<AdminHomePage/>} />
     </Routes>
   );
 };

@@ -394,4 +394,22 @@ router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req,
 
 router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), reportsController.generateRevenuePDF);
 
+router.get('/itineraries/viewAllItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.viewAllItineraries);
+
+router.get('/itineraries/getTags', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), preferenceTagController.getPreferenceTags);
+
+router.get('/activities/viewAllActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.viewAllActivities);
+
+router.get('/activities/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.getCategories);
+
+router.get('/activities/filterActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.filterActivities);
+
+router.get('/activities/sortActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.sortActivities);
+
+router.get('/itineraries/filterItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), itineraryController.filterItineraries);
+
+router.get('/activities/getActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.getActivity);
+
+router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), itineraryController.getItinerary);
+
 export default router;

@@ -8,7 +8,7 @@ import tourGuideModel from '../../models/tourGuide.js';
 import advertiserModel from '../../models/advertiser.js';
 import ItineraryModel from '../../models/itinerary.js'; // Import the itinerary model
 import productModel from '../../models/product.js'; // Import the product model
-import activityModel from '../../models/activity.js'; 
+import activityModel from '../../models/activity.js';
 import dotenv from 'dotenv';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
 
@@ -81,21 +81,21 @@ const flagItinerary = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: "Invalid itinerary ID format." });
         }
-  
+
         // Find the itinerary by ID
         const itinerary = await ItineraryModel.findById(id);
-        
+
         if (!itinerary) {
             return res.status(404).json({ message: "Itinerary not found." });
         }
-  
+
         let isFlagged = itinerary.isFlagged;
-      
+
         // Preserve the creatorId and save the itinerary
         await ItineraryModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
 
         await sendEmail(itinerary); // Send an email to the tour guide
-  
+
         return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
     } catch (error) {
         console.error("Error toggling itinerary flag:", error);
@@ -153,7 +153,7 @@ const deleteAccount = async (req, res) => {
             default:
                 return res.status(400).json({ message: "Invalid type" }); // Return after sending response
         }
- 
+
         // Check if the account was found and deleted
         if (!deletedAccount) {
             return res.status(404).json({ message: "Account not found or already deleted" });
@@ -176,7 +176,7 @@ const checkValidity = async (touristId) => {
     // Check if there are any hotel or flight bookings
     if (tourist.hotelBookings.length > 0 || tourist.flightBookings.length > 0 || tourist.transportationBookings.length > 0) {
         return false; // Return false if there are any bookings
-    } 
+    }
 
     // Check for upcoming itineraries
     const upcomingItineraries = await ItineraryModel.find({ // Use ItineraryModel here
@@ -205,13 +205,13 @@ const getDeleteUsers = async (req, res) => {
     try {
         const deletedTourists = await touristModel.find({ deleteAccount: true });
         console.log('Deleted Tourists:', deletedTourists); // Log the result
-        
+
         const deletedTourGuides = await tourGuideModel.find({ deleteAccount: true });
         console.log('Deleted Tour Guides:', deletedTourGuides); // Log the result
-        
+
         const deletedAdvertisers = await advertiserModel.find({ deleteAccount: true });
         console.log('Deleted Advertisers:', deletedAdvertisers); // Log the result
-        
+
         const deletedSellers = await sellerModel.find({ deleteAccount: true });
         console.log('Deleted Sellers:', deletedSellers); // Log the result
 
@@ -374,6 +374,32 @@ const sendEmail = async (itinerary) => {
     }
 };
 
+const viewAllItineraries = async (req, res) => {
+    try {
+        const itineraries = await ItineraryModel.find();
+        res.status(200).json({
+            status: true,
+            itineraries: itineraries
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: false,
+            error: err.message
+          });
+    }
+}
+
+const viewAllActivities = async (req, res) => {
+    try {
+        const bookings = await activityModel.find().sort({ createdAt: -1 });
+        res.status(200).json(bookings);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Error fetching activities", error: error.message });
+    }
+}
+
 export default {
     addAdmin,
     deleteAccount,
@@ -382,5 +408,7 @@ export default {
     viewProductsAdmin,
     getDeleteUsers,
     createPromoCode,
-    getUsers
+    getUsers,
+    viewAllItineraries,
+    viewAllActivities
 }
