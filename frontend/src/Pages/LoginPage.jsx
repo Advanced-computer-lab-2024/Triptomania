@@ -23,7 +23,7 @@ const LoginPage = () => {
       console.log('User data:', response.data);
       switch (type) {
         case 'admin':
-          navigate('/admin/products/viewproducts');
+          navigate('/admin/adminHomePage');
           break;
         case 'advertiser':
         navigate('/AdvertiserHomePage');

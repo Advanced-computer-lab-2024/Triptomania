@@ -1,0 +1,80 @@
+:root {
+    --primary-color: #36827f;
+    --secondary-color: #54a7a4;
+}
+
+.header {
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 0px;
+}
+
+.container {
+    max-width: 7xl;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.nav-link {
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+.brand {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: "Dancing Script", cursive;
+    font-size: 25px;
+}
+
+.icon-link {
+    display: flex;
+    align-items: center;
+    color: black;
+    transition: color 0.3s ease;
+}
+
+.icon-link:hover {
+    color: var(--primary-color);
+}
+
+.cursor-default {
+    cursor: default;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    z-index: 10;
+}
+
+.relative:hover .dropdown {
+    display: block;
+}
+
+.dropdown:hover {
+    display: block;
+}
+
+/* Adjust dropdown alignment */
+.dropdown a {
+    display: block;
+    padding: 0.5rem 1rem;
+    /* Keep dropdown spacing compact */
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown a:hover {
+    background-color: #f5f5f5;
+    color: var(--primary-color);
+}
