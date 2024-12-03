@@ -109,7 +109,7 @@ const SearchFlights = () => {
                 </p>
                 <Button
                   className="more-info-button"
-                  onClick={() => window.location.href = `/tourist/getFlightOffers/${flight.id}`}
+                  onClick={() => window.location.href = `/tourist/getFlightOffers/${flight.flightOfferId}`}
                 >
                   More Info
                 </Button>

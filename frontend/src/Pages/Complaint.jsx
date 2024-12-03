@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Header } from '@/components/HeaderAdmin';
+import { Header } from '@/components/AdminHeader';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import axiosInstance from '@/axiosInstance';

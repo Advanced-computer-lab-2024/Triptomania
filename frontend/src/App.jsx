@@ -77,7 +77,7 @@ const App = () => {
       <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
       <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
-      <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
+      <Route path="/tourist/getFlightOffers/:flightOfferId" element={<FlightInfo />} />
       <Route path="/admin/complaints" element={<Complaints />} />
       <Route path="/admin/complaint" element={<Complaint />} />
       <Route path="/guest/HistoricalPlaces" element={<ViewHistoricalPlaces />} />

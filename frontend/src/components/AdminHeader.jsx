@@ -50,7 +50,7 @@ export function Header() {
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/" className="brand">
+            <a href="/admin/adminHomePage" className="brand">
               TripTomania
             </a>
           </div>
@@ -64,7 +64,7 @@ export function Header() {
               >
                 <a 
                   href={item.href || '#'} 
-                  className={`nav-link ${!item.href ? 'cursor-default' : ''}`}
+                  className={`header-link ${!item.href ? 'cursor-default' : ''}`}
                   onClick={(e) => !item.href && e.preventDefault()}
                 >
                   {item.name}
