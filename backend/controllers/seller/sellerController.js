@@ -112,7 +112,7 @@ const viewMyProducts = async (req, res) => {
     //filter by the seller's ID
     const products = await productModel.find({
       Seller: id, // Filter products added by the logged-in seller
-    });
+    }).populate('Seller', 'username');
 
     res.status(200).json({data: products});
   } catch (error) {
@@ -129,7 +129,7 @@ const viewProducts = async (req, res) => {
           { Archive: false },
           { Seller: id }
       ]
-  });
+  }).populate('Seller', 'username');
     res.status(200).json({data: products});
   } catch (error) {
     console.log(error);

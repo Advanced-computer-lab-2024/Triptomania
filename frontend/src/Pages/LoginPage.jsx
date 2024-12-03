@@ -28,6 +28,7 @@ const LoginPage = () => {
         case 'advertiser':
           break;
         case 'seller':
+          navigate('/seller/home');
           break;
         case 'tourGuide':
           navigate('/tourGuide/addItinerary');
@@ -35,7 +36,7 @@ const LoginPage = () => {
         case 'tourismGovernor':
           break;
         case 'tourist':
-          navigate('/tourist/viewProducts');
+          navigate('/tourist/home');
           break;
         default:
           navigate('/');

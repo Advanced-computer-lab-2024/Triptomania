@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { Header } from '../../components/HeaderTourist';
-import { DollarSign, Star, Tag, Search } from 'lucide-react';
+import { Header } from '../../components/SellerHeader';
+import { DollarSign, Star, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -9,10 +9,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 import Loading from "@/components/Loading"; // Import the Loading component
-import './ViewProducts.css';
+import './ViewMyProducts.css';
 import '../../index.css';
 
-const ViewProducts = () => {
+const ViewMyProducts = () => {
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,10 +22,6 @@ const ViewProducts = () => {
   const [loading, setLoading] = useState(true); // Track loading state
   const navigate = useNavigate();
 
-  const handleAddToCartClick = (productId) => {
-    // Implement add to cart functionality
-    console.log(`Added product ${productId} to cart`);
-  };
 
   useEffect(() => {
     fetchAllProducts();
@@ -33,15 +29,18 @@ const ViewProducts = () => {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await axiosInstance.get('/api/tourist/product/viewProducts');
-      setAllProducts(response.data);
-      setProducts(response.data);
-      setLoading(false);  // Set loading to false when data is fetched
+      // Fetch products using the updated API
+      const response = await axiosInstance.get('/api/seller/product/viewMyProducts');
+      // Access the data field in the response
+      setAllProducts(response.data.data);
+      setProducts(response.data.data);
+      setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching all products:', error);
-      setLoading(false);  // Ensure loading is false even on error
+      setLoading(false); // Ensure loading is false even on error
     }
   };
+  
 
   const fetchFilteredProducts = async () => {
     try {
@@ -59,25 +58,21 @@ const ViewProducts = () => {
         }
 
         // Send API request with query parameters
-        const response = await axiosInstance.get('/api/tourist/product/filterProducts', { params });
+        const response = await axiosInstance.get('/api/seller/product/filterProducts', { params });
         setProducts(response.data);
     } catch (error) {
         console.error('Error fetching filtered products:', error);
     }
 };
 
-
- 
-
-  
- const fetchSortedProducts = async (order) => {
-  try {
+  const fetchSortedProducts = async (order) => {
+    try {
       if (!order) {
           // Fetch unsorted products if order is null
           return fetchProducts();
       }
 
-      const response = await axiosInstance.get(`/api/tourist/product/sortProducts`, {
+      const response = await axiosInstance.get(`/api/seller/product/sortProducts`, {
           params: { order },
       });
       setProducts(response.data);
@@ -94,7 +89,7 @@ const ViewProducts = () => {
     }
 
     try {
-      const response = await axiosInstance.get(`/api/tourist/product/searchProducts`, {
+      const response = await axiosInstance.get(`/api/seller/product/searchProducts`, {
         params: { Name: name },
       });
       setProducts(response.data);
@@ -111,6 +106,29 @@ const ViewProducts = () => {
     setSortOrder(newSortOrder); 
     fetchSortedProducts(newSortOrder); 
 };
+
+const handleArchiveToggle = async (productId, currentStatus) => {
+  try {
+      // Send the API request to toggle the archive status
+      const response = await axiosInstance.patch('/api/seller/product/archive', {
+          id: productId,
+      });
+
+      if (response.status === 200) {
+          // Update the product's status locally
+          setProducts((prevProducts) =>
+              prevProducts.map((product) =>
+                  product._id === productId
+                      ? { ...product, Archive: !currentStatus }
+                      : product
+              )
+          );
+      }
+  } catch (error) {
+      console.error('Error toggling product archive status:', error);
+  }
+};
+
 
   const isBase64 = (str) => {
     try {
@@ -143,46 +161,46 @@ const ViewProducts = () => {
           </div>
 
           <div className="mb-4">
-  <Label>Average Rating</Label>
-  <RadioGroup value={selectedRating} onValueChange={setSelectedRating}>
-  {[5, 4, 3, 2, 1].map((rating) => (
-    <div key={rating} className="flex items-center space-x-2">
-      <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} />
-      <Label htmlFor={`rating-${rating}`}>
-        {rating} {rating === 1 ? 'star' : 'stars'} & up
-      </Label>
-    </div>
-  ))}
-</RadioGroup>
+            <Label>Average Rating</Label>
+            <RadioGroup value={selectedRating} onValueChange={setSelectedRating}>
+              {[5, 4, 3, 2, 1].map((rating) => (
+                <div key={rating} className="flex items-center space-x-2">
+                  <RadioGroupItem value={rating.toString()} id={`rating-${rating}`} />
+                  <Label htmlFor={`rating-${rating}`}>
+                    {rating} {rating === 1 ? 'star' : 'stars'} & up
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
 
-</div>
-
-
-     <div className="mb-4">
+          <div className="mb-4">
             <Label>Sort by</Label>
             <RadioGroup value={sortOrder} onValueChange={() => {}}>
-                <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                        value="high"
-                        id="sort-high"
-                        checked={sortOrder === 'high'}
-                        onClick={() => handleSortChange('high')}
-                    />
-                    <Label htmlFor="sort-high">Highest to Lowest Rating</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                        value="low"
-                        id="sort-low"
-                        checked={sortOrder === 'low'}
-                        onClick={() => handleSortChange('low')}
-                    />
-                    <Label htmlFor="sort-low">Lowest to Highest Rating</Label>
-                </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="high"
+                  id="sort-high"
+                  checked={sortOrder === 'high'}
+                  onClick={() => handleSortChange('high')}
+                />
+                <Label htmlFor="sort-high">Highest to Lowest Rating</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="low"
+                  id="sort-low"
+                  checked={sortOrder === 'low'}
+                  onClick={() => handleSortChange('low')}
+                />
+                <Label htmlFor="sort-low">Lowest to Highest Rating</Label>
+              </div>
             </RadioGroup>
-        </div>
+          </div>
+
           <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
         </aside>
+
         <main className="products">
           <div className="search-bar mb-4">
             <Input
@@ -190,14 +208,12 @@ const ViewProducts = () => {
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-
               className="w-full"
             />
-            <Button onClick={() => handleSearch(searchTerm)}  id='search' >
-              <Search />
+            <Button onClick={() => handleSearch(searchTerm)} id="search">
+              <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
-
           </div>
 
           {loading ? (
@@ -227,18 +243,26 @@ const ViewProducts = () => {
                     </div>
                     <p className="product-description">{product.Description}</p>
                     <div className="product-info">
-                  
                       <p className="product-seller">
                         <strong>Seller:&nbsp;</strong> {product.Seller?.username || 'Unknown'}
+                      </p>
+                      <p className="product-quantity">
+                        <strong>Quantity:&nbsp;</strong> {product.Quantity < 1 ? 'Out of stock' : product.Quantity}
+                      </p>
+                      <p className="product-quantity">
+                        <strong>Sales:&nbsp;</strong> {product.Sales}
                       </p>
                     </div>
                     <div className="product-footer">
                       <p className="product-price">
                         <DollarSign className="icon" />
-                        {product.Price.toFixed(2)}
+                        {product.Price.toFixed(2)} 
                       </p>
-                      <Button className="add-to-cart-button" onClick={() => handleAddToCartClick(product._id)}>
-                        Add to Cart
+                      <Button
+                        className="archive-button"
+                        onClick={() => handleArchiveToggle(product._id, product.status)}
+                      >
+                        {product.Archive === true ? 'Unarchive' : 'Archive'}
                       </Button>
                     </div>
                   </div>
@@ -254,4 +278,4 @@ const ViewProducts = () => {
   );
 };
 
-export default ViewProducts;
+export default ViewMyProducts;

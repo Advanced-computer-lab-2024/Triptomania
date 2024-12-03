@@ -26,8 +26,8 @@ import TourGuideSignUp from './Pages/TourGuideSignUp';
 import FileComplaint from './Tourist/Complaints/FileComplaint'
 import ViewProductsTourist from './Tourist/Products/ViewProducts';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
-import SellerViewProducts from './Seller/SellerViewProducts.jsx';
-import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
+import SellerViewProducts from './Seller/Product/ViewProducts';
+import SellerViewMyProducts from './Seller/Product/ViewMyProducts';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
 
@@ -39,7 +39,6 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<SignUp/>} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
       <Route path="/guest/viewItineraries" element={<ViewItineraries />} />
@@ -59,14 +58,14 @@ const App = () => {
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/touristsign-up" element={<TouristSignUp />} />
       <Route path="/tourguidesign-up" element={<TourGuideSignUp />} />
-      <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
+      <Route path="/seller/home" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
       <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
-
+    
     </Routes>
   );
 };
