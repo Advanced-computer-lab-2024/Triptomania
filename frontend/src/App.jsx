@@ -26,10 +26,21 @@ import TourGuideSignUp from './Pages/TourGuideSignUp';
 import FileComplaint from './Tourist/Complaints/FileComplaint'
 import ViewProductsTourist from './Tourist/Products/ViewProducts';
 import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
-import SellerViewProducts from './Seller/Product/ViewProducts';
-import SellerViewMyProducts from './Seller/Product/ViewMyProducts';
+import SellerViewProducts from './Seller/SellerViewProducts.jsx';
+import SellerViewMyProducts from './Seller/SellerViewMyProducts.jsx';
+import TourismGovernorHomePage from './TourismGovernor/TourismGovernorHomePage.jsx';
+import AdvertiserHomePage from './Advertiser/AdvertiserHomePage.jsx';
+import AdvertiserAllActivities from './Advertiser/AllActivities.jsx';
+import AdvertiserMyActivities from './Advertiser/MyActivities.jsx';
+import TourismGovernorAllItirenaries from './TourismGovernor/GovernorAllItirenaries.jsx';
+import TourismGovernorMyItirenaries from './TourismGovernor/GovernorMyItirenaries.jsx';
+import TourGuideHomePage from './TourGuide/TourGuideHomePage.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
+import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
+import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
+import SearchFlights from './Tourist/FlightBooking/searchFlights';
+import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 
 
 const App = () => {
@@ -64,9 +75,19 @@ const App = () => {
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
+      <Route path="/GovernerHomePage" element={<TourismGovernorHomePage/>} />
+      <Route path="/AdvertiserHomePage" element={<AdvertiserHomePage/>} />
+      <Route path="/Advertiser/AllActivities" element={<AdvertiserAllActivities/>} />
+      <Route path="/Advertiser/MyActivities" element={<AdvertiserMyActivities/>} /> 
+      <Route path="/Governor/AllItirenaries" element={<TourismGovernorAllItirenaries/>} /> 
+      <Route path="/Governor/MyItirenaries" element={<TourismGovernorMyItirenaries />} />
+      <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} /> 
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
-    
-    </Routes>
+      <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
+      <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
+      <Route path="/tourist/searchFlights" element={<SearchFlights />} />
+      <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
+      </Routes>
   );
 };
 

@@ -48,8 +48,8 @@ const getHistoricalPlace = async (req, res) => {
 const addHistoricalPlace = async (req, res) => {
     
     try {
-        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, Category, creatorId } = req.body;
-
+        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, Category } = req.body;
+        const creatorId = req.user._id;
         // Check that all required fields are provided
         if (!Name || !Description || !Picture || !Location || !Opening_hours || !Closing_hours || !Ticket_prices || !Category || !creatorId) {
             return res.status(400).json({ message: "All required fields must be provided." });

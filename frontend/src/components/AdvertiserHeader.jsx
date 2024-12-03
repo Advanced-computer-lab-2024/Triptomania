@@ -1,9 +1,9 @@
-// src/components/Header.jsx
-
 import React from 'react';
 import { Button } from "@/components/ui/button"; // Adjust path as needed
 import './Header.css'; // Importing the CSS file
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { Bell, ShoppingCart, User } from 'lucide-react'; // Import icons for notifications, cart, and profile
+
 
 export function Header() {
     const navigate = useNavigate();  // Initialize navigate function
@@ -12,11 +12,7 @@ export function Header() {
       navigate("/login");  // Navigate to the Login page on button click
     };
 
-    const handleSignUpClick = () => {
-      navigate("/signUp");  // Navigate to the Login page on button click
-    };
   return (
-
     <header className="header">
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
@@ -26,17 +22,20 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/guest/viewActivities" className="header-link">Activities</a>
-            <a href="#" className="header-link">Historical places</a>
-            <a href="/guest/viewItineraries" className="header-link">Itineraries</a>
+            <a href="/AdvertiserHomePage" className="nav-link">Home</a>
+            <a href="/Advertiser/AllActivities" className="nav-link">All Activities</a>
+            <a href="/Advertiser/MyActivities" className="nav-link">My Activities</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-          <Button variant="ghost" className="signin-btn" onClick={handleSignInClick}>
-          Sign in
-            </Button>
-            <Button className="signup-btn" onClick={handleSignUpClick}>
-              Sign up
-            </Button>
+            <a href="/notifications" className="icon-link">
+              <Bell className="h-6 w-6 text-black hover:text-primary" />
+            </a>
+            <a href="/cart" className="icon-link ml-6">
+              <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
+            </a>
+            <a href="/profile" className="icon-link ml-6">
+              <User className="h-6 w-6 text-black hover:text-primary" />
+            </a>
           </div>
         </div>
       </div>

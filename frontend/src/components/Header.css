@@ -20,13 +20,14 @@
     padding-right: 1rem;
   }
   
-  .nav-link {
+  .header-link {
     color: black; /* gray-500 */
     text-decoration: none;
     transition: color 0.3s ease;
+    font-size: 1.2rem;
   }
   
-  .nav-link:hover {
+  .header-link:hover {
     color: var(--secondary-color); /* gray-900 */
     text-decoration: underline;
   }
