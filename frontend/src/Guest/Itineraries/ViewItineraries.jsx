@@ -180,8 +180,8 @@ const ViewItineraries = () => {
             </Popover>
           </div>
 
-          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
-          <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
+          <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
+          <Button onClick={handleFilterReset} id="filter">Reset Filters</Button>
         </aside>
         <main className="itineraries">
           <div className="search-bar mb-4">

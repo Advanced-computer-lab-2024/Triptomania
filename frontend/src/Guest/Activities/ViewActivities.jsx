@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import './ViewActivities.css';
+// import './ViewActivities.css';
 import { Header } from '../../components/Header';
 import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -118,7 +118,8 @@ const ViewActivities = () => {
     setSelectedRating('');
     setSelectedCategory('');
     setSearchTerm('');
-
+    setSortBy('');
+    setSortOrder('');
     fetchAllActivities();
   };
 
@@ -243,11 +244,10 @@ const ViewActivities = () => {
             )}
           </div>
 
-          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
-          <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
-          <Button onClick={handleSortClick} className="mt-4">Apply Sort</Button>
+          <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
+          <Button onClick={handleFilterReset} id="filter">Reset Filters</Button>
+          <Button onClick={handleSortClick} id="filter">Apply Sort</Button>
           <br></br>
-          <Button onClick={handleSortReset} className="mt-4">Reset Sort</Button>
         </aside>
         <main className="activities">
           <div className="search-bar mb-4">
@@ -259,6 +259,7 @@ const ViewActivities = () => {
               className="w-full"
             />
           </div>
+          
           {activities.length > 0 ? (
             activities.map((activity) => (
               <div className="activity-card" key={activity._id}>

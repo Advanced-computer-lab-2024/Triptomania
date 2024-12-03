@@ -26,9 +26,9 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/guest/viewActivities" className="header-link">Activities</a>
-            <a href="#" className="header-link">Historical places</a>
-            <a href="/guest/viewItineraries" className="header-link">Itineraries</a>
+            <a href="/guest/Activities" className="header-link">Activities</a>
+            <a href="/guest/HistoricalPlaces" className="header-link">Historical places</a>
+            <a href="/guest/Itineraries" className="header-link">Itineraries</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
           <Button variant="ghost" className="signin-btn" onClick={handleSignInClick}>
