@@ -52,7 +52,6 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signUp" element={<SignUp />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/viewActivities" element={<ViewActivities />} />
       <Route path="/guest/viewItineraries" element={<ViewItineraries />} />
@@ -72,7 +71,7 @@ const App = () => {
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/touristsign-up" element={<TouristSignUp />} />
       <Route path="/tourguidesign-up" element={<TourGuideSignUp />} />
-      <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
+      <Route path="/seller/home" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
       <Route path="/tourist/products/viewproducts" element={<ViewProductsTourist />} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />

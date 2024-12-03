@@ -33,9 +33,9 @@ const ViewProducts = () => {
 
   const fetchAllProducts = async () => {
     try {
-      const response = await axiosInstance.get('/api/tourist/product/viewProducts');
-      setAllProducts(response.data);
-      setProducts(response.data);
+      const response = await axiosInstance.get('/api/seller/product/viewProducts');
+      setAllProducts(response.data.data);
+      setProducts(response.data.data);
       setLoading(false);  // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching all products:', error);
@@ -59,7 +59,7 @@ const ViewProducts = () => {
         }
 
         // Send API request with query parameters
-        const response = await axiosInstance.get('/api/tourist/product/filterProducts', { params });
+        const response = await axiosInstance.get('/api/seller/product/filterProducts', { params });
         setProducts(response.data);
     } catch (error) {
         console.error('Error fetching filtered products:', error);
@@ -77,7 +77,7 @@ const ViewProducts = () => {
           return fetchProducts();
       }
 
-      const response = await axiosInstance.get(`/api/tourist/product/sortProducts`, {
+      const response = await axiosInstance.get(`/api/seller/product/sortProducts`, {
           params: { order },
       });
       setProducts(response.data);
@@ -94,7 +94,7 @@ const ViewProducts = () => {
     }
 
     try {
-      const response = await axiosInstance.get(`/api/tourist/product/searchProducts`, {
+      const response = await axiosInstance.get(`/api/seller/product/searchProducts`, {
         params: { Name: name },
       });
       setProducts(response.data);
@@ -230,6 +230,12 @@ const ViewProducts = () => {
                   
                       <p className="product-seller">
                         <strong>Seller:&nbsp;</strong> {product.Seller?.username || 'Unknown'}
+                      </p>
+                      <p className="product-quantity">
+                      <strong>Quantity:&nbsp;</strong> {product.Quantity < 1 ? 'Out of stock' : product.Quantity}
+                      </p>
+                      <p className="product-sales">
+                        <strong>Sales:&nbsp;</strong> {product.Sales}
                       </p>
                     </div>
                     <div className="product-footer">

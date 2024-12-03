@@ -249,7 +249,7 @@ const handleArchiveToggle = async (productId, currentStatus) => {
                         <strong>Seller:&nbsp;</strong> {product.Seller?.username || 'Unknown'}
                       </p>
                       <p className="product-quantity">
-                        <strong>Quantity:&nbsp;</strong> {product.Quantity || 'Unknown'}
+                        <strong>Quantity:&nbsp;</strong> {product.Quantity < 1 ? 'Out of stock' : product.Quantity}
                       </p>
                       <p className="product-quantity">
                         <strong>Sales:&nbsp;</strong> {product.Sales}

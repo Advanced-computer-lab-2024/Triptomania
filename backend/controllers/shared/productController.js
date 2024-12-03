@@ -122,7 +122,7 @@ const uploadPicture = async (req, res) => {
 const viewProducts = async (req, res) => {
    try {
       // Exclude archived products by setting Archive: false in the filter
-      const products = await productModel.find({ Archive: false });
+      const products = await productModel.find({ Archive: false }).populate('Seller', 'username');
       res.status(200).json(products);
    } catch (error) {
       console.log(error);
