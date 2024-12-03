@@ -50,8 +50,8 @@ const ViewItineraries = () => {
     setLoading(true); // Show loading indicator while fetching filtered itineraries
     try {
       const filters = {
-        budgetMin: budgetRange[0],
-        budgetMax: budgetRange[1],
+        minPrice: budgetRange[0],
+        maxPrice: budgetRange[1],
         date: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
         preferences: preferences.join(','),
         language: selectedLanguage,
