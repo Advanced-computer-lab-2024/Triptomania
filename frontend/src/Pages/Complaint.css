@@ -1,0 +1,38 @@
+.complaint-details-page .content {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .complaint-box, .reply-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .complaint-box h2 {
+    margin-bottom: 10px;
+  }
+  
+  .reply-box h3 {
+    margin-bottom: 10px;
+  }
+  
+  .reply-textarea {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 10px;
+  }
+  
+  .success-message {
+    color: green;
+    margin-top: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  

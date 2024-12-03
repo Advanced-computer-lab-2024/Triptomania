@@ -169,10 +169,7 @@ const ViewHistoricalPlaces = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
-            <Button onClick={() => handleSearch(searchTerm)} className="ml-2">
-              <Search className="w-4 h-4 mr-2" />
-              Search
-            </Button>
+            
           </div>
 
           {loading ? (
