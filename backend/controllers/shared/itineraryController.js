@@ -255,12 +255,17 @@ const sortItineraries = async (req, res) => {
 
     const filterItineraries = async (req, res) => {
       try {
-          const { budget, date, preferences, language } = req.query;
+          const { minPrice, maxPrice, date, preferences, language } = req.query;
   
           const filters = {};
   
           // Filter by budget
-          if (budget) filters.price = { $lte: budget }; 
+          if (minPrice || maxPrice) {
+              // Convert the price strings to numbers for comparison
+              const min = minPrice ? Number(minPrice) : 0;
+              const max = maxPrice ? Number(maxPrice) : Infinity;
+              filters.price = { $gte: min, $lte: max }; // Match itineraries within the specified price range
+          } 
           
           // Filter by date (only include itineraries with available dates greater than or equal to the specified date)
           if (date) {
