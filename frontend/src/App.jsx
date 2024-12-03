@@ -38,13 +38,17 @@ import TourGuideHomePage from './TourGuide/TourGuideHomePage.jsx';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
 import AdminHomePage from './Admin/AdminHomePage';
+import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
+import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
+import SearchFlights from './Tourist/FlightBooking/searchFlights';
+import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/signUp" element={<SignUp/>} />
+      <Route path="/signUp" element={<SignUp />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/TouristHomeScreen" element={<TouristHomeScreen />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
@@ -57,30 +61,34 @@ const App = () => {
       <Route path="/seller/addProduct" element={<AddProduct />} />
       <Route path="/tourismGovernor/addHistoricalPlaces" element={<AddHistoricalPlace />} />
       <Route path="/tourGuide/addItinerary" element={<AddItinerary />} />
-      <Route path="/admin/products/viewproducts" element = {<ViewProducts/>} />
-      <Route path="/auth/requestOtp" element = {<RequestOtpPage/>} />
-      <Route path="/auth/verifyOtp" element = {<VerifyOtpPage/>} />
-      <Route path="/auth/newPassword" element = {<NewPasswordPage/>} />
-      <Route path="/tourist/hotelBooking/getHotels" element = {<GetHotels/>} />
+      <Route path="/admin/products/viewproducts" element={<ViewProducts />} />
+      <Route path="/auth/requestOtp" element={<RequestOtpPage />} />
+      <Route path="/auth/verifyOtp" element={<VerifyOtpPage />} />
+      <Route path="/auth/newPassword" element={<NewPasswordPage />} />
+      <Route path="/tourist/hotelBooking/getHotels" element={<GetHotels />} />
       <Route path="/advertisersign-up" element={<AdvertiserSignUp />} />
       <Route path="/sellersign-up" element={<SellerSignUp />} />
       <Route path="/touristsign-up" element={<TouristSignUp />} />
       <Route path="/tourguidesign-up" element={<TourGuideSignUp />} />
       <Route path="/Seller/SellerHomePage" element={<SellerHomePage />} />
       <Route path="/tourist/fileComplaint" element={<FileComplaint />} />
-      <Route path="/tourist/products/viewproducts" element = {<ViewProductsTourist/>} />
+      <Route path="/tourist/products/viewproducts" element={<ViewProductsTourist />} />
       <Route path="/tourist/getHotelOffers" element={<GetHotelOffers />} />
-      <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
-      <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
-      <Route path="/GovernerHomePage" element={<TourismGovernorHomePage/>} />
-      <Route path="/AdvertiserHomePage" element={<AdvertiserHomePage/>} />
-      <Route path="/Advertiser/AllActivities" element={<AdvertiserAllActivities/>} />
-      <Route path="/Advertiser/MyActivities" element={<AdvertiserMyActivities/>} /> 
-      <Route path="/Governor/AllItirenaries" element={<TourismGovernorAllItirenaries/>} /> 
+      <Route path="/Seller/ViewProducts" element={<SellerViewProducts />} />
+      <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts />} />
+      <Route path="/GovernerHomePage" element={<TourismGovernorHomePage />} />
+      <Route path="/AdvertiserHomePage" element={<AdvertiserHomePage />} />
+      <Route path="/Advertiser/AllActivities" element={<AdvertiserAllActivities />} />
+      <Route path="/Advertiser/MyActivities" element={<AdvertiserMyActivities />} />
+      <Route path="/Governor/AllItirenaries" element={<TourismGovernorAllItirenaries />} />
       <Route path="/Governor/MyItirenaries" element={<TourismGovernorMyItirenaries />} />
-      <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} /> 
+      <Route path="/TourGuideHomePage" element={<TourGuideHomePage />} />
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
-      <Route path="/admin/adminHomePage" element={<AdminHomePage/>} />
+      <Route path="/admin/adminHomePage" element={<AdminHomePage />} />
+      <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
+      <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
+      <Route path="/tourist/searchFlights" element={<SearchFlights />} />
+      <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
     </Routes>
   );
 };

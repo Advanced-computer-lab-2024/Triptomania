@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewItineraries.css';
 import { Header } from '../../components/Header';
-import { CalendarIcon, MapPinIcon, TagIcon } from 'lucide-react';
+import { CalendarIcon, MapPinIcon, TagIcon, Languages } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -62,10 +62,7 @@ const ViewItineraries = () => {
         .map((key) => `${key}=${encodeURIComponent(filters[key])}`)
         .join('&');
 
-      console.log("Filter query:", query); // Debugging to ensure query is correct
-
       const response = await axiosInstance.get(`/api/guest/itineraries/filter?${query}`);
-      console.log("Filtered itineraries response:", response.data); // Debug response data
       setItineraries(response.data.itineraries || []);
     } catch (error) {
       console.error('Error fetching filtered itineraries:', error.response?.data || error.message);
@@ -197,7 +194,7 @@ const ViewItineraries = () => {
             />
           </div>
 
-          {loading ? (
+          {loading || !preferenceTags.length ? (
             <Loading /> // Display loading component while fetching itineraries
           ) : itineraries.length > 0 ? (
             itineraries.map((itinerary) => (
@@ -224,18 +221,19 @@ const ViewItineraries = () => {
                       {itinerary.locationsToVisit?.[0] || 'Location not available'}
                     </p>
                     <p>
+                      <Languages className="icon" />
+                      {itinerary.language}
+                    </p>
+                    <p>
                       <TagIcon className="icon" />
                       {itinerary.preferenceTags
                         ?.map((tagId) => {
-                          console.log('Iterating over tagId:', tagId);
                           const tag = preferenceTags.find(c => c._id === tagId);
-                          console.log('Found tag:', tag);  // Check if tag is found correctly
                           return tag ? tag.PreferenceTagName : null;
                         })
-                        .filter((tagName) => tagName)  // Filter out any null or undefined values
+                        .filter((tagName) => tagName)
                         .join(', ') || 'N/A'}
                     </p>
-
                   </div>
                   <div className="itinerary-footer">
                     <p className="itinerary-price">${itinerary.price} USD</p>
