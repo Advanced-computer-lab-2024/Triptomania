@@ -31,7 +31,6 @@ import SellerViewMyProducts from './Seller/Product/ViewMyProducts';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
 import BookHotel from './Tourist/HotelBooking/BookHotel';
 import ViewHistoricalPlaces from './Guest/HistoicalPlaces/viewHistoricalPlaces';
-
 import AdminHomePage from './Admin/AdminHomePage';
 import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
 import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
@@ -45,7 +44,7 @@ import TourismGovernorHomePage from './TourismGovernor/TourismGovernorHomePage';
 import UploadHistoricalPicture from './TourismGovernor/HistoricalPlaces/UploadHistoricalPicture';
 import SalesReportViewer from './Admin/SalesReportViewer/SalesReportViewer';
 import UploadProductPicture from './Seller/Product/UploadProductPicture';
-// import { Upload } from 'lucide-react';
+import TouristAccountManagement from './Tourist/Account/pages/AccountManagement';
 import NotFoundPage from './Pages/NotFoundPage';
 import AdvertiserHomePage from './Advertiser/AdvertiserHomePage';
 import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
@@ -99,8 +98,9 @@ const App = () => {
       <Route path="/tourismGovernor/historicalPlace/addHistoricalPlaces" element={<AddHistoricalPlace />} />
       <Route path="/seller/addProduct" element={<AddProduct />} />
       <Route path="tourismGoverner/HistoricalPlace/uploadPhoto" element={<UploadHistoricalPicture />} />
-      <Route path="/sales-report" element={<SalesReportViewer />} />
+      <Route path="/sales-report" element={<SalesReportViewer />} />
       <Route path="/seller/product/uploadPicture" element={<UploadProductPicture />} />
+      <Route path="/tourist/account" element={<TouristAccountManagement />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/advertiser/home" element={<AdvertiserHomePage />} />
       <Route path="/advertiser/Activities" element={<ViewActivitiesAdvertiser />} />
