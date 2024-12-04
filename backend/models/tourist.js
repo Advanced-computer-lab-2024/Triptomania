@@ -12,10 +12,6 @@ const touristSchema = new Schema({
     type: String,
     required: true,
   },
-  deleteAccount:{
-    type: Boolean,
-    default: false
-  },
   username: {
     type: String,
     required: true,

@@ -44,6 +44,8 @@ import UploadHistoricalPicture from './TourismGovernor/HistoricalPlaces/UploadHi
 import SalesReportViewer from './Admin/SalesReportViewer/SalesReportViewer';
 import UploadProductPicture from './Seller/Product/UploadProductPicture';
 // import { Upload } from 'lucide-react';
+import NotFoundPage from './Pages/NotFoundPage';
+
 const App = () => {
   return (
     <Routes>
@@ -91,7 +93,7 @@ const App = () => {
       <Route path="tourismGoverner/HistoricalPlace/uploadPhoto" element={<UploadHistoricalPicture />} />
       <Route path="/sales-report" element={<SalesReportViewer />} />
       <Route path="/seller/product/uploadPicture" element={<UploadProductPicture />} />
-
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

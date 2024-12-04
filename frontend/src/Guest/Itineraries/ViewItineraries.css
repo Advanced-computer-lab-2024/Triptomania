@@ -29,7 +29,17 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.itinerary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
 
+.itinerary-rating {
+  display: flex;
+  align-items: center;
+}
   
   .itinerary-image-container {
     width: 300px;
