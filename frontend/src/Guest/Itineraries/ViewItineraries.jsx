@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewItineraries.css';
 import { Header } from '../../components/Header';
-import { CalendarIcon, MapPinIcon, TagIcon, Languages } from 'lucide-react';
+import { CalendarIcon, MapPinIcon, TagIcon, Languages, StarIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -25,6 +26,8 @@ const ViewItineraries = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [preferences, setPreferences] = useState([]);
   const [preferenceTags, setPreferenceTags] = useState([]); // State for preference tags
+  const [sortOrder, setSortOrder] = useState('');
+  const [sortBy, setSortBy] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
   const navigate = useNavigate();
 
@@ -49,6 +52,7 @@ const ViewItineraries = () => {
   const fetchFilteredItineraries = async () => {
     setLoading(true); // Show loading indicator while fetching filtered itineraries
     try {
+      console.log(preferences);
       const filters = {
         minPrice: budgetRange[0],
         maxPrice: budgetRange[1],
@@ -62,12 +66,38 @@ const ViewItineraries = () => {
         .map((key) => `${key}=${encodeURIComponent(filters[key])}`)
         .join('&');
 
-      const response = await axiosInstance.get(`/api/guest/itineraries/filter?${query}`);
-      setItineraries(response.data.itineraries || []);
+      const response = await axiosInstance.get(`/api/guest/itineraries/filterItineraries?${query}`);
+
+      if (response.status === 200 && Array.isArray(response.data) && response.data.length === 0) {
+        setItineraries([]); // No itineraries found for the filter
+      } else if (response.status === 200) {
+        setItineraries(response.data || []);
+      } else {
+        setItineraries([]); // Handle unexpected response
+      }
     } catch (error) {
-      console.error('Error fetching filtered itineraries:', error.response?.data || error.message);
+      if (error.response?.status === 404) {
+        setItineraries([]); // Handle 404 explicitly
+      } else {
+        console.error('Error fetching filtered itineraries:', error.response?.data || error.message);
+      }
     } finally {
       setLoading(false); // Hide loading indicator once data is fetched
+    }
+  };
+
+  const fetchSortedItineraries = async () => {
+    try {
+      let apiLink = '/api/guest/itineraries/sortItineraries';
+      if (sortBy && sortOrder) {
+        apiLink += `?sortBy=${sortBy}`;
+        apiLink += `&order=${sortOrder}`;
+      }
+      const response = await axiosInstance.get(apiLink);
+      console.log('Sorted itineraries:', response.data);
+      setItineraries(response.data);
+    } catch (error) {
+      console.error('Error fetching sorted itineraries:', error);
     }
   };
 
@@ -91,7 +121,21 @@ const ViewItineraries = () => {
     setSelectedLanguage('');
     setPreferences([]);
     setSearchTerm('');
+    setSortBy('');
+    setSortOrder('');
     fetchAllItineraries();
+  };
+
+  const handleSortClick = () => {
+    fetchSortedItineraries();
+  };
+
+  const handleSortByChange = (value) => {
+    setSortBy(value);
+  };
+
+  const handleSortOrderChange = (value) => {
+    setSortOrder(value);
   };
 
   const handlePreferencesChange = (preference) => {
@@ -151,8 +195,8 @@ const ViewItineraries = () => {
               {preferenceTags.map((preference) => (
                 <Button
                   key={preference._id}
-                  variant={preferences.includes(preference.PreferenceTagName) ? 'primary' : 'outline'}
-                  onClick={() => handlePreferencesChange(preference.PreferenceTagName)}
+                  variant={preferences.includes(preference._id) ? 'primary' : 'outline'}
+                  onClick={() => handlePreferencesChange(preference._id)}
                 >
                   {preference.PreferenceTagName}
                 </Button>
@@ -179,9 +223,38 @@ const ViewItineraries = () => {
               </PopoverContent>
             </Popover>
           </div>
+          
+          <div className="mb-4">
+            <Label>Sort by</Label>
+            <RadioGroup value={sortBy} onValueChange={handleSortByChange}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="price" id="sort-price" />
+                <Label htmlFor="sort-price">Price</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="rating" id="sort-rating" />
+                <Label htmlFor="sort-rating">Rating</Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <div className="mb-4">
+            <Label>Order</Label>
+            <RadioGroup value={sortOrder} onValueChange={handleSortOrderChange}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="low" id="sort-asc" />
+                <Label htmlFor="sort-asc">Lowest to Highest</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="high" id="sort-desc" />
+                <Label htmlFor="sort-desc">Highest to Lowest</Label>
+              </div>
+            </RadioGroup>
+          </div>
 
           <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
           <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
+          <Button onClick={handleSortClick} className="mt-4">Apply Sort</Button>
         </aside>
         <main className="itineraries">
           <div className="search-bar mb-4">
@@ -207,7 +280,13 @@ const ViewItineraries = () => {
                   />
                 </div>
                 <div className="itinerary-details">
-                  <h2 className="itinerary-title">{itinerary.Name}</h2>
+                  <div className="itinerary-header">
+                    <h2 className="itinerary-title">{itinerary.Name}</h2>
+                    <div className="itinerary-rating">
+                      <StarIcon className="icon" />
+                      <span>{itinerary.averageRating || 'N/A'}</span>
+                    </div>
+                  </div>
                   <p>{itinerary.Description}</p>
                   <div className="itinerary-info">
                     <p>

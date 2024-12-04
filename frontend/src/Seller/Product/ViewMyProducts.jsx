@@ -199,8 +199,9 @@ const handleArchiveToggle = async (productId, currentStatus) => {
           </div>
 
           <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
+     
+         
         </aside>
-
         <main className="products">
           <div className="search-bar mb-4">
             <Input

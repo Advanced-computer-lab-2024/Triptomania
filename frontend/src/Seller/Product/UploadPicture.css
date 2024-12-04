@@ -1,8 +1,9 @@
+/* UploadPicture.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
-    --primary-color: #000000;
-    --secondary-color: #333333;
+    --primary-color: #36827f;
+    --secondary-color: #54a7a4;  
     --text-color: #333333;
     --input-background: #ffffff;
     --input-border: #d1d5db;
@@ -10,13 +11,7 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-body {
-    background-color: #f5f5f5;
-    color: var(--text-color);
-    font-family: 'Poppins', sans-serif;
-}
-
-.add-product-container {
+.upload-picture-container {
     max-width: 600px;
     margin: 2rem auto;
     padding: 2rem;
@@ -25,54 +20,53 @@ body {
     box-shadow: 0 8px 16px var(--shadow-color);
 }
 
-.add-product-container h2 {
+.upload-picture-container h2 {
     text-align: center;
     margin-bottom: 1.5rem;
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: #36827f;
 }
 
-.add-product-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.input-group {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-#input-icon {
-/* make it in the center beside the input-group */
-    margin-right: 5px;
-}
-.input-group input,
-.input-group textarea {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem; /* Increased left padding */
-    border: 1px solid var(--input-border);
+.product-details {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8fafc;
     border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
+    border: 1px solid var(--input-border);
 }
 
-.input-group input:focus,
-.input-group textarea:focus {
-    outline: none;
-    border-color: var(--input-focus);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+.product-details h3 {
+    margin-bottom: 1rem;
+    color: black;
+    font-weight: 600;
 }
 
-.input-group textarea {
-    min-height: 100px;
-    resize: vertical;
+.details-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.value {
+    color: var(--text-color);
 }
 
 /* File Upload Styling */
 .file-upload-group {
     margin: 1.5rem 0;
+    position: relative;
 }
 
 .file-upload-container {
@@ -112,9 +106,7 @@ body {
 .file-upload-label span {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--primary-color);
-    display: flex;
-    align-items: center;
+    color: black;
 }
 
 .file-upload-label small {
@@ -130,6 +122,7 @@ body {
     background-color: #f8fafc;
     text-align: center;
     border: 1px solid var(--input-border);
+    animation: fadeIn 0.3s ease-out;
 }
 
 .image-preview img {
@@ -141,88 +134,38 @@ body {
 }
 
 /* Button Styling */
-button[type="submit"] {
-    background-color: var(--primary-color);
-    color: white;
+.upload-button {
+    width: 100%;
     padding: 0.75rem 1.5rem;
+    background-color: black;
+    color: white;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
 }
 
-button[type="submit"]:hover {
+.upload-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.upload-button:hover {
     background-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px var(--shadow-color);
 }
 
-button[type="submit"]:active {
+.upload-button:active {
     transform: translateY(0);
 }
 
-/* Input type number styling */
-input[type="number"] {
-    -moz-appearance: textfield;
-    -webkit-appearance: none; /* WebKit-based browsers */
-    appearance: none;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Placeholder styling */
-::placeholder {
-    color: #9ca3af;
-    opacity: 1;
-}
-
-:-ms-input-placeholder {
-    color: #9ca3af;
-}
-
-::-ms-input-placeholder {
-    color: #9ca3af;
-}
-
-/* Focus styling */
-*:focus {
-    outline: none;
-}
-
-/* Responsive Design */
-@media (max-width: 640px) {
-    .add-product-container {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
-
-    .add-product-container h2 {
-        font-size: 2rem;
-    }
-
-    .input-group input,
-    .input-group textarea {
-        font-size: 0.875rem;
-    }
-
-    .file-upload-container {
-        padding: 1.5rem;
-    }
-    
-    .file-upload-label span {
-        font-size: 1rem;
-    }
-
-    .image-preview img {
-        max-height: 200px;
-    }
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color);
 }
 
 /* Animations */
@@ -237,6 +180,26 @@ input[type="number"]::-webkit-inner-spin-button {
     }
 }
 
-.image-preview {
-    animation: fadeIn 0.3s ease-out;
+/* Responsive Design */
+@media (max-width: 640px) {
+    .upload-picture-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .upload-picture-container h2 {
+        font-size: 2rem;
+    }
+
+    .file-upload-container {
+        padding: 1.5rem;
+    }
+    
+    .file-upload-label span {
+        font-size: 1rem;
+    }
+
+    .image-preview img {
+        max-height: 200px;
+    }
 }

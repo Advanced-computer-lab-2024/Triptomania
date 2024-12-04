@@ -44,10 +44,16 @@ body {
     display: flex;
     align-items: center;
 }
-#input-icon {
-/* make it in the center beside the input-group */
-    margin-right: 5px;
+
+.input-icon {
+    position: absolute;
+    left: 0.75rem; /* Adjusted for better spacing */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    color: var(--text-color);
 }
+
 .input-group input,
 .input-group textarea {
     width: 100%;

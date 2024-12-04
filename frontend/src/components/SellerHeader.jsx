@@ -21,10 +21,10 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/seller/home" className="nav-link">Home</a>
-            <a href="/Seller/ViewProducts" className="nav-link">Products</a>
-            <a href="/Seller/ViewMyProducts" className="nav-link">My Products</a>
-            <a href="/hotels" className="nav-link">Sales</a>
+            <a href="/seller/home" className="header-link">Home</a>
+            <a href="/Seller/ViewProducts" className="header-link">Products</a>
+            <a href="/Seller/ViewMyProducts" className="header-link">My Products</a>
+            <a href="/seller/addProduct" className="header-link">Sales</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/notifications" className="icon-link">

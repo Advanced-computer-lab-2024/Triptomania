@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { Header } from '../../components/HeaderTourist';
+import { Header } from '../../components/SellerHeader';
 import { DollarSign, Star, Tag, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

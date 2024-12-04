@@ -22,9 +22,9 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/AdvertiserHomePage" className="nav-link">Home</a>
-            <a href="/Advertiser/AllActivities" className="nav-link">All Activities</a>
-            <a href="/Advertiser/MyActivities" className="nav-link">My Activities</a>
+            <a href="/AdvertiserHomePage" className="header-link">Home</a>
+            <a href="/Advertiser/AllActivities" className="header-link">All Activities</a>
+            <a href="/Advertiser/MyActivities" className="header-link">My Activities</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/notifications" className="icon-link">

@@ -124,7 +124,7 @@ const updateComplaintStatus = async (req, res) => {
 
 // view details of a selected complaint by ID
 const viewComplaintDetails = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.query;
 
     try {
         // Validate the complaint ID
