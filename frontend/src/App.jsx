@@ -50,6 +50,7 @@ import AdvertiserHomePage from './Advertiser/AdvertiserHomePage';
 import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
 import TourGuideHomePage from './TourGuide/TourGuideHomePage';
 import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytineraries';
+import TransportationBooking from './Tourist/TransportationBooking/TransportationBooking';
 const App = () => {
   return (
     <Routes>
@@ -106,6 +107,7 @@ const App = () => {
       <Route path="/advertiser/Activities" element={<ViewActivitiesAdvertiser />} />
       <Route path="/tourGuide/home" element={<TourGuideHomePage/>} />
       <Route path="/tourGuide/MyItineraries" element={<ViewMyItinerariesTourGuide/>} />
+      <Route path="/tourist/transportationBooking" element={<TransportationBooking />} />
 
     </Routes>
   );
