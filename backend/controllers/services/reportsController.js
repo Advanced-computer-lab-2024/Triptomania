@@ -169,8 +169,7 @@ const generateRevenuePDF = async (req, res) => {
             doc.text(`Filtered Product: ${productFound?.Name || 'NA'}`, { align: 'center' });
         } else if (creatorId) {
             doc.text(
-                `Filtered Creator: ${tourGuide ? `${tourGuideFound?.username || 'NA'}` : advertiser ? `${advertiserFound?.username || 'NA'}` : 'Creator Not Found'
-                }`,
+                `Filtered Creator: ${tourGuideFound ? `${tourGuideFound?.username || 'NA'}` : advertiserFound ? `${advertiserFound?.username || 'NA'}` : 'Creator Not Found'}`,
                 { align: 'center' }
             );
         } else if (sellerId) {

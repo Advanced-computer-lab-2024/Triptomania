@@ -47,6 +47,9 @@ import SalesReportViewer from './Admin/SalesReportViewer/SalesReportViewer';
 import UploadProductPicture from './Seller/Product/UploadProductPicture';
 // import { Upload } from 'lucide-react';
 import NotFoundPage from './Pages/NotFoundPage';
+import SellerRevenueReport from './Seller/GenerateReport/GenerateReport';
+import ReportTourGuide from './TourGuide/GenerateReport/ReportTourGuide';
+import AdvertiserRevenueReport from './Advertiser/ReportAdvertiser/ReportAdvertiser';
 
 const App = () => {
   return (
@@ -99,6 +102,9 @@ const App = () => {
       <Route path="/sales-report" element={<SalesReportViewer />} />
       <Route path="/seller/product/uploadPicture" element={<UploadProductPicture />} />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/generateReport" element={<SellerRevenueReport />} />
+      <Route path="/tourGuide/generateReport" element={<ReportTourGuide />} />
+      <Route path="/advertiser/generateReport" element={<AdvertiserRevenueReport />} />
     </Routes>
   );
 };

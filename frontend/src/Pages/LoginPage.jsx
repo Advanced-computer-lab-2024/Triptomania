@@ -29,7 +29,7 @@ const LoginPage = () => {
         navigate('/AdvertiserHomePage');
           break;
         case 'seller':
-          navigate('/seller/home');
+          navigate('/generateReport');
           break;
         case 'tourGuide':
         navigate('/TourGuideHomePage');
