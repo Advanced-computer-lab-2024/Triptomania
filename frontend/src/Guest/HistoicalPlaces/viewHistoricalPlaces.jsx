@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Header } from '../../components/Header';
 import Loading from "@/components/Loading";
-import './ViewHistoricalPlaces.css';
+import './viewHistoricalPlaces.css';
 
 const getImageUrl = (picture) => {
   if (!picture) {
