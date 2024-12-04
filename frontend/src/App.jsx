@@ -43,7 +43,7 @@ import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
 import SearchFlights from './Tourist/FlightBooking/searchFlights';
 import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 import DocumentsViewer from './Admin/Documentsviewer/DocumentsViewer.jsx';
-
+import GeneratePdfs from './Admin/GeneratePdfs/GeneratePdfs.jsx';
 const App = () => {
   return (
     <Routes>
@@ -90,6 +90,8 @@ const App = () => {
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
       <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
       <Route path="/admin/view/documents" element={<DocumentsViewer />} />
+      <Route path="/admin/generatePdfs" element={<GeneratePdfs />} />
+
     </Routes>
   );
 };

@@ -8,8 +8,6 @@ import advertiserModel from '../../models/advertiser.js';
 import tourGuideModel from '../../models/tourGuide.js';
 import sellerModel from '../../models/seller.js';
 
-
-
 const reportsDir = path.resolve('./reports');
 if (!fs.existsSync(reportsDir)) {
     fs.mkdirSync(reportsDir, { recursive: true });
