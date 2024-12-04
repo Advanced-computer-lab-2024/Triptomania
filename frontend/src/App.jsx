@@ -12,6 +12,7 @@ import ActivityDetails from './Guest/Details/ActivityDetails';
 import HistoricalPlacesDetails from './Guest/Details/HistoricalPlacesDetails';
 import AddActivity from './Advertiser/Activities/AddActivity';
 import ViewProducts from './Admin/Products/ViewProducts';
+import EditMyProduct from './Seller/Product/editMyProducts';
 import RequestOtpPage from './Pages/auth/RequestOtp';
 import VerifyOtpPage from './Pages/auth/VerifyOtp';
 import NewPasswordPage from './Pages/auth/NewPassword';
@@ -50,6 +51,8 @@ import AdvertiserHomePage from './Advertiser/AdvertiserHomePage';
 import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
 import TourGuideHomePage from './TourGuide/TourGuideHomePage';
 import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytineraries';
+import EditMyItinerary from './TourGuide/Itineraries/EditMyItinerary';
+
 const App = () => {
   return (
     <Routes>
@@ -68,6 +71,7 @@ const App = () => {
       <Route path="/tourismGovernor/addHistoricalPlaces" element={<AddHistoricalPlace />} />
       <Route path="/tourGuide/addItinerary" element={<AddItinerary />} />
       <Route path="/admin/products/viewproducts" element = {<ViewProducts/>} />
+      <Route path="/Seller/editMyProducts/:productId" element={<EditMyProduct />} />
       <Route path="/auth/requestOtp" element = {<RequestOtpPage/>} />
       <Route path="/auth/verifyOtp" element = {<VerifyOtpPage/>} />
       <Route path="/auth/newPassword" element = {<NewPasswordPage/>} />
@@ -106,6 +110,8 @@ const App = () => {
       <Route path="/advertiser/Activities" element={<ViewActivitiesAdvertiser />} />
       <Route path="/tourGuide/home" element={<TourGuideHomePage/>} />
       <Route path="/tourGuide/MyItineraries" element={<ViewMyItinerariesTourGuide/>} />
+      <Route path="/tourGuide/editMyItinerary/:id" element={<EditMyItinerary />} />
+
 
     </Routes>
   );

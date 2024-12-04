@@ -67,7 +67,7 @@ router.put("/itinerary/editItinerary", (req, res, next) => authMiddleware.verify
  *       200:
  *         description: Itinerary details
  */
-router.get("/itinerary/getItinerary", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.getItinerary);
+router.get("/itinerary/getItinerary/:id", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), itineraryController.getItinerary);
 
 
 

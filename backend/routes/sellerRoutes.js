@@ -178,4 +178,7 @@ router.get('/product/getProductSales', (req, res, next) => authMiddleware.verify
 
 router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), reportsController.generateRevenuePDF);
 
+router.get('/product/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.getProductById);
+
+
 export default router;

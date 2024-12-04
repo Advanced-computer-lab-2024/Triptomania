@@ -118,6 +118,29 @@ const uploadPicture = async (req, res) => {
    }
 };
 
+const getProductById = async (req, res) => {
+   try {
+     const { id } = req.params;
+ 
+     // Validate the ID format
+     if (!mongoose.Types.ObjectId.isValid(id)) {
+       return res.status(400).json({ message: "Invalid product ID format." });
+     }
+ 
+     // Find the product by ID
+     const product = await productModel.findById(id).populate('Seller', 'username');
+     if (!product) {
+       return res.status(404).json({ message: "Product not found" });
+     }
+ 
+     res.status(200).json({ message: "Product fetched successfully", product });
+   } catch (error) {
+     console.error('Error fetching product:', error);
+     res.status(500).json({ message: "Error fetching product", error: error.message });
+   }
+ };
+ 
+
 
 const viewProducts = async (req, res) => {
    try {
@@ -270,6 +293,7 @@ const getProductSales = async (req, res) => {
 
 export default{
    addProduct,
+   getProductById,
    editProduct,
    viewProducts,
    searchProduct,

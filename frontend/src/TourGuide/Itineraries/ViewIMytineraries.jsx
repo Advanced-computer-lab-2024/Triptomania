@@ -5,6 +5,7 @@ import { Header } from '../../components/TourguideHeader';
 import { CalendarIcon, MapPinIcon, TagIcon, Languages, StarIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading'; // Import the loading component
 
 const ViewItineraries = () => {
@@ -12,6 +13,7 @@ const ViewItineraries = () => {
   const [allItineraries, setAllItineraries] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllItineraries();
@@ -30,6 +32,23 @@ const ViewItineraries = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this itinerary?")) return;
+    try {
+      setLoading(true);
+      await axiosInstance.delete('/api/tourGuide/itinerary/deleteItinerary', { id });
+      setItineraries((prev) => prev.filter((itinerary) => itinerary._id !== id));
+      setAllItineraries((prev) => prev.filter((itinerary) => itinerary._id !== id));
+      alert("Itinerary deleted successfully.");
+    } catch (error) {
+      console.error('Error deleting itinerary:', error.response?.data || error.message);
+      alert("Failed to delete itinerary. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+ 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     const filtered = allItineraries.filter((itinerary) =>
@@ -96,13 +115,32 @@ const ViewItineraries = () => {
                   </div>
                   <div className="itinerary-footer">
                     <p className="itinerary-price">${itinerary.price} USD</p>
+
+
+
                     <Button
                       className="edit-button"
-                      onClick={() => console.log('Booking itinerary')} // Implement booking functionality if needed
+                      onClick={() => navigate(`/TourGuide/editMyItinerary/${itinerary._id}`)}// Implement booking functionality if needed
                     >
                       Edit
                     </Button>
+
+
+
+                    <Button
+                      className="delete-button"
+                      onClick={() => handleDelete(itinerary._id)}
+                    >
+                      Delete
+                    </Button>
+
+
+                    
+                  
+                    
                   </div>
+
+                  
                 </div>
               </div>
             ))
