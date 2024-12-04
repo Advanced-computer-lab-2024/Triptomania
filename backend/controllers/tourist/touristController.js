@@ -89,7 +89,7 @@ const getOneTourist = async (req, res) => {
 // Update a tourist
 const UpdateTourist = async (req, res) => {
   try {
-    const { firstName, lastName, username, email, password, mobile, nationality, job_Student, wallet, points } = req.body;
+    const { firstName, lastName, username, email, mobile, nationality, job_Student } = req.body;
     console.log('Request Body:', req.body); // Log the incoming request
 
     // Fetch the existing tourist data
@@ -101,13 +101,9 @@ const UpdateTourist = async (req, res) => {
     const updateData = {
       firstName: firstName !== undefined ? firstName : existingTourist.firstName,
       lastName: lastName !== undefined ? lastName : existingTourist.lastName,
-      email: email !== undefined ? email : existingTourist.email,
-      password: password !== undefined ? password : existingTourist.password,
       mobile: mobile !== undefined ? mobile : existingTourist.mobile,
       nationality: nationality !== undefined ? nationality : existingTourist.nationality,
-      job_Student: job_Student !== undefined ? job_Student : existingTourist.job_Student,
-      wallet: wallet !== undefined ? wallet : existingTourist.wallet,
-      points: points !== undefined ? points : existingTourist.points
+      job_Student: job_Student !== undefined ? job_Student : existingTourist.job_Student
     };
 
 

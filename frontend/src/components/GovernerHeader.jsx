@@ -23,7 +23,7 @@ export function Header() {
           <nav className="hidden md:flex space-x-10">
             <a href="/tourismGovernor/home" className="header-link">Home</a>
             <a href="/Governor/AllItirenaries" className="header-link">All Historical Places</a>
-            <a href="/Governor/MyItirenaries" className="header-link">My Historical Places</a>
+            <a href="/tourismGovernor/historicalPlace/addHistoricalPlaces" className="header-link">My Historical Places</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/notifications" className="icon-link">

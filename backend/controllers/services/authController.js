@@ -76,7 +76,7 @@ const login = async (req, res) => {
             sameSite: 'lax', // For cross-origin cookies
         });
 
-        res.status(200).json({ message: "Login successful" });
+        res.status(200).json({ message: "Login successful", user: user });
     } catch (err) {
         console.error(err);
         res.status(500).send("Server error");

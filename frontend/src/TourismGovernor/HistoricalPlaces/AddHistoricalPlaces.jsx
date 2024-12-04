@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Header } from '../../components/GovernerHeader';
 import './AddHistoricalPlaces.css';
 import axiosInstance from '@/axiosInstance';
 // import Resizer from 'react-image-file-resizer';
@@ -98,7 +99,7 @@ const AddHistoricalPlace = () => {
             <h2>Add Historical Place</h2>
             <form className="add-product-form" onSubmit={handleSubmit}>
                 <div className="input-group">
-                    <BookText className="input-icon" />
+                    <BookText id="input-icon" />
                     <Input 
                         type="text" 
                         name="Name" 
@@ -110,7 +111,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group">
-                    <FileText className="input-icon" />
+                    <FileText id="input-icon" />
                     <Textarea 
                         name="Description" 
                         placeholder="Description" 
@@ -121,7 +122,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group">
-                    <MapPin className="input-icon" />
+                    <MapPin id="input-icon" />
                     <Input 
                         type="text" 
                         name="Location" 
@@ -133,7 +134,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group">
-                    <Clock className="input-icon" />
+                    <Clock id="input-icon" />
                     <Input 
                         type="text" 
                         name="Opening_hours" 
@@ -145,7 +146,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group">
-                    <Clock className="input-icon" />
+                    <Clock id="input-icon" />
                     <Input 
                         type="text" 
                         name="Closing_hours" 
@@ -157,7 +158,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group">
-                    <DollarSign className="input-icon" />
+                    <DollarSign id="input-icon" />
                     <Input 
                         type="number" 
                         name="Ticket_prices" 
@@ -171,7 +172,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group">
-                    <Tag className="input-icon" />
+                    <Tag id="input-icon" />
                     <Input 
                         type="text" 
                         name="Category" 
@@ -183,7 +184,7 @@ const AddHistoricalPlace = () => {
                 </div>
 
                 <div className="input-group file-upload-group">
-                    <Image className="input-icon" />
+                    <Image id="file-icon" />
                     <div className="file-upload-container">
                         <Input 
                             type="file" 

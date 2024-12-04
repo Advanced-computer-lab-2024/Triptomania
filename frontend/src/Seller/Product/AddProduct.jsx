@@ -76,8 +76,8 @@ const AddProduct = () => {
                 <h2>Add New Product</h2>
                 <form className="add-product-form" onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <Package id="input-icon" />
-                        <Input
+                    <FileText id="input-icon" />
+                    <Input
                             type="text"
                             name="Name"
                             placeholder="Name"
