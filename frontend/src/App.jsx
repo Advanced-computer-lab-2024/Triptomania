@@ -39,6 +39,7 @@ import SearchFlights from './Tourist/FlightBooking/searchFlights';
 import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 import Complaints from './Pages/Complaints';
 import Complaint from './Pages/Complaint';
+import NotFoundPage from './Pages/NotFoundPage';
 
 const App = () => {
   return (
@@ -81,7 +82,7 @@ const App = () => {
       <Route path="/admin/complaints" element={<Complaints />} />
       <Route path="/admin/complaint" element={<Complaint />} />
       <Route path="/guest/HistoricalPlaces" element={<ViewHistoricalPlaces />} />
-
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

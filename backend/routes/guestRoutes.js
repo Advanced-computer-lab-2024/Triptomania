@@ -10,6 +10,8 @@ const router = express.Router();
 
 router.get('/itineraries/viewItineraries', itineraryController.viewItineraries);
 
+router.get('/itineraries/sortItineraries', itineraryController.sortItineraries);
+
 router.get('/itineraries/getTags', preferenceTagController.getPreferenceTags);
 
 router.get('/activities/viewActivities', activityController.viewActivities);

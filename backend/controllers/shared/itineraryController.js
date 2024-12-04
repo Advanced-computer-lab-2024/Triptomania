@@ -218,8 +218,8 @@ const sortItineraries = async (req, res) => {
     }
 
     // Validate 'sortBy' for at least price, duration, or both
-    if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('ratings'))) {
-      return res.status(400).json({ message: "Invalid sort option. Use 'price', 'duration', or both." });
+    if (!sortBy || (!sortBy.includes('price') && !sortBy.includes('rating'))) {
+      return res.status(400).json({ message: "Invalid sort option. Use 'price', 'rating', or both." });
     }
 
     // Determine sort order: -1 for descending (high), 1 for ascending (low)
@@ -230,8 +230,8 @@ const sortItineraries = async (req, res) => {
     if (sortBy.includes('price')) {
       sortOption.price = sortOrder; // Add sorting by price
     }
-    if (sortBy.includes('ratings')) {
-      sortOption.ratings = sortOrder; // Add sorting by duration
+    if (sortBy.includes('rating')) {
+      sortOption.averageRating = sortOrder; // Add sorting by duration
     }
 
     // Fetch and sort itineraries
@@ -257,23 +257,29 @@ const filterItineraries = async (req, res) => {
 
     // Filter by budget
     if (minPrice || maxPrice) {
-      // Convert the price strings to numbers for comparison
       const min = minPrice ? Number(minPrice) : 0;
       const max = maxPrice ? Number(maxPrice) : Infinity;
-      filters.price = { $gte: min, $lte: max }; // Match itineraries within the specified price range
+      filters.price = { $gte: min, $lte: max };
     }
 
-    // Filter by date (only include itineraries with available dates greater than or equal to the specified date)
+    // Filter by date
     if (date) {
-      // Convert the date string to a Date object for comparison
       const parsedDate = new Date(date);
-      filters.availableDates = { $gte: parsedDate }; // Match itineraries with available dates on or after the specified date
+      filters.Start_date = { $gte: parsedDate };
     }
 
-    // Filter by preferences (assuming preferences is a comma-separated string of ObjectIds)
+    // Filter by preferences
     if (preferences) {
-      const preferenceArray = preferences.split(',').map(id => mongoose.Types.ObjectId(id.trim())); // Convert string to ObjectIds
-      filters.preferenceTags = { $in: preferenceArray }; // Match itineraries with any of the specified preference tags
+      const preferenceArray = preferences.split(',');
+      if (preferenceArray.length > 1) {
+        // Use $all if multiple tags are provided
+        filters.preferenceTags = { $all: preferenceArray };
+      } else {
+        // Use $in for single tag (partial match allowed)
+        filters.preferenceTags = { $in: preferenceArray };
+        console.log('Filters:', filters);
+        console.log('Preference array:', preferenceArray);
+      }
     }
 
     // Filter by language
@@ -281,8 +287,8 @@ const filterItineraries = async (req, res) => {
 
     // Fetch the filtered itineraries
     const filteredItineraries = await itineraryModel.find(filters).sort({ availableDates: 1 });
+    // console.log('Filtered itineraries:', filteredItineraries);
 
-    // Handle case where no itineraries are found
     if (filteredItineraries.length === 0) {
       return res.status(404).json({ message: 'No itineraries found matching your criteria.' });
     }
@@ -290,7 +296,7 @@ const filterItineraries = async (req, res) => {
     // Return filtered itineraries
     res.status(200).json(filteredItineraries);
   } catch (error) {
-    console.error(error); // Log the error for debugging purposes
+    console.error(error);
     res.status(500).json({ message: "Error filtering itineraries", error: error.message });
   }
 };
