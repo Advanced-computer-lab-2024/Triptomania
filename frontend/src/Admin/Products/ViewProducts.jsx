@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { Header } from '../../components/HeaderAdmin';
+import { Header } from '../../components/AdminHeader';
 import { DollarSign, Star, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 import Loading from "@/components/Loading"; // Import the Loading component
 import './ViewProducts.css';
-import '../../index.css';
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);

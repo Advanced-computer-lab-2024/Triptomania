@@ -165,18 +165,19 @@ async function upload(fileBuffer, fileName, type) {
 
 const acceptUser = async (req, res) => {
     try {
-        const type = req.user.type;
-        const id = req.user._id;
-
+        
+        const { type, id } = req.body;
+       
         // Map user type to the corresponding model
         const userModels = {
             seller: sellerModel,
             advertiser: advertiserModel,
             tourGuide: tourGuideModel,
         };
-
+    
         const UserModel = userModels[type];
-
+       
+    
         if (!UserModel) {
             return res.status(400).json({ message: 'Invalid user type' });
         }
@@ -187,7 +188,7 @@ const acceptUser = async (req, res) => {
             { $set: { status: 'accepted' } },
             { new: true } // Return the updated document
         );
-
+        
         if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -205,9 +206,9 @@ const acceptUser = async (req, res) => {
 
 const rejectUser = async (req, res) => {
     try {
-        const type = req.user.type;
-        const id = req.user._id;
-
+        
+        const { type, id } = req.body;
+       
         // Map user type to the corresponding model
         const userModels = {
             seller: sellerModel,
@@ -419,6 +420,25 @@ const saveFCMToken = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    try {
+        const type = req.user.type;
+        const userId = req.user._id;
+
+        const userModel = userCollections[type];
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ user });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+}
+
 export default {
     uploadDocuments,
     uploadProfilePicture,
@@ -427,5 +447,6 @@ export default {
     getPendingUsers,
     acceptTerms,
     requestAccountDeletion,
-    saveFCMToken
+    saveFCMToken,
+    updateUser
 }

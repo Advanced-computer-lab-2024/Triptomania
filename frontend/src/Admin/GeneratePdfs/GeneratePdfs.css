@@ -1,0 +1,20 @@
+.revenue-report-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.MuiFormControl-root {
+    background-color: white;
+    border-radius: 4px;
+}
+
+.MuiButton-root {
+    text-transform: none;
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+.MuiButton-root:disabled {
+    background-color: #cccccc;
+}

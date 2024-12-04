@@ -400,6 +400,65 @@ const viewAllActivities = async (req, res) => {
     }
 }
 
+const getAllDocuments = async (req, res) => {
+    try {
+        console.log('Fetching documents...');
+
+        // Fetch users with documents from each model
+        const sellers = await sellerModel.find({ documents: { $exists: true, $ne: null } })
+            .select('username documents status type');
+        console.log('Sellers found:', sellers);
+        
+        const advertisers = await advertiserModel.find({ documents: { $exists: true, $ne: null } })
+            .select('username documents status type');
+        console.log('Advertisers found:', advertisers);
+            
+        const tourGuides = await tourGuideModel.find({ documents: { $exists: true, $ne: null } })
+            .select('username documents status type');
+        console.log('Tour Guides found:', tourGuides);
+
+        // Combine all documents into one response
+        const allDocuments = {
+            sellers: sellers.map(seller => ({
+                userId: seller._id,
+                name: seller.username,
+                documentUrl: seller.documents,
+                status: seller.status,
+                userType: 'seller'
+            })),
+            advertisers: advertisers.map(advertiser => ({
+                userId: advertiser._id,
+                name: advertiser.username,
+                documentUrl: advertiser.documents,
+                status: advertiser.status,
+                userType: 'advertiser'
+            })),
+            tourGuides: tourGuides.map(guide => ({
+                userId: guide._id,
+                name: guide.username,
+                documentUrl: guide.documents,
+                status: guide.status,
+                userType: 'tourGuide'
+            }))
+        };
+
+        console.log('Sending response:', {
+            message: 'Documents retrieved successfully',
+            documents: allDocuments
+        });
+
+        res.status(200).json({
+            message: 'Documents retrieved successfully',
+            documents: allDocuments
+        });
+    } catch (error) {
+        console.error('Error retrieving documents:', error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+
+
 export default {
     addAdmin,
     deleteAccount,
@@ -410,5 +469,6 @@ export default {
     createPromoCode,
     getUsers,
     viewAllItineraries,
-    viewAllActivities
+    viewAllActivities,
+    getAllDocuments
 }

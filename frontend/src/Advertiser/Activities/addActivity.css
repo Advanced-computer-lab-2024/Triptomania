@@ -30,6 +30,7 @@ body {
   margin-bottom: 1.5rem;
   font-size: 2.5rem;
   font-weight: 700;
+  color: var(--primary-color);
 }
 
 .add-activity-container form {
@@ -121,4 +122,8 @@ button[type="submit"]:hover {
   .input-group textarea {
     font-size: 0.875rem;
   }
+}
+
+#isBookingOpen {
+  color: var(--primary-color) !important;
 }

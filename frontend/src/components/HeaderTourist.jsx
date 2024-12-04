@@ -21,13 +21,13 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/tourist/home" className="nav-link">Home</a>
-            <a href="/activities" className="nav-link">Activities</a>
-            <a href="/itineraries" className="nav-link">Itineraries</a>
-            <a href="/historical-places" className="nav-link">Historical Places</a>
-            <a href="/tourist/products/viewproducts" className="nav-link">Products</a>
-            <a href="/flights" className="nav-link">Flights</a>
-            <a href="/tourist/hotelBooking/getHotels" className="nav-link">Hotels</a>
+            <a href="/tourist/home" className="header-link">Home</a>
+            <a href="/activities" className="header-link">Activities</a>
+            <a href="/itineraries" className="header-link">Itineraries</a>
+            <a href="/historical-places" className="header-link">Historical Places</a>
+            <a href="/tourist/products/viewproducts" className="header-link">Products</a>
+            <a href="/tourist/searchFlights" className="header-link">Flights</a>
+            <a href="/tourist/hotelBooking/getHotels" className="header-link">Hotels</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/notifications" className="icon-link">
@@ -36,7 +36,7 @@ export function Header() {
             <a href="/cart" className="icon-link ml-6">
               <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
             </a>
-            <a href="/profile" className="icon-link ml-6">
+            <a href="/tourist/account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
             </a>
           </div>

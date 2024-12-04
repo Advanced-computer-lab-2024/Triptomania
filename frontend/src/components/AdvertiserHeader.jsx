@@ -8,9 +8,7 @@ import { Bell, ShoppingCart, User } from 'lucide-react'; // Import icons for not
 export function Header() {
     const navigate = useNavigate();  // Initialize navigate function
 
-    const handleSignInClick = () => {
-      navigate("/login");  // Navigate to the Login page on button click
-    };
+ 
 
   return (
     <header className="header">
@@ -22,9 +20,9 @@ export function Header() {
             </a>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/AdvertiserHomePage" className="nav-link">Home</a>
-            <a href="/Advertiser/AllActivities" className="nav-link">All Activities</a>
-            <a href="/Advertiser/MyActivities" className="nav-link">My Activities</a>
+            <a href="/AdvertiserHomePage" className="header-link">Home</a>
+            <a href="/advertiser/Activities" className="header-link">My Activities</a>
+            <a href="/advertiser/addActivity" className="header-link">Add Activity</a>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="/notifications" className="icon-link">

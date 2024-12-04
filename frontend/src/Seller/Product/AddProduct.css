@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
-    --primary-color: #000000;
+    --primary-color: #36827f;
     --secondary-color: #333333;
     --text-color: #333333;
     --input-background: #ffffff;
@@ -41,21 +41,17 @@ body {
 
 .input-group {
     position: relative;
+    display: flex;
+    align-items: center;
 }
-
-.input-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    color: var(--text-color);
+#input-icon {
+/* make it in the center beside the input-group */
+    margin-right: 5px;
 }
-
 .input-group input,
 .input-group textarea {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 3rem;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* Increased left padding */
     border: 1px solid var(--input-border);
     border-radius: 8px;
     font-size: 1rem;

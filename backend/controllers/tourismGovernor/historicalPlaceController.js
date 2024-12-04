@@ -182,7 +182,36 @@ const getMyHistoricalPlaces = async (req, res) => {
         });
     }
 };
-
+const uploadPicture = async (req, res) => {
+    try {
+        const { id } = req.body;
+ 
+        // Check if a file is uploaded
+        if (!req.file) {
+            return res.status(400).json({ message: "Historical place image is required." });
+        }
+ 
+        // Convert the file buffer to a Base64 string
+        const base64Image = req.file.buffer.toString('base64');
+ 
+        // Update the historical place with the new image
+        const updatedPlace = await historicalPlaceModel.findByIdAndUpdate(
+            id,
+            { Picture: base64Image },
+            { new: true, runValidators: true }
+        );
+ 
+        // Check if the place was found
+        if (!updatedPlace) {
+            return res.status(404).json({ message: "Historical place not found." });
+        }
+ 
+        // Return the updated place
+        res.status(200).json({ message: "Uploaded successfully", data: updatedPlace });
+    } catch (error) {
+        res.status(500).json({ message: "Error uploading photo", error: error.message });
+    }
+ };
 
 export default {
     getHistoricalPlaces,
@@ -190,5 +219,6 @@ export default {
     addHistoricalPlace,
     editHistoricalPlace,
     deleteHistoricalPlace,
-    getMyHistoricalPlaces
+    getMyHistoricalPlaces,
+    uploadPicture
 }

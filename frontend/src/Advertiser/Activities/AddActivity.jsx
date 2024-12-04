@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import axiosInstance from '@/axiosInstance'; // Import the axiosInstance
 import './addActivity.css';
-
+import { FileText } from 'lucide-react'; // Import FileText icon
 const AddActivity = () => {
     const [activity, setActivity] = useState({
         name: '',
@@ -19,7 +19,6 @@ const AddActivity = () => {
         tags: [],
         specialDiscounts: '',
         isBookingOpen: true,
-        creatorId: ''
     });
 
     const [mapKey, setMapKey] = useState('');
@@ -105,7 +104,7 @@ const AddActivity = () => {
                     ...activity, 
                     name: '', description: '', date: '', time: '', 
                     location: '', price: '', category: '', tags: [], 
-                    specialDiscounts: 0, isBookingOpen: true, creatorId: '' 
+                    specialDiscounts: 0, isBookingOpen: true
                 });
             } else {
                 alert(response.data.error || "Error adding activity");
@@ -120,44 +119,45 @@ const AddActivity = () => {
             <h2>Add New Activity</h2>
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
+                <FileText id="input-icon" />
+
                     <Input type="text" name="name" className="name" placeholder="Activity Name" value={activity.name} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
+                <FileText id="input-icon" />
+
                     <Textarea name="description" placeholder="Description" className="description" value={activity.description} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
-                    <Calendar className="input-icon" />
+                    <Calendar id="input-icon" />
                     <Input type="date" name="date" value={activity.date} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
-                    <Clock className="input-icon" />
+                    <Clock id="input-icon" />
                     <Input type="time" name="time" value={activity.time} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
-                    <MapPin className="input-icon" />
+                    <MapPin id="input-icon" />
                     <Input type="text" id="location" name="location" placeholder="Enter location" value={activity.location} onChange={handleChange} required />
                 </div>
                 <div ref={mapRef} className="map-container"></div>
                 <div className="input-group">
-                    <DollarSign className="input-icon" />
+                    <DollarSign id="input-icon" />
                     <Input type="number" name="price" placeholder="Price" value={activity.price} onChange={handleChange} required min="0" />
                 </div>
                 <div className="input-group">
-                    <Tag className="input-icon" />
+                    <Tag id="input-icon" />
                     <Input type="text" name="category" placeholder="Category" value={activity.category} onChange={handleChange} required />
                 </div>
                 <div className="input-group">
-                    <Tag className="input-icon" />
+                    <Tag id="input-icon" />
                     <Input type="text" name="tags" placeholder="Tags (comma separated)" value={activity.tags.join(',')} onChange={(e) => setActivity({ ...activity, tags: e.target.value.split(',').map(tag => tag.trim()) })} />
                 </div>
                 <div className="input-group">
-                    <Percent className="input-icon" />
+                    <Percent id="input-icon" />
                     <Input type="number" name="specialDiscounts" placeholder="Special Discounts" value={activity.specialDiscounts} onChange={handleChange} min="0" />
                 </div>
-                <div className="input-group">
-                    <User className="input-icon" />
-                    <Input type="text" name="creatorId" placeholder="Creator ID" value={activity.creatorId} onChange={handleChange} required />
-                </div>
+                
                 <div className="checkbox-group">
                     <Switch 
                         id="isBookingOpen"

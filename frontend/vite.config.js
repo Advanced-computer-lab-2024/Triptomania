@@ -7,7 +7,11 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      '@mui/utils': '@mui/utils/esm',
     },
+  },
+  optimizeDeps: {
+      include: ['@mui/utils'],
   },
   css: {
     modules: {

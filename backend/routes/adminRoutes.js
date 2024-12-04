@@ -412,4 +412,6 @@ router.get('/activities/getActivity/:id', (req, res, next) => authMiddleware.ver
 
 router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), itineraryController.getItinerary);
 
+router.get('/getAllDocuments', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getAllDocuments);
+
 export default router;
