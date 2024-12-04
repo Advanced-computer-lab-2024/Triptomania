@@ -37,6 +37,8 @@ import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
 import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
 import SearchFlights from './Tourist/FlightBooking/searchFlights';
 import FlightInfo from './Tourist/FlightBooking/FlightInfo';
+import DocumentsViewer from './Admin/Documentsviewer/DocumentsViewer.jsx';
+import GeneratePdfs from './Admin/GeneratePdfs/GeneratePdfs.jsx';
 import Complaints from './Pages/Complaints';
 import Complaint from './Pages/Complaint';
 import TourismGovernorHomePage from './TourismGovernor/TourismGovernorHomePage';
@@ -86,7 +88,10 @@ const App = () => {
       <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
       <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
-      <Route path="/tourist/getFlightOffers/:flightOfferId" element={<FlightInfo />} />
+      <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
+      <Route path="/admin/view/documents" element={<DocumentsViewer />} />
+      <Route path="/admin/generatePdfs" element={<GeneratePdfs />} />
+
       <Route path="/admin/complaints" element={<Complaints />} />
       <Route path="/admin/complaint" element={<Complaint />} />
       <Route path="/guest/HistoricalPlaces" element={<ViewHistoricalPlaces />} />
