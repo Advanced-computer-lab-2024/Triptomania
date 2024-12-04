@@ -1,5 +1,5 @@
 /* General Layout */
-.container {
+.transportation-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -7,7 +7,7 @@
   padding: 20px;
 }
 
-h1 {
+.transportation-h1 {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
@@ -15,7 +15,7 @@ h1 {
   color: #333;
 }
 
-button {
+.transportation-button {
   padding: 10px 20px;
   background-color: #36827f;
   color: white;
@@ -26,7 +26,7 @@ button {
   margin-bottom: 20px;
 }
 
-button:hover {
+.transportation-button:hover {
   background-color: #54a7a4;
 }
 

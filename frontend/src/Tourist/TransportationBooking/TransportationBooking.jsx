@@ -55,8 +55,8 @@ const TransportationBooking = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Book Transportation</h1>
+    <div className="transportation-container">
+      <h1 className='transportation-h1'>Book Transportation</h1>
       <button onClick={displayDummyBookings}>View Available Bookings</button>
 
       <div className="bookings-container">
@@ -77,7 +77,7 @@ const TransportationBooking = () => {
             <p>
               <strong>Travel Type:</strong> {booking.travelType}
             </p>
-            <button onClick={() => confirmBooking(index)}>Confirm Booking</button>
+            <button className='transportation-button' onClick={() => confirmBooking(index)}>Confirm Booking</button>
           </div>
         ))}
       </div>
