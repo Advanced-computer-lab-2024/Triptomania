@@ -1,0 +1,107 @@
+.input-group {
+    position: relative;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    color: #666;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .input-group input,
+  .input-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3.5rem; /* Adjusted padding for more space */
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .input-group input:focus,
+  .input-group textarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(165, 216, 214, 0.3);
+  }
+  
+  .input-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .file-upload-group {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .file-upload-container {
+    flex: 1;
+  }
+  
+  .file-upload-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+  }
+  
+  .file-upload-label small {
+    color: #666;
+  }
+  
+  .image-preview {
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .image-preview img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 4px;
+  }
+  
+  .file-input {
+    padding: 0.75rem 1rem 0.75rem 3.5rem;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    width: 100%;
+  }
+  
+  button[type="submit"] {
+    background-color: black;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  @media (max-width: 640px) {
+    .add-product-container {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+  
+    .add-product-container h2 {
+      font-size: 2rem;
+    }
+  
+    .input-group input,
+    .input-group textarea {
+      font-size: 0.875rem;
+    }
+  }

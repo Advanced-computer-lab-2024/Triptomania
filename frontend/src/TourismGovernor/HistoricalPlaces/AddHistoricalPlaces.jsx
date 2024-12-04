@@ -6,79 +6,93 @@ import {
     DollarSign, 
     FileText,
     Image,
-    Tag,
-    User
+    Tag
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import './AddHistoricalPlaces.css';
 import axiosInstance from '@/axiosInstance';
+// import Resizer from 'react-image-file-resizer';
 
 const AddHistoricalPlace = () => {
     const [formData, setFormData] = useState({
         Name: '',
         Description: '',
-        Picture: null,
+        Picture: '',
         Location: '',
-        Opening_hours: '',
-        Closing_hours: '',
+        Opening_hours: '',    // String in HH:MM format
+        Closing_hours: '',    // String in HH:MM format
         Ticket_prices: '',
-        Category: '',
-        creatorId: ''
+        Category: ''
     });
 
     const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        if (name === 'Ticket_prices') {
+            setFormData({ ...formData, [name]: Number(value) });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData({ ...formData, Picture: file });
-            const fileReader = new FileReader();
-            fileReader.onload = () => {
-                setPreviewUrl(fileReader.result);
-            };
-            fileReader.readAsDataURL(file);
+            Resizer.imageFileResizer(
+                file,
+                300, // max width
+                300, // max height
+                'JPEG', // output format
+                70, // quality
+                0, // rotation
+                (uri) => {
+                    setFormData({ ...formData, Picture: uri });
+                    setPreviewUrl(uri);
+                },
+                'base64'
+            );
         }
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formDataToSend = new FormData();
-        for (const key in formData) {
-            formDataToSend.append(key, formData[key]);
-        }
-
+        
         try {
-            const response = await axiosInstance.post('/api/tourismGovernor/addHistoricalPlace', formDataToSend);
-            const data = await response.json();
+            const response = await axiosInstance.post(
+                '/api/tourismGovernor/addHistoricalPlace',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+    
             if (response.status === 201) {
                 alert('Historical place added successfully!');
                 setFormData({
                     Name: '',
                     Description: '',
-                    Picture: null,
+                    Picture: '',
                     Location: '',
                     Opening_hours: '',
                     Closing_hours: '',
-                    Ticket_prices: '',
-                    Category: '',
-                    creatorId: ''
+                    Ticket_prices: 0,
+                    Category: ''
                 });
                 setPreviewUrl(null);
-            } else {
-                alert(data.message);
             }
         } catch (error) {
             console.error('Error adding historical place:', error);
+            if (error.response) {
+                alert(`Error: ${error.response.data.message || 'Failed to add historical place'}`);
+            } else {
+                alert('Error connecting to the server');
+            }
         }
     };
-
     return (
         <div className="add-product-container">
             <h2>Add Historical Place</h2>
@@ -88,7 +102,7 @@ const AddHistoricalPlace = () => {
                     <Input 
                         type="text" 
                         name="Name" 
-                        placeholder="Historical Place Name" 
+                        placeholder="Name" 
                         value={formData.Name}
                         onChange={handleChange} 
                         required 
@@ -121,7 +135,7 @@ const AddHistoricalPlace = () => {
                 <div className="input-group">
                     <Clock className="input-icon" />
                     <Input 
-                        type="time" 
+                        type="text" 
                         name="Opening_hours" 
                         placeholder="Opening Hours (HH:MM)" 
                         value={formData.Opening_hours}
@@ -133,7 +147,7 @@ const AddHistoricalPlace = () => {
                 <div className="input-group">
                     <Clock className="input-icon" />
                     <Input 
-                        type="time" 
+                        type="text" 
                         name="Closing_hours" 
                         placeholder="Closing Hours (HH:MM)" 
                         value={formData.Closing_hours}
@@ -151,6 +165,8 @@ const AddHistoricalPlace = () => {
                         value={formData.Ticket_prices}
                         onChange={handleChange} 
                         required 
+                        min="0"
+                        step="any"
                     />
                 </div>
 
@@ -161,18 +177,6 @@ const AddHistoricalPlace = () => {
                         name="Category" 
                         placeholder="Category" 
                         value={formData.Category}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <User className="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="creatorId" 
-                        placeholder="Creator ID" 
-                        value={formData.creatorId}
                         onChange={handleChange} 
                         required 
                     />

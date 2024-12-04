@@ -3,7 +3,7 @@ import { Bell, User } from 'lucide-react';
 import './AdminHeader.css';
 
 const menuItems = [
-  { name: 'Home', href: '/admin/adminHomePage' },
+  { name: 'Home', href: '/admin/home' },
   { name: 'Activities', href: '#' },
   { name: 'Complaints', href: '/admin/complaints' },
   { name: 'Itineraries', href: '#' },
@@ -50,7 +50,7 @@ export function Header() {
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/admin/adminHomePage" className="brand">
+            <a href="/admin/home" className="brand">
               TripTomania
             </a>
           </div>

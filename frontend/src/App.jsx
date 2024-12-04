@@ -17,7 +17,7 @@ import VerifyOtpPage from './Pages/auth/VerifyOtp';
 import NewPasswordPage from './Pages/auth/NewPassword';
 import GetHotels from './Tourist/HotelBooking/GetHotels'
 import AddProduct from './Seller/Product/AddProduct';
-import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces ';
+import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp';
 import SellerSignUp from './Pages/SellerSignUp';
@@ -39,7 +39,11 @@ import SearchFlights from './Tourist/FlightBooking/searchFlights';
 import FlightInfo from './Tourist/FlightBooking/FlightInfo';
 import Complaints from './Pages/Complaints';
 import Complaint from './Pages/Complaint';
-
+import TourismGovernorHomePage from './TourismGovernor/TourismGovernorHomePage';
+import UploadHistoricalPicture from './TourismGovernor/HistoricalPlaces/UploadHistoricalPicture';
+import SalesReportViewer from './Admin/SalesReportViewer/SalesReportViewer';
+import UploadProductPicture from './Seller/Product/UploadProductPicture';
+// import { Upload } from 'lucide-react';
 const App = () => {
   return (
     <Routes>
@@ -73,7 +77,7 @@ const App = () => {
       <Route path="/Seller/ViewProducts" element={<SellerViewProducts/>} />
       <Route path="/Seller/ViewMyProducts" element={<SellerViewMyProducts/>} />
       <Route path="/tourist/bookHotel/:offerId" element={<BookHotel />} />
-      <Route path="/admin/adminHomePage" element={<AdminHomePage />} />
+      <Route path="/admin/home" element={<AdminHomePage />} />
       <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
       <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
@@ -81,6 +85,12 @@ const App = () => {
       <Route path="/admin/complaints" element={<Complaints />} />
       <Route path="/admin/complaint" element={<Complaint />} />
       <Route path="/guest/HistoricalPlaces" element={<ViewHistoricalPlaces />} />
+      <Route path="/tourismGovernor/home" element={<TourismGovernorHomePage/>} />
+      <Route path="/tourismGovernor/historicalPlace/addHistoricalPlaces" element={<AddHistoricalPlace />} />
+      <Route path="/seller/addProduct" element={<AddProduct />} />
+      <Route path="tourismGoverner/HistoricalPlace/uploadPhoto" element={<UploadHistoricalPicture />} />
+      <Route path="/sales-report" element={<SalesReportViewer />} />
+      <Route path="/seller/product/uploadPicture" element={<UploadProductPicture />} />
 
     </Routes>
   );
