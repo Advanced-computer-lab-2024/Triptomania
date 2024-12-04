@@ -233,11 +233,11 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative h-[500px]">
         <img 
-          src="/placeholder.svg?height=500&width=1920" 
+          src=""
           alt="Hero Background" 
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-black">
           <h1 className="text-4xl font-bold mb-4">Discover Your Next Adventure</h1>
           <p className="text-xl mb-8">Book hotels, flights, activities, and more</p>
           <div className="flex w-full max-w-md space-x-2">
