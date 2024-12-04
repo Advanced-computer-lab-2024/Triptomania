@@ -22,6 +22,7 @@ const ViewComplaints = () => {
   const fetchAllComplaints = async () => {
     try {
       const response = await axiosInstance.get('/api/admin/complaints/viewComplaints');
+      console.log(response.data);
       setComplaints(response.data);
       setLoading(false);
     } catch (error) {
@@ -35,7 +36,7 @@ const ViewComplaints = () => {
       const response = await axiosInstance.get(`/api/admin/complaints/viewComplaint?id=${complaintId}`);
       if (response.status === 200) {
         // Redirect to the complaint details page and pass the complaint data
-        navigate('/admin/complaint', { state: { complaint: response.data } });
+        navigate('/admin/complaint', { state: { complaint: response.data.complaint } });
       }
     } catch (error) {
       console.error('Error fetching complaint:', error);
@@ -93,16 +94,16 @@ const ViewComplaints = () => {
                       <div className="complaint-status">
                         <strong>Status: </strong>
                         <span>
-                          {complaint.resolved ? 'Resolved' : 'Unresolved'}
+                          {complaint.status}
                         </span>
                       </div>
                     </div>
                     <p className="complaint-description">
-                      {complaint.description || 'No Description'}
+                      {complaint.body}
                     </p>
                     <div className="complaint-info">
                       <p>
-                        <strong>Submitted by:</strong> {complaint.submitter || 'Anonymous'}
+                        <strong>Submitted by:</strong> {complaint.touristId?.username || 'Unknown'}
                       </p>
                       <p>
                         <strong>Date:</strong>{' '}

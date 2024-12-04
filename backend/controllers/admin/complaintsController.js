@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
  */
 const viewComplaints = async (req, res) => {
     try {
-        const complaints = await complaintModel.find({}, "title status date");
+        const complaints = await complaintModel.find({}, "title status date body touristId").populate('touristId', 'username');
 
         if (complaints.length === 0) {
             return res.status(404).json({ message: "No complaints found" });
@@ -133,7 +133,7 @@ const viewComplaintDetails = async (req, res) => {
         }
 
         // Find the complaint by ID
-        const complaint = await complaintModel.findById(id).populate('touristId', 'name email'); // You can modify the fields to include as needed
+        const complaint = await complaintModel.findById(id).populate('touristId', 'username'); // You can modify the fields to include as needed
 
         // Check if the complaint was found
         if (!complaint) {

@@ -24,7 +24,6 @@ const ComplaintDetails = () => {
       </div>
     );
   }
-
   const handleSendReply = async () => {
     setIsReplying(true);
     setSuccessMessage('');
@@ -59,15 +58,15 @@ const ComplaintDetails = () => {
         <div className="complaint-box">
           <h2 className="text-lg font-bold">{complaint.title || 'No Title'}</h2>
           <p>
-            <strong>Submitted by:</strong> {complaint.submitter || 'Anonymous'}
+            <strong>Submitted by:</strong> {complaint.touristId?.username || 'Unknown'}
           </p>
           <p>
-            <strong>Status:</strong> {complaint.resolved ? 'Resolved' : 'Unresolved'}
+            <strong>Status:</strong> {complaint.status}
           </p>
           <p>
             <strong>Date:</strong> {new Date(complaint.date).toLocaleDateString() || 'Unknown'}
           </p>
-          <p className="mt-4">{complaint.description || 'No Description'}</p>
+          <p className="mt-4">{complaint.body}</p>
         </div>
 
         {/* Reply Box */}
