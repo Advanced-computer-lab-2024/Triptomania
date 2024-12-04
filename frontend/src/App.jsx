@@ -45,7 +45,10 @@ import SalesReportViewer from './Admin/SalesReportViewer/SalesReportViewer';
 import UploadProductPicture from './Seller/Product/UploadProductPicture';
 // import { Upload } from 'lucide-react';
 import NotFoundPage from './Pages/NotFoundPage';
-
+import AdvertiserHomePage from './Advertiser/AdvertiserHomePage';
+import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
+import TourGuideHomePage from './TourGuide/TourGuideHomePage';
+import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytineraries';
 const App = () => {
   return (
     <Routes>
@@ -94,6 +97,11 @@ const App = () => {
       <Route path="/sales-report" element={<SalesReportViewer />} />
       <Route path="/seller/product/uploadPicture" element={<UploadProductPicture />} />
       <Route path="*" element={<NotFoundPage />} />
+      <Route path="/advertiser/home" element={<AdvertiserHomePage />} />
+      <Route path="/advertiser/Activities" element={<ViewActivitiesAdvertiser />} />
+      <Route path="/tourGuide/home" element={<TourGuideHomePage/>} />
+      <Route path="/tourGuide/MyItineraries" element={<ViewMyItinerariesTourGuide/>} />
+
     </Routes>
   );
 };
