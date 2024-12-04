@@ -156,7 +156,7 @@ const editItinerary = async (req, res) => {
 
 const deleteItinerary = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.query;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({
         status: false,

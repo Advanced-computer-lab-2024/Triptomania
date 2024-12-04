@@ -34,20 +34,33 @@ const ViewItineraries = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this itinerary?")) return;
+  
     try {
-      setLoading(true);
-      await axiosInstance.delete('/api/tourGuide/itinerary/deleteItinerary', { id });
-      setItineraries((prev) => prev.filter((itinerary) => itinerary._id !== id));
-      setAllItineraries((prev) => prev.filter((itinerary) => itinerary._id !== id));
-      alert("Itinerary deleted successfully.");
+      setLoading(true); // Show loading spinner while processing the delete request
+  
+      // Send DELETE request to backend
+      const response = await axiosInstance.delete(`/api/tourGuide/itinerary/deleteItinerary?id=${id}`);
+  
+      // Handle success
+      if (response.status === 200) {
+        alert(response.data.message); // Success message from the backend
+        setItineraries((prev) => prev.filter((itinerary) => itinerary._id !== id)); // Update state to remove deleted itinerary
+        setAllItineraries((prev) => prev.filter((itinerary) => itinerary._id !== id)); // Update state to remove deleted itinerary
+      }
     } catch (error) {
-      console.error('Error deleting itinerary:', error.response?.data || error.message);
-      alert("Failed to delete itinerary. Please try again.");
+      // Handle specific error for booked itineraries
+      if (error.response?.status === 400 && error.response.data.message) {
+        alert(error.response.data.message); // Display specific message from backend
+      } else {
+        // Generic error message for any unexpected issue
+        alert("An error occurred while trying to delete the itinerary. Please try again.");
+      }
+      console.error('Error deleting itinerary:', error.response?.data || error.message); // Log error details for debugging
     } finally {
-      setLoading(false);
+      setLoading(false); // Hide loading spinner after the operation completes
     }
   };
-
+  
  
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
