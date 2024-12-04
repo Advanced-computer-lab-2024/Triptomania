@@ -42,6 +42,7 @@ import TourGuideAllItirenaries from './TourGuide/TourGuideAllItirenaries.jsx';
 import TourGuideMyItirenaries from './TourGuide/TourGuideMyItirenaries.jsx';
 import SearchFlights from './Tourist/FlightBooking/searchFlights';
 import FlightInfo from './Tourist/FlightBooking/FlightInfo';
+import DocumentsViewer from './Admin/Documentsviewer/DocumentsViewer.jsx';
 
 const App = () => {
   return (
@@ -88,6 +89,7 @@ const App = () => {
       <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
       <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
+      <Route path="/admin/view/documents" element={<DocumentsViewer />} />
     </Routes>
   );
 };
