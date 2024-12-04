@@ -159,10 +159,8 @@ function FeaturedProducts() {
                     "/api/admin/product/viewProducts"
                 );
 
-                console.log(response.data);
-
-                if (Array.isArray(response.data.data)) {
-                    setProducts(response.data.data); // Update state with the array of products
+                if (Array.isArray(response.data)) {
+                    setProducts(response.data); // Update state with the array of products
                 } else {
                     console.error("Invalid data format: products is not an array", response.data);
                 }

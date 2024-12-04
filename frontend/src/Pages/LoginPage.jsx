@@ -3,6 +3,7 @@ import axiosInstance from '@/axiosInstance';
 import '../index.css';
 import styles from './login.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/UserContext.jsx';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -10,6 +11,7 @@ const LoginPage = () => {
   const [type, setType] = useState(''); // State to store selected user type
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,10 +19,10 @@ const LoginPage = () => {
       const response = await axiosInstance.post('/api/auth/login', {
         username,
         password,
-        type, 
+        type,
       });
       alert('Login successful!');
-      console.log('User data:', response.data);
+      setUser(response.data.user);
       switch (type) {
         case 'admin':
           navigate('/admin/home');
