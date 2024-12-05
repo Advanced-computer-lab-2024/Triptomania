@@ -105,9 +105,7 @@ const checkoutCart = async (req, res) => {
 
             // Notify if out of stock
             if (product.Quantity === 0) {
-                await notifyOutOfStock(product).catch((error) => {
-                    console.error('Error sending out-of-stock email:', error);
-                });
+                await notifyOutOfStock(product);
             }
         }
 
@@ -170,11 +168,8 @@ const checkoutCart = async (req, res) => {
             ...(paymentIntent && { paymentIntent })
         });
 
-        await sendProductInvoice(tempOrder).catch((error) => {
-            console.error('Error sending invoice:', error);
-        });
+        await sendProductInvoice(tempOrder);
     } catch (error) {
-        console.error('Error processing payment:', error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -246,11 +241,8 @@ const cancelOrder = async (req, res) => {
         await order.save();
 
         res.status(200).json({ success: true, message: 'Order cancelled successfully' });
-        await sendCancellationNotice(order).catch((error) => {
-            console.error(error);
-        });
+        await sendCancellationNotice(order);
     } catch (error) {
-        console.error('Error cancelling order:', error.message);
         res.status(500).json({ error: error.message });
     }
 
@@ -322,9 +314,8 @@ const sendProductInvoice = async (order) => {
         };
 
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
     } catch (error) {
-        console.error(error);
+        throw new Error("Error sending invoice:", error);
     }
 }
 
@@ -384,9 +375,8 @@ const sendCancellationNotice = async (order) => {
         };
 
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
     } catch (error) {
-        console.error(error);
+        throw new Error("Error sending cancellation notice:", error);
     }
 }
 
@@ -428,9 +418,8 @@ const notifyOutOfStock = async (product) => {
 
         // Send the email using Brevo transactional API
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
     } catch (error) {
-        console.error(error);
+        throw new Error("Error sending out-of-stock email:", error);
     }
 };
 
@@ -562,11 +551,8 @@ const payForEvent = async (req, res) => {
             ...(paymentIntent && { paymentIntent })
         });
 
-        await sendEventInvoice(eventMap, userId, eventType).catch((error) => {
-            console.error('Error sending invoice:', error);
-        });
+        await sendEventInvoice(eventMap, userId, eventType);
     } catch (error) {
-        console.error('Error processing payment:', error);
         res.status(500).json({ error: error });
     }
 }
@@ -621,9 +607,8 @@ const sendEventInvoice = async (event, userId, type) => {
         };
 
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
     } catch (error) {
-        console.error(error);
+        throw new Error("Error sending invoice:", error);
     }
 }
 
@@ -712,11 +697,8 @@ const cancelEvent = async (req, res) => {
             refundAmount
         });
 
-        await sendEventCancellation(eventMap, userId, eventType).catch((error) => {
-            console.error('Error sending invoice:', error);
-        });
+        await sendEventCancellation(eventMap, userId, eventType);
     } catch (error) {
-        console.error('Error unbooking event:', error.message);
         res.status(500).json({ error: error.message });
     }
 };
@@ -765,9 +747,8 @@ const sendEventCancellation = async (event, userId, type) => {
         };
 
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
     } catch (error) {
-        console.error(error);
+        throw new Error("Error sending invoice:", error);
     }
 }
 

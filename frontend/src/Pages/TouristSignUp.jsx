@@ -36,8 +36,6 @@ const TouristSignUp = () => {
                 password: storedData.password || '',
             };
 
-            console.log('Sending tourist signup data:', touristData);
-
             const response = await axiosInstance.post(
                 '/api/tourist/addTourist',
                 touristData,
@@ -45,8 +43,6 @@ const TouristSignUp = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
-
-            console.log('Signup response:', response);
             setSuccess(true); // Display success message
         } catch (err) {
             console.error('Signup error:', err);

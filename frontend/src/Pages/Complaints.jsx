@@ -22,7 +22,6 @@ const ViewComplaints = () => {
   const fetchAllComplaints = async () => {
     try {
       const response = await axiosInstance.get('/api/admin/complaints/viewComplaints');
-      console.log(response.data);
       setComplaints(response.data);
       setLoading(false);
     } catch (error) {

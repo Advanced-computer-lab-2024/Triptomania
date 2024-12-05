@@ -216,7 +216,6 @@ const generateRevenuePDF = async (req, res) => {
             });
         });
     } catch (error) {
-        console.error(error);
         res.status(500).send({ error: error.message });
     }
 };
@@ -378,7 +377,6 @@ const generateTouristCountPDF = async (req, res) => {
             });
         });
     } catch (error) {
-        console.error(error);
         res.status(500).send({ error: error.message });
     }
 };

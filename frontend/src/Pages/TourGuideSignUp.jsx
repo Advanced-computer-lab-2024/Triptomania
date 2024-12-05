@@ -35,8 +35,6 @@ const TourGuideSignUp = () => {
                 password: storedData.password || '',
             };
 
-            console.log('Sending tour guide signup data:', tourGuideData);
-
             const response = await axiosInstance.post(
                 '/api/tourguide/addTourGuide',
                 tourGuideData,
@@ -44,8 +42,6 @@ const TourGuideSignUp = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
-
-            console.log('Signup response:', response);
             setSuccess(true); // Display success message
         } catch (err) {
             console.error('Signup error:', err);

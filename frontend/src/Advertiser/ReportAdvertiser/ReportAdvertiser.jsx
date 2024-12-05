@@ -51,8 +51,6 @@ const AdvertiserRevenueReport = () => {
             if (startDate) params.append('startDate', startDate);
             if (endDate) params.append('endDate', endDate);
     
-            console.log('Request params:', Object.fromEntries(params));
-    
             const response = await axiosInstance.get(`/api/advertiser/generateSalesReport?${params.toString()}`, {
                 responseType: 'blob',
                 headers: {

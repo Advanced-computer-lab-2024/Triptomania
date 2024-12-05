@@ -78,7 +78,6 @@ const login = async (req, res) => {
 
         res.status(200).json({ message: "Login successful", user: user });
     } catch (err) {
-        console.error(err);
         res.status(500).send("Server error");
     }
 };
@@ -173,10 +172,8 @@ const requestOtp = async (req, res) => {
         };
 
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
         res.status(200).send('Email sent successfully');
     } catch (err) {
-        console.error(err);
         res.status(500).send('Server error');
     }
 }
@@ -201,7 +198,6 @@ const verifyOTP = async (req, res) => {
 
         res.status(200).send('OTP verified successfully');
     } catch (err) {
-        console.error(err);
         res.status(500).send('Server error');
     }
 }
@@ -212,7 +208,6 @@ async function hashPassword(password) {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         return hashedPassword;
     } catch (error) {
-        console.error("Error hashing password:", error);
         throw new Error('Failed to hash password');
     }
 }
@@ -263,7 +258,6 @@ const changePassword = async (req, res) => {
 
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
-        console.error("Error changing password:", error);
         res.status(500).json({ message: "Something went wrong" });
     }
 }
@@ -296,7 +290,6 @@ const changeForgotPassword = async (req, res) => {
 
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
-        console.error("Error changing password:", error);
         res.status(500).json({ message: "Something went wrong" });
     }
 }

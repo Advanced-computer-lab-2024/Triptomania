@@ -25,7 +25,6 @@ function FeaturedItineraries() {
     const fetchItineraries = async () => {
       try {
         const response = await axiosInstance.get("http://localhost:5000/api/guest/itineraries/viewItineraries");
-        console.log(response.data);
       
         if (response.data.status && Array.isArray(response.data.itineraries)) {
           setItineraries(response.data.itineraries);

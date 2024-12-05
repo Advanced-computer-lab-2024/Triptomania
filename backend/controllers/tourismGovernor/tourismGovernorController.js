@@ -157,7 +157,6 @@ export const updateTag = async (req, res) => {
                 message: 'Tag deleted successfully!'
             });
         } catch (err) {
-            console.error('Error deleting tag:', err); // Log the error for debugging
             res.status(500).json({
                 status: false,
                 message: 'Error deleting tag',

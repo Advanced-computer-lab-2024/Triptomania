@@ -22,10 +22,7 @@ const AdvertiserSignUp = () => {
     setSuccess(false); // Reset success state
 
     try {
-      console.log('Sending advertiser signup data:', formData);
       const response = await axiosInstance.post('/api/advertiser/addAdvertiser', formData);
-
-      console.log('Signup response:', response);
       setSuccess(true); // Display success message
     } catch (err) {
       console.error('Signup error:', err);

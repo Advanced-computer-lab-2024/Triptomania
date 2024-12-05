@@ -135,7 +135,6 @@ const getProductById = async (req, res) => {
  
      res.status(200).json({ message: "Product fetched successfully", product });
    } catch (error) {
-     console.error('Error fetching product:', error);
      res.status(500).json({ message: "Error fetching product", error: error.message });
    }
  };
@@ -148,7 +147,6 @@ const viewProducts = async (req, res) => {
       const products = await productModel.find({ Archive: false }).populate('Seller', 'username');
       res.status(200).json(products);
    } catch (error) {
-      console.log(error);
       res.status(500).json({ message: 'Error retrieving products', error });
    }
 };
@@ -172,7 +170,6 @@ const searchProduct = async (req, res) => {
 
       res.status(200).json(products);
    } catch (error) {
-      console.log(error);
       res.status(500).json({ message: 'Error searching for products', error });
    }
 };
@@ -214,7 +211,6 @@ const filterProducts = async (req, res) => {
 
        res.status(200).json(products);
    } catch (error) {
-       console.log(error);
        res.status(500).json({ message: 'Error filtering products', error: error.message });
    }
 };
@@ -242,8 +238,6 @@ const filterProducts = async (req, res) => {
 
        res.status(200).json(products);
    } catch (error) {
-       
-       console.error(error);
        res.status(500).json({ message: 'Error sorting products by ratings', error: error.message });
    }
 };
@@ -286,7 +280,6 @@ const getProductSales = async (req, res) => {
       const sales = product.Sales;
       res.status(200).json({ message: 'Product sales retrieved successfully', sales: sales });
    } catch (error) {
-      console.log(error);
       res.status(500).json({ message: 'Error retrieving product sales', error });
    }
 }

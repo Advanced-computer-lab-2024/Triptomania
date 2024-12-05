@@ -167,7 +167,6 @@ const sortActivities = async (req, res) => {
       // Return sorted activities
       res.status(200).json(activities);
   } catch (error) {
-      console.error(error);
       res.status(500).json({ message: 'Error sorting activities', error: error.message });
   }
 };

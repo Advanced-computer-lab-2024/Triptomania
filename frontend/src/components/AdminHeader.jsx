@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './AdminHeader.css';
 
 const menuItems = [
@@ -50,9 +51,9 @@ export function Header() {
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/admin/home" className="brand">
+            <Link to="/admin/home" className="brand">
               TripTomania
-            </a>
+            </Link>
           </div>
           <nav className="hidden md:flex space-x-10">
             {menuItems.map((item) => (
@@ -94,12 +95,12 @@ export function Header() {
             ))}
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <a href="/notifications" className="icon-link">
+            <Link to="/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
-            </a>
-            <a href="/profile" className="icon-link ml-6">
+            </Link>
+            <Link to="/profile" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>
