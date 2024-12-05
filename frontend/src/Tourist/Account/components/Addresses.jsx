@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import Loading from '@/components/Loading';
+import { useUser } from '@/UserContext';
+import axiosInstance from '@/axiosInstance';
 
 const Addresses = () => {
   const [addresses, setAddresses] = useState([]);
@@ -7,16 +10,15 @@ const Addresses = () => {
     address: '',
     city: '',
     state: '',
-    zipCode: '',
+    zip: '',
   });
   const [isLoading, setIsLoading] = useState(true);
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await fetch('/api/user-addresses');
-        const data = await response.json();
-        setAddresses(data);
+        setAddresses(user.deliveryAddresses);
       } catch (error) {
         console.error('Error fetching addresses:', error);
       } finally {
@@ -34,17 +36,13 @@ const Addresses = () => {
 
   const handleAddAddress = async () => {
     try {
-      const response = await fetch('/api/add-address', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newAddress),
-      });
-      if (response.ok) {
-        const addedAddress = await response.json();
-        setAddresses(prevAddresses => [...prevAddresses, addedAddress]);
-        setNewAddress({ address: '', city: '', state: '', zipCode: '' });
+      const response = await axiosInstance.put('/api/tourist/addDeliveryAddress', newAddress);
+      if (response.status === 201) {
+        const updatedUser = await axiosInstance.get('/api/auth/updateUser');
+        setUser(updatedUser.data.user);
+        setAddresses(user.deliveryAddresses);
+        setNewAddress({ address: '', city: '', state: '', zip: '' });
+        window.location.reload();
       } else {
         throw new Error('Failed to add address');
       }
@@ -55,18 +53,17 @@ const Addresses = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-primary mb-4">Addresses</h2>
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Saved Addresses</h3>
-        {addresses.map(address => (
-          <div key={address.id} className="bg-gray-100 p-4 rounded-md mb-2">
+        {addresses.map((address, index) => (
+          <div key={address.id || index} className="bg-gray-100 p-4 rounded-md mb-2">
             <p>{address.address}</p>
-            <p>{address.city}, {address.state} {address.zipCode}</p>
+            <p>{address.city}, {address.state} {address.zip}</p>
           </div>
         ))}
       </div>
@@ -107,8 +104,8 @@ const Addresses = () => {
             <label className="block text-sm font-medium text-gray-700">Zip Code</label>
             <input
               type="text"
-              name="zipCode"
-              value={newAddress.zipCode}
+              name="zip"
+              value={newAddress.zip}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
             />

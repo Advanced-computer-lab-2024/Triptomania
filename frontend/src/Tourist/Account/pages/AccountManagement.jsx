@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from '@/components/Header';
+import { Header } from '@/components/HeaderTourist';
 import AccountInfo from '../components/AccountInfo';
 import Addresses from '../components/Addresses';
 import Bookings from '../components/Bookings';
 import BookmarkedEvents from '../components/BookmarkedEvents';
 import SecuritySettings from '../components/SecuritySettings';
 import './index.css';
+import { useUser } from '@/UserContext';
 
 const AccountManagement = () => {
   const [activeTab, setActiveTab] = useState('accountInfo');
   const [walletBalance, setWalletBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
       try {
-        const response = await fetch('/api/wallet-balance');
-        const data = await response.json();
-        setWalletBalance(data.balance);
+        setWalletBalance(user.wallet);
       } catch (error) {
         console.error('Error fetching wallet balance:', error);
       } finally {
