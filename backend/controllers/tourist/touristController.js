@@ -1371,6 +1371,8 @@ const bookTransportation = async (req, res) => {
   }
 }
 
+
+
 const addProductToCart = async (req, res) => {
   try {
     const id = req.user._id;
@@ -1511,7 +1513,7 @@ const viewOrderDetails = async (req, res) => {
 const addProductToWishlist = async (req, res) => {
   try {
     const id = req.user._id;
-    const { productId } = req.body; // Product ID
+    const { productId } = req.body;
 
     if (!productId) {
       return res.status(400).json({ error: 'Product ID is required' });
@@ -1528,9 +1530,14 @@ const addProductToWishlist = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Initialize wishlist if it doesn't exist
+    if (!user.whishlist) {
+      user.whishlist = [];
+    }
+
     // Check if the product is already in the wishlist
     const isAlreadyInWishlist = user.whishlist.some(
-      (item) => item.productId.toString() === productId
+      (item) => item.toString() === productId
     );
 
     if (isAlreadyInWishlist) {
@@ -1549,7 +1556,6 @@ const addProductToWishlist = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 const getWishlist = async (req, res) => {
   try {
     const id = req.user._id;

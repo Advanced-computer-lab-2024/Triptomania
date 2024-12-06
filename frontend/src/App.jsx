@@ -52,7 +52,8 @@ import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
 import TourGuideHomePage from './TourGuide/TourGuideHomePage';
 import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytineraries';
 import EditMyItinerary from './TourGuide/Itineraries/EditMyItinerary';
-
+import ProductDetails from './Tourist/Products/ProductDetails';
+import TouristCart from './Tourist/TouristCart/TouristCart';
 const App = () => {
   return (
     <Routes>
@@ -111,8 +112,8 @@ const App = () => {
       <Route path="/tourGuide/home" element={<TourGuideHomePage/>} />
       <Route path="/tourGuide/MyItineraries" element={<ViewMyItinerariesTourGuide/>} />
       <Route path="/tourGuide/editMyItinerary/:id" element={<EditMyItinerary />} />
-
-
+      <Route path="/tourist/product/:id" element={<ProductDetails />} />
+      <Route path="/tourist/cart" element={<TouristCart />} />
     </Routes>
   );
 };

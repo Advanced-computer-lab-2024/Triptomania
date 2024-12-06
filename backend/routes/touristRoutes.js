@@ -459,4 +459,8 @@ router.get('/events/getBookmarkedEvents', (req, res, next) => authMiddleware.ver
 
 router.put('/events/unbookmarkEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.unbookmarkEvent);
 
-export default router;
+
+router.get('/product/:id', (req, res, next) => 
+    authMiddleware.verifyToken(req, res, next, ['tourist']), 
+    productController.getProductById
+  );export default router;

@@ -33,8 +33,7 @@ export function Header() {
             <a href="/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
             </a>
-            <a href="/cart" className="icon-link ml-6">
-              <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
+            <a href="/Tourist/Cart" className="icon-link ml-6"><ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
             </a>
             <a href="/tourist/account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
