@@ -20,7 +20,6 @@ function MyItinerary() {
             const response = await axiosInstance.get(
                 "http://localhost:5000/api/tourismGovernor/getMyHistoricalPlaces"
             );
-            console.log("API Response:", response.data); // Debugging
             if (Array.isArray(response.data.myItinerary)) { // Access the 'activities' array, change this key if needed
                 setMyItinerary(response.data.myItinerary);
             } else {

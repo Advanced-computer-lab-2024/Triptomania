@@ -20,7 +20,6 @@ function MyItinerary() {
             const response = await axiosInstance.get(
                 "http://localhost:5000/api/tourGuide/itinerary/getMyItineraries"
             );
-            console.log("API Response:", response.data); // Debugging
             if (Array.isArray(response.data.itineraries)) {
                 setMyItinerary(response.data.itineraries);
             } else {

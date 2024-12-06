@@ -4,9 +4,6 @@ const acceptTerms = async (event) => {
     const id = document.getElementById('acceptTermsId').value.trim();
     const type = document.getElementById('acceptTermsType').value.trim();
 
-    console.log(`User ID: ${id}`);
-    console.log(`User Type: ${type}`);
-
     try {
         let url = '';
 
@@ -24,8 +21,6 @@ const acceptTerms = async (event) => {
             default:
                 throw new Error('Invalid user type');
         }
-
-        console.log(`Sending request to: ${url}`);
 
         const response = await fetch(url, {
             method: 'PUT',

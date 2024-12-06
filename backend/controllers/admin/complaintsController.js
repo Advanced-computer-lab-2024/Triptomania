@@ -21,7 +21,6 @@ const viewComplaints = async (req, res) => {
 
         res.status(200).json(formattedComplaints);
     } catch (error) {
-        console.error("Error retrieving complaints:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -57,7 +56,6 @@ const sortComplaintsByDate = async (req, res) => {
         
         res.status(200).json(complaints);
     } catch (error) {
-        console.error("Error retrieving sorted complaints:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -70,7 +68,6 @@ const filterComplaintsByStatus = async (req, res) => {
 
         
         if (!status || !['pending', 'resolved', 'received'].includes(status)) {
-            console.log("Invalid status received:", status);
             return res.status(400).json({ message: "Invalid status. Must be either 'pending' or 'resolved'." });
         }
 
@@ -79,14 +76,12 @@ const filterComplaintsByStatus = async (req, res) => {
 
         
         if (complaints.length === 0) {
-            console.log("No complaints found for status:", status);
             return res.status(404).json({ message: "No complaints found with the specified status" });
         }
 
         
         res.status(200).json(complaints);
     } catch (error) {
-        console.error("Error filtering complaints by status:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -117,7 +112,6 @@ const updateComplaintStatus = async (req, res) => {
        
         res.status(200).json({ message: "Complaint status updated successfully", complaint: updatedComplaint });
     } catch (error) {
-        console.error("Error updating complaint status:", error);
         res.status(500).json({ message: "Error updating complaint status", error: error.message });
     }
 };
@@ -170,7 +164,6 @@ const viewComplaintDetails = async (req, res) => {
         // Respond with the updated complaint
         res.status(200).json({ message: "Reply added successfully", complaint: updatedComplaint });
     } catch (error) {
-        console.error("Error replying to complaint:", error);
         res.status(500).json({ message: "Error replying to complaint", error: error.message });
     }
 };

@@ -48,7 +48,7 @@ const getTourist = async (req, res) => {
     const tourist = await userModel.find();
     return res.status(200).send(tourist);
   } catch (error) {
-    console.log(error);
+    res.status(404).json({ message: error.message });
   }
 };
 
@@ -77,7 +77,6 @@ const getOneTourist = async (req, res) => {
 
     return res.status(200).json(tourist);
   } catch (error) {
-    console.error('Error getting tourist:', error);
     return res.status(500).json({ message: 'Error fetching tourist information', error: error.message });
   }
 };
@@ -90,7 +89,6 @@ const getOneTourist = async (req, res) => {
 const UpdateTourist = async (req, res) => {
   try {
     const { firstName, lastName, username, email, mobile, nationality, job_Student } = req.body;
-    console.log('Request Body:', req.body); // Log the incoming request
 
     // Fetch the existing tourist data
     const existingTourist = await userModel.findOne({ username });
@@ -113,7 +111,6 @@ const UpdateTourist = async (req, res) => {
         delete updateData[key];
       }
     });
-    console.log('Update Data:', updateData); // Log what's going to be updated
 
     // Check if the email already exists but exclude the current user
     if (email && email !== existingTourist.email) {
@@ -129,10 +126,8 @@ const UpdateTourist = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log('Updated Tourist:', updatedTourist); // Log the updated document
     res.status(200).json(updatedTourist);
   } catch (error) {
-    console.log('Error:', error); // Log the error if there's any
     res.status(400).json({ error: error.message });
   }
 };
@@ -277,7 +272,6 @@ const addComment = async (req, res) => {
     res.status(200).json(addedComment);
 
   } catch (error) {
-    console.log('Error:', error); // Log the error if there's any
     res.status(500).json({ error: error.message });
   }
 };
@@ -310,7 +304,6 @@ const reviewProduct = async (req, res) => {
 
     res.status(200).json(updatedProduct); // Send the updated product with the new review
   } catch (error) {
-    console.log('Error:', error); // Log the error if there's any
     res.status(400).json({ error: error.message });
   }
 };
@@ -368,7 +361,6 @@ export const rateTourGuide = async (req, res) => {
 
     res.status(200).json({ message: 'Rating submitted successfully', averageRating: tourGuide.averageRating });
   } catch (error) {
-    console.error("Error in rateTourGuide:", error); // Log the error for debugging
     res.status(500).json({ error: 'Server error', details: error.message });
   }
 };
@@ -439,7 +431,6 @@ const bookActivity = async (req, res) => {
 
     res.status(200).json({ message: 'Activity booked successfully!', activity });
   } catch (error) {
-    console.error('Error booking activity:', error);
     res.status(500).json({ message: 'Error booking activity', error: error.message });
   }
 };
@@ -482,7 +473,6 @@ const bookItinerary = async (req, res) => {
 
     res.status(200).json({ message: 'Itinerary booked successfully!', itinerary });
   } catch (error) {
-    console.error('Error booking activity:', error);
     res.status(500).json({ message: 'Error booking itinerary', error: error.message });
   }
 };
@@ -527,7 +517,6 @@ const badge = async (req, res) => {
 
     res.status(200).json({ message: 'Level and badge updated successfully!', tourist });
   } catch (error) {
-    console.error('Error updating level and badge:', error);
     res.status(500).json({ message: 'Error updating level and badge', error: error.message });
   }
 };
@@ -578,7 +567,6 @@ export const rateItinerary = async (req, res) => {
 
     res.status(200).json({ message: 'Rating submitted successfully', averageRating: itinerary.averageRating });
   } catch (error) {
-    console.error("Error in rateItinerary:", error); // Log the error for debugging
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -626,7 +614,6 @@ async function rateActivity(req, res) {
     activity.ratings.push({ touristId, rating });
 
     // Debugging: Log the ratings array
-    console.log('Ratings Array:', activity.ratings);
 
     // Calculate new average rating
     const totalRatings = activity.ratings.length;
@@ -636,14 +623,12 @@ async function rateActivity(req, res) {
     activity.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
 
     // Debugging: Log the calculated average rating
-    console.log('New Average Rating:', activity.averageRating);
 
     // Save the updated activity
     await activityModel.findByIdAndUpdate(activityId, { ratings: activity.ratings, averageRating: activity.averageRating }, { new: true });
 
     res.status(200).json({ message: 'Rating submitted successfully', averageRating: activity.averageRating });
   } catch (error) {
-    console.error("Error in rateActivity:", error); // Log the error for debugging
     res.status(500).json({ error: 'Server error', details: error.message });
   }
 }
@@ -731,7 +716,6 @@ const processPayment = async (req, res) => {
       itemDetails: item,
     });
   } catch (error) {
-    console.error('Error processing payment:', error);
     res.status(500).json({ message: 'Error processing payment', error: error.message });
   }
 };
@@ -753,9 +737,8 @@ const updateBadge = async (tourist) => {
 
     // Save the tourist document to update the database
     await tourist.save();
-    console.log('Level and badge updated successfully!', tourist);
   } catch (error) {
-    console.error('Error updating level and badge:', error);
+    throw new Error(error.message);
   }
 };
 
@@ -811,7 +794,6 @@ const rateProduct = async (req, res) => {
 
     res.status(200).json({ message: 'Product rated successfully!', averageRating: product.averageRating });
   } catch (error) {
-    console.error('Error rating product:', error);
     res.status(500).json({ message: 'Error rating product', error: error.message });
   }
 };
@@ -820,7 +802,6 @@ const fileComplaint = async (req, res) => {
   const { title, body } = req.body;
   const touristId = req.user._id;
 
-  console.log(touristId);
 
   try {
     // Verify the tourist exists
@@ -851,7 +832,6 @@ const viewMyComplaints = async (req, res) => {
 
     return res.status(200).json({ message: 'Complaints retrieved successfully', complaints });
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -936,7 +916,6 @@ export const cancelBooking = async (req, res) => {
     return res.status(200).json({ message: "Booking canceled successfully" });
 
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
@@ -962,7 +941,6 @@ const getHotels = async (req, res) => {
       res.status(404).json({ message: 'No hotels found' });
     }
   } catch (error) {
-    console.error('Error fetching hotels:', error);
     res.status(500).json({ error: error });
   }
 }
@@ -987,7 +965,6 @@ const getHotelOffers = async (req, res) => {
       res.status(404).json({ message: 'No offers found for this hotel' });
     }
   } catch (error) {
-    console.error('Error fetching hotel offers:', error);
 
     // Check if the error code matches the "No Rooms Available" error
     if (error.description && error.description[0].code === 3664) {
@@ -1085,7 +1062,6 @@ const bookHotel = async (req, res) => {
     return res.status(200).json(response.data);  // Send booking response back to client
 
   } catch (error) {
-    console.error('Error booking hotel:', error);
     return res.status(500).json({ error: 'Failed to book hotel' });
   }
 };
@@ -1123,7 +1099,6 @@ const searchFlights = async (req, res) => {
     return res.status(200).json(flightOffersCache.data);
 
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ error: 'Error searching for flights', details: error.message });
   }
 };
@@ -1151,7 +1126,6 @@ const getFlightDetails = async (req, res) => {
     }
 
   } catch (error) {
-    console.error('Error fetching flight details:', error);
     return res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 };
@@ -1206,7 +1180,6 @@ const bookFlight = async (req, res) => {
     return res.status(201).json(bookingResponse.data);
 
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ error: 'Error booking the flight', details: error.message });
   }
 };
@@ -1220,7 +1193,6 @@ const bookFlight = async (req, res) => {
 //       cityCode: "CAI",
 //     });
 
-//     console.log(hotelsList.data[14]);
 
 //     // 2. Hotel Search API to get the price and offer id
 //     const pricingResponse = await amadeus.shopping.hotelOffersSearch.get({
@@ -1272,10 +1244,8 @@ const bookFlight = async (req, res) => {
 //         },
 //       },
 //     });
-//     console.log(response);
 //     res.status(200).json(response.data);
 //   } catch (error) {
-//     console.error(error);
 //     res.status(500).json({ error: error.message });
 //   }
 // }
@@ -1338,10 +1308,8 @@ const bookFlight = async (req, res) => {
 //         ],
 //       },
 //     });
-//     console.log(response);
 //     res.status(200).json(response.data);
 //   } catch (error) {
-//     console.error(error);
 //     res.status(500).json({ error: error.message });
 //   }
 // }
@@ -1366,7 +1334,6 @@ const bookTransportation = async (req, res) => {
     await userModel.findByIdAndUpdate(id, { $push: { transportationBookings: transportationData } }, { new: true });
     res.status(200).json({ message: "transportation added successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1411,7 +1378,6 @@ const addProductToCart = async (req, res) => {
 
     res.status(200).json({ message: 'Product added to cart successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -1427,7 +1393,6 @@ const removeProductFromCart = async (req, res) => {
       { new: true });
     res.status(200).json({ message: "product removed from cart successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1455,7 +1420,6 @@ const changeCartQuantity = async (req, res) => {
     });
     res.status(200).json({ message: "cart quantity updated successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1476,7 +1440,6 @@ const addDeliveryAdress = async (req, res) => {
     await userModel.findByIdAndUpdate(id, { $push: { deliveryAddresses: deliveryAddress } }, { new: true });
     res.status(200).json({ message: "delivery address added successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1490,7 +1453,6 @@ const viewOrders = async (req, res) => {
     }
     res.status(200).json({ orders: user.orders });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1505,7 +1467,6 @@ const viewOrderDetails = async (req, res) => {
     }
     res.status(200).json({ order: order });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1552,7 +1513,6 @@ const addProductToWishlist = async (req, res) => {
 
     res.status(200).json({ message: 'Product added to wishlist successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -1565,7 +1525,6 @@ const getWishlist = async (req, res) => {
     }
     res.status(200).json({ wishlist: user.whishlist });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1579,7 +1538,6 @@ const getCart = async (req, res) => {
     }
     res.status(200).json({ cart: user.cart });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1606,7 +1564,6 @@ const removeProductFromWishlist = async (req, res) => {
 
     res.status(200).json({ message: 'Product removed from wishlist successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -1624,7 +1581,6 @@ const getUpcomingActivities = async (req, res) => {
 
     res.status(200).json({ upcomingActivities });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1642,7 +1598,6 @@ const getUpcomingItineraries = async (req, res) => {
 
     res.status(200).json({ upcomingItineraries });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1660,7 +1615,6 @@ const getPastActivities = async (req, res) => {
 
     res.status(200).json({ pastActivities });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1678,7 +1632,6 @@ const getPastItineraries = async (req, res) => {
 
     res.status(200).json({ pastItineraries });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1726,7 +1679,6 @@ const bookmarkEvent = async (req, res) => {
     res.status(200).json({ message: 'Event bookmarked successfully' });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1774,7 +1726,6 @@ const unbookmarkEvent = async (req, res) => {
     res.status(200).json({ message: 'Event unbookmarked successfully' });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }
@@ -1795,7 +1746,6 @@ const getBookmarkedEvents = async (req, res) => {
 
     res.status(200).json({ bookmarkEvents: bookmarkedEvents });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 }

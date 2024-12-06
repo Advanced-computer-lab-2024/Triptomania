@@ -8,7 +8,7 @@ const AccountInfo = () => {
   const [preferences, setPreferences] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,6 +35,10 @@ const AccountInfo = () => {
       const response = await axiosInstance.put('/api/tourist/updateTourist', userInfo);
       if (response.status === 200) {
         alert('User information updated successfully!');
+        const updatedUser = await axiosInstance.get('/api/auth/updateUser');
+        setUser(updatedUser.data.user);
+        setUserInfo(user);
+        window.location.reload();
       } else {
         throw new Error('Failed to update user information');
       }
@@ -50,7 +54,6 @@ const AccountInfo = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-primary mb-4">Account Information</h2>
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Preferences</h3>
         <div className="flex items-center">
@@ -106,8 +109,16 @@ const AccountInfo = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
           <input
-            type="date"
-            value={new Date(userInfo.DOB).toLocaleDateString() || ''}
+            type="text"
+            value={
+              userInfo.DOB
+                ? new Date(userInfo.DOB).toLocaleDateString('en-GB', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                })
+                : ''
+            }
             readOnly
             className="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm"
           />
@@ -136,7 +147,7 @@ const AccountInfo = () => {
           <label className="block text-sm font-medium text-gray-700">Job</label>
           <input
             type="text"
-            name="job"
+            name="job_Student"
             value={userInfo.job_Student || ''}
             onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"

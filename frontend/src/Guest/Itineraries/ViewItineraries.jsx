@@ -52,7 +52,6 @@ const ViewItineraries = () => {
   const fetchFilteredItineraries = async () => {
     setLoading(true); // Show loading indicator while fetching filtered itineraries
     try {
-      console.log(preferences);
       const filters = {
         minPrice: budgetRange[0],
         maxPrice: budgetRange[1],
@@ -94,7 +93,6 @@ const ViewItineraries = () => {
         apiLink += `&order=${sortOrder}`;
       }
       const response = await axiosInstance.get(apiLink);
-      console.log('Sorted itineraries:', response.data);
       setItineraries(response.data);
     } catch (error) {
       console.error('Error fetching sorted itineraries:', error);
@@ -111,7 +109,6 @@ const ViewItineraries = () => {
   };
 
   const handleFilterClick = () => {
-    console.log("Applying filters...");
     fetchFilteredItineraries();
   };
 

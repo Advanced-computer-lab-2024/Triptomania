@@ -34,8 +34,6 @@ const SellerSignUp = () => {
                 password: storedData.password || '',
             };
 
-            console.log('Sending seller signup data:', sellerData);
-
             const response = await axiosInstance.post(
                 '/api/seller/addSeller',
                 sellerData,
@@ -43,8 +41,6 @@ const SellerSignUp = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
-
-            console.log('Signup response:', response);
             setSuccess(true); // Display success message
         } catch (err) {
             console.error('Signup error:', err);

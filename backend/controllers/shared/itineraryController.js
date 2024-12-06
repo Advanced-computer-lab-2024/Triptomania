@@ -244,7 +244,6 @@ const sortItineraries = async (req, res) => {
     // Return sorted itineraries
     res.status(200).json(itineraries);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Error sorting itineraries', error: error.message });
   }
 };
@@ -277,8 +276,6 @@ const filterItineraries = async (req, res) => {
       } else {
         // Use $in for single tag (partial match allowed)
         filters.preferenceTags = { $in: preferenceArray };
-        console.log('Filters:', filters);
-        console.log('Preference array:', preferenceArray);
       }
     }
 
@@ -287,7 +284,6 @@ const filterItineraries = async (req, res) => {
 
     // Fetch the filtered itineraries
     const filteredItineraries = await itineraryModel.find(filters).sort({ availableDates: 1 });
-    // console.log('Filtered itineraries:', filteredItineraries);
 
     if (filteredItineraries.length === 0) {
       return res.status(404).json({ message: 'No itineraries found matching your criteria.' });
@@ -296,7 +292,6 @@ const filterItineraries = async (req, res) => {
     // Return filtered itineraries
     res.status(200).json(filteredItineraries);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Error filtering itineraries", error: error.message });
   }
 };

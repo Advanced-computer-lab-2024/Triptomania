@@ -19,7 +19,6 @@ function FeaturedActivities() {
             const response = await axiosInstance.get(
                 "http://localhost:5000/api/advertiser/activity/viewMyActivities"
             );
-            console.log("API Response:", response.data); // Debugging
             if (Array.isArray(response.data.activities)) { // Access the 'activities' array
                 setMyActivities(response.data.activities);
             } else {

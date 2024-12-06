@@ -54,10 +54,7 @@ const SignUp = () => {
     setError('');
 
     try {
-      console.log('Sending signup data:', formData);
       const response = await axios.post('http://localhost:5000/api/auth/signup', formData);
-
-      console.log('Signup response:', response);
       alert('Sign-up successful! Please log in.');
       navigate('/login');
     } catch (err) {

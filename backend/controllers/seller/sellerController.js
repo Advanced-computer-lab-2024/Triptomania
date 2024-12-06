@@ -39,7 +39,6 @@ const CreateSeller = async (req, res) => {
 
     res.status(201).send(seller);
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: 'Error creating seller' });
   }
 };
@@ -54,7 +53,7 @@ const getOneSeller = async (req, res) => {
     const seller = await SellerModel.find({ username });
     return res.status(200).send(seller);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error getting seller' });
   }
 };
 
@@ -66,7 +65,7 @@ const getSeller = async (req, res) => {
     const seller = await SellerModel.find({});
     return res.status(200).send(seller);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error getting seller' });
   }
 };
 
@@ -101,7 +100,7 @@ const updateSeller = async (req, res) => {
 
     res.status(200).send(seller);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error updating seller' });
   }
 };
 
@@ -116,7 +115,6 @@ const viewMyProducts = async (req, res) => {
 
     res.status(200).json({data: products});
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: 'Error retrieving products', error });
   }
 };
@@ -132,7 +130,6 @@ const viewProducts = async (req, res) => {
   }).populate('Seller', 'username');
     res.status(200).json({data: products});
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: 'Error retrieving products', error });
   }
 }

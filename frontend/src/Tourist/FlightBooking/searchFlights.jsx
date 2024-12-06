@@ -29,7 +29,6 @@ const SearchFlights = () => {
         departure_date,
         ...(return_date && { return_date }), // Include return_date if provided
       });
-      console.log('Response received:', response.data);
       setFlights(response.data || []);
     } catch (err) {
       console.error('Error fetching flights:', err);

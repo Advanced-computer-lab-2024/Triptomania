@@ -25,7 +25,6 @@ async function getAccessToken() {
 
       return { accessToken, expiresIn: response.data.expires_in };
     } catch (error) {
-      console.error('Error fetching access token:', error.response ? error.response.data : error.message);
       throw new Error('Unable to fetch access token');
     }
   }  

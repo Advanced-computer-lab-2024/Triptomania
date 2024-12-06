@@ -16,7 +16,6 @@ const EditMyItinerary = () => {
     const fetchItinerary = async () => {
       try {
         const response = await axiosInstance.get(`/api/tourGuide/itinerary/getItinerary/${id}`);
-        console.log('Fetched Itinerary:', response.data.data); // Debug response
         setItinerary(response.data.data); // Set itinerary state
         setLoading(false);
       } catch (error) {
@@ -42,12 +41,10 @@ const EditMyItinerary = () => {
   // Handle form submission
   const handleSaveChanges = async () => {
     try {
-      console.log('Payload being sent:', itinerary); // Debug payload
       const response = await axiosInstance.put('/api/tourGuide/itinerary/editItinerary', {
         id,
         ...itinerary,
       });
-      console.log('API Response:', response.data); // Debug response
       setSuccessMessage(response.data.message || 'Changes saved successfully!');
       setTimeout(() => navigate('/tourGuide/MyItineraries'), 2000); // Redirect after success
     } catch (error) {

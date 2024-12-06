@@ -25,13 +25,10 @@ const GetHotelOffers = () => {
         const response = await axiosInstance.get(`/api/tourist/getHotelOffers`, {
           params: { hotelId },
         });
-
-        console.log('API Response:', response.data);
         setOffers(response.data.offers || []); // Ensure offers is always an array
       } catch (err) {
         console.error('Error fetching hotel offers:', err);
         if (err.response) {
-          console.log('Error Response JSON:', err.response.data);
         }
         if (
           err.response?.status === 400 &&

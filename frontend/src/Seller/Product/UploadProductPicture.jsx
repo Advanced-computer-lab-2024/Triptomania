@@ -13,7 +13,6 @@ const UploadPicture = () => {
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('sellerData')) || {};
-        console.log('Retrieved from localStorage:', storedData);
         setProductData(storedData);
     }, []);
 
@@ -36,10 +35,6 @@ const UploadPicture = () => {
         const formData = new FormData();
         formData.append('file', selectedFile);
         formData.append('id', productData._id);
-
-        console.log('File:', formData.get('file'));
-        console.log('Product ID:', formData.get('id'));
-
         try {
             const response = await axiosInstance.post(
                 '/api/seller/product/uploadPicture',
@@ -51,8 +46,6 @@ const UploadPicture = () => {
                 }
             );
 
-            console.log('Upload response:', response);
-
             if (response.status === 200) {
                 alert('Picture uploaded successfully!');
                 setSelectedFile(null);
@@ -61,7 +54,6 @@ const UploadPicture = () => {
         } catch (error) {
             console.error('Full error:', error);
             if (error.response) {
-                console.log('Error response:', error.response.data);
                 alert(error.response.data.message || 'Upload failed');
             } else {
                 alert('Failed to upload picture. Please try again.');

@@ -65,7 +65,6 @@ const addTourismGovernor = async (req, res) => {
         // Respond with a success message
         res.status(201).json({ message: "Tourism Governor added successfully" });
     } catch (error) {
-        console.error("Error saving tourism governor:", error); // Log the error for debugging
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -98,7 +97,6 @@ const flagItinerary = async (req, res) => {
 
         return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
     } catch (error) {
-        console.error("Error toggling itinerary flag:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
@@ -111,7 +109,6 @@ const viewProductsAdmin = async (req, res) => {
         const products = await productModel.find().populate('Seller', 'username');
         res.status(200).json(products);
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: 'Error retrieving products', error });
     }
 };
@@ -204,16 +201,12 @@ const checkValidity = async (touristId) => {
 const getDeleteUsers = async (req, res) => {
     try {
         const deletedTourists = await touristModel.find({ deleteAccount: true });
-        console.log('Deleted Tourists:', deletedTourists); // Log the result
 
         const deletedTourGuides = await tourGuideModel.find({ deleteAccount: true });
-        console.log('Deleted Tour Guides:', deletedTourGuides); // Log the result
 
         const deletedAdvertisers = await advertiserModel.find({ deleteAccount: true });
-        console.log('Deleted Advertisers:', deletedAdvertisers); // Log the result
 
         const deletedSellers = await sellerModel.find({ deleteAccount: true });
-        console.log('Deleted Sellers:', deletedSellers); // Log the result
 
         const deletedUsers = [
             ...deletedTourists,
@@ -238,7 +231,6 @@ const getDeleteUsers = async (req, res) => {
                         canDelete: isValid // Add a flag to indicate if the user can be deleted
                     };
                 } catch (validityError) {
-                    console.error("Error checking validity for user:", user._id, validityError);
                     return {
                         ...userObj,
                         canDelete: false // Default to false if there's an error
@@ -253,7 +245,6 @@ const getDeleteUsers = async (req, res) => {
 
         res.status(200).json(usersResponse);
     } catch (error) {
-        console.error("Error retrieving deleted users:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 }
@@ -276,7 +267,6 @@ const createPromoCode = async (req, res) => {
 
         res.status(201).json({ message: "Promo code created successfully" });
     } catch (error) {
-        console.error("Error creating promo code:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -323,7 +313,6 @@ const getUsers = async (req, res) => {
 
         res.status(200).json(response);
     } catch (error) {
-        console.error("Error retrieving users:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -368,9 +357,8 @@ const sendEmail = async (itinerary) => {
 
         // Send the email using Brevo transactional API
         const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-        console.log(response);
     } catch (error) {
-        console.error(error);
+        throw new Error(`Error sending email: ${error.message}`);
     }
 };
 
@@ -382,7 +370,6 @@ const viewAllItineraries = async (req, res) => {
             itineraries: itineraries
         });
     } catch (error) {
-        console.log(error);
         res.status(500).json({
             status: false,
             error: err.message
@@ -395,27 +382,22 @@ const viewAllActivities = async (req, res) => {
         const bookings = await activityModel.find().sort({ createdAt: -1 });
         res.status(200).json(bookings);
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Error fetching activities", error: error.message });
     }
 }
 
 const getAllDocuments = async (req, res) => {
     try {
-        console.log('Fetching documents...');
 
         // Fetch users with documents from each model
         const sellers = await sellerModel.find({ documents: { $exists: true, $ne: null } })
             .select('username documents status type');
-        console.log('Sellers found:', sellers);
         
         const advertisers = await advertiserModel.find({ documents: { $exists: true, $ne: null } })
             .select('username documents status type');
-        console.log('Advertisers found:', advertisers);
             
         const tourGuides = await tourGuideModel.find({ documents: { $exists: true, $ne: null } })
             .select('username documents status type');
-        console.log('Tour Guides found:', tourGuides);
 
         // Combine all documents into one response
         const allDocuments = {
@@ -442,17 +424,11 @@ const getAllDocuments = async (req, res) => {
             }))
         };
 
-        console.log('Sending response:', {
-            message: 'Documents retrieved successfully',
-            documents: allDocuments
-        });
-
         res.status(200).json({
             message: 'Documents retrieved successfully',
             documents: allDocuments
         });
     } catch (error) {
-        console.error('Error retrieving documents:', error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 };

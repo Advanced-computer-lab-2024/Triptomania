@@ -64,7 +64,6 @@ const uploadDocuments = async (req, res) => {
             documents: fileUrl,
         });
     } catch (error) {
-        console.error('Error uploading documents:', error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 
@@ -123,7 +122,6 @@ const uploadProfilePicture = async (req, res) => {
             profilePicture: fileUrl,
         });
     } catch (error) {
-        console.error('Error uploading profile picture:', error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 }
@@ -158,7 +156,6 @@ async function upload(fileBuffer, fileName, type) {
         const fileUrl = `https://storage.googleapis.com/${firebase.bucket.name}/${uniqueFileName}`;
         return fileUrl;
     } catch (error) {
-        console.error('Error uploading file:', error);
         throw new Error('Failed to upload file to Firebase');
     }
 }
@@ -199,7 +196,6 @@ const acceptUser = async (req, res) => {
             user: updatedUser,
         });
     } catch (error) {
-        console.error('Error accepting user:', error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 };
@@ -239,7 +235,6 @@ const rejectUser = async (req, res) => {
             user: updatedUser,
         });
     } catch (error) {
-        console.error('Error rejecting user:', error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 };
@@ -268,7 +263,6 @@ const getPendingUsers = async (req, res) => {
             pendingUsers
         });
     } catch (error) {
-        console.error('Error retrieving pending users:', error);
         res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 };
@@ -279,10 +273,6 @@ const acceptTerms = async (req, res) => {
         // Extract id and type from the route parameters
         const type = req.user.type;
         const id = req.user._id;
-
-        // Log the ID and type to verify the values are coming through correctly
-        console.log(`Received ID: ${id}`);
-        console.log(`Received Type: ${type}`);
 
         // Trim any leading/trailing spaces from the ID
         const trimmedId = id.trim();
@@ -322,18 +312,6 @@ const acceptTerms = async (req, res) => {
             user: updatedUser,
         });
     } catch (error) {
-        console.error('Error in acceptTerms function:', error);
-
-        // Log more detailed information if it's a specific error type
-        if (error instanceof TypeError) {
-            console.error('Type Error Details:', error.stack);
-        } else if (error instanceof ReferenceError) {
-            console.error('Reference Error Details:', error.stack);
-        }
-
-        console.error('Complete Error Object:', JSON.stringify(error));
-        console.error('Stack Trace:', error.stack);
-
         res.status(500).json({
             message: 'Something went wrong',
             error: error.message,
@@ -390,7 +368,6 @@ const requestAccountDeletion = async (req, res) => {
         // Return a success message
         return res.status(200).json({ message: "Account deletion request sent." });
     } catch (error) {
-        console.error("Error requesting account deletion:", error);
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
@@ -415,7 +392,6 @@ const saveFCMToken = async (req, res) => {
         res.status(200).json({ message: 'Token saved successfully' });
 
     } catch (error) {
-        console.error("Error saving token:", error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 };
@@ -432,9 +408,8 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        return res.status(200).json({ user });
+        return res.status(200).json({ user: user });
     } catch (error) {
-        console.error("Error updating user:", error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 }

@@ -29,7 +29,6 @@ const DocumentsViewer = () => {
                     guide.status === 'pending')
             };
             
-            console.log('Filtered Documents:', filteredDocuments); // Debug log
             setDocuments(filteredDocuments);
         } else {
             throw new Error('Invalid response structure');
@@ -56,7 +55,6 @@ const DocumentsViewer = () => {
         
         const handleAccept = async () => {
             try {
-                console.log(user.userType);
                 await axiosInstance.put('/api/admin/acceptUser', {type: user.userType, id: user.userId});  // Add user ID to URL
                 fetchDocuments();
             } catch (err) {
@@ -64,7 +62,6 @@ const DocumentsViewer = () => {
                 alert('Failed to accept user');
             }
         };
-        console.log(user.userType);
 
         const handleReject = async () => {
             try {

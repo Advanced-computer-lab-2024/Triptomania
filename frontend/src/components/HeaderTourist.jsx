@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from "@/components/ui/button"; // Adjust path as needed
 import './Header.css'; // Importing the CSS file
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 import { Bell, ShoppingCart, User } from 'lucide-react'; // Import icons for notifications, cart, and profile
+import { Link } from 'react-router-dom';
 
 export function Header() {
     const navigate = useNavigate();  // Initialize navigate function
@@ -16,28 +16,28 @@ export function Header() {
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="/tourist/home" className="brand">
+            <Link to="/tourist/home" className="brand">
               TripTomania
-            </a>
+            </Link>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <a href="/tourist/home" className="header-link">Home</a>
-            <a href="/activities" className="header-link">Activities</a>
-            <a href="/itineraries" className="header-link">Itineraries</a>
-            <a href="/historical-places" className="header-link">Historical Places</a>
-            <a href="/tourist/products/viewproducts" className="header-link">Products</a>
-            <a href="/tourist/searchFlights" className="header-link">Flights</a>
-            <a href="/tourist/hotelBooking/getHotels" className="header-link">Hotels</a>
+            <Link to="/tourist/home" className="header-link">Home</Link>
+            <Link to="/activities" className="header-link">Activities</Link>
+            <Link to="/itineraries" className="header-link">Itineraries</Link>
+            <Link to="/historical-places" className="header-link">Historical Places</Link>
+            <Link to="/tourist/products/viewproducts" className="header-link">Products</Link>
+            <Link to="/tourist/searchFlights" className="header-link">Flights</Link>
+            <Link to="/tourist/hotelBooking/getHotels" className="header-link">Hotels</Link>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <a href="/notifications" className="icon-link">
+            <Link to="/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
-            </a>
-            <a href="/Tourist/Cart" className="icon-link ml-6"><ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
-            </a>
-            <a href="/tourist/account" className="icon-link ml-6">
+            </Link>
+            <Link to="/Tourist/Cart" className="icon-link ml-6"><ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
+            </Link>
+            <Link to="/tourist/account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -17,7 +17,6 @@ const BookHotel = () => {
 
   // Log offerId to check if it's extracted correctly
   useEffect(() => {
-    console.log("Offer ID:", offerId);
     if (!offerId) {
       setError("Offer ID is missing. Please try again.");
       navigate("/errorPage"); // Redirect to error page or handle accordingly

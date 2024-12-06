@@ -41,7 +41,7 @@ const createAdvertiser = async (req, res) => {
 
     res.status(201).send(adv);
   } catch (error) {
-    console.log(error);
+    res.statuse(500).send({ message: 'Error creating advertiser' });
   }
 };
 ///////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ const getOneAdvertiser = async (req, res) => {
     const advertiser = await AdvertiserModel.find({username});
     return res.status(200).send(advertiser);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error getting advertiser' });
   }
 };
 ///////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ const getAdvertiser = async (req, res) => {
     const adv = await AdvertiserModel.find({});
     return res.status(200).send(adv);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error getting advertisers' });
   }
 };
 
@@ -101,7 +101,7 @@ const updateAdvertiser = async (req, res) => {
 
     res.status(200).send(adv);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error updating advertiser' });
   }
 };
 

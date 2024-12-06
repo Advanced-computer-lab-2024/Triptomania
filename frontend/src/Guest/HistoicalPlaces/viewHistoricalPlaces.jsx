@@ -57,14 +57,6 @@ const ViewHistoricalPlaces = () => {
   const fetchHistoricalPlaces = async () => {
     try {
       const response = await axiosInstance.get('/api/guest/historicalPlaces/getHistoricalPlaces');
-      
-      // Detailed logging
-      console.log('API Response:', {
-        status: response.status,
-        data: response.data,
-        firstPlace: response.data.historicalPlaces?.[0],
-        pictureExample: response.data.historicalPlaces?.[0]?.Picture?.substring(0, 100) // Show first 100 chars of picture
-      });
 
       if (response.data.historicalPlaces) {
         setAllHistoricalPlaces(response.data.historicalPlaces);
@@ -184,7 +176,6 @@ const ViewHistoricalPlaces = () => {
     alt={place.Name}
     className="activity-image"
     onError={(e) => {
-      console.log('Image load error for:', place.Name);
       e.target.src = 'https://via.placeholder.com/300x200';
     }}
   />

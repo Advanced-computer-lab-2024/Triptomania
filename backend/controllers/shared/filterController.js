@@ -30,7 +30,6 @@ const filterByTag = async (req, res) => {
         return res.status(200).json({ message: "Fetched historical places by tags", historicalPlaces });
 
     } catch (error) {
-        console.error('Error in filterByTag function:', error); // Log the error
         return res.status(500).json({ error: 'Error occurred while filtering historical places by tags.' });
     }
 };

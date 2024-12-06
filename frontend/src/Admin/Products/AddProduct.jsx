@@ -46,7 +46,6 @@ const handleSubmit = async (e) => {
         );
 
         if (response.status === 201) {
-            console.log('API Response:', response.data);
             
             // Store the complete product data including the ID
             const productData = {
@@ -55,7 +54,6 @@ const handleSubmit = async (e) => {
                 Seller: response.data.product.Seller // Include the Seller ID if needed
             };
             
-            console.log('Data being stored:', productData);
             localStorage.setItem('sellerData', JSON.stringify(productData));
             
             alert('Product added successfully!');

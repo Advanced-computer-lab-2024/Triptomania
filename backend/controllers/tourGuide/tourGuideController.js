@@ -31,7 +31,7 @@ const CreateTourGuide = async (req, res) => {
     const tourg = await TourGuideModel.create({ firstName, lastName, username, email, password, mobile , yearsOfExperience , previousWork });
     res.status(201).send(tourg);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error creating tour guide' });
   }
 };
 
@@ -43,7 +43,7 @@ const getTourGuide = async (req, res) => {
     const tourg = await TourGuideModel.find({});
     return res.status(200).send(tourg);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error getting tour guides' });
   }
 };
 
@@ -57,7 +57,7 @@ const getOneTourGuide = async (req, res) => {
     const tourGuide = await TourGuideModel.find({username});
     return res.status(200).send(tourGuide);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error getting tour guide' });
   }
 };
 
@@ -95,7 +95,7 @@ const updateTourGuide = async (req, res) => {
     }
     res.status(200).send(tourg);
   } catch (error) {
-    console.log(error);
+    res.status(500).send({ message: 'Error updating tour guide' });
   }
 };
 
@@ -232,7 +232,6 @@ const toggleItineraryStatus = async (req, res) => {
 
       return res.status(200).json({ message: `Itinerary ${isActivated ? 'deactivated' : 'activated'} successfully.` });
   } catch (error) {
-      console.error("Error toggling itinerary status:", error);
       res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 }
