@@ -26,7 +26,7 @@ import TouristSignUp from './Pages/TouristSignUp';
 import TourGuideSignUp from './Pages/TourGuideSignUp';
 import FileComplaint from './Tourist/Complaints/FileComplaint'
 import ViewProductsTourist from './Tourist/Products/ViewProducts';
-import GetHotelOffers from './Tourist/GetHotelOffers/GetHotelOffers';
+import GetHotelOffers from './Tourist/HotelBooking/GetHotelOffers';
 import SellerViewProducts from './Seller/Product/ViewProducts';
 import SellerViewMyProducts from './Seller/Product/ViewMyProducts';
 import SellerHomePage from './Seller/SellerHomePage.jsx';
@@ -93,7 +93,7 @@ const App = () => {
       <Route path="/tourGuide/AllItirnaries" element={<TourGuideAllItirenaries />} />
       <Route path="/tourGuide/MyItirnaries" element={<TourGuideMyItirenaries />} />
       <Route path="/tourist/searchFlights" element={<SearchFlights />} />
-      <Route path="/tourist/getFlightOffers/:flightId" element={<FlightInfo />} />
+      <Route path="/tourist/getFlightOffers/:flightOfferId" element={<FlightInfo />} />
       <Route path="/admin/view/documents" element={<DocumentsViewer />} />
       <Route path="/admin/generatePdfs" element={<GeneratePdfs />} />
 

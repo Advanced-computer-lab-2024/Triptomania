@@ -9,11 +9,6 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
-  .book-hotel h1 {
-    text-align: center;
-    color: #333;
-  }
-  
   .booking-form {
     display: flex;
     flex-direction: column;
@@ -33,21 +28,6 @@
     border-radius: 4px;
   }
   
-  .booking-form button {
-    margin-top: 20px;
-    padding: 10px 15px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .booking-form button:hover {
-    background-color: #0056b3;
-  }
-  
   .error {
     color: red;
     font-weight: bold;
@@ -55,3 +35,17 @@
     margin-bottom: 10px;
   }
   
+  .back-button-book {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #e23c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .back-button-book:hover {
+    background-color: #eb6666;
+  }
