@@ -51,7 +51,7 @@ import AdvertiserHomePage from './Advertiser/AdvertiserHomePage';
 import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
 import TourGuideHomePage from './TourGuide/TourGuideHomePage';
 import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytineraries';
-import EditMyItinerary from './TourGuide/Itineraries/EditMyItinerary';
+import EditMyItinerary from './TourGuide/Itineraries/editMyItinerary';
 import ProductDetails from './Tourist/Products/ProductDetails';
 import TouristCart from './Tourist/TouristCart/TouristCart';
 
