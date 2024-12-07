@@ -54,7 +54,6 @@ import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytinerarie
 import EditMyItinerary from './TourGuide/Itineraries/EditMyItinerary';
 import ProductDetails from './Tourist/Products/ProductDetails';
 import TouristCart from './Tourist/TouristCart/TouristCart';
-import EditMyItinerary from './TourGuide/Itineraries/editMyItinerary';
 
 const App = () => {
   return (
