@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance';
 import './FlightInfo.css';
+import Loading from '@/components/Loading';
+import { Header } from '@/components/HeaderTourist';
 
 const FlightInfo = () => {
-  const { flightId } = useParams(); // Use useParams to get the flight ID from the URL
+  const { flightOfferId } = useParams();
   const [flightDetails, setFlightDetails] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,17 +14,15 @@ const FlightInfo = () => {
 
   useEffect(() => {
     const fetchFlightDetails = async () => {
-      if (!flightId) {
+      if (!flightOfferId) {
         setError('No flight offer ID provided.');
         setLoading(false);
         return;
       }
 
       try {
-        const response = await axiosInstance.get(`/api/tourist/getFlightDetails`, {
-          params: { flightOfferId: flightId }, // Send flightOfferId as a query parameter
-        });
-        setFlightDetails(response.data);
+        const response = await axiosInstance.get(`/api/tourist/getFlightDetails?flightOfferId=${flightOfferId}`);
+        setFlightDetails(response.data.flightOffers[0]);
       } catch (error) {
         console.error('Error fetching flight details:', error);
         setError('Failed to fetch flight details. Please try again.');
@@ -32,14 +32,18 @@ const FlightInfo = () => {
     };
 
     fetchFlightDetails();
-  }, [flightId]);
+  }, [flightOfferId]);
 
   const handleBooking = () => {
-    navigate(`/bookFlight?flight_id=${flightId}`); // Redirect to the booking page with flight ID
+    navigate(`/bookFlight?flight_id=${flightOfferId}`);
+  };
+
+  const handleBackToOffers = () => {
+    navigate('/allOffers');  // Change '/allOffers' to the correct path for flight offers
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {
@@ -48,6 +52,7 @@ const FlightInfo = () => {
 
   return (
     <div className="flight-info">
+      <Header />
       <h1>Flight Details</h1>
       {flightDetails && (
         <div className="flight-details-container">
@@ -82,9 +87,14 @@ const FlightInfo = () => {
               </div>
             ))}
           </div>
-          <button className="book-flight-button" onClick={handleBooking}>
-            Book This Flight
-          </button>
+          <div className="buttons-container">
+            <button className="book-flight-button" onClick={handleBooking}>
+              Book This Flight
+            </button>
+            <button className="back-to-offers-button" onClick={handleBackToOffers}>
+              Back to All Offers
+            </button>
+          </div>
         </div>
       )}
     </div>

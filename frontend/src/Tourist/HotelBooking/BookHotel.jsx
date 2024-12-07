@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "@/axiosInstance.js"; // Ensure this is configured correctly
+import { Button } from '@/components/ui/button';
 import "./BookHotel.css";
 import { Header } from "@/components/HeaderTourist";
 
@@ -65,43 +66,46 @@ const BookHotel = () => {
   };
 
   return (
-    <div className="book-hotel">
+    <div>
       <Header />
-      <h1>Book Hotel Offer</h1>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit} className="booking-form">
-        <label htmlFor="cardNumber">Card Number:</label>
-        <input
-          type="text"
-          id="cardNumber"
-          name="cardNumber"
-          value={formData.cardNumber}
-          onChange={handleChange}
-          required
-        />
+      <div className="book-hotel">
+        <h1>Book Hotel Offer</h1>
+        {error && <p className="error">{error}</p>}
+        <form onSubmit={handleSubmit} className="booking-form">
+          <label htmlFor="cardNumber">Card Number:</label>
+          <input
+            type="text"
+            id="cardNumber"
+            name="cardNumber"
+            value={formData.cardNumber}
+            onChange={handleChange}
+            required
+          />
 
-        <label htmlFor="expiryDate">Expiry Date (YYYY-MM):</label>
-        <input
-          type="text"
-          id="expiryDate"
-          name="expiryDate"
-          value={formData.expiryDate}
-          onChange={handleChange}
-          required
-        />
+          <label htmlFor="expiryDate">Expiry Date (YYYY-MM):</label>
+          <input
+            type="text"
+            id="expiryDate"
+            name="expiryDate"
+            value={formData.expiryDate}
+            onChange={handleChange}
+            required
+          />
 
-        <label htmlFor="holderName">Card Holder Name:</label>
-        <input
-          type="text"
-          id="holderName"
-          name="holderName"
-          value={formData.holderName}
-          onChange={handleChange}
-          required
-        />
+          <label htmlFor="holderName">Card Holder Name:</label>
+          <input
+            type="text"
+            id="holderName"
+            name="holderName"
+            value={formData.holderName}
+            onChange={handleChange}
+            required
+          />
 
-        <button type="submit">Book Now</button>
-      </form>
+          <Button type="submit">Book Now</Button>
+          <Button onClick={() => navigate(-1)} className="back-button-book">Cancel</Button>
+        </form>
+      </div>
     </div>
   );
 };

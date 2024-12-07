@@ -3,6 +3,9 @@ import axiosInstance from '@/axiosInstance.js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import './searchFlights.css';
+import { Header } from '@/components/HeaderTourist';
+import Loading from '@/components/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const SearchFlights = () => {
   const [searchParams, setSearchParams] = useState({
@@ -14,6 +17,8 @@ const SearchFlights = () => {
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();  // Fix for invalid hook call
 
   // Handles form submission and searches for flights
   const handleSubmit = async (e) => {
@@ -40,7 +45,8 @@ const SearchFlights = () => {
 
   return (
     <div className="search-flights">
-      <h1 className="header">Flight Finder</h1>
+      <Header />
+      <h1>Flight Finder</h1>
       <form className="search-container" onSubmit={handleSubmit}>
         <div className="search-bar">
           <Input
@@ -70,14 +76,14 @@ const SearchFlights = () => {
             value={searchParams.return_date}
             onChange={(e) => setSearchParams({ ...searchParams, return_date: e.target.value })}
           />
-          <Button type="submit" className="search-button">
+          <Button type="submit" className="search-button-sf">
             Search Flights
           </Button>
         </div>
       </form>
 
       {error && <p className="error-message">{error}</p>}
-      {loading && <p className="loading-message">Loading...</p>}
+      {loading && <Loading />}
 
       {flights.length > 0 && (
         <div className="flights-container">
@@ -108,7 +114,7 @@ const SearchFlights = () => {
                 </p>
                 <Button
                   className="more-info-button"
-                  onClick={() => window.location.href = `/tourist/getFlightOffers/${flight.flightOfferId}`}
+                  onClick={() => navigate(`/tourist/getFlightOffers/${flight.id}`)}
                 >
                   More Info
                 </Button>
