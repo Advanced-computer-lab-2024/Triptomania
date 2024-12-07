@@ -3,7 +3,7 @@ import HistoricalPlace from '../../models/historicalPlace.js';
 
 const filterByTag = async (req, res) => {
     try {
-        const tags = req.query.tags; // Retrieve the tags from the request query
+        const { tags } = req.query; // Retrieve the tags from the request query
 
         if (!tags) {
             // If no tags are provided, return all historical places
