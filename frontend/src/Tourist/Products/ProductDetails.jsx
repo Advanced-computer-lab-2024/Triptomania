@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance';
 import { Header } from '../../components/HeaderTourist';
 import { DollarSign, Heart, Plus, Minus } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import Loading from "@/components/Loading";
@@ -17,11 +18,15 @@ const ProductDetails = () => {
     const [notification, setNotification] = useState({ show: false, message: '', type: '' });
     const [quantity, setQuantity] = useState(1);
     const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [isPurchaser, setIsPurchaser] = useState(true);
+    const [rating, setRating] = useState(0);
+    const [review, setReview] = useState('');
   
     useEffect(() => {
       const initializeData = async () => {
         await fetchProductDetails();
         await checkWishlistStatus();
+        await checkPurchaserStatus();
       };
       
       initializeData();
@@ -47,6 +52,20 @@ const ProductDetails = () => {
       } catch (error) {
         console.error('Error checking wishlist status:', error);
         showNotification('Failed to check wishlist status', 'error');
+      }
+    };
+
+    const checkPurchaserStatus = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/tourist/product/${id}`);
+        const product = response.data.product;
+        console.log(product);
+        console.log(product.Purchasers);
+        const touristId = response.data.touristId;
+        console.log(touristId);
+        setIsPurchaser(product.Purchasers.includes(touristId));
+      } catch (error) {
+        console.error('Error checking purchaser status:', error);
       }
     };
 
@@ -119,6 +138,34 @@ const ProductDetails = () => {
         );
       } finally {
         setIsAddingToCart(false);
+      }
+    };
+
+    const handleRatingSubmit = async (ratingValue) => {
+      try {
+        const response = await axiosInstance.put('/api/tourist/rateProduct', {
+          productId: id,
+          rating: ratingValue
+        });
+        setRating(ratingValue); // Update the rating state
+        showNotification(response.data.message, 'success');
+      } catch (error) {
+        console.error('Error rating product:', error);
+        showNotification('Failed to rate product', 'error');
+      }
+    };
+
+    const handleReviewSubmit = async () => {
+      try {
+        await axiosInstance.post('/api/tourist/product/reviews', {
+          id,
+          review
+        });
+        showNotification('Review added successfully', 'success');
+        setReview('');
+      } catch (error) {
+        console.error('Error adding review:', error);
+        showNotification('Failed to add review', 'error');
       }
     };
 
@@ -218,6 +265,33 @@ const ProductDetails = () => {
                   {isAddingToCart ? 'Adding...' : 'Add to Cart'}
                 </Button>
               </div>
+
+              {isPurchaser && (
+                <div className="rating-review-section">
+                  <div className="rating-section">
+                    <label>Rate this product:</label>
+                    <div className="star-rating">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Button
+                          key={star}
+                          onClick={() => handleRatingSubmit(star)}
+                          className={`star-button ${rating >= star ? 'selected' : ''}`}
+                        >
+                          <Star className="star-icon" fill="none" stroke="#000000" />
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="review-section">
+                    <label>Write a review:</label>
+                    <textarea
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+                    />
+                    <Button onClick={handleReviewSubmit}>Submit Review</Button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

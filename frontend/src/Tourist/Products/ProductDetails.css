@@ -321,3 +321,18 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  .star-rating {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .star-button.selected .star-icon {
+    fill: #FFD700;
+  }
