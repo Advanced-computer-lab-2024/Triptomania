@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'; // Import useNaviga
 import { Button } from '@/components/ui/button';
 import axiosInstance from '@/axiosInstance.js';
 import './GetHotelOffers.css';
+import Loading from '@/components/Loading';
+import { Header } from '@/components/HeaderTourist';
 
 const GetHotelOffers = () => {
   const location = useLocation();
@@ -53,7 +55,8 @@ const GetHotelOffers = () => {
 
   return (
     <div className="hotel-offers-container">
-      <h1 className="page-title">Exclusive Hotel Offers</h1>
+      <Header />
+      <h1>Exclusive Hotel Offers</h1>
 
       {/* Back Button */}
       <Button className="back-button" onClick={() => navigate(-1)}>
@@ -61,7 +64,7 @@ const GetHotelOffers = () => {
       </Button>
 
       {error && <p className="error-message">{error}</p>}
-      {loading && <p className="loading-message">Loading...</p>}
+      {loading && <Loading />}
       {!loading && !error && offers.length === 0 && <p className="no-offers-message">No offers available.</p>}
 
       <div className="offers-grid">

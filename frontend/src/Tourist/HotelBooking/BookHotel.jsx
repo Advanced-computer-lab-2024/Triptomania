@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "@/axiosInstance.js"; // Ensure this is configured correctly
 import "./BookHotel.css";
+import { Header } from "@/components/HeaderTourist";
 
 const BookHotel = () => {
   const { offerId } = useParams();  // Extract offerId from URL path
@@ -53,7 +54,7 @@ const BookHotel = () => {
 
     try {
       // Post the booking data to the backend
-      const response = await axiosInstance.post(`/tourist/bookHotel`, bookingData);
+      const response = await axiosInstance.post(`/api/tourist/bookHotel`, bookingData);
 
       alert(response.data.message || "Booking successful!");
       navigate("/hotelBookings"); // Redirect to bookings page on success
@@ -65,6 +66,7 @@ const BookHotel = () => {
 
   return (
     <div className="book-hotel">
+      <Header />
       <h1>Book Hotel Offer</h1>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit} className="booking-form">

@@ -26,7 +26,6 @@ const Bookings = ({ type }) => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-primary mb-4">{type.charAt(0).toUpperCase() + type.slice(1)} Bookings</h2>
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Upcoming Bookings</h3>
         {bookings.upcoming.map(booking => (

@@ -69,12 +69,12 @@ const touristSchema = new Schema({
   },
   hotelBookings: [
     {
-      type: String,
+      type: Object,
     },
   ],
   flightBookings: [
     {
-      type: String,
+      type: Object,
     },
   ],
   transportationBookings: [

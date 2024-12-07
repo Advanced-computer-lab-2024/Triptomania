@@ -837,6 +837,24 @@ const viewMyComplaints = async (req, res) => {
 
 const choosePreferences = async (req, res) => {
   const { preferences } = req.body;
+  const { touristId } = req.query;
+
+  try {
+    // Verify the tourist exists
+    const tourist = await userModel.findByIdAndUpdate(touristId, { $set: { preferences: preferences } }, { new: true });
+    if (!tourist) {
+      return res.status(404).json({ error: 'Tourist not found' });
+    }
+
+    res.status(200).json({ message: 'Preferences updated successfully', tourist: tourist });
+  }
+  catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const updatePreferences = async (req, res) => {
+  const { preferences } = req.body;
   const touristId = req.user._id;
 
   try {
@@ -1057,12 +1075,12 @@ const bookHotel = async (req, res) => {
 
     let response = await amadeus.booking.hotelOrders.post(bookingData);
 
-    await userModel.findByIdAndUpdate(id, { $push: { hotelBookings: response.data.id } });
+    await userModel.findByIdAndUpdate(id, { $push: { hotelBookings: response.data } });
 
     return res.status(200).json(response.data);  // Send booking response back to client
 
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to book hotel' });
+    return res.status(500).json({ error: 'Failed to book hotel', details: error.message });
   }
 };
 
@@ -1174,7 +1192,7 @@ const bookFlight = async (req, res) => {
     // Call Amadeus API to book the flight
     const bookingResponse = await amadeus.booking.flightOrders.post(bookingData);
 
-    await userModel.findByIdAndUpdate(id, { $push: { flightBookings: bookingResponse.data.id } });
+    await userModel.findByIdAndUpdate(id, { $push: { flightBookings: bookingResponse.data } });
 
     // Return the booking response
     return res.status(201).json(bookingResponse.data);
@@ -1806,6 +1824,7 @@ export default {
   fileComplaint,
   viewMyComplaints,
   choosePreferences,
+  updatePreferences,
   cancelBooking,
   addProductToCart,
   removeProductFromCart,

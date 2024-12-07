@@ -11,6 +11,7 @@ const AccountInfo = () => {
   const { user, setUser } = useUser();
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchUserData = async () => {
       try {
         setPreferences(user.preferences);

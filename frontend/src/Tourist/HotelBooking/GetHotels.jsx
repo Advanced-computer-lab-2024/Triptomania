@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Star, MapPin } from 'lucide-react';
 import '../HotelBooking/GetHotels.css'; // Import custom styles
+import { Header } from '@/components/HeaderTourist';
+import Loading from '@/components/Loading';
 
 const GetHotels = () => {
   const [city, setCity] = useState('');
@@ -30,17 +32,10 @@ const GetHotels = () => {
     }
   };
 
-  const isBase64 = (str) => {
-    try {
-      return btoa(atob(str)) === str;
-    } catch (err) {
-      return false;
-    }
-  };
-
   return (
     <div className="view-hotels">
-      <h1 className="header">Hotel Finder</h1>
+      <Header />
+      <h1>Hotel Finder</h1>
       <div className="search-container">
         <div className="search-bar">
           <Input
@@ -53,18 +48,14 @@ const GetHotels = () => {
         </div>
       </div>
       {error && <p className="error-message">{error}</p>}
-      {loading && <p className="loading-message">Loading...</p>}
+      {loading && <Loading />}
       {responseData && (
         <div className="hotels-container">
           {responseData.map((hotel) => (
             <div key={hotel.hotelId} className="hotel-card">
               <div className="hotel-image-container">
                 <img
-                  src={
-                    isBase64(hotel.Picture)
-                      ? `data:image/jpeg;base64,${hotel.Picture}`
-                      : hotel.image || 'https://via.placeholder.com/300x200'
-                  }
+                  src=""
                   alt={hotel.name}
                   className="hotel-image"
                 />

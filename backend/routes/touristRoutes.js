@@ -381,7 +381,9 @@ router.post('/complaint/addComplaint', (req, res, next) => authMiddleware.verify
 
 router.get('/complaint/viewMyComplaints', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewMyComplaints);
 
-router.put('/selectTouristPreferences', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.choosePreferences);
+router.put('/selectTouristPreferences', touristController.choosePreferences);
+
+router.put('/UpdateTouristPreferences', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.updatePreferences);
 
 router.put('/cancelBooking', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.cancelBooking);
 

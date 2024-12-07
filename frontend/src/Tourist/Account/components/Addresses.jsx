@@ -36,8 +36,9 @@ const Addresses = () => {
 
   const handleAddAddress = async () => {
     try {
+      setIsLoading(true);
       const response = await axiosInstance.put('/api/tourist/addDeliveryAddress', newAddress);
-      if (response.status === 201) {
+      if (response.status === 200) {
         const updatedUser = await axiosInstance.get('/api/auth/updateUser');
         await setUser(updatedUser.data.user);
         setAddresses(user.deliveryAddresses); // Update addresses from the updated user
@@ -48,11 +49,15 @@ const Addresses = () => {
     } catch (error) {
       console.error('Error adding address:', error);
       alert('Failed to add address. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteAddress = async (addressId) => {
+    if (!window.confirm("Are you sure you want to delete this address?")) return;
     try {
+      setIsLoading(true);
       const response = await axiosInstance.delete(`/api/tourist/deleteDeliveryAddress?addressIndex=${addressId}`);
       if (response.status === 200) {
         const updatedUser = await axiosInstance.get('/api/auth/updateUser');
@@ -63,6 +68,8 @@ const Addresses = () => {
       }
     } catch (error) {
       alert('Failed to delete address. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
