@@ -27,7 +27,7 @@ const Addresses = () => {
     };
 
     fetchAddresses();
-  }, []);
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,16 +39,30 @@ const Addresses = () => {
       const response = await axiosInstance.put('/api/tourist/addDeliveryAddress', newAddress);
       if (response.status === 201) {
         const updatedUser = await axiosInstance.get('/api/auth/updateUser');
-        setUser(updatedUser.data.user);
-        setAddresses(user.deliveryAddresses);
+        await setUser(updatedUser.data.user);
+        setAddresses(user.deliveryAddresses); // Update addresses from the updated user
         setNewAddress({ address: '', city: '', state: '', zip: '' });
-        window.location.reload();
       } else {
         throw new Error('Failed to add address');
       }
     } catch (error) {
       console.error('Error adding address:', error);
       alert('Failed to add address. Please try again.');
+    }
+  };
+
+  const handleDeleteAddress = async (addressId) => {
+    try {
+      const response = await axiosInstance.delete(`/api/tourist/deleteDeliveryAddress?addressIndex=${addressId}`);
+      if (response.status === 200) {
+        const updatedUser = await axiosInstance.get('/api/auth/updateUser');
+        await setUser(updatedUser.data.user);
+        setAddresses(user.deliveryAddresses); // Update addresses from the updated user
+      } else {
+        throw new Error('Failed to delete address');
+      }
+    } catch (error) {
+      alert('Failed to delete address. Please try again.');
     }
   };
 
@@ -61,9 +75,17 @@ const Addresses = () => {
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Saved Addresses</h3>
         {addresses.map((address, index) => (
-          <div key={address.id || index} className="bg-gray-100 p-4 rounded-md mb-2">
-            <p>{address.address}</p>
-            <p>{address.city}, {address.state} {address.zip}</p>
+          <div key={index} className="bg-gray-100 p-4 rounded-md mb-2 flex justify-between items-center">
+            <div>
+              <p>{address.address}</p>
+              <p>{address.city}, {address.state} {address.zip}</p>
+            </div>
+            <Button
+              className="ml-4 bg-red-600 text-white hover:bg-red-700"
+              onClick={() => handleDeleteAddress(index)}
+            >
+              Delete
+            </Button>
           </div>
         ))}
       </div>
@@ -120,4 +142,3 @@ const Addresses = () => {
 };
 
 export default Addresses;
-

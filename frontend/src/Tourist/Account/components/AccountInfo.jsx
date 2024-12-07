@@ -36,9 +36,8 @@ const AccountInfo = () => {
       if (response.status === 200) {
         alert('User information updated successfully!');
         const updatedUser = await axiosInstance.get('/api/auth/updateUser');
-        setUser(updatedUser.data.user);
-        setUserInfo(user);
-        window.location.reload();
+        await setUser(updatedUser.data.user);
+        setUserInfo(updatedUser.data.user);
       } else {
         throw new Error('Failed to update user information');
       }

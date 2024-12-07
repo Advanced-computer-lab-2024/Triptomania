@@ -1444,6 +1444,33 @@ const addDeliveryAdress = async (req, res) => {
   }
 }
 
+const deleteDeliveryAddress = async (req, res) => {
+  try {
+    const id = req.user._id;
+    const { addressIndex } = req.query;
+
+    if (!addressIndex || addressIndex === 'undefined') {
+      return res.status(400).json({ error: 'Address index is required' });
+    }
+
+    // Remove the address at the specified index
+    await userModel.updateOne(
+      { _id: id },
+      { $unset: { [`deliveryAddresses.${addressIndex}`]: "" } } // Remove the address at the given index
+    );
+
+    // Clean up any 'null' values left in the array after the unset
+    await userModel.updateOne(
+      { _id: id },
+      { $pull: { deliveryAddresses: null } } // Remove any null values left after unset
+    );
+
+    res.status(200).json({ message: "Delivery address deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const viewOrders = async (req, res) => {
   try {
     const id = req.user._id;
@@ -1553,7 +1580,7 @@ const removeProductFromWishlist = async (req, res) => {
 
     // Use the $pull operator to remove the product from the wishlist
     const user = await userModel.findByIdAndUpdate(
-      id, 
+      id,
       { $pull: { whishlist: productId } }, // Pull the productId from the wishlist array
       { new: true }
     );
@@ -1717,7 +1744,7 @@ const unbookmarkEvent = async (req, res) => {
       if (user.bookmarkedItineraries.includes(eventId)) {
         return res.status(400).json({ error: 'Itinerary already bookmarked' });
       }
-      
+
       user.bookmarkedItineraries.pull(eventId);
     }
 
@@ -1784,6 +1811,7 @@ export default {
   removeProductFromCart,
   changeCartQuantity,
   addDeliveryAdress,
+  deleteDeliveryAddress,
   viewOrders,
   viewOrderDetails,
   addProductToWishlist,

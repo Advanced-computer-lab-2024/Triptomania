@@ -427,6 +427,8 @@ router.post("/cart/changeQuantity", (req, res, next) => authMiddleware.verifyTok
 
 router.put("/addDeliveryAddress", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.addDeliveryAdress);
 
+router.delete("/deleteDeliveryAddress", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.deleteDeliveryAddress);
+
 router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.saveFCMToken);
 
 router.get('/orders/viewOrders', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.viewOrders);

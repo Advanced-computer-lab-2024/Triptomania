@@ -26,7 +26,13 @@ const AccountManagement = () => {
     };
 
     fetchWalletBalance();
-  }, []);
+  }, [user]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    // Save the selected tab to localStorage
+    localStorage.setItem('activeTab', tabId);
+  };
 
   const tabs = [
     { id: 'accountInfo', label: 'Account Info' },
@@ -83,7 +89,7 @@ const AccountManagement = () => {
                   className={`block w-full text-left px-4 py-2 hover:bg-secondary hover:text-white transition-colors ${
                     activeTab === tab.id ? 'bg-primary text-white' : 'text-gray-700'
                   }`}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                 >
                   {tab.label}
                 </button>
