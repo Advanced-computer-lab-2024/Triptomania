@@ -62,9 +62,6 @@ const AccountInfo = () => {
               <li key={index}>{pref}</li>
             ))}
           </ul>
-          <Button className="ml-4 bg-primary text-white hover:bg-secondary">
-            Change Preferences
-          </Button>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">

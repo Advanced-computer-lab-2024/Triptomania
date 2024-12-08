@@ -16,6 +16,7 @@ const AccountManagement = () => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [pointBalance, setPointBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [key, setKey] = useState(0);
   const { user } = useUser();
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const AccountManagement = () => {
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
+    setKey((prevKey) => prevKey + 1);
   };
 
   const tabs = [
@@ -58,13 +60,13 @@ const AccountManagement = () => {
       case 'orders':
         return <Orders />;
       case 'hotelBookings':
-        return <Bookings type="hotel" />;
+        return <Bookings key={key} type="hotel" />;
       case 'flightBookings':
-        return <Bookings type="flight" />;
+        return <Bookings key={key} type="flight" />;
       case 'transportationBookings':
-        return <Bookings type="transportation" />;
+        return <Bookings key={key} type="transportation" />;
       case 'eventBookings':
-        return <Bookings type="event" />;
+        return <Bookings key={key} type="event" />;
       case 'bookmarkedEvents':
         return <BookmarkedEvents />;
       case 'securitySettings':
