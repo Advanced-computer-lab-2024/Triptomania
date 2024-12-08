@@ -31,6 +31,10 @@ const orderSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    deliveryDate: {
+        type: Date,
+        default: null
+    },
     promoCode: {
         type: mongoose.Schema.Types.ObjectId,
         default: null

@@ -407,7 +407,7 @@ router.get('/getHotelOffers', (req, res, next) => authMiddleware.verifyToken(req
 
 router.post('/bookHotel', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookHotel)
 
-// router.post('/getHotelBookings', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getHotelBookings);
+router.get('/getBookings', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getBookings);
 
 router.post('/searchFlights', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.searchFlights);
 
