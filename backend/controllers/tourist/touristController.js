@@ -12,6 +12,15 @@ import { amadeus, getAccessToken } from '../../config/amadeus.js';
 import axios from 'axios';
 import promoCodeModel from '../../models/promoCode.js';
 import schedule from 'node-schedule';
+import dotenv from 'dotenv';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
+
+dotenv.config();
+
+const client = SibApiV3Sdk.ApiClient.instance;
+const apiKey = client.authentications['api-key'];
+apiKey.apiKey = process.env.BREVO_API_KEY;
+const transactionalEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
@@ -1938,7 +1947,7 @@ const sendBirthdayPromo = async (tourist) => {
       email: 'triptomania.app@gmail.com',
     };
 
-    const promoCode = generatePromoCode(tourist);
+    // const promoCode = generatePromoCode(tourist);
 
     const emailContent = {
       sender,
@@ -1946,12 +1955,13 @@ const sendBirthdayPromo = async (tourist) => {
       templateId: 8, // Replace with your Brevo template ID
       params: {
         username: tourist.username,
-        promoCode: promoCode
+        // promoCode: promoCode
       }
     };
 
     // Send the email using Brevo transactional API
-    const response = await transactionalEmailApi.sendTransacEmail(emailContent);
+    // const response = await transactionalEmailApi.sendTransacEmail(emailContent);
+    console.log(tourist.username, response);
   } catch (error) {
     throw new Error(`Error sending email: ${error.message}`);
   }
@@ -1972,9 +1982,11 @@ const checkAndSendBirthdayPromos = async () => {
                 ]
             }
         });
+        console.log(usersWithBirthday);
 
         // Call sendBirthdayPromo for each user
         usersWithBirthday.forEach((user) => {
+            console.log(user);
             sendBirthdayPromo(user); // Pass the full user object
             console.log(`Birthday promo sent for user: ${user.name}`);
         });
@@ -1987,8 +1999,12 @@ const checkAndSendBirthdayPromos = async () => {
     }
 };
 
+const now = new Date();
+
+// Calculate 1 minute from now
+const oneMinuteFromNow = new Date(now.getTime() + 1 * 60 * 1000);
 // Schedule the task for midnight
-schedule.scheduleJob('0 0 * * *', checkAndSendBirthdayPromos);
+schedule.scheduleJob(oneMinuteFromNow, checkAndSendBirthdayPromos);
 
 // Export all functions using ES module syntax
 export default {
