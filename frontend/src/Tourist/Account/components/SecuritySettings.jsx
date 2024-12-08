@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import Loading from "@/components/Loading";
+import axiosInstance from '@/axiosInstance';
 
 const SecuritySettings = () => {
   const [passwords, setPasswords] = useState({
@@ -58,17 +60,13 @@ const SecuritySettings = () => {
       return;
     }
     try {
-      const response = await fetch('/api/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          oldPassword: passwords.oldPassword,
-          newPassword: passwords.newPassword,
-        }),
+      setIsLoading(true);
+      const response = await axiosInstance.put('/api/auth/changePassword', {
+        oldPassword: passwords.oldPassword,
+        newPassword: passwords.newPassword,
+        confirmPassword: passwords.confirmPassword
       });
-      if (response.ok) {
+      if (response.status === 200) {
         alert('Password changed successfully');
         setPasswords({ oldPassword: '', newPassword: '', confirmPassword: '' });
       } else {
@@ -77,16 +75,33 @@ const SecuritySettings = () => {
     } catch (error) {
       console.error('Error changing password:', error);
       alert('Failed to change password. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRequestDelete = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.put('/api/tourist/request/delete');
+      if (response.status === 200) {
+        alert('Account marked for deletion');
+      } else {
+        throw new Error('An error occured');
+      }
+    } catch (error) {
+      alert('Failed to initiate request. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-primary mb-4">Security & Settings</h2>
       <form onSubmit={handleSubmit} className="mb-6">
         <h3 className="text-xl font-semibold mb-2">Change Password</h3>
         <div className="space-y-4">
@@ -125,9 +140,13 @@ const SecuritySettings = () => {
           Change Password
         </Button>
       </form>
+      <br></br>
       <div>
         <h3 className="text-xl font-semibold mb-2">Notification Settings</h3>
         <div className="flex items-center">
+        <label htmlFor="notifications" className="ml-2 block text-sm text-gray-900">
+            Receive notifications
+          </label>
           <input
             type="checkbox"
             id="notifications"
@@ -135,11 +154,12 @@ const SecuritySettings = () => {
             onChange={handleNotificationToggle}
             className="rounded border-gray-300 text-primary focus:ring-primary"
           />
-          <label htmlFor="notifications" className="ml-2 block text-sm text-gray-900">
-            Receive notifications
-          </label>
         </div>
       </div>
+      <br></br>
+      <Button className="ml-4 bg-red-600 text-white hover:bg-red-700" onClick={handleRequestDelete}>
+        Request Account Deletion
+      </Button>
     </div>
   );
 };
