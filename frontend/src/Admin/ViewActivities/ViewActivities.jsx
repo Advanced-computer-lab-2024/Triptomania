@@ -36,7 +36,7 @@ const ViewActivitiesAdmin = () => {
 
   const fetchAllActivities = async () => {
     try {
-      const response = await axiosInstance.get('http://localhost:5000/api/guest/activities/viewActivities');
+      const response = await axiosInstance.get('/api/guest/activities/viewActivities');
       setAllActivities(response.data); // Store all activities
       setActivities(response.data); // Initially show all activities
     } catch (error) {
