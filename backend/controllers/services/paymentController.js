@@ -240,13 +240,13 @@ const cancelOrder = async (req, res) => {
             product.Quantity += item.quantity;
 
             // Adjust sales array
-            const saleEntryIndex = product.SalesReport.findIndex(sale => sale.date === order.date);
+            const saleEntryIndex = product.SalesReport.findIndex(sale => sale.date === order.orderDate);
 
             if (saleEntryIndex !== -1) {
                 // Remove the existing sale entry
                 product.SalesReport.splice(saleEntryIndex, 1);
             } else {
-                console.warn(`Sale entry for date ${order.date} not found in product sales.`);
+                console.warn(`Sale entry for date ${order.orderDate} not found in product sales.`);
             }
 
             product.Sales -= item.quantity;
@@ -314,7 +314,7 @@ const sendProductInvoice = async (order) => {
             { email: 'nnnh7240@gmail.com' }
         ];
 
-        const now = new Date(order.date);
+        const now = new Date(order.orderDate);
 
         // Extract the day, month, and year
         const day = now.getDate(); // Day of the month (1-31)
@@ -393,7 +393,7 @@ const sendCancellationNotice = async (order) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 orderId: order.id,
-                orderDate: `${day}-${month}-${year}`,
+                cancellationDate: `${day}-${month}-${year}`,
                 products: products,
                 totalPrice: order.finalPrice,
                 currentYear: new Date().getFullYear()

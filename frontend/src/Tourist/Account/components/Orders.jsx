@@ -31,8 +31,10 @@ const Orders = () => {
             setIsLoading(true);
             const response = await axiosInstance.post('/api/tourist/orders/cancelOrder', { orderId });
             if (response.status === 200) {
-                const updatedUser = await axiosInstance.get('/api/tourist/orders/viewOrders');
-                setOrders(updatedUser.data.orders);
+                const response = await axiosInstance.get('/api/tourist/orders/viewOrders');
+                setOrders(response.data.orders);
+                const userResponse = await axiosInstance.get('/api/auth/updateUser');
+                setUser(userResponse.data.user);
             } else {
                 throw new Error('Failed to cancel order');
             }
