@@ -320,7 +320,7 @@ const acceptTerms = async (req, res) => {
 
 const requestAccountDeletion = async (req, res) => {
     try {
-        const { id } = req.query; // Extracting id from query parameters
+        const id = req.user._id;
 
         // Validate if the ID is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(id)) {

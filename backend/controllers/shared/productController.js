@@ -2,16 +2,16 @@
 import productModel from '../../models/product.js';
 import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId validation
 
- const addProduct = async (req, res) => {
+const addProduct = async (req, res) => {
    try {
-      const {Name,Description, Price, Ratings, Reviews, Quantity } = req.body;
+      const { Name, Description, Price, Ratings, Reviews, Quantity } = req.body;
       const Seller = req.user._id;
 
       if (!Name || !Description || !Price || !Seller || !Quantity) {
          return res.status(400).json({ message: "All required fields must be provided." });
       }
 
-      if (typeof Name !== 'string'||typeof Description !== 'string' || typeof Seller !== 'string' ) {
+      if (typeof Name !== 'string' || typeof Description !== 'string' || typeof Seller !== 'string') {
          return res.status(400).json({ message: "Must be a string" });
       }
       if (typeof Price !== 'number' || Price <= 0) {
@@ -44,39 +44,39 @@ import mongoose from 'mongoose'; // Ensure mongoose is imported for ObjectId val
 
 const uploadPicture = async (req, res) => {
    try {
-       const { id } = req.body;
+      const { id } = req.body;
 
-       // Check if a file is uploaded
-       if (!req.file) {
-           return res.status(400).json({ message: "Product image is required." });
-       }
+      // Check if a file is uploaded
+      if (!req.file) {
+         return res.status(400).json({ message: "Product image is required." });
+      }
 
-       // Convert the file buffer to a Base64 string
-       const base64Image = req.file.buffer.toString('base64');
+      // Convert the file buffer to a Base64 string
+      const base64Image = req.file.buffer.toString('base64');
 
-       // Update the product with the new image
-       const updatedProduct = await productModel.findByIdAndUpdate(
-           id,
-           { Picture: base64Image },
-           { new: true, runValidators: true }
-       );
+      // Update the product with the new image
+      const updatedProduct = await productModel.findByIdAndUpdate(
+         id,
+         { Picture: base64Image },
+         { new: true, runValidators: true }
+      );
 
-       // Check if the product was found
-       if (!updatedProduct) {
-           return res.status(404).json({ message: "Product not found." });
-       }
+      // Check if the product was found
+      if (!updatedProduct) {
+         return res.status(404).json({ message: "Product not found." });
+      }
 
-       // Return the updated product
-       res.status(200).json({ message: "Uploaded successfully", data: updatedProduct });
+      // Return the updated product
+      res.status(200).json({ message: "Uploaded successfully", data: updatedProduct });
    } catch (error) {
-       res.status(500).json({ message: "Error uploading photo", error: error.message });
+      res.status(500).json({ message: "Error uploading photo", error: error.message });
    }
 };
 
 
- const editProduct = async (req, res) => {
+const editProduct = async (req, res) => {
    try {
-      const { id, Name,Description, Price, Seller, Quantity, Reviews, Ratings } = req.body;
+      const { id, Name, Description, Price, Seller, Quantity, Reviews, Ratings } = req.body;
 
       // Validate if the id is a valid MongoDB ObjectId
       if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -120,25 +120,25 @@ const uploadPicture = async (req, res) => {
 
 const getProductById = async (req, res) => {
    try {
-     const { id } = req.params;
- 
-     // Validate the ID format
-     if (!mongoose.Types.ObjectId.isValid(id)) {
-       return res.status(400).json({ message: "Invalid product ID format." });
-     }
- 
-     // Find the product by ID
-     const product = await productModel.findById(id).populate('Seller', 'username');
-     if (!product) {
-       return res.status(404).json({ message: "Product not found" });
-     }
- 
-     res.status(200).json({ message: "Product fetched successfully", product });
+      const { id } = req.params;
+
+      // Validate the ID format
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+         return res.status(400).json({ message: "Invalid product ID format." });
+      }
+
+      // Find the product by ID
+      const product = await productModel.findById(id).populate('Seller', 'username');
+      if (!product) {
+         return res.status(404).json({ message: "Product not found" });
+      }
+
+      res.status(200).json({ message: "Product fetched successfully", product });
    } catch (error) {
-     res.status(500).json({ message: "Error fetching product", error: error.message });
+      res.status(500).json({ message: "Error fetching product", error: error.message });
    }
- };
- 
+};
+
 
 
 const viewProducts = async (req, res) => {
@@ -178,67 +178,82 @@ const searchProduct = async (req, res) => {
 
 const filterProducts = async (req, res) => {
    try {
-       const { minPrice, maxPrice, averageRating } = req.query;
+      const { minPrice, maxPrice, averageRating } = req.query;
+      const type = req.user.type;
 
-       const min = minPrice ? Number(minPrice) : null;
-       const max = maxPrice ? Number(maxPrice) : null;
+      const min = minPrice ? Number(minPrice) : null;
+      const max = maxPrice ? Number(maxPrice) : null;
 
-       let filter = {};
+      let filter = {};
 
-       // Price range filter
-       if (min !== null && max !== null) {
-           filter.Price = { $gte: min, $lte: max };
-       } else if (min !== null) {
-           filter.Price = { $gte: min };
-       } else if (max !== null) {
-           filter.Price = { $lte: max };
-       }
+      // Price range filter
+      if (min !== null && max !== null) {
+         filter.Price = { $gte: min, $lte: max };
+      } else if (min !== null) {
+         filter.Price = { $gte: min };
+      } else if (max !== null) {
+         filter.Price = { $lte: max };
+      }
 
-       // Handle averageRating filter
-       if (averageRating) {
-           const rating = Number(averageRating); // Ensure it's a number
-           if (isNaN(rating)) {
-               return res.status(400).json({ message: "Invalid rating value" });
-           }
-           filter.averageRating = { $gte: rating }; // Assuming averageRating is a numeric field in DB
-       }
+      // Handle averageRating filter
+      if (averageRating) {
+         const rating = Number(averageRating); // Ensure it's a number
+         if (isNaN(rating)) {
+            return res.status(400).json({ message: "Invalid rating value" });
+         }
+         filter.averageRating = { $gte: rating }; // Assuming averageRating is a numeric field in DB
+      }
 
-       const products = await productModel.find(filter);
+      if (type === 'admin') {
+         const products = await productModel.find(filter);
+      } else if (type === 'seller') {
+         filter.Seller = req.user._id;
+         const products = await productModel.find(filter);
+      } else {
+         filter.Archive = false;
+         const products = await productModel.find(filter);
+      }
 
-       if (products.length === 0) {
-           return res.status(404).json({ message: 'No products found with the given filters.' });
-       }
+      if (products.length === 0) {
+         return res.status(404).json({ message: 'No products found with the given filters.' });
+      }
 
-       res.status(200).json(products);
+      res.status(200).json(products);
    } catch (error) {
-       res.status(500).json({ message: 'Error filtering products', error: error.message });
+      res.status(500).json({ message: 'Error filtering products', error: error.message });
    }
 };
 
 
 
- const sortProducts = async (req, res) => {
+const sortProducts = async (req, res) => {
    try {
-       
 
-       const { order } = req.query;
+      const type = req.user.type;
+      const { order } = req.query;
 
-       if (!order || (order !== 'high' && order !== 'low')) {
-           return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
-       }
+      if (!order || (order !== 'high' && order !== 'low')) {
+         return res.status(400).json({ message: 'Please provide a valid order value ("high" or "low").' });
+      }
 
-       const sortOrder = order === 'high' ? -1 : 1; // -1 for descending, 1 for ascending
+      const sortOrder = order === 'high' ? -1 : 1; // -1 for descending, 1 for ascending
 
-       
-       const products = await productModel.find().sort({ averageRating: sortOrder });
 
-       if (products.length === 0) {
-           return res.status(404).json({ message: 'No products found.' });
-       }
+      if (type === 'admin') {
+         const products = await productModel.find().sort({ Price: sortOrder });
+      } else if (type === 'seller') {
+         const products = await productModel.find({ Seller: req.user._id }).sort({ Price: sortOrder });
+      } else {
+         const products = await productModel.find({ Archive: false }).sort({ Price: sortOrder });
+      }
 
-       res.status(200).json(products);
+      if (products.length === 0) {
+         return res.status(404).json({ message: 'No products found.' });
+      }
+
+      res.status(200).json(products);
    } catch (error) {
-       res.status(500).json({ message: 'Error sorting products by ratings', error: error.message });
+      res.status(500).json({ message: 'Error sorting products by ratings', error: error.message });
    }
 };
 
@@ -246,25 +261,25 @@ const toggleArchiveStatus = async (req, res) => {
    const { id } = req.body;
 
    try {
-       // Validate the product ID
-       if (!mongoose.Types.ObjectId.isValid(id)) {
-           return res.status(400).json({ message: "Invalid product ID format." });
-       }
+      // Validate the product ID
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+         return res.status(400).json({ message: "Invalid product ID format." });
+      }
 
-       // Find the product and toggle the Archive status
-       const product = await productModel.findById(id);
-       if (!product) {
-           return res.status(404).json({ message: "Product not found." });
-       }
+      // Find the product and toggle the Archive status
+      const product = await productModel.findById(id);
+      if (!product) {
+         return res.status(404).json({ message: "Product not found." });
+      }
 
-       // Toggle the Archive status
-       product.Archive = !product.Archive;
+      // Toggle the Archive status
+      product.Archive = !product.Archive;
 
-       await productModel.findByIdAndUpdate(id, { Archive: product.Archive });
+      await productModel.findByIdAndUpdate(id, { Archive: product.Archive });
 
-       return res.status(200).json({ message: "Product archive status updated", product });
+      return res.status(200).json({ message: "Product archive status updated", product });
    } catch (error) {
-       return res.status(500).json({ message: "Error updating archive status", error: error.message });
+      return res.status(500).json({ message: "Error updating archive status", error: error.message });
    }
 };
 
@@ -284,7 +299,7 @@ const getProductSales = async (req, res) => {
    }
 }
 
-export default{
+export default {
    addProduct,
    getProductById,
    editProduct,

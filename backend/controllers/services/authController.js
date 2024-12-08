@@ -10,6 +10,7 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -258,6 +259,7 @@ const changePassword = async (req, res) => {
 
         res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: "Something went wrong" });
     }
 }
