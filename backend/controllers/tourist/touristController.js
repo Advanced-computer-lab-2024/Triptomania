@@ -1174,6 +1174,8 @@ const bookFlight = async (req, res) => {
 
     const tourist = await userModel.findById(id);
 
+    console.log(flightOffersCache);
+
     // Create the booking request data
     const bookingData = {
       data: {
@@ -1198,7 +1200,7 @@ const bookFlight = async (req, res) => {
                 },
               ],
             },
-            documents: documents,
+            documents: [documents],
           },
         ],
       }

@@ -8,10 +8,9 @@ import { Header } from '@/components/HeaderTourist';
 const FlightBooking = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const flightId = useParams();
+  const flight = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  //const { offerId } = useParams();
 
   const handleBooking = async () => {
     const documentData = {
@@ -29,9 +28,7 @@ const FlightBooking = () => {
 
     setLoading(true);
     try {
-        console.log(flightId);
-        console.log(documentData);
-      await axiosInstance.post('/api/tourist/bookFlight', { flight_offer : flightOfferId, documents: documentData});
+      await axiosInstance.post('/api/tourist/bookFlight', { flight_offer : flight.flight_id, documents: documentData});
       navigate(`/tourist/searchFlights`);
     } catch (error) {
       console.error('Error booking the flight:', error);
