@@ -29,7 +29,8 @@ const FlightBooking = () => {
     setLoading(true);
     try {
       await axiosInstance.post('/api/tourist/bookFlight', { flight_offer : flight.flight_id, documents: documentData});
-      navigate(`/tourist/searchFlights`);
+      alert('Flight booked successfully!');
+      navigate(`/tourist/home`);
     } catch (error) {
       console.error('Error booking the flight:', error);
       setError('Failed to book the flight. Please try again.');

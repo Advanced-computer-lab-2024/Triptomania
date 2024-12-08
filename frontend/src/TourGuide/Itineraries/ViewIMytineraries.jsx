@@ -69,6 +69,31 @@ const ViewItineraries = () => {
     );
     setItineraries(filtered);
   };
+  
+  const handletoggle = async (id, currentStatus) => {
+    try {
+      setLoading(true); // Show loading spinner while processing the request
+      const response = await axiosInstance.put(`/api/tourGuide/activate/itinerary?itineraryId=${id}`);
+      if (response.status === 200) {
+        alert(response.data.message); // Success message from the backend
+        setItineraries((prev) =>
+          prev.map((itinerary) =>
+            itinerary._id === id ? { ...itinerary, isActivated: !currentStatus } : itinerary
+          )
+        );
+        setAllItineraries((prev) =>
+          prev.map((itinerary) =>
+            itinerary._id === id ? { ...itinerary, isActivated: !currentStatus } : itinerary
+          )
+        );
+      }
+    } catch (error) {
+      alert("An error occurred while trying to update the itinerary status. Please try again.");
+      console.error('Error updating itinerary status:', error.response?.data || error.message);
+    } finally {
+      setLoading(false); // Hide loading spinner after the operation completes
+    }
+  };
 
   return (
     <div className="view-itineraries">
@@ -146,10 +171,14 @@ const ViewItineraries = () => {
                     >
                       Delete
                     </Button>
-
+                    <Button
+                      className={`toggle-button ${itinerary.isActivated ? 'active' : 'inactive'}`}
+                      onClick={() => handletoggle(itinerary._id, itinerary.isActivated)}
+                    >
+                      {itinerary.isActivated ? 'Active' : 'Deactivate'}
+                    </Button>
 
                     
-                  
                     
                   </div>
 
