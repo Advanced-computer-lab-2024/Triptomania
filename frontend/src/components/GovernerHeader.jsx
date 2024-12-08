@@ -25,7 +25,7 @@ export function Header() {
             <Link to="/tourismGovernor/home" className="header-link">Home</Link>
             <Link to="/tourismGovernor/historicalPlace/viewHistoricalPlaces" className="header-link">My Historical Places</Link>
             <Link to="/tourismGovernor/historicalPlace/addHistoricalPlaces" className="header-link">Add historical place</Link>
-            <Link to="/tourismGovernor/historicalPlace/addTags" className="header-link">Add Tags</Link>
+            <Link to="/tourismGovernor/tags/viewTag" className="header-link">Add Tags</Link>
 
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">

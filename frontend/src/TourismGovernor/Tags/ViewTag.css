@@ -1,0 +1,116 @@
+:root {
+    --primary-color: #36827f;
+    --secondary-color: #54a7a4;
+}
+
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.add-tag {
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.add-tag input {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.add-tag button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+.add-tag button:hover {
+    background-color: var(--secondary-color);
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex: 1;
+}
+
+.tag-item {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 20px;
+    flex: 1 1 calc(33.333% - 20px);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.tag-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(54, 130, 127, 0.1);
+}
+
+.tag-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.tag-actions button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tag-actions button:hover {
+    background-color: var(--secondary-color);
+}
+
+.tag-actions button[color="primary"] {
+    color: #1976d2 !important; /* Material-UI default blue */
+}
+
+.tag-actions button[color="primary"]:hover {
+    color: #1565c0 !important; /* Darker blue on hover */
+}
+
+.tag-actions button[color="error"] {
+    color: #d32f2f !important; /* Material-UI default red */
+}
+
+.tag-actions button[color="error"]:hover {
+    color: #c62828 !important; /* Darker red on hover */
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .add-tag {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}
