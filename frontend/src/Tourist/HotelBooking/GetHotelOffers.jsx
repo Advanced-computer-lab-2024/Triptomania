@@ -24,9 +24,7 @@ const GetHotelOffers = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axiosInstance.get(`/api/tourist/getHotelOffers`, {
-          params: { hotelId },
-        });
+        const response = await axiosInstance.get(`/api/tourist/getHotelOffers?hotelId=${hotelId}`);
         setOffers(response.data.offers || []); // Ensure offers is always an array
       } catch (err) {
         console.error('Error fetching hotel offers:', err);

@@ -3,7 +3,7 @@ import HistoricalPlace from '../../models/historicalPlace.js';
 import Tag from '../../models/tag.js';
 
 // Function to add tags to an existing historical place
-export const addTagToHistoricalPlace = async (req, res) => {
+const addTagToHistoricalPlace = async (req, res) => {
     try {
         const { id, newTagId } = req.body; // Tag ID to be searched
 
@@ -27,7 +27,7 @@ export const addTagToHistoricalPlace = async (req, res) => {
                 message: 'Tag not found'
             });
         }
-        
+
         // Add the tag name to the Tags array if it doesn't already exist
         if (!historicalPlace.Tags.includes(tag.name)) {
             historicalPlace.Tags.push(tag.name);  // Add the tag name
@@ -50,7 +50,7 @@ export const addTagToHistoricalPlace = async (req, res) => {
     }
 };
 // Function to add a new tag
-export const addTag = async (req, res) => {
+const addTag = async (req, res) => {
     try {
         const { name } = req.body;
 
@@ -83,19 +83,8 @@ export const addTag = async (req, res) => {
     }
 };
 // Function to get all tags or a specific tag
-export const getTags = async (req, res) => {
+const getTags = async (req, res) => {
     try {
-        const { id } = req.body;
-
-        // If an ID is provided, fetch that specific tag
-        if (id) {
-            const tag = await Tag.findById(id);
-            if (!tag) {
-                return res.status(404).json({ message: 'Tag not found' });
-            }
-            return res.status(200).json({ status: true, tag });
-        }
-
         // Fetch all tags
         const tags = await Tag.find();
         res.status(200).json({ status: true, tags });
@@ -108,7 +97,7 @@ export const getTags = async (req, res) => {
     }
 };
 // Function to update an existing tag
-export const updateTag = async (req, res) => {
+const updateTag = async (req, res) => {
     try {
         const { id, name } = req.body;
 
@@ -140,31 +129,32 @@ export const updateTag = async (req, res) => {
         });
     }
 };
-    // Function to delete a tag
-    export const deleteTag = async (req, res) => {
-        try {
-            const { id } = req.body;
-    
-            // Find the tag by its ID
-            const tag = await Tag.findById(id);
-            if (!tag) {
-                return res.status(404).json({ message: 'Tag not found' });
-            }
-    
-            await Tag.findByIdAndDelete(id);
-            res.status(200).json({
-                status: true,
-                message: 'Tag deleted successfully!'
-            });
-        } catch (err) {
-            res.status(500).json({
-                status: false,
-                message: 'Error deleting tag',
-                error: err.message // Send the error message to the client
-            });
+// Function to delete a tag
+const deleteTag = async (req, res) => {
+    try {
+        const { id } = req.body;
+
+        // Find the tag by its ID
+        const tag = await Tag.findById(id);
+        if (!tag) {
+            return res.status(404).json({ message: 'Tag not found' });
         }
-    };
-    export default{
+
+        await Tag.findByIdAndDelete(id);
+        res.status(200).json({
+            status: true,
+            message: 'Tag deleted successfully!'
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: false,
+            message: 'Error deleting tag',
+            error: err.message // Send the error message to the client
+        });
+    }
+};
+
+export default {
     addTagToHistoricalPlace,
     addTag,
     getTags,

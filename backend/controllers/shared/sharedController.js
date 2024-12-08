@@ -20,8 +20,7 @@ const userCollections = {
 
 const uploadDocuments = async (req, res) => {
     try {
-        const type = req.user.type;
-        const id = req.user._id;
+        const { id, type } = req.query;
         const file = req.file; // Get file from request
 
         if (!file) {
@@ -72,8 +71,7 @@ const uploadDocuments = async (req, res) => {
 
 const uploadProfilePicture = async (req, res) => {
     try {
-        const type = req.user.type;
-        const id = req.user._id;
+        const { id, type } = req.query;
         const file = req.file; // Get file from request
 
         if (!file) {

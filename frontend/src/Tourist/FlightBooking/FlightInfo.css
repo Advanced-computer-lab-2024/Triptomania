@@ -1,29 +1,93 @@
-.flight-details {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+:root {
+  --primary-color: #36827f;
+  --secondary-color: #54a7a4;
+}
+
+.flight-info {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.flight-details-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.flight-price,
+.flight-itinerary {
+  margin-bottom: 20px;
+}
+
+.flight-price p,
+.segment p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.flight-itinerary h3 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.itinerary {
+  margin-bottom: 15px;
+}
+
+.segment {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.segment p {
+  font-size: 0.9rem;
+}
+
+.book-flight-button,
+.back-to-offers-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.book-flight-button:hover,
+.back-to-offers-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.book-flight-button:focus,
+.back-to-offers-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(54, 130, 127, 0.5);
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .flight-info {
+    padding: 10px;
   }
-  
-  .flight-details h2 {
-    color: #333;
+
+  .flight-details-container {
+    padding: 15px;
   }
-  
-  .flight-details p {
-    margin: 5px 0;
+
+  .book-flight-button,
+  .back-to-offers-button {
+    width: 100%;
+    margin-bottom: 10px;
   }
-  
-  .flight-details button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .flight-details button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error {
-    color: red;
-    font-weight: bold;
-  }
+}

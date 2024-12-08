@@ -1,32 +1,48 @@
-import { useState } from 'react';
-import axiosInstance from '@/axiosInstance.js';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import axiosInstance from "@/axiosInstance.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, MapPin } from 'lucide-react';
-import '../HotelBooking/GetHotels.css'; // Import custom styles
-import { Header } from '@/components/HeaderTourist';
-import Loading from '@/components/Loading';
+import { Star, MapPin } from "lucide-react";
+import "../HotelBooking/GetHotels.css"; // Import custom styles
+import { Header } from "@/components/HeaderTourist";
+import Loading from "@/components/Loading";
 
 const GetHotels = () => {
-  const [city, setCity] = useState('');
-  const [responseData, setResponseData] = useState(null); // To store JSON response
+  const navigate = useNavigate(); // Initialize navigate
+  const [city, setCity] = useState(() => sessionStorage.getItem("city") || ""); // Restore city from sessionStorage
+  const [responseData, setResponseData] = useState(() => {
+    const data = sessionStorage.getItem("responseData");
+    return data ? JSON.parse(data) : null; // Restore responseData if available
+  });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+
+  // Save state to sessionStorage whenever it changes
+  useEffect(() => {
+    sessionStorage.setItem("city", city);
+  }, [city]);
+
+  useEffect(() => {
+    if (responseData) {
+      sessionStorage.setItem("responseData", JSON.stringify(responseData));
+    }
+  }, [responseData]);
 
   const handleSearch = async () => {
     if (!city) {
-      setError('City is required');
+      setError("City is required");
       return;
     }
     setLoading(true);
-    setError('');
+    setError("");
     setResponseData(null); // Clear previous results
     try {
       const response = await axiosInstance.get(`/api/tourist/getHotels?city=${city}`);
       setResponseData(response.data.hotels.result.data); // Store JSON response
     } catch (err) {
-      console.error('Error fetching hotels:', err);
-      setError('Failed to fetch hotels');
+      console.error("Error fetching hotels:", err);
+      setError("Failed to fetch hotels");
     } finally {
       setLoading(false);
     }
@@ -44,7 +60,9 @@ const GetHotels = () => {
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
-          <Button className="search-button" onClick={handleSearch}>Search</Button>
+          <Button className="search-button" onClick={handleSearch}>
+            Search
+          </Button>
         </div>
       </div>
       {error && <p className="error-message">{error}</p>}
@@ -65,20 +83,24 @@ const GetHotels = () => {
                   <h2 className="hotel-title">{hotel.name}</h2>
                   <div className="hotel-rating">
                     <Star className="icon" />
-                    <span>{hotel.rating || 'N/A'}</span>
+                    <span>{hotel.rating || "N/A"}</span>
                   </div>
                 </div>
-                <p className="hotel-description">Location: {hotel.geoCode.latitude}, {hotel.geoCode.longitude}</p>
+                <p className="hotel-description">
+                  Location: {hotel.geoCode.latitude}, {hotel.geoCode.longitude}
+                </p>
                 <div className="hotel-info">
                   <p>
                     <MapPin className="icon" />
-                    {hotel.address.countryCode || 'N/A'}
+                    {hotel.address.countryCode || "N/A"}
                   </p>
                 </div>
-                <div className="hotel-footer"> 
-                  <Button 
-                    className="more-info-button" 
-                    onClick={() => window.location.href = `/tourist/getHotelOffers?hotelId=${hotel.hotelId}`}
+                <div className="hotel-footer">
+                  <Button
+                    className="more-info-button"
+                    onClick={() =>
+                      navigate(`/tourist/getHotelOffers?hotelId=${hotel.hotelId}`)
+                    }
                   >
                     More Info
                   </Button>

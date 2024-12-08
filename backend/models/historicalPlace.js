@@ -34,9 +34,9 @@ const historicalPlaceSchema = new Schema({
         type: String,
         required: true,
     },
-    Tags: [{         // References the `tags` collection
+    Tags: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'tags',  // Referencing the `tags` collection model
+        ref: 'Tag',
         required: false,
     }],
     creatorId: {

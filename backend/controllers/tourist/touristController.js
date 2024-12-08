@@ -970,7 +970,6 @@ const getHotelOffers = async (req, res) => {
     if (!hotelId) {
       return res.status(400).json({ error: 'Hotel ID is required' });
     }
-
     const response = await amadeus.shopping.hotelOffersSearch.get({
       hotelIds: hotelId,
     });
@@ -987,6 +986,8 @@ const getHotelOffers = async (req, res) => {
     // Check if the error code matches the "No Rooms Available" error
     if (error.description && error.description[0].code === 3664) {
       res.status(400).json({ error: 'No rooms available at the requested property' });
+    } else if (error.description && error.description[0].code === 1257) {
+      res.status(400).json({ error: 'No offers available for this hotel' });
     } else {
       res.status(500).json({ error: 'Failed to fetch hotel offers' });
     }
@@ -1123,7 +1124,7 @@ const searchFlights = async (req, res) => {
 
 const getFlightDetails = async (req, res) => {
   try {
-    const { flightOfferId } = req.body; // Get flight offer ID from the URL parameters
+    const { flightOfferId } = req.query; // Get flight offer ID from the URL parameters
 
     if (!flightOfferId) {
       return res.status(400).json({ error: 'Flight offer ID is required' });
@@ -1795,6 +1796,54 @@ const getBookmarkedEvents = async (req, res) => {
   }
 }
 
+const categorizeHotelBookings = (hotelBookings) => {
+  const today = new Date(); // Get the current date
+
+  return hotelBookings.reduce(
+    (result, bookingGroup) => {
+      bookingGroup.hotelBookings.forEach((booking) => {
+        const checkInDate = new Date(booking.hotelOffer.checkInDate);
+
+        if (checkInDate >= today) {
+          result.upcoming.push(booking);
+        } else {
+          result.past.push(booking);
+        }
+      });
+
+      return result;
+    },
+    { upcoming: [], past: [] } // Initialize the result object
+  );
+};
+
+const getBookings = async (req, res) => {
+  const id = req.user._id;
+  const { type } = req.query;
+  try {
+    const tourist = await userModel.findById(id);
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found' });
+    }
+
+    if (type === 'hotel') {
+      const hotelBookings = tourist.hotelBookings;
+      const categorizedBookings = categorizeHotelBookings(hotelBookings);
+      return res.status(200).json(categorizedBookings);
+    } else if (type === 'flight') {
+      const flightBookings = tourist.flightBookings;
+      return res.status(200).json({ flightBookings });
+    } else if (type === 'transportation') {
+      const transportationBookings = tourist.transportationBookings;
+      return res.status(200).json({ transportationBookings });
+    } else {
+      return res.status(400).json({ message: 'Invalid booking type' });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'Failed to fetch hotel bookings', details: error.message });
+  }
+}
+
 // Export all functions using ES module syntax
 export default {
   CreateTourist,
@@ -1804,6 +1853,7 @@ export default {
   getHotels,
   getHotelOffers,
   bookHotel,
+  // getHotelBookings,
   searchFlights,
   getFlightDetails,
   bookFlight,

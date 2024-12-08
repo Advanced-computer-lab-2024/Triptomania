@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Loading from '@/components/Loading';
+import axiosInstance from '@/axiosInstance';
 
 const Bookings = ({ type }) => {
   const [bookings, setBookings] = useState({ upcoming: [], past: [] });
@@ -6,8 +8,9 @@ const Bookings = ({ type }) => {
 
   useEffect(() => {
     const fetchBookings = async () => {
+      setIsLoading(true);
       try {
-        const response = await fetch(`/api/${type}-bookings`);
+        const response = axiosInstance.get(`/api/tourist/getBookings?type=${type}`);
         const data = await response.json();
         setBookings(data);
       } catch (error) {
@@ -21,7 +24,7 @@ const Bookings = ({ type }) => {
   }, [type]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

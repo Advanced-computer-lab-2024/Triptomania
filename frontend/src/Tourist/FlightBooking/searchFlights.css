@@ -69,6 +69,7 @@
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
+    padding: 50px;
   }
   
   .flight-card:hover {
@@ -84,7 +85,8 @@
   
   .flight-details {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-evenly;
     gap: 10px;
     padding: 10px;
   }
