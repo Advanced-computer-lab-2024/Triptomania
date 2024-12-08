@@ -111,6 +111,7 @@ const ViewTag = () => {
                     <p>No tags found.</p>
                 )}
             </div>
+            <button onClick={() => history.push('/tourismGovernor/home')}>Back to Home</button>
         </div>
     );
 };

@@ -5,7 +5,7 @@ import './AdminHeader.css';
 
 const menuItems = [
   { name: 'Home', href: '/admin/home' },
-  { name: 'Activities', href: '#' },
+  { name: 'Activities', href: '/admin/viewActivitiesAdmin' },
   { name: 'Complaints', href: '/admin/complaints' },
   { name: 'Itineraries', href: '#' },
   {
