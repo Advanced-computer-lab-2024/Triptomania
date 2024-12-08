@@ -18,29 +18,31 @@ const client = SibApiV3Sdk.ApiClient.instance;
 const apiKey = client.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 const transactionalEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
-
 const addAdmin = async (req, res) => {
-    const { adminName, adminUsername, adminPassword } = req.body;
+    const { name, username, password, email } = req.body;
 
-    if (!adminName || !adminUsername || !adminPassword) {
+    if (!name || !username || !password || !email) {
         return res.status(400).json({ message: "Please fill in all fields" });
     }
 
     try {
         const admin = new adminModel({
-            name: adminName,
-            username: adminUsername,
-            password: adminPassword
+            name,
+            username,
+            password,
+            email,
+            type: 'admin'
         });
 
         await admin.save();
-
         res.status(201).json({ message: "Admin added successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ 
+            message: "Something went wrong", 
+            error: error.message 
+        });
     }
-}
-
+};
 
 const addTourismGovernor = async (req, res) => {
     const { tourismGovernorName, tourismGovernorUsername, tourismGovernorPassword, email } = req.body;
@@ -316,7 +318,120 @@ const getUsers = async (req, res) => {
         res.status(500).json({ message: "Something went wrong", error: error.message });
     }
 };
+const getAllUsers = async (req, res) => {
+    try {
+        // Fetch users from each model with selected fields
+        const tourists = await touristModel.find()
+            .select('firstName lastName username email mobile nationality type createdAt status level badge points');
 
+        const tourGuides = await tourGuideModel.find()
+            .select('firstName lastName username email mobile yearsOfExperience averageRating type createdAt status');
+
+        const advertisers = await advertiserModel.find()
+            .select('firstName lastName username email mobile companyName website type createdAt status');
+
+        const sellers = await sellerModel.find()
+            .select('firstName lastName username email mobile description type createdAt status');
+
+        const tourismGovernors = await tourismGovernorModel.find()
+            .select('name username email type');
+
+        // Combine all users for monthly statistics
+        const allUsers = [
+            ...tourists,
+            ...tourGuides,
+            ...advertisers,
+            ...sellers,
+            ...tourismGovernors,
+        ];
+
+        // Calculate users by month
+        const usersByMonth = allUsers.reduce((acc, user) => {
+            const createdAt = user.createdAt;
+            if (createdAt) {
+                const date = new Date(createdAt);
+                if (!isNaN(date)) {
+                    const monthKey = date.toISOString().slice(0, 7); // Format as YYYY-MM
+                    acc[monthKey] = (acc[monthKey] || 0) + 1;
+                }
+            }
+            return acc;
+        }, {});
+
+        // Transform the data to include user type and format consistently
+        const formattedUsers = [
+            ...tourists.map(user => ({
+                ...user.toObject(),
+                userType: 'Tourist',
+                additionalInfo: {
+                    level: user.level,
+                    badge: user.badge,
+                    points: user.points
+                }
+            })),
+            ...tourGuides.map(user => ({
+                ...user.toObject(),
+                userType: 'Tour Guide',
+                additionalInfo: {
+                    experience: `${user.yearsOfExperience} years`,
+                    rating: user.averageRating ? `${user.averageRating}/5` : 'No ratings'
+                }
+            })),
+            ...advertisers.map(user => ({
+                ...user.toObject(),
+                userType: 'Advertiser',
+                additionalInfo: {
+                    company: user.companyName,
+                    website: user.website || 'Not provided'
+                }
+            })),
+            ...sellers.map(user => ({
+                ...user.toObject(),
+                userType: 'Seller',
+                additionalInfo: {
+                    description: user.description
+                }
+            })),
+            ...tourismGovernors.map(user => ({
+                ...user.toObject(),
+                userType: 'Tourism Governor',
+                firstName: user.name,
+                additionalInfo: {}
+            }))
+        ];
+
+        // Calculate statistics
+        const statistics = {
+            totalUsers: formattedUsers.length,
+            usersByType: {
+                tourists: tourists.length,
+                tourGuides: tourGuides.length,
+                advertisers: advertisers.length,
+                sellers: sellers.length,
+                tourismGovernors: tourismGovernors.length
+            },
+            usersByStatus: formattedUsers.reduce((acc, user) => {
+                const status = user.status || 'N/A';
+                acc[status] = (acc[status] || 0) + 1;
+                return acc;
+            }, {}),
+            usersByMonth
+        };
+
+        res.status(200).json({
+            success: true,
+            statistics,
+            users: formattedUsers
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error fetching users",
+            error: error.message
+        });
+    }
+};
 const sendEmail = async (itinerary) => {
     try {
         // Fetch the seller and check if user exists
@@ -446,5 +561,7 @@ export default {
     getUsers,
     viewAllItineraries,
     viewAllActivities,
-    getAllDocuments
+    getAllDocuments,
+    getAllUsers
+
 }

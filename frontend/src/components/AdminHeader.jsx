@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bell, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './AdminHeader.css';
 
 const menuItems = [
@@ -9,11 +9,12 @@ const menuItems = [
   { name: 'Complaints', href: '/admin/complaints' },
   { name: 'Itineraries', href: '#' },
   {
-    name: 'User Accounts',
+   name: 'User Accounts',
     href: '#',
     subitems: [
-      { name: 'Account Deletion', href: '#' },
+      { name: 'Account Deletion', href: '/admin/deleteUsers' },
       { name: 'Document Reviews', href: '#' },
+      { name: 'Accounts Creation', href: '/admin/accountCreation' }, 
     ],
   },
   {
@@ -24,26 +25,31 @@ const menuItems = [
     name: 'System Administration',
     href: '#',
     subitems: [
-      { name: 'Activity Categories', href: '#' },
-      { name: 'Preference Tags', href: '#' },
+      { name: 'Activity Categories', href: '/admin/activityCategories' },
+      { name: 'Preference Tags', href: '/admin/preferenceTags' },
       { name: 'Reports', href: '#' },
-      { name: 'Promo Codes', href: '#' },
+      { name: 'Promo Codes', href: '/admin/promoCode' },
     ],
   },
 ];
 
 export function Header() {
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [timeoutId, setTimeoutId] = useState(null);
+  const navigate = useNavigate();
 
   const handleMouseEnter = (itemName) => {
-    clearTimeout(timeoutId); // Clear any existing timeout
     setHoveredItem(itemName);
   };
 
   const handleMouseLeave = () => {
-    const id = setTimeout(() => setHoveredItem(null), 200); // Add a short delay
-    setTimeoutId(id);
+    setHoveredItem(null);
+  };
+
+  const handleSubItemClick = (href) => {
+    if (href && href !== '#') {
+      navigate(href);
+      setHoveredItem(null);
+    }
   };
 
   return (
@@ -63,30 +69,32 @@ export function Header() {
                 onMouseEnter={() => handleMouseEnter(item.name)}
                 onMouseLeave={handleMouseLeave}
               >
-                <a 
-                  href={item.href || '#'} 
+                <Link 
+                  to={item.href || '#'} 
                   className={`header-link ${!item.href ? 'cursor-default' : ''}`}
                   onClick={(e) => !item.href && e.preventDefault()}
                 >
                   {item.name}
-                </a>
+                </Link>
                 {item.subitems && hoveredItem === item.name && (
                   <div
-                    className="dropdown absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                    className="dropdown"
                     onMouseEnter={() => handleMouseEnter(item.name)}
                     onMouseLeave={handleMouseLeave}
                   >
                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                       {item.subitems.map((subitem) => (
-                        <a
+                        <Link
                           key={subitem.name}
-                          href={subitem.href || '#'}
-                          className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 ${!subitem.href ? 'cursor-default' : ''}`}
-                          role="menuitem"
-                          onClick={(e) => !subitem.href && e.preventDefault()}
+                          to={subitem.href || '#'}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleSubItemClick(subitem.href);
+                          }}
                         >
                           {subitem.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>

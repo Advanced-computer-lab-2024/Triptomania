@@ -54,7 +54,11 @@ import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewIMytinerarie
 import EditMyItinerary from './TourGuide/Itineraries/editMyItinerary';
 import ProductDetails from './Tourist/Products/ProductDetails';
 import TouristCart from './Tourist/TouristCart/TouristCart';
-
+import DeleteUsers from './Admin/DeleteUsers/DeleteUsers';
+import ActivityCategories from './Admin/ActivityCategories/ActivityCategories';
+import PreferenceTags from './Admin/PreferenceTags/PreferenceTags';
+import Promocode from './Admin/Promocode/Promocode';
+import AccountCreation from './Admin/AccountCreation/AccountCreation';
 const App = () => {
   return (
     <Routes>
@@ -115,6 +119,11 @@ const App = () => {
       <Route path="/tourGuide/editMyItinerary/:id" element={<EditMyItinerary />} />
       <Route path="/tourist/product/:id" element={<ProductDetails />} />
       <Route path="/tourist/cart" element={<TouristCart />} />
+      <Route path="/admin/deleteUsers" element={<DeleteUsers />} />
+      <Route path="/admin/activityCategories" element={<ActivityCategories />} />
+      <Route path="/admin/preferenceTags" element={<PreferenceTags />} />
+      <Route path="/admin/promoCode" element={<Promocode />} />
+      <Route path="/admin/accountCreation" element={<AccountCreation />} />
     </Routes>
   );
 };
