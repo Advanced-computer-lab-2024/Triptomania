@@ -44,6 +44,8 @@ const checkoutCart = async (req, res) => {
         let promo = null;
 
         const date = new Date();
+        const futureDate = new Date(date);
+        futureDate.setDate(date.getDate() + 5);
 
         if (promoCode) {
             promo = await promoCodeModel.findOne({ code: promoCode });
@@ -150,7 +152,8 @@ const checkoutCart = async (req, res) => {
             deliveryAddress: user.deliveryAddresses[address],
             promoCode: promo ? promo.id : null,
             discountAmount: discountAmount,
-            date: date
+            orderDate: date,
+            deliveryDate: futureDate
         });
 
         // Clear the user's cart on successful payment

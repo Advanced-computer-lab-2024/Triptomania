@@ -106,6 +106,7 @@ const touristSchema = new Schema({
   orders: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order'
     }
   ],
   fcmToken: {

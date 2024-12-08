@@ -7,3 +7,8 @@
     display: inline-block;
     color: var(--primary-color);
 }
+
+#tab-button:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}

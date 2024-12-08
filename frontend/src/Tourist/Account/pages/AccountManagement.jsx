@@ -5,12 +5,16 @@ import Addresses from '../components/Addresses';
 import Bookings from '../components/Bookings';
 import BookmarkedEvents from '../components/BookmarkedEvents';
 import SecuritySettings from '../components/SecuritySettings';
+import Orders from '../components/Orders';
+import { Gift } from 'lucide-react';
 import './index.css';
 import { useUser } from '@/UserContext';
+import Loading from '@/components/Loading';
 
 const AccountManagement = () => {
   const [activeTab, setActiveTab] = useState('accountInfo');
   const [walletBalance, setWalletBalance] = useState(0);
+  const [pointBalance, setPointBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useUser();
 
@@ -18,6 +22,7 @@ const AccountManagement = () => {
     const fetchWalletBalance = async () => {
       try {
         setWalletBalance(user.wallet);
+        setPointBalance(user.points);
       } catch (error) {
         console.error('Error fetching wallet balance:', error);
       } finally {
@@ -30,13 +35,12 @@ const AccountManagement = () => {
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
-    // Save the selected tab to localStorage
-    localStorage.setItem('activeTab', tabId);
   };
 
   const tabs = [
     { id: 'accountInfo', label: 'Account Info' },
     { id: 'addresses', label: 'Addresses' },
+    { id: 'orders', label: 'Orders' },
     { id: 'hotelBookings', label: 'Hotel Bookings' },
     { id: 'flightBookings', label: 'Flight Bookings' },
     { id: 'transportationBookings', label: 'Transportation Bookings' },
@@ -51,6 +55,8 @@ const AccountManagement = () => {
         return <AccountInfo />;
       case 'addresses':
         return <Addresses />;
+      case 'orders':
+        return <Orders />;
       case 'hotelBookings':
         return <Bookings type="hotel" />;
       case 'flightBookings':
@@ -77,18 +83,26 @@ const AccountManagement = () => {
             <div className="bg-white rounded-lg shadow p-4 mb-4">
               <h2 className="text-xl font-semibold text-primary mb-2">Wallet Balance</h2>
               {isLoading ? (
-                <p>Loading...</p>
+                <Loading />
               ) : (
                 <p className="text-2xl font-bold">${walletBalance.toFixed(2)}</p>
+              )}
+              <br></br>
+              <h2 className="text-xl font-semibold text-primary mb-2 inline-flex">Points Balance &nbsp; <Gift /></h2>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <p className="text-2xl font-bold">{pointBalance}</p>
               )}
             </div>
             <nav className="bg-white rounded-lg shadow overflow-hidden">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
+                  id='tab-button'
                   className={`block w-full text-left px-4 py-2 hover:bg-secondary hover:text-white transition-colors ${
                     activeTab === tab.id ? 'bg-primary text-white' : 'text-gray-700'
-                  }`}
+                  }`}upcoming
                   onClick={() => handleTabChange(tab.id)}
                 >
                   {tab.label}

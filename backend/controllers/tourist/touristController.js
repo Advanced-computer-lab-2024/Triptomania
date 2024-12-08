@@ -1490,14 +1490,38 @@ const deleteDeliveryAddress = async (req, res) => {
   }
 };
 
+const categorizeOrders = (orders) => {
+  const today = new Date(); // Get the current date
+  today.setHours(0, 0, 0, 0); // Normalize time to midnight for comparison
+
+  return orders.reduce(
+    (result, order) => {
+      let orderDate = new Date(order.deliveryDate);
+      if (!orderDate) {
+        orderDate = new Date(order.orderDate);
+      }
+
+      if (orderDate >= today) {
+        result.upcoming.push(order);
+      } else {
+        result.past.push(order);
+      }
+
+      return result;
+    },
+    { upcoming: [], past: [] } // Initialize the result object
+  );
+};
+
 const viewOrders = async (req, res) => {
   try {
     const id = req.user._id;
-    const user = await userModel.findById(id);
+    const user = await userModel.findById(id).populate('orders');
+    const orders = user.orders;
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.status(200).json({ orders: user.orders });
+    res.status(200).json({ orders: categorizeOrders(orders) });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -1817,6 +1841,27 @@ const categorizeHotelBookings = (hotelBookings) => {
   );
 };
 
+const categorizeTransportationBookings = (transportationBookings) => {
+  const now = new Date(); // Get the current date and time
+
+  return transportationBookings.reduce(
+    (result, booking) => {
+      const travelDateTime = new Date(
+        `${booking.travelDate}T${booking.travelTime}`
+      ); // Combine travelDate and travelTime into a Date object
+
+      if (travelDateTime >= now) {
+        result.upcoming.push(booking);
+      } else {
+        result.past.push(booking);
+      }
+
+      return result;
+    },
+    { upcoming: [], past: [] } // Initialize the result object
+  );
+};
+
 const getBookings = async (req, res) => {
   const id = req.user._id;
   const { type } = req.query;
@@ -1835,7 +1880,8 @@ const getBookings = async (req, res) => {
       return res.status(200).json({ flightBookings });
     } else if (type === 'transportation') {
       const transportationBookings = tourist.transportationBookings;
-      return res.status(200).json({ transportationBookings });
+      const categorizedBookings = categorizeTransportationBookings(transportationBookings);
+      return res.status(200).json(categorizedBookings);
     } else {
       return res.status(400).json({ message: 'Invalid booking type' });
     }
@@ -1853,7 +1899,7 @@ export default {
   getHotels,
   getHotelOffers,
   bookHotel,
-  // getHotelBookings,
+  getBookings,
   searchFlights,
   getFlightDetails,
   bookFlight,
