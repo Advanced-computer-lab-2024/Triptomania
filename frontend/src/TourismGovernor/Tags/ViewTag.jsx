@@ -67,7 +67,7 @@ const ViewTag = () => {
     };
 
     return (
-        <div className="container">
+        <div className="container-tag">
             <h1>Manage Tags</h1>
 
             <div className="add-tag">
