@@ -1183,8 +1183,6 @@ const bookFlight = async (req, res) => {
 
     const tourist = await userModel.findById(id);
 
-    console.log(flightOffersCache);
-
     // Create the booking request data
     const bookingData = {
       data: {
@@ -1947,7 +1945,7 @@ const sendBirthdayPromo = async (tourist) => {
       email: 'triptomania.app@gmail.com',
     };
 
-    // const promoCode = generatePromoCode(tourist);
+    const promoCode = generatePromoCode(tourist);
 
     const emailContent = {
       sender,
@@ -1955,13 +1953,13 @@ const sendBirthdayPromo = async (tourist) => {
       templateId: 8, // Replace with your Brevo template ID
       params: {
         username: tourist.username,
-        // promoCode: promoCode
+        promoCode: promoCode
       }
     };
+    console.log(emailContent.params);
 
     // Send the email using Brevo transactional API
-    // const response = await transactionalEmailApi.sendTransacEmail(emailContent);
-    console.log(tourist.username, response);
+    const response = await transactionalEmailApi.sendTransacEmail(emailContent);
   } catch (error) {
     throw new Error(`Error sending email: ${error.message}`);
   }
@@ -1982,13 +1980,11 @@ const checkAndSendBirthdayPromos = async () => {
                 ]
             }
         });
-        console.log(usersWithBirthday);
 
         // Call sendBirthdayPromo for each user
         usersWithBirthday.forEach((user) => {
-            console.log(user);
             sendBirthdayPromo(user); // Pass the full user object
-            console.log(`Birthday promo sent for user: ${user.name}`);
+            console.log(`Birthday promo sent for user: ${user.username}`);
         });
 
         if (usersWithBirthday.length === 0) {
