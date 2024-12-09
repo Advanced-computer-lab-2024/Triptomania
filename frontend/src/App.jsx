@@ -92,6 +92,8 @@ import AdvertiserUploadPicture from './Advertiser/AdvertiserUploadPicture';
 import ViewActivitiesTourist from './Tourist/Activities/ViewActivitiesTourist';
 import ViewItinerariesTourist from './Tourist/Itineraries/ViewItinerariesTourist';
 import EventCheckout from './Tourist/Account/pages/EventCheckout';
+import AcceptTerms from './Pages/TermsAndConditions';
+
 const App = () => {
   return (    
     <Routes>
@@ -188,6 +190,7 @@ const App = () => {
       <Route path="/tourist/viewactivities-tourist" element={<ViewActivitiesTourist />} />
       <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist />} />
       <Route path="/tourist/eventCheckout" element={<EventCheckout />} />
+      <Route path="/acceptTerms" element={<AcceptTerms />} />
     </Routes>
   );
 };

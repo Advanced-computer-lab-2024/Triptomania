@@ -220,7 +220,7 @@ const redeemPoints = async (req, res) => {
       tourist.level = 3;
       tourist.badge = 'GOLD';
     }
-    
+
     tourist.wallet += pointsToRedeem;
     tourist.points -= redeemablePoints;
     // Save the updated tourist details
@@ -485,8 +485,11 @@ const bookActivity = async (req, res) => {
       date: activity.date,
       status: 'Pending'
     }
+<<<<<<< HEAD
     tourist.activities.push(eventMap);
     await tourist.save();
+=======
+>>>>>>> 967943b (changes)
     // Proceed with booking
     tourist.activities.push(eventMap);
     await tourist.save();
@@ -667,7 +670,11 @@ async function rateActivity(req, res) {
 
 const processPayment = async (req, res) => {
   const _id = req.user._id;
+<<<<<<< HEAD
   const { itemId } = req.body;
+=======
+  const { price } = req.body; // Item ID
+>>>>>>> 967943b (changes)
 
   try {
     // Fetch the tourist by ID
@@ -676,6 +683,7 @@ const processPayment = async (req, res) => {
       return res.status(404).json({ message: 'Tourist not found.' });
     }
 
+<<<<<<< HEAD
     // Search for the item in Itinerary, Activity, and Product collections
     let item = await itineraryModel.findById(itemId);
     let itemType = 'itinerary';
@@ -730,6 +738,17 @@ const processPayment = async (req, res) => {
       } else if (tourist.level === 3) {
         pointsEarned = itemPrice * 1.5;
       }
+=======
+    // Calculate loyalty points only for itineraries and activities
+    let pointsEarned = 0;
+
+    if (tourist.level === 1) {
+      pointsEarned = price * 0.5;
+    } else if (tourist.level === 2) {
+      pointsEarned = price * 1;
+    } else if (tourist.level === 3) {
+      pointsEarned = price * 1.5;
+>>>>>>> 967943b (changes)
     }
 
     tourist.points += pointsEarned;

@@ -34,13 +34,50 @@ const LoginPage = () => {
           navigate('/admin/home');
           break;
         case 'advertiser':
-        navigate('/advertiser/home');
+          if (response.data.user.status === 'rejected') {
+            alert('Your account has been rejected. Please contact the admin.');
+            return;
+          } else if (response.data.user.status === 'pending') {
+            alert('Your account is pending approval. Please wait for the admin to approve.');
+            return;
+          } else if (response.data.user.status === 'accepted') {
+            if (response.data.user.acceptedTerms) {
+              navigate('/advertiser/home');
+            } else {
+              navigate('/acceptTerms')
+            }
+          }
           break;
         case 'seller':
-          navigate('/seller/home');
+          console.log(response.data.user.status, response.data.user.acceptedTerms);
+          if (response.data.user.status === 'rejected') {
+            alert('Your account has been rejected. Please contact the admin.');
+            return;
+          } else if (response.data.user.status === 'pending') {
+            alert('Your account is pending approval. Please wait for the admin to approve.');
+            return;
+          } else if (response.data.user.status === 'accepted') {
+            if (response.data.user.acceptedTerms) {
+              navigate('/advertiser/home');
+            } else {
+              navigate('/acceptTerms')
+            }
+          }
           break;
         case 'tourGuide':
-        navigate('/tourGuide/home');
+          if (response.data.user.status === 'rejected') {
+            alert('Your account has been rejected. Please contact the admin.');
+            return;
+          } else if (response.data.user.status === 'pending') {
+            alert('Your account is pending approval. Please wait for the admin to approve.');
+            return;
+          } else if (response.data.user.status === 'accepted') {
+            if (response.data.user.acceptedTerms) {
+              navigate('/advertiser/home');
+            } else {
+              navigate('/acceptTerms')
+            }
+          }
           break;
         case 'tourismGovernor':
           navigate('/tourismGovernor/home');

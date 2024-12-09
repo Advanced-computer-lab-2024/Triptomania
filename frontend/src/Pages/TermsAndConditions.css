@@ -1,0 +1,23 @@
+.terms-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    text-align: left;
+}
+
+.terms-content {
+    margin-bottom: 20px;
+}
+
+.accept-button {
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.accept-button:hover {
+    background-color: #45a049;
+}
