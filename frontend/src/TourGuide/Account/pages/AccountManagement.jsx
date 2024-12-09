@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from '@/components/tourguideHeader';
+import { Header } from '@/components/TourguideHeader';
 import AccountInfo from '../components/AccountInfo';
 import SecuritySettings from '../components/SecuritySettings';
 import { Gift } from 'lucide-react';

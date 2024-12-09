@@ -68,7 +68,11 @@ import HistoricalPlacesViewww from './TourismGovernor/HistoricalPlaces/Historica
 import UploadDocGuide from './TourGuide/SignUp/UploadDocuments';
 import ViewComplaints from './Tourist/Complaints/viewMyComplaints';
 import FlightBooking from './Tourist/FlightBooking/FlightBooking';
-import EditProduct from './Admin/Products/EditProducts';
+import ViewTag from './TourismGovernor/Tags/ViewTag';
+import WishList from './Tourist/WishList/WishList';
+import ViewActivitiesAdmin from './Admin/ViewActivities/ViewActivities';
+import ViewItinerariesAdmin from './Admin/ViewItineraries/ViewItineraries';
+import EditProduct from './Admin/Products/editProducts';
 import SellerAccount from './Seller/Account/pages/AccountManagement';
 import TourGuideAccount from './TourGuide/Account/pages/AccountManagement';
 import AdvertiserAccount from './Advertiser/Account/pages/AccountManagement';

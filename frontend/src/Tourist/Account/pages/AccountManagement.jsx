@@ -6,6 +6,7 @@ import Bookings from '../components/Bookings';
 import BookmarkedEvents from '../components/BookmarkedEvents';
 import SecuritySettings from '../components/SecuritySettings';
 import Orders from '../components/Orders';
+import Events from '../components/Events';
 import { Gift } from 'lucide-react';
 import './index.css';
 import { useUser } from '@/UserContext';
@@ -66,7 +67,7 @@ const AccountManagement = () => {
       case 'transportationBookings':
         return <Bookings key={key} type="transportation" />;
       case 'eventBookings':
-        return <Bookings key={key} type="event" />;
+        return <Events />;
       case 'bookmarkedEvents':
         return <BookmarkedEvents />;
       case 'securitySettings':

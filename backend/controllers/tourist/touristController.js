@@ -1740,22 +1740,22 @@ const bookmarkEvent = async (req, res) => {
         return res.status(404).json({ error: 'Activity not found' });
       }
 
-      if (user.bookmarkedActivities.includes(eventId)) {
+      if (user.bookmarkedActivities.includes(activity)) {
         return res.status(400).json({ error: 'Activity already bookmarked' });
       }
 
-      user.bookmarkedActivities.push(eventId);
+      user.bookmarkedActivities.push(activity);
     } else if (eventType === 'itinerary') {
       const itinerary = await itineraryModel.findById(eventId);
       if (!itinerary) {
         return res.status(404).json({ error: 'Activity not found' });
       }
 
-      if (user.bookmarkedItineraries.includes(eventId)) {
+      if (user.bookmarkedItineraries.includes(itinerary)) {
         return res.status(400).json({ error: 'Itinerary already bookmarked' });
       }
 
-      user.bookmarkedItineraries.push(eventId);
+      user.bookmarkedItineraries.push(itinerary);
     }
 
     await user.save();
@@ -1787,22 +1787,22 @@ const unbookmarkEvent = async (req, res) => {
         return res.status(404).json({ error: 'Activity not found' });
       }
 
-      if (!user.bookmarkedActivities.includes(eventId)) {
+      if (!user.bookmarkedActivities.includes(activity)) {
         return res.status(400).json({ error: 'Activity is not bookmarked' });
       }
 
-      user.bookmarkedActivities.pull(eventId);
+      user.bookmarkedActivities.pull(activity);
     } else if (eventType === 'itinerary') {
       const itinerary = await itineraryModel.findById(eventId);
       if (!itinerary) {
         return res.status(404).json({ error: 'Activity not found' });
       }
 
-      if (user.bookmarkedItineraries.includes(eventId)) {
+      if (user.bookmarkedItineraries.includes(itinerary)) {
         return res.status(400).json({ error: 'Itinerary already bookmarked' });
       }
 
-      user.bookmarkedItineraries.pull(eventId);
+      user.bookmarkedItineraries.pull(itinerary);
     }
 
     await user.save();
@@ -1826,9 +1826,12 @@ const getBookmarkedEvents = async (req, res) => {
     const activities = user.bookmarkedActivities;
     const itineraries = user.bookmarkedItineraries;
 
-    const bookmarkedEvents = [...activities, ...itineraries];
+    const bookmarkedEvents = {
+      activities: activities,
+      itineraries: itineraries
+    };
 
-    res.status(200).json({ bookmarkEvents: bookmarkedEvents });
+    res.status(200).json({ bookmarkedEvents: bookmarkedEvents });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useUser } from '@/UserContext';
+import axiosInstance from '@/axiosInstance';
+import Loading from '@/components/Loading';
 
 const BookmarkedEvents = () => {
   const [bookmarkedEvents, setBookmarkedEvents] = useState([]);
@@ -7,9 +10,9 @@ const BookmarkedEvents = () => {
   useEffect(() => {
     const fetchBookmarkedEvents = async () => {
       try {
-        const response = await fetch('/api/bookmarked-events');
-        const data = await response.json();
-        setBookmarkedEvents(data);
+        const response = await axiosInstance.get('/api/tourist/events/getBookmarkedEvents');
+        console.log(response.data);
+        setBookmarkedEvents();
       } catch (error) {
         console.error('Error fetching bookmarked events:', error);
       } finally {
@@ -21,7 +24,7 @@ const BookmarkedEvents = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
