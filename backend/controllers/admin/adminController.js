@@ -76,7 +76,7 @@ const addTourismGovernor = async (req, res) => {
 
 const flagItinerary = async (req, res) => {
     const { id } = req.body; // Extracting itineraryId from query parameters
-
+console.log(id);
     try {
         // Validate if the ID is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(id)) {

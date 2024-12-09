@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewItineraries.css';
-import { CalendarIcon, MapPinIcon, TagIcon, Languages, StarIcon } from 'lucide-react';
+import { CalendarIcon, MapPinIcon, TagIcon, Languages, StarIcon, FlagIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -27,6 +27,7 @@ const ViewItinerariesAdmin = () => {
   const [preferenceTags, setPreferenceTags] = useState([]); // State for preference tags
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
+  const [ setFlaggedItineraries] = useState([]);
   const [loading, setLoading] = useState(false); // State for loading indicator
   const navigate = useNavigate();
 
@@ -104,6 +105,21 @@ const ViewItinerariesAdmin = () => {
       setPreferenceTags(response.data || []);
     } catch (error) {
       console.error('Error fetching preference tags:', error.response?.data || error.message);
+    }
+  };
+
+  const handleFlagItinerary = async (id) => {
+    try {
+      const response = await axiosInstance.put('/api/admin/flagitinerary', { id });
+      if (response.status === 200) {
+        setFlaggedItineraries((prev) => [...prev, id]); // Mark itinerary as flagged
+        fetchAllItineraries(); // Refresh itineraries
+        const message = response.data.message;
+        alert(message);
+      }
+    } catch (error) {
+      console.error('Error flagging itinerary:', error.response?.data || error.message);
+      alert(`Error flagging itinerary: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -280,6 +296,14 @@ const ViewItinerariesAdmin = () => {
                     <div className="itinerary-rating">
                       <StarIcon className="icon" />
                       <span>{itinerary.averageRating || 'N/A'}</span>
+                    </div>
+                    <div className="itinerary-flag">
+                      <FlagIcon
+                        className="flag-icon"
+                        color={itinerary.isFlagged ? 'red' : 'gray'}
+                        onClick={() => handleFlagItinerary(itinerary._id)}
+                        style={{ cursor: 'pointer' }}
+                      />
                     </div>
                   </div>
                   <p>{itinerary.Description}</p>
