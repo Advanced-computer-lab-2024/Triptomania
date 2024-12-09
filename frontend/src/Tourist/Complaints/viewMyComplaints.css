@@ -1,0 +1,70 @@
+.view-complaints-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .view-complaints-form {
+    background: var(--input-background);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 16px var(--shadow-color);
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .view-complaints-form h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #54a7a4;
+  }
+  
+  .complaints-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .complaint-item {
+    background: var(--input-background);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: all 0.3s ease;
+  }
+  
+  .complaint-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--shadow-color);
+  }
+  
+  .complaint-info h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+  
+  .complaint-info p {
+    font-size: 1rem;
+    color: var(--text-color);
+  }
+  
+  .status {
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+  
+  .status.pending {
+    color: #f39c12; /* Yellow for Pending */
+  }
+  
+  .status.resolved {
+    color: #27ae60; /* Green for Resolved */
+  }

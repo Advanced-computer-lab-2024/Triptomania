@@ -95,122 +95,126 @@ const AddHistoricalPlace = () => {
         }
     };
     return (
-        <div className="add-product-container">
-            <h2>Add Historical Place</h2>
-            <form className="add-product-form" onSubmit={handleSubmit}>
-                <div className="input-group">
-                    <BookText id="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="Name" 
-                        placeholder="Name" 
-                        value={formData.Name}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <FileText id="input-icon" />
-                    <Textarea 
-                        name="Description" 
-                        placeholder="Description" 
-                        value={formData.Description}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <MapPin id="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="Location" 
-                        placeholder="Location" 
-                        value={formData.Location}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Clock id="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="Opening_hours" 
-                        placeholder="Opening Hours (HH:MM)" 
-                        value={formData.Opening_hours}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Clock id="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="Closing_hours" 
-                        placeholder="Closing Hours (HH:MM)" 
-                        value={formData.Closing_hours}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group">
-                    <DollarSign id="input-icon" />
-                    <Input 
-                        type="number" 
-                        name="Ticket_prices" 
-                        placeholder="Ticket Price" 
-                        value={formData.Ticket_prices}
-                        onChange={handleChange} 
-                        required 
-                        min="0"
-                        step="any"
-                    />
-                </div>
-
-                <div className="input-group">
-                    <Tag id="input-icon" />
-                    <Input 
-                        type="text" 
-                        name="Category" 
-                        placeholder="Category" 
-                        value={formData.Category}
-                        onChange={handleChange} 
-                        required 
-                    />
-                </div>
-
-                <div className="input-group file-upload-group">
-                    <Image id="file-icon" />
-                    <div className="file-upload-container">
+        <div>
+            <Header />
+            <div className="add-product-container">
+                <h2>Add Historical Place</h2>
+                <form className="add-product-form" onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <BookText id="input-icon" />
                         <Input 
-                            type="file" 
-                            id="place-image"
-                            name="Picture" 
-                            accept="image/*" 
-                            onChange={handleFileChange} 
-                            className="file-input"
+                            type="text" 
+                            name="Name" 
+                            placeholder="Name" 
+                            value={formData.Name}
+                            onChange={handleChange} 
                             required 
                         />
-                        <div className="file-upload-label">
-                            <span>Choose a file</span>
-                            <small>Upload a clear image of the historical place</small>
-                        </div>
                     </div>
-                    {previewUrl && (
-                        <div className="image-preview">
-                            <img src={previewUrl} alt="Historical place preview" />
+    
+                    <div className="input-group">
+                        <FileText id="input-icon" />
+                        <Textarea 
+                            name="Description" 
+                            placeholder="Description" 
+                            value={formData.Description}
+                            onChange={handleChange} 
+                            required 
+                        />
+                    </div>
+    
+                    <div className="input-group">
+                        <MapPin id="input-icon" />
+                        <Input 
+                            type="text" 
+                            name="Location" 
+                            placeholder="Location" 
+                            value={formData.Location}
+                            onChange={handleChange} 
+                            required 
+                        />
+                    </div>
+    
+                    <div className="input-group">
+                        <Clock id="input-icon" />
+                        <Input 
+                            type="text" 
+                            name="Opening_hours" 
+                            placeholder="Opening Hours (HH:MM)" 
+                            value={formData.Opening_hours}
+                            onChange={handleChange} 
+                            required 
+                        />
+                    </div>
+    
+                    <div className="input-group">
+                        <Clock id="input-icon" />
+                        <Input 
+                            type="text" 
+                            name="Closing_hours" 
+                            placeholder="Closing Hours (HH:MM)" 
+                            value={formData.Closing_hours}
+                            onChange={handleChange} 
+                            required 
+                        />
+                    </div>
+    
+                    <div className="input-group">
+                        <DollarSign id="input-icon" />
+                        <Input 
+                            type="number" 
+                            name="Ticket_prices" 
+                            placeholder="Ticket Price" 
+                            value={formData.Ticket_prices}
+                            onChange={handleChange} 
+                            required 
+                            min="0"
+                            step="any"
+                        />
+                    </div>
+    
+                    <div className="input-group">
+                        <Tag id="input-icon" />
+                        <Input 
+                            type="text" 
+                            name="Category" 
+                            placeholder="Category" 
+                            value={formData.Category}
+                            onChange={handleChange} 
+                            required 
+                        />
+                    </div>
+    
+                    <div className="input-group file-upload-group">
+                        <Image id="file-icon" />
+                        <div className="file-upload-container">
+                            <Input 
+                                type="file" 
+                                id="place-image"
+                                name="Picture" 
+                                accept="image/*" 
+                                onChange={handleFileChange} 
+                                className="file-input"
+                                required 
+                            />
+                            <div className="file-upload-label">
+                                <span>Choose a file</span>
+                                <small>Upload a clear image of the historical place</small>
+                            </div>
                         </div>
-                    )}
-                </div>
-
-                <Button type="submit">Add Historical Place</Button>
-            </form>
+                        {previewUrl && (
+                            <div className="image-preview">
+                                <img src={previewUrl} alt="Historical place preview" />
+                            </div>
+                        )}
+                    </div>
+    
+                    <Button type="submit">Add Historical Place</Button>
+                </form>
+            </div>
         </div>
     );
+    
 };
 
 export default AddHistoricalPlace;

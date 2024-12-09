@@ -1,0 +1,105 @@
+.upload-document-container {
+    max-width: 700px; /* Increased max-width for a more spacious layout */
+    margin: 40px auto; /* Added margin-top for better spacing */
+    padding: 30px; /* Increased padding for a more spacious feel */
+    background: #fff; /* White background for better contrast */
+    border-radius: 10px; /* Slightly rounded corners */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1); /* Enhanced box shadow for a more elevated feel */
+}
+
+.upload-document-container h2 {
+    text-align: center;
+    font-size: 1.8rem; /* Larger font for the header */
+    color: #333; /* Darker text color for better contrast */
+    margin-bottom: 20px;
+}
+
+.tour-guide-details {
+    margin-bottom: 25px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px; /* Increased gap for a more spacious layout */
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+}
+
+.label {
+    font-weight: bold;
+    color: #555; /* Slightly lighter color for labels */
+}
+
+.file-upload-group {
+    display: flex;
+    flex-direction: column; /* Stack file input and label vertically */
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.file-upload-container {
+    width: 100%;
+}
+
+.file-upload-label {
+    font-size: 0.9rem;
+    color: #777;
+    margin-top: 5px;
+}
+
+.file-input {
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 100%;
+    background-color: #f8f8f8;
+}
+
+.file-preview img {
+    max-width: 100%;
+    max-height: 300px; /* Limiting the height for better control */
+    object-fit: cover; /* Ensures the image fits within the box */
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+.upload-button {
+    width: 100%;
+    background-color: #007bff; /* Primary button color */
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.upload-button:disabled {
+    background-color: #cccccc; /* Gray background for disabled state */
+    cursor: not-allowed;
+}
+
+.error-message, .success-message {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #e74c3c; /* Red color for errors */
+}
+
+.success-message {
+    color: #2ecc71; /* Green color for success */
+}

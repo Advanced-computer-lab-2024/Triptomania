@@ -65,8 +65,10 @@ import Activities from './Tourist/Activities/Activities';
 import HistoricalPlacesView from './Tourist/HistoricalPlacesView/HistoricalPlacesView';
 import HistoricalPlacesVieww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesVieww';
 import HistoricalPlacesViewww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesViewww';
+import UploadDocGuide from './TourGuide/SignUp/UploadDocuments';
+import ViewComplaints from './Tourist/Complaints/viewMyComplaints';
 const App = () => {
-  return (
+  return (    
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
@@ -137,6 +139,8 @@ const App = () => {
    
       <Route path="/tourismgoverner/HistoricalPlaces" element={<HistoricalPlacesVieww />} />
       <Route path="/myHistoricalPlaces" element={<HistoricalPlacesViewww/>} />
+      <Route path="/tourGuide/uploadDocument" element={<UploadDocGuide/>} />
+      <Route path="/tourist/view-mycomplaints" element={<ViewComplaints/>}/>
     </Routes>
   );
 };

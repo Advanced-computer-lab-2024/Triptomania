@@ -25,7 +25,10 @@ export function Header() {
             <Link to="/seller/home" className="header-link">Home</Link>
             <Link to="/Seller/ViewProducts" className="header-link">Products</Link>
             <Link to="/Seller/ViewMyProducts" className="header-link">My Products</Link>
+            <Link to="/seller/addProduct" className="header-link">Add product</Link>
             <Link to="/seller/addProduct" className="header-link">Sales</Link>
+
+
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Link to="/notifications" className="icon-link">

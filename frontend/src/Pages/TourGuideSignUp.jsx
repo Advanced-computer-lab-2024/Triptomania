@@ -105,7 +105,7 @@ const TourGuideSignUp = () => {
                         />
                     </div>
                     {error && <p className="error-message">{error}</p>}
-                    <button type="submit" className="signup-button">Sign Up</button>
+                    <button type="submit" className="signup-button" onClick={() => navigate('/tourGuide/uploadDocument')}>Sign Up</button>
                 </form>
                 {success && (
                     <div className="success-message">

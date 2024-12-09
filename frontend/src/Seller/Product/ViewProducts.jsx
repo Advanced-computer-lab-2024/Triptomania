@@ -243,9 +243,7 @@ const ViewProducts = () => {
                         <DollarSign className="icon" />
                         {product.Price.toFixed(2)}
                       </p>
-                      <Button className="add-to-cart-button" onClick={() => handleAddToCartClick(product._id)}>
-                        Add to Cart
-                      </Button>
+         
                     </div>
                   </div>
                 </div>
