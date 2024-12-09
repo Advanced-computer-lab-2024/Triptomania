@@ -208,12 +208,9 @@ const redeemPoints = async (req, res) => {
     const redeemablePoints = Math.floor(tourist.points / 5000) * 5000;
     const pointsToRedeem = redeemablePoints * 0.01;
 
-    tourist.wallet += pointsToRedeem;
-    tourist.points -= redeemablePoints;
-
     // Update badge logic directly after redeeming points
     // This checks if the current points qualify for a higher badge
-   if (tourist.points <= 100000) {
+    if (tourist.points <= 100000) {
       tourist.level = 1;
       tourist.badge = 'BRONZE';
     } else if (tourist.points <= 500000) {
@@ -223,7 +220,9 @@ const redeemPoints = async (req, res) => {
       tourist.level = 3;
       tourist.badge = 'GOLD';
     }
-
+    
+    tourist.wallet += pointsToRedeem;
+    tourist.points -= redeemablePoints;
     // Save the updated tourist details
     await tourist.save();
 

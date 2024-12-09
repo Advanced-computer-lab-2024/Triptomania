@@ -108,11 +108,15 @@ router.put('/redeem', (req, res, next) => authMiddleware.verifyToken(req, res, n
 
 router.get('/chooseCategory', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.chooseCategory);
 
+router.get('/activities/getCategories', activityController.getCategories);
+
+
 router.put('/bookActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookActivity);
 
 router.put('/bookItinerary', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookItinerary);
 
 router.put('/badge', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.badge);
+
 
 /**
  * @swagger

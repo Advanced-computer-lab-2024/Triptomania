@@ -314,6 +314,7 @@ const ViewActivitiesTourist = () => {
                   </div>
                   <div className="activity-footer">
                     <p className="activity-price">${activity.price.toFixed(2)} USD</p>
+<<<<<<< HEAD
                     <Button
   className="book-button"
   onClick={() => handleBookActivity(activity._id)}x>
@@ -321,6 +322,11 @@ const ViewActivitiesTourist = () => {
 </Button>
 
 
+=======
+                    <Button className="book-button" onClick={handleSignInClick}>
+                      Book Activity
+                    </Button>
+>>>>>>> 57cb379 (hi)
                   </div>
                 </div>
               </div>

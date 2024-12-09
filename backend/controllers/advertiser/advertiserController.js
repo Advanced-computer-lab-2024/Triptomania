@@ -145,6 +145,9 @@ const updateAdvertiser = async (req, res) => {
     }
  };
  
+
+
+
   const editActivity = async (req, res) => {
     try {
        const { id, name,description, date, time, location, price, category, tags, specialDiscounts, isBookingOpen } = req.body;

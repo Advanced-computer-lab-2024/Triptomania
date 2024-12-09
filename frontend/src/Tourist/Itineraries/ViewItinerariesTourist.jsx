@@ -132,12 +132,12 @@ const ViewItinerariesTourist = () => {
 
   const handleBookActivity = async (itineraryId) => {
     try {
-    const { data } = await axiosInstance.put('/api/tourist/bookItinerary', { itineraryId });
+      const { data } = await axiosInstance.put('/api/tourist/bookItinerary', { itineraryId });
       setShowSuccessMessage(true);
       console.log(data.message); // Log the success message
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
-  
+
       if (errorMessage === "You have already booked this activity") {
         console.error("Itinerary already booked");
         // Optionally, show a message to the user
@@ -148,7 +148,7 @@ const ViewItinerariesTourist = () => {
       }
     }
   };
-  
+
   return (
     <div className="view-itineraries">
       <Header />
@@ -201,7 +201,7 @@ const ViewItinerariesTourist = () => {
               </PopoverContent>
             </Popover>
           </div>
-          
+
           <div className="mb-4">
             <Label>Sort by</Label>
             <RadioGroup value={sortBy} onValueChange={handleSortByChange}>
@@ -285,10 +285,10 @@ const ViewItinerariesTourist = () => {
                   <div className="itinerary-footer">
                     <p className="itinerary-price">${itinerary.price} USD</p>
                     <Button
-  className="book-button"
-  onClick={() => handleBookActivity(itinerary._id)}x>
-  Book Itinerary
-</Button>
+                      className="book-button"
+                      onClick={() => handleBookActivity(itinerary._id)} x>
+                      Book Itinerary
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -297,14 +297,14 @@ const ViewItinerariesTourist = () => {
             <p>No itineraries found.</p>
           )}
         </main>
-        
+
       </div>
       {showSuccessMessage && (
-  <div className="success-message">
-    <p>Itinerary booked successfully! Go to your account to complete your payment.</p>
-    <Button onClick={() => setShowSuccessMessage(false)}>Close</Button>
-  </div>
-)}
+        <div className="success-message">
+          <p>Itinerary booked successfully! Go to your account to complete your payment.</p>
+          <Button onClick={() => setShowSuccessMessage(false)}>Close</Button>
+        </div>
+      )}
     </div>
   );
 };

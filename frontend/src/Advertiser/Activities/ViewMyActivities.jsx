@@ -14,8 +14,8 @@ const ViewActivities = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const handleEditClick = () => {
-    navigate("/advertiser/Activity/edit");
+  const handleEditClick = (id) => {
+    navigate(`/advertiser/editactivity/${id}`);
   };
 
   useEffect(() => {

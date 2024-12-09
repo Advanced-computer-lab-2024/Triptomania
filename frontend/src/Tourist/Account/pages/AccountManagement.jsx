@@ -84,7 +84,7 @@ const AccountManagement = () => {
     try {
       const response = await axiosInstance.put('/api/tourist/redeem');
       if (response.status === 200) {
-        const updatedUser = axiosInstance.get('/api/auth/updateUser');
+        const updatedUser = await axiosInstance.get('/api/auth/updateUser');
         setUser(updatedUser.data.user);
         setWalletBalance(updatedUser.data.user.wallet);
         setPointBalance(updatedUser.data.user.points);
@@ -130,7 +130,7 @@ const AccountManagement = () => {
                 {isLoading ? (
                   <Loading />
                 ) : (
-                  <p>&nbsp; &nbsp; &nbsp; &nbsp;{user.badge}</p>
+                  <p className='text-xl font-semibold'>&nbsp; &nbsp; &nbsp; &nbsp;{user.badge}</p>
                 )}
               </div>
             </div>

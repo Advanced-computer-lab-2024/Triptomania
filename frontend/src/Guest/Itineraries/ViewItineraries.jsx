@@ -25,7 +25,7 @@ const ViewItineraries = () => {
   const [budgetRange, setBudgetRange] = useState([0, 5000]);
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [preferences, setPreferences] = useState([]);
-  const [preferenceTags, setPreferenceTags] = useState([]); // State for preference tags
+
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
@@ -33,7 +33,6 @@ const ViewItineraries = () => {
 
   useEffect(() => {
     fetchAllItineraries();
-    fetchPreferenceTags(); // Fetch preference tags on component mount
   }, []);
 
   const fetchAllItineraries = async () => {
@@ -99,14 +98,7 @@ const ViewItineraries = () => {
     }
   };
 
-  const fetchPreferenceTags = async () => {
-    try {
-      const response = await axiosInstance.get('/api/guest/itineraries/getTags');
-      setPreferenceTags(response.data || []);
-    } catch (error) {
-      console.error('Error fetching preference tags:', error.response?.data || error.message);
-    }
-  };
+
 
   const handleFilterClick = () => {
     fetchFilteredItineraries();

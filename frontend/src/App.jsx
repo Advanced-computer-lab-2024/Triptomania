@@ -6,6 +6,9 @@ import ResetPassword from './components/ResetPassword'; // ResetPassword compone
 import LandingPage from './Pages/LandingPage';
 import TouristHomeScreen from './Tourist/TouristHomeScreen';
 import ViewActivities from './Guest/Activities/ViewActivities';
+import ViewActivitiesTourist from './Tourist/Activities/ViewActivitiesTourist';
+import ViewItinerariesTourist from './Tourist/Itineraries/ViewItinerariesTourist';
+
 import ViewItineraries from './Guest/Itineraries/ViewItineraries';
 import ViewItineraryDetails from './Guest/Details/ViewItineraryDetails';
 import ActivityDetails from './Guest/Details/ActivityDetails';
@@ -52,6 +55,8 @@ import ViewActivitiesAdvertiser from './Advertiser/Activities/ViewMyActivities';
 import TourGuideHomePage from './TourGuide/TourGuideHomePage';
 import ViewMyItinerariesTourGuide from './TourGuide/Itineraries/ViewMytineraries';
 import EditMyItinerary from './TourGuide/Itineraries/editMyItinerary';
+import EditActivity from './Advertiser/Activities/EditActivity';
+
 import ProductDetails from './Tourist/Products/ProductDetails';
 import TouristCart from './Tourist/TouristCart/TouristCart';
 import DeleteUsers from './Admin/DeleteUsers/DeleteUsers';
@@ -95,6 +100,9 @@ const App = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/tourist/home" element={<TouristHomeScreen />} />
       <Route path="/guest/Activities" element={<ViewActivities />} />
+      <Route path="/tourist/viewactivities-tourist" element={<ViewActivitiesTourist />} />
+      <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist />} />
+
       <Route path="/guest/Itineraries" element={<ViewItineraries />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
@@ -144,6 +152,8 @@ const App = () => {
       <Route path="/tourGuide/home" element={<TourGuideHomePage/>} />
       <Route path="/tourGuide/MyItineraries" element={<ViewMyItinerariesTourGuide/>} />
       <Route path="/tourGuide/editMyItinerary/:id" element={<EditMyItinerary />} />
+      <Route path="/advertiser/editactivity/:id" element={<EditActivity/>} />
+
       <Route path="/tourist/product/:id" element={<ProductDetails />} />
       <Route path="/tourist/cart" element={<TouristCart />} />
       <Route path="/admin/deleteUsers" element={<DeleteUsers />} />

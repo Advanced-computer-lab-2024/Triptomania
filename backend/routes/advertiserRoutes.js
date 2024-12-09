@@ -135,6 +135,8 @@ router.delete('/activity/deleteActivity', (req, res, next) => authMiddleware.ver
  */
 router.get('/activity/viewMyActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewMyActivities);
 
+
+
 router.put('/uploadDocument', upload.single('file'), sharedController.uploadDocuments);
 
 router.put('/uploadProfilePicture', upload.single('file'), sharedController.uploadProfilePicture);
