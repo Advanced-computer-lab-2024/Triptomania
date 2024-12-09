@@ -30,7 +30,7 @@ const viewComplaints = async (req, res) => {
 const sortComplaintsByDate = async (req, res) => {
     try {
         
-        let complaints = await complaintModel.find({}, "title status date");
+        let complaints = await complaintModel.find({}, "title status date body touristId").populate('touristId', 'username');
 
      
         if (complaints.length === 0) {
@@ -72,7 +72,7 @@ const filterComplaintsByStatus = async (req, res) => {
         }
 
        
-        const complaints = await complaintModel.find({ status }, "title status date");
+        const complaints = await complaintModel.find({ status }, "title status date body touristId").populate('touristId', 'username');
 
         
         if (complaints.length === 0) {

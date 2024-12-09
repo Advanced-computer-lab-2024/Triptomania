@@ -72,6 +72,7 @@ import EditProduct from './Admin/Products/EditProducts';
 import SellerAccount from './Seller/Account/pages/AccountManagement';
 import TourGuideAccount from './TourGuide/Account/pages/AccountManagement';
 import AdvertiserAccount from './Advertiser/Account/pages/AccountManagement';
+import ViewTag from './TourismGovernor/Tags/ViewTag';
 const App = () => {
   return (    
     <Routes>
@@ -152,6 +153,7 @@ const App = () => {
       <Route path="/tourGuide/tourGuide-account" element={<TourGuideAccount/>} /> 
       <Route path="/advertiser/advertiser-account" element={<AdvertiserAccount/>} /> 
 
+      <Route path="/tourismGovernor/tags/viewTag" element={<ViewTag />} />
     </Routes>
   );
 };

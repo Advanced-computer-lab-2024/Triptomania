@@ -11,22 +11,47 @@ import '@/index.css';
 
 const ViewComplaints = () => {
   const [complaints, setComplaints] = useState([]);
-  const [sortOrder, setSortOrder] = useState('latest'); // Default to "latest first"
+  const [sortOrder, setSortOrder] = useState(''); // Default to "latest first"
+  const [filterStatus, setFilterStatus] = useState(''); // Filter by complaint status
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAllComplaints(sortOrder); // Fetch complaints with the current sort order
-  }, [sortOrder]);
+    fetchAllComplaints(); // Fetch all complaints initially
+  }, []);
 
-  const fetchAllComplaints = async (order) => {
+  const fetchAllComplaints = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/api/admin/complaints/viewComplaints?sort=${order}`);
+      const response = await axiosInstance.get(`/api/admin/complaints/viewComplaints`);
       setComplaints(response.data);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching all complaints:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSortedComplaints = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(`/api/admin/complaints/sortComplaints?sort=${sortOrder}`);
+      setComplaints(response.data);
+    } catch (error) {
+      console.error('Error fetching sorted complaints:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFilteredComplaints = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(`/api/admin/complaints/filterComplaints?status=${filterStatus}`);
+      setComplaints(response.data);
+    } catch (error) {
+      console.error('Error fetching filtered complaints:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -42,6 +67,15 @@ const ViewComplaints = () => {
     }
   };
 
+  const handleSortComplaints = (order) => {
+    setSortOrder(order);
+    fetchSortedComplaints(); // Trigger sorting once the order is set
+  };
+
+  const handleFilterComplaints = (status) => {
+    setFilterStatus(status);
+  };
+
   return (
     <div className="view-complaints">
       <Header />
@@ -52,19 +86,34 @@ const ViewComplaints = () => {
           {/* Sort by options */}
           <div className="mb-4">
             <Label>Sort by</Label>
-            <RadioGroup value={sortOrder} onValueChange={(newOrder) => setSortOrder(newOrder)}>
+            <RadioGroup value={sortOrder} onValueChange={handleSortComplaints}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="latest" id="sort-latest" />
+                <RadioGroupItem value="asc" id="sort-latest" />
                 <Label htmlFor="sort-latest">Latest First</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="oldest" id="sort-oldest" />
+                <RadioGroupItem value="desc" id="sort-oldest" />
                 <Label htmlFor="sort-oldest">Oldest First</Label>
               </div>
             </RadioGroup>
           </div>
 
-          <Button onClick={() => fetchAllComplaints(sortOrder)} id="filter">
+          {/* Filter by status dropdown */}
+          <div className="mb-4">
+            <Label>Status</Label>
+            <select
+              value={filterStatus}
+              onChange={(e) => handleFilterComplaints(e.target.value)}
+              className="status-dropdown"
+            >
+              <option value="">Select Status</option>
+              <option value="received">Received</option>
+              <option value="pending">Pending</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
+
+          <Button onClick={fetchFilteredComplaints} id="filter">
             Apply Filters
           </Button>
         </aside>

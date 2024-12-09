@@ -33,8 +33,8 @@ const ComplaintDetails = () => {
 
     try {
       // Send reply to the server
-      const response = await axiosInstance.post('/api/admin/complaints/reply', {
-        complaintId: complaint._id,
+      const response = await axiosInstance.put('/api/admin/complaints/replyToComplaint', {
+        id: complaint._id,
         reply,
       });
 
@@ -60,7 +60,7 @@ const ComplaintDetails = () => {
 
     try {
       const response = await axiosInstance.put('/api/admin/complaints/updateStatus', {
-        complaintId: complaint._id,
+        id: complaint._id,
         status: newStatus,
       });
 
