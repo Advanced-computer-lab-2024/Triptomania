@@ -67,6 +67,7 @@ import HistoricalPlacesVieww from './TourismGovernor/HistoricalPlaces/Historical
 import HistoricalPlacesViewww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesViewww';
 import UploadDocGuide from './TourGuide/SignUp/UploadDocuments';
 import ViewComplaints from './Tourist/Complaints/viewMyComplaints';
+import FlightBooking from './Tourist/FlightBooking/FlightBooking';
 const App = () => {
   return (    
     <Routes>
@@ -141,6 +142,7 @@ const App = () => {
       <Route path="/myHistoricalPlaces" element={<HistoricalPlacesViewww/>} />
       <Route path="/tourGuide/uploadDocument" element={<UploadDocGuide/>} />
       <Route path="/tourist/view-mycomplaints" element={<ViewComplaints/>}/>
+      <Route path="/tourist/flightBooking/:flight_id" element={<FlightBooking />} />
     </Routes>
   );
 };

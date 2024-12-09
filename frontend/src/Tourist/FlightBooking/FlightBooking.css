@@ -1,0 +1,46 @@
+.flight-booking {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.booking-form {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.book-flight-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.book-flight-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.book-flight-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(54, 130, 127, 0.5);
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  

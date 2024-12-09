@@ -35,11 +35,11 @@ const FlightInfo = () => {
   }, [flightOfferId]);
 
   const handleBooking = () => {
-    navigate(`/bookFlight?flight_id=${flightOfferId}`);
+    navigate(`/tourist/flightBooking/${flightOfferId}`);
   };
 
   const handleBackToOffers = () => {
-    navigate('/allOffers');  // Change '/allOffers' to the correct path for flight offers
+    navigate('/tourist/searchFlights');  // Change '/allOffers' to the correct path for flight offers
   };
 
   if (loading) {
