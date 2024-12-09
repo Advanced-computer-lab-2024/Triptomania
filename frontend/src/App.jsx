@@ -96,6 +96,11 @@ import AcceptTerms from './Pages/TermsAndConditions';
 
 import ChoosePreferenceTag from './Pages/PreferencesTags';
 import Review from './Tourist/Account/components/Review';
+import TouristNotifications from './Tourist/ViewNotifications'
+import TourGuideNotifications from './TourGuide/ViewNotifications'
+import SellerNotifications from './Seller/ViewNotifications'
+import AdvertiserNotifications from './Advertiser/ViewNotifications'
+import AdminNotifications from './Admin/ViewNotifications'
 const App = () => {
   return (    
     <Routes>
@@ -195,6 +200,12 @@ const App = () => {
       <Route path="/acceptTerms" element={<AcceptTerms />} />
       <Route path="/tourist/choose-prefrence" element={<ChoosePreferenceTag/>} />
       <Route path="/give-review" element={<Review />} />
+      <Route path="/tourist/notifications" element={<TouristNotifications />} />
+      <Route path="/tourGuide/notifications" element={<TourGuideNotifications />} />
+      <Route path="/advertiser/notifications" element={<AdvertiserNotifications />} />
+      <Route path="/seller/notifications" element={<SellerNotifications />} />
+      <Route path="/admin/notifications" element={<AdminNotifications />} />
+
 
     </Routes>
   );

@@ -180,5 +180,8 @@ router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToke
 
 router.get('/product/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), productController.getProductById);
 
+router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.getNotifications);
+
+router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['seller']), sharedController.readNotification);
 
 export default router;

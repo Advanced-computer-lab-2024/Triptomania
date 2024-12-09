@@ -14,6 +14,7 @@ import promoCodeModel from '../../models/promoCode.js';
 import schedule from 'node-schedule';
 import dotenv from 'dotenv';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
+import notificationModel from '../../models/notification.js';
 
 dotenv.config();
 
@@ -2096,6 +2097,53 @@ const now = new Date();
 const oneMinuteFromNow = new Date(now.getTime() + 1 * 60 * 1000);
 // Schedule the task for midnight
 schedule.scheduleJob('0 0 * * *', checkAndSendBirthdayPromos);
+
+schedule.scheduleJob('0 0 * * *', async () => {
+  try {
+    // Get tomorrow's date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0); // Set to midnight for comparison
+
+    // Find activities where the date is tomorrow
+    const activities = await activityModel.find({
+      date: { $gte: tomorrow, $lt: new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000) } // Tomorrow's date range
+    });
+
+    // Find itineraries where the start date is tomorrow
+    const itineraries = await itineraryModel.find({
+      Start_date: { $gte: tomorrow, $lt: new Date(tomorrow.getTime() + 24 * 60 * 60 * 1000) } // Tomorrow's start date range
+    });
+
+    // For each activity, send notifications to tourists in the bookingMade array
+    for (const activity of activities) {
+      const tourists = activity.bookingMade; // Array of user IDs (tourists)
+      for (const touristId of tourists) {
+        const notification = await notificationModel.create({
+          title: 'Upcoming Activity',
+          body: `Your activity "${activity.name}" is tomorrow. Don't forget to attend!`,
+        });
+        const notificationEntry = { id: notification.id, read: false };
+        await userModel.findByIdAndUpdate(touristId, { $push: { notifications: notificationEntry } });
+      }
+    }
+
+    // For each itinerary, send notifications to tourists in the bookingMade array
+    for (const itinerary of itineraries) {
+      const tourists = itinerary.bookingMade; // Array of user IDs (tourists)
+      for (const touristId of tourists) {
+        const notification = await notificationModel.create({
+          title: 'Upcoming Itinerary',
+          body: `Your itinerary "${activity.name}" is tomorrow. Don't forget to attend!`,
+        });
+        const notificationEntry = { id: notification.id, read: false };
+        await userModel.findByIdAndUpdate(touristId, { $push: { notifications: notificationEntry } });
+      }
+    }
+  } catch (error) {
+    console.error('Error during scheduled job execution:', error);
+  }
+});
 
 // Export all functions using ES module syntax
 export default {

@@ -154,4 +154,8 @@ router.get('/getTouristCount', (req, res, next) => authMiddleware.verifyToken(re
 router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), reportsController.generateRevenuePDF);
 router.get('/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), activityController.getCategories);
 
+router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.getNotifications);
+
+router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.readNotification);
+
 export default router;

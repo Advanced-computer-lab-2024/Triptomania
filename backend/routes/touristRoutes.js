@@ -469,6 +469,9 @@ router.get('/events/getBookmarkedEvents', (req, res, next) => authMiddleware.ver
 
 router.put('/events/unbookmarkEvent', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.unbookmarkEvent);
 
+router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.getNotifications);
+
+router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.readNotification);
 
 router.get('/product/:id', (req, res, next) => 
     authMiddleware.verifyToken(req, res, next, ['tourist']), 

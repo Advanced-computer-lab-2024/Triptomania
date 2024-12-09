@@ -176,5 +176,8 @@ router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToke
 
 router.get('/tags/getPreferenceTags', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), preferenceTagController.getPreferenceTags);
 
+router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.getNotifications);
+
+router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourGuide']), sharedController.readNotification);
 
 export default router;

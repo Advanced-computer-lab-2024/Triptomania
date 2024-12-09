@@ -412,6 +412,52 @@ const updateUser = async (req, res) => {
     }
 }
 
+const getNotifications = async (req, res) => {
+    try {
+        const type = req.user.type;
+        const userId = req.user._id;
+
+        const userModel = userCollections[type];
+
+        const user = await userModel.findById(userId).populate('notifications');
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ notifications: user.notifications });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+}
+
+const readNotification = async (req, res) => {
+    try {
+        const type = req.user.type;
+        const userId = req.user._id;
+        const { notificationId } = req.body;
+
+        const userModel = userCollections[type];
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const notification = user.notifications.id(notificationId);
+        if (!notification) {
+            return res.status(404).json({ error: 'Notification not found' });
+        }
+
+        notification.read = true;
+        await user.save();
+
+        return res.status(200).json({ message: 'Notification marked as read' });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+}
+
 export default {
     uploadDocuments,
     uploadProfilePicture,
@@ -421,5 +467,7 @@ export default {
     acceptTerms,
     requestAccountDeletion,
     saveFCMToken,
-    updateUser
+    updateUser,
+    getNotifications,
+    readNotification
 }

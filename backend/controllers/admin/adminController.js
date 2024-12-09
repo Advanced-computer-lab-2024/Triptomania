@@ -11,6 +11,7 @@ import productModel from '../../models/product.js'; // Import the product model
 import activityModel from '../../models/activity.js';
 import dotenv from 'dotenv';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
+import notificationModel from '../../models/notification.js';
 
 dotenv.config();
 
@@ -95,6 +96,15 @@ console.log(id);
         // Preserve the creatorId and save the itinerary
         await ItineraryModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
 
+        const notification = await notificationModel.create({
+            title: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'}`,
+            body: `Your itinerary ${itinerary.Name} has been ${isFlagged ? 'unflagged' : 'flagged'}`,
+        });
+        const notificationEntry = { id: notification.id, read: false };
+
+        const tourGuide = await tourGuideModel.findById(itinerary.creatorId);
+        tourGuide.notifications.push(notificationEntry);
+
         await sendEmail(itinerary); // Send an email to the tour guide
 
         return res.status(200).json({ message: `Itinerary ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
@@ -123,6 +133,15 @@ const flagActivity = async (req, res) => {
 
         // Preserve the creatorId and save the itinerary
         await activityModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
+
+        const notification = await notificationModel.create({
+            title: `Activity ${isFlagged ? 'unflagged' : 'flagged'}`,
+            body: `Your activity ${activity.name} has been ${isFlagged ? 'unflagged' : 'flagged'}`,
+        });
+        const notificationEntry = { id: notification.id, read: false };
+
+        const advertiser = await advertiserModel.findById(itinerary.creatorId);
+        advertiser.notifications.push(notificationEntry);
 
         await sendEmail(activity); // Send an email to the tour guide
 

@@ -419,4 +419,9 @@ router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.v
 
 router.get('/getAllDocuments', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getAllDocuments);
 router.get('/getAllUsers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getAllUsers);
+
+router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.getNotifications);
+
+router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), sharedController.readNotification);
+
 export default router;

@@ -27,7 +27,7 @@ export function Header() {
             <Link to="/tourGuide/addItinerary" className="header-link">Add itinerary</Link>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Link to="/notifications" className="icon-link">
+            <Link to="/tourGuide/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
             </Link>
             <Link to="/cart" className="icon-link ml-6">

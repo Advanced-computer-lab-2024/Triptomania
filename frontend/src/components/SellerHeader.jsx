@@ -31,7 +31,7 @@ export function Header() {
 
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Link to="/notifications" className="icon-link">
+            <Link to="/seller/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
             </Link>
             <Link to="/cart" className="icon-link ml-6">
