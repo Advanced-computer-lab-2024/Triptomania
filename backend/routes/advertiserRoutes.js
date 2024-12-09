@@ -6,7 +6,6 @@ import activityController from '../controllers/shared/activityController.js';
 import multer from 'multer';
 import authMiddleware from '../middleware/authMiddleware.js';
 import reportsController from '../controllers/services/reportsController.js';
-import activityController from '../controllers/shared/activityController.js';
 activityController
 const storage = multer.memoryStorage();
 const upload = multer({ storage });

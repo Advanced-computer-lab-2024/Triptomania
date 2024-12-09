@@ -10,7 +10,7 @@ const SecuritySettings = () => {
     newPassword: '',
     confirmPassword: '',
   });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => { }, []);
