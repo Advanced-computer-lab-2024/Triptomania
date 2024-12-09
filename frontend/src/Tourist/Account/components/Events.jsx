@@ -41,7 +41,7 @@ const Events = () => {
       <p>Status: {event.status}</p>
       {event.status === "Pending" ? (
         // TODO: Implement payment completion
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2" onClick="">
+        <button id="tab-button" className="bg-primary text-white px-4 py-2 rounded-md mt-2" onClick="">
           Complete Payment
         </button>
       ) : (

@@ -7,10 +7,12 @@ import BookmarkedEvents from '../components/BookmarkedEvents';
 import SecuritySettings from '../components/SecuritySettings';
 import Orders from '../components/Orders';
 import Events from '../components/Events';
-import { Gift } from 'lucide-react';
+import { Gift, Award } from 'lucide-react';
 import './index.css';
 import { useUser } from '@/UserContext';
 import Loading from '@/components/Loading';
+import { Button } from '@/components/ui/button';
+import axiosInstance from '@/axiosInstance';
 
 const AccountManagement = () => {
   const [activeTab, setActiveTab] = useState('accountInfo');
@@ -18,7 +20,7 @@ const AccountManagement = () => {
   const [pointBalance, setPointBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [key, setKey] = useState(0);
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
@@ -77,6 +79,28 @@ const AccountManagement = () => {
     }
   };
 
+  const handleRedeem = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.put('/api/tourist/redeem');
+      if (response.status === 200) {
+        const updatedUser = axiosInstance.get('/api/auth/updateUser');
+        setUser(updatedUser.data.user);
+        setWalletBalance(updatedUser.data.user.wallet);
+        setPointBalance(updatedUser.data.user.points);
+        alert('Points redeemed successfully');
+      }
+    } catch (error) {
+      if (error.response.data.message === 'Insufficient points to redeem.') {
+        alert('Insufficient points to redeem.');
+      } else {
+        alert('Error redeeming points');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <Header />
@@ -88,24 +112,35 @@ const AccountManagement = () => {
               {isLoading ? (
                 <Loading />
               ) : (
-                <p className="text-2xl font-bold">${walletBalance.toFixed(2)}</p>
+                <p className="text-2xl font-bold">$&nbsp;{walletBalance.toFixed(2)}</p>
               )}
               <br></br>
-              <h2 className="text-xl font-semibold text-primary mb-2 inline-flex">Points Balance &nbsp; <Gift /></h2>
+              <h2 className="text-xl font-semibold text-primary mb-2 inline-flex items-center">Points Balance &nbsp; <Gift /></h2>
               {isLoading ? (
                 <Loading />
               ) : (
-                <p className="text-2xl font-bold">{pointBalance}</p>
+                <div id='redeem'>
+                  <p className="text-2xl font-bold">{pointBalance}</p>
+                  <Button className="text-white" id="tab-button" onClick={handleRedeem}>Redeem</Button>
+                </div>
               )}
+              <br></br>
+              <div id="badge">
+                <h2 className="text-xl font-semibold text-primary mb-2 inline-flex items-center">Badge &nbsp; <Award /></h2>
+                {isLoading ? (
+                  <Loading />
+                ) : (
+                  <p>&nbsp; &nbsp; &nbsp; &nbsp;{user.badge}</p>
+                )}
+              </div>
             </div>
             <nav className="bg-white rounded-lg shadow overflow-hidden">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   id='tab-button'
-                  className={`block w-full text-left px-4 py-2 hover:bg-secondary hover:text-white transition-colors ${
-                    activeTab === tab.id ? 'bg-primary text-white' : 'text-gray-700'
-                  }`}upcoming
+                  className={`block w-full text-left px-4 py-2 hover:bg-secondary hover:text-white transition-colors ${activeTab === tab.id ? 'bg-primary text-white' : 'text-gray-700'
+                    }`} upcoming
                   onClick={() => handleTabChange(tab.id)}
                 >
                   {tab.label}

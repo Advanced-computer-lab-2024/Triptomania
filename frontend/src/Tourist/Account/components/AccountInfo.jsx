@@ -151,7 +151,7 @@ const AccountInfo = () => {
           />
         </div>
       </div>
-      <Button className="mt-6 bg-primary text-white hover:bg-secondary" onClick={handleSaveChanges}>
+      <Button className="mt-6 text-white" id="tab-button" onClick={handleSaveChanges}>
         Save Changes
       </Button>
     </div>
