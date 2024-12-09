@@ -1,6 +1,8 @@
 import express from 'express';
 import advertiserController from '../controllers/advertiser/advertiserController.js';
 import sharedController from '../controllers/shared/sharedController.js';
+import activityController from '../controllers/shared/activityController.js';
+
 import multer from 'multer';
 import authMiddleware from '../middleware/authMiddleware.js';
 import reportsController from '../controllers/services/reportsController.js';
@@ -135,7 +137,7 @@ router.delete('/activity/deleteActivity', (req, res, next) => authMiddleware.ver
  */
 router.get('/activity/viewMyActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), advertiserController.viewMyActivities);
 
-
+router.get('/activities/getActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), activityController.getActivity);
 
 router.put('/uploadDocument', upload.single('file'), sharedController.uploadDocuments);
 

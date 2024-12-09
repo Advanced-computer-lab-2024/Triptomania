@@ -150,7 +150,7 @@ const ViewActivitiesTourist = () => {
       console.log(data.message); // Log the success message
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
-  
+
       if (errorMessage === "You have already booked this activity") {
         console.error("Activity already booked");
         // Optionally, show a message to the user
@@ -161,8 +161,8 @@ const ViewActivitiesTourist = () => {
       }
     }
   };
-  
-  
+
+
   return (
     <div className="view-activities">
       <Header />
@@ -278,7 +278,7 @@ const ViewActivitiesTourist = () => {
               className="w-full"
             />
           </div>
-          
+
           {activities.length > 0 ? (
             activities.map((activity) => (
               <div className="activity-card" key={activity._id}>
@@ -314,19 +314,13 @@ const ViewActivitiesTourist = () => {
                   </div>
                   <div className="activity-footer">
                     <p className="activity-price">${activity.price.toFixed(2)} USD</p>
-<<<<<<< HEAD
                     <Button
-  className="book-button"
-  onClick={() => handleBookActivity(activity._id)}x>
-  Book Activity
-</Button>
-
-
-=======
-                    <Button className="book-button" onClick={handleSignInClick}>
+                      className="book-button"
+                      onClick={() => handleBookActivity(activity._id)} x>
                       Book Activity
                     </Button>
->>>>>>> 57cb379 (hi)
+
+
                   </div>
                 </div>
               </div>
@@ -337,11 +331,11 @@ const ViewActivitiesTourist = () => {
         </main>
       </div>
       {showSuccessMessage && (
-  <div className="success-message">
-    <p>Activity booked successfully! Go to your account to complete your payment.</p>
-    <Button onClick={() => setShowSuccessMessage(false)}>Close</Button>
-  </div>
-)}
+        <div className="success-message">
+          <p>Activity booked successfully! Go to your account to complete your payment.</p>
+          <Button onClick={() => setShowSuccessMessage(false)}>Close</Button>
+        </div>
+      )}
 
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axiosInstance from '@/axiosInstance'; // Adjust this to the actual axios instance
-import './editActivity.css'; // Style for the activity edit form
+import axiosInstance from '@/axiosInstance'; // Adjust this to your actual axios instance
+import './EditActivity.css'; // Style for the activity edit form
 
 const EditActivity = () => {
   const { id } = useParams(); // Get activity ID from URL
@@ -15,12 +15,17 @@ const EditActivity = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const response = await axiosInstance.get(`/api/advertiser/activity/getoneActivity/${id}`);
-        setActivity(response.data.booking); // Set activity state
+        // Fixing the API endpoint
+        const response = await axiosInstance.get(`/api/advertiser/activities/getActivity/${id}`);
+        setActivity(response.data); // Set activity state with response data
         setLoading(false);
       } catch (error) {
         console.error('Error fetching activity:', error.message); // Debug error
-        setErrorMessage('Unable to fetch activity details.');
+        if (error.response && error.response.data) {
+          setErrorMessage(error.response.data.message || 'Unable to fetch activity details.');
+        } else {
+          setErrorMessage('Network error. Please try again.');
+        }
         setLoading(false);
       }
     };
@@ -46,7 +51,7 @@ const EditActivity = () => {
         ...activity,
       });
       setSuccessMessage(response.data.message || 'Changes saved successfully!');
-      setTimeout(() => navigate('/advertiser/MyActivities'), 2000); // Redirect after success
+      setTimeout(() => navigate('/advertiser/Activities'), 2000); // Redirect after success
     } catch (error) {
       console.error('Error saving activity:', error.message); // Debug error
       setErrorMessage('Failed to save changes. Please try again.');
