@@ -664,9 +664,10 @@ async function rateActivity(req, res) {
 }
 
 //////////////////////////////////////////////////////////////////////
+
 const processPayment = async (req, res) => {
   const _id = req.user._id;
-  const { itemId } = req.body; // Item ID
+  const { itemId } = req.body;
 
   try {
     // Fetch the tourist by ID
@@ -694,20 +695,33 @@ const processPayment = async (req, res) => {
       return res.status(404).json({ message: 'Item not found in Itinerary, Activity, or Product collections.' });
     }
 
-    // Log the item's price for debugging
     const itemPrice = item.price || item.Price;
 
-    // Check for sufficient funds
-    //if (tourist.wallet < itemPrice) {
-    //return res.status(400).json({ message: 'Insufficient funds in wallet.' });
-    //}
+    // Update the status in the appropriate array
+    if (itemType === 'itinerary') {
+      const itineraryIndex = tourist.itineraries.findIndex(
+        itinerary => itinerary.eventId === itemId // Changed from itineraryId to eventId
+      );
+      if (itineraryIndex !== -1) {
+        tourist.itineraries[itineraryIndex] = {
+          ...tourist.itineraries[itineraryIndex],
+          status: 'Paid'
+        };
+      }
+    } else if (itemType === 'activity') {
+      const activityIndex = tourist.activities.findIndex(
+        activity => activity.eventId === itemId // Changed from activityId to eventId
+      );
+      if (activityIndex !== -1) {
+        tourist.activities[activityIndex] = {
+          ...tourist.activities[activityIndex],
+          status: 'Paid'
+        };
+      }
+    }
 
-    // Deduct the item's price from the tourist's wallet
-    //tourist.wallet -= itemPrice; // Deduct from wallet
-
-    // Calculate loyalty points only for itineraries and activities
+    // Calculate loyalty points
     let pointsEarned = 0;
-
     if (itemType === 'itinerary' || itemType === 'activity') {
       if (tourist.level === 1) {
         pointsEarned = itemPrice * 0.5;
@@ -718,38 +732,26 @@ const processPayment = async (req, res) => {
       }
     }
 
-    // Update the tourist's points
     tourist.points += pointsEarned;
-
-    // Call the method to update the badge and level
     await updateBadge(tourist);
 
-    // Prepare update data for the tourist
-    const updateData = {
-      wallet: tourist.wallet,
-      points: tourist.points,
-      level: tourist.level, // Ensure level is included
-      badge: tourist.badge, // Ensure badge is included
-    };
-
-    // Update the tourist's information
-    const updatedTourist = await userModel.findByIdAndUpdate(_id, updateData, { new: true });
-    if (!updatedTourist) {
-      return res.status(404).json({ message: 'Tourist not found during update.' });
-    }
+    // Save all changes
+    await tourist.save();
 
     res.status(200).json({
       message: 'Payment processed successfully!',
-      walletBalance: updatedTourist.wallet,
-      totalPoints: updatedTourist.points, // Include total points
-      badge: updatedTourist.badge, // Include updated badge
+      walletBalance: tourist.wallet,
+      totalPoints: tourist.points,
+      badge: tourist.badge,
       itemDetails: item,
+      status: 'Paid',
+      itemType
     });
   } catch (error) {
+    console.error('Processing payment error:', error); // Add this for debugging
     res.status(500).json({ message: 'Error processing payment', error: error.message });
   }
 };
-
 // Method to update badge and level
 const updateBadge = async (tourist) => {
   try {

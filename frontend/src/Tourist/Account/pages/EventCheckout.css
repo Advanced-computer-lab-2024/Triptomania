@@ -1,0 +1,79 @@
+.checkout-page {
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.checkout-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.error-message {
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.payment-options {
+    display: grid;
+    gap: 15px;
+}
+
+.payment-option {
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    border-color: var(--primary);
+}
+
+.wallet-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.wallet-balance {
+    font-size: 0.9em;
+    color: var(--gray-600);
+}
+
+.card-details {
+    margin-top: 15px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+}
+
+.order-summary {
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.checkout-button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .payment-options {
+        grid-template-columns: 1fr;
+    }
+}
