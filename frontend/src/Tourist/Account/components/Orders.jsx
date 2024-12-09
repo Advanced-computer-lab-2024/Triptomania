@@ -29,7 +29,7 @@ const Orders = () => {
         if (!window.confirm("Are you sure you want to cancel this order?")) return;
         try {
             setIsLoading(true);
-            const response = await axiosInstance.post('/api/tourist/orders/cancelOrder', { orderId: orderId });
+            const response = await axiosInstance.post('/api/tourist/orders/cancelOrder', { orderId });
             if (response.status === 200) {
                 const updatedUser = await axiosInstance.get('/api/tourist/orders/viewOrders');
                 setOrders(updatedUser.data.orders);
@@ -70,6 +70,16 @@ const Orders = () => {
                                 <p>Promo Code: {order.promoCode ? order.promoCode : 'No promo code provided'}</p>
                                 <p>Discount: {order.discountAmount > 0 ? `${order.discountAmount} USD` : 'No discount applied'}</p>
                                 <p>Total Price: {order.finalPrice} USD</p>
+                                {order.status === 'Pending' ? (
+                                    <Button 
+                                        variant="destructive" 
+                                        onClick={() => handleCancelOrder(order._id)}
+                                    >
+                                        Cancel Order
+                                    </Button>
+                                ) : (
+                                    <p className="text-red-500 mt-2">Order can't be canceled</p>
+                                )}
                             </div>
                         ))
                     )
@@ -96,6 +106,7 @@ const Orders = () => {
                                 <p>Promo Code: {order.promoCode ? order.promoCode : 'No promo code provided'}</p>
                                 <p>Discount: {order.discountAmount > 0 ? `${order.discountAmount} USD` : 'No discount applied'}</p>
                                 <p>Total Price: {order.finalPrice} USD</p>
+                                <p className="text-red-500 mt-2">Order can't be canceled</p>
                             </div>
                         ))
                     )

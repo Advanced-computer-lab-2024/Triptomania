@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance'; // Import your axios instance for API requests
-import './UploadDocuments.css'; // Use consistent styling
+import './uploadDocuments.css'; // Use consistent styling
 import { Header } from '../../components/Header'; // Import your header component
 
 const UploadDocument = () => {
