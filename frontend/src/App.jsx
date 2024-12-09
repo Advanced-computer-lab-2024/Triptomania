@@ -94,6 +94,7 @@ import ViewItinerariesTourist from './Tourist/Itineraries/ViewItinerariesTourist
 import EventCheckout from './Tourist/Account/pages/EventCheckout';
 import AcceptTerms from './Pages/TermsAndConditions';
 
+import ChoosePreferenceTag from './Pages/PreferencesTags';
 const App = () => {
   return (    
     <Routes>
@@ -191,6 +192,8 @@ const App = () => {
       <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist />} />
       <Route path="/tourist/eventCheckout" element={<EventCheckout />} />
       <Route path="/acceptTerms" element={<AcceptTerms />} />
+      <Route path="/tourist/choose-prefrence" element={<ChoosePreferenceTag/>} />
+
     </Routes>
   );
 };

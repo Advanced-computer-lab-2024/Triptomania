@@ -9,11 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading'; // Import the loading component
 
@@ -27,8 +23,18 @@ const ViewItinerariesTourist = () => {
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
+
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
   const navigate = useNavigate();
+
+  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // State for selected currency
+  const exchangeRates = {
+    USD: 1,
+    EUR: 0.85,
+    GBP: 0.75,
+    EPG: 30,
+  };
 
   useEffect(() => {
     fetchAllItineraries();
@@ -47,53 +53,12 @@ const ViewItinerariesTourist = () => {
     }
   };
 
-  const fetchFilteredItineraries = async () => {
-    setLoading(true); // Show loading indicator while fetching filtered itineraries
-    try {
-      const filters = {
-        minPrice: budgetRange[0],
-        maxPrice: budgetRange[1],
-        date: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
-        language: selectedLanguage,
-      };
-
-      const query = Object.keys(filters)
-        .filter((key) => filters[key]) // Include only non-empty filters
-        .map((key) => `${key}=${encodeURIComponent(filters[key])}`)
-        .join('&');
-
-      const response = await axiosInstance.get(`/api/tourist/itineraries/filterItineraries?${query}`);
-
-      if (response.status === 200 && Array.isArray(response.data) && response.data.length === 0) {
-        setItineraries([]); // No itineraries found for the filter
-      } else if (response.status === 200) {
-        setItineraries(response.data || []);
-      } else {
-        setItineraries([]); // Handle unexpected response
-      }
-    } catch (error) {
-      if (error.response?.status === 404) {
-        setItineraries([]); // Handle 404 explicitly
-      } else {
-        console.error('Error fetching filtered itineraries:', error.response?.data || error.message);
-      }
-    } finally {
-      setLoading(false); // Hide loading indicator once data is fetched
-    }
+  const handleCurrencyChange = (currency) => {
+    setSelectedCurrency(currency);
   };
 
-  const fetchSortedItineraries = async () => {
-    try {
-      let apiLink = '/api/tourist/itineraries/sortItineraries';
-      if (sortBy && sortOrder) {
-        apiLink += `?sortBy=${sortBy}`;
-        apiLink += `&order=${sortOrder}`;
-      }
-      const response = await axiosInstance.get(apiLink);
-      setItineraries(response.data);
-    } catch (error) {
-      console.error('Error fetching sorted itineraries:', error);
-    }
+  const convertPrice = (price) => {
+    return (price * exchangeRates[selectedCurrency]).toFixed(2);
   };
 
   const handleFilterClick = () => {
@@ -108,18 +73,6 @@ const ViewItinerariesTourist = () => {
     setSortBy('');
     setSortOrder('');
     fetchAllItineraries();
-  };
-
-  const handleSortClick = () => {
-    fetchSortedItineraries();
-  };
-
-  const handleSortByChange = (value) => {
-    setSortBy(value);
-  };
-
-  const handleSortOrderChange = (value) => {
-    setSortOrder(value);
   };
 
   const handleSearch = (e) => {
@@ -140,11 +93,10 @@ const ViewItinerariesTourist = () => {
 
       if (errorMessage === "You have already booked this activity") {
         console.error("Itinerary already booked");
-        // Optionally, show a message to the user
         alert("You have already booked this activity.");
       } else {
         console.error('Error booking activity:', errorMessage);
-        alert("An error occured OR You have already booked this Itinerary");
+        alert("An error occurred OR You have already booked this Itinerary");
       }
     }
   };
@@ -152,6 +104,15 @@ const ViewItinerariesTourist = () => {
   return (
     <div className="view-itineraries">
       <Header />
+      
+      {/* Currency Selector at the top right */}
+      <div className="currency-selector">
+        <Button variant={selectedCurrency === 'USD' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('USD')}>USD</Button>
+        <Button variant={selectedCurrency === 'EUR' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('EUR')}>EUR</Button>
+        <Button variant={selectedCurrency === 'GBP' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('GBP')}>GBP</Button>
+        <Button variant={selectedCurrency === 'EPG' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('EPG')}>EPG</Button>
+      </div>
+
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
@@ -232,8 +193,8 @@ const ViewItinerariesTourist = () => {
 
           <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
           <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
-          <Button onClick={handleSortClick} className="mt-4">Apply Sort</Button>
         </aside>
+
         <main className="itineraries">
           <div className="search-bar mb-4">
             <Input
@@ -283,7 +244,9 @@ const ViewItinerariesTourist = () => {
                     </p>
                   </div>
                   <div className="itinerary-footer">
-                    <p className="itinerary-price">${itinerary.price} USD</p>
+                    <p className="itinerary-price">
+                      {selectedCurrency} {convertPrice(itinerary.price)}
+                    </p>
                     <Button
                       className="book-button"
                       onClick={() => handleBookActivity(itinerary._id)} x>
@@ -297,8 +260,8 @@ const ViewItinerariesTourist = () => {
             <p>No itineraries found.</p>
           )}
         </main>
-
       </div>
+
       {showSuccessMessage && (
         <div className="success-message">
           <p>Itinerary booked successfully! Go to your account to complete your payment.</p>

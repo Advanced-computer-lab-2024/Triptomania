@@ -20,10 +20,14 @@ const ViewProducts = () => {
   const [selectedRating, setSelectedRating] = useState('');
   const [sortOrder, setSortOrder] = useState('');
   const [loading, setLoading] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // Currency state
   const navigate = useNavigate();
 
-  const handleProductClick = (productId) => {
-    navigate(`/tourist/product/${productId}`);
+  const exchangeRates = {
+    USD: 1,
+    EUR: 0.85,
+    GBP: 0.75,
+    EGP: 30,
   };
 
   useEffect(() => {
@@ -40,6 +44,14 @@ const ViewProducts = () => {
       console.error('Error fetching all products:', error);
       setLoading(false);
     }
+  };
+
+  const handleCurrencyChange = (currency) => {
+    setSelectedCurrency(currency);
+  };
+
+  const convertPrice = (price) => {
+    return (price * exchangeRates[selectedCurrency]).toFixed(2);
   };
 
   const fetchFilteredProducts = async () => {
@@ -59,27 +71,13 @@ const ViewProducts = () => {
     }
   };
 
-  const fetchSortedProducts = async (order) => {
-    try {
-      if (!order) {
-        return fetchProducts();
-      }
-      const response = await axiosInstance.get(`/api/tourist/product/sortProducts`, {
-        params: { order },
-      });
-      setProducts(response.data);
-    } catch (error) {
-      console.error('Error fetching sorted products:', error);
-    }
-  };
-
   const handleSearch = async (name) => {
     if (!name) {
       fetchAllProducts();
       return;
     }
     try {
-      const response = await axiosInstance.get(`/api/tourist/product/searchProducts`, {
+      const response = await axiosInstance.get('/api/tourist/product/searchProducts', {
         params: { Name: name },
       });
       setProducts(response.data);
@@ -97,6 +95,20 @@ const ViewProducts = () => {
     fetchSortedProducts(newSortOrder);
   };
 
+  const fetchSortedProducts = async (order) => {
+    try {
+      if (!order) {
+        return fetchAllProducts();
+      }
+      const response = await axiosInstance.get('/api/tourist/product/sortProducts', {
+        params: { order },
+      });
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching sorted products:', error);
+    }
+  };
+
   const isBase64 = (str) => {
     try {
       return btoa(atob(str)) === str;
@@ -108,6 +120,15 @@ const ViewProducts = () => {
   return (
     <div className="view-products">
       <Header />
+      
+      {/* Currency Selector at the top right */}
+      <div className="currency-selector">
+        <Button variant={selectedCurrency === 'USD' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('USD')}>USD</Button>
+        <Button variant={selectedCurrency === 'EUR' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('EUR')}>EUR</Button>
+        <Button variant={selectedCurrency === 'GBP' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('GBP')}>GBP</Button>
+        <Button variant={selectedCurrency === 'EGP' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('EGP')}>EGP</Button>
+      </div>
+
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
@@ -141,29 +162,6 @@ const ViewProducts = () => {
             </RadioGroup>
           </div>
 
-          <div className="mb-4">
-            <Label>Sort by</Label>
-            <RadioGroup value={sortOrder} onValueChange={() => {}}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="high"
-                  id="sort-high"
-                  checked={sortOrder === 'high'}
-                  onClick={() => handleSortChange('high')}
-                />
-                <Label htmlFor="sort-high">Highest to Lowest Rating</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="low"
-                  id="sort-low"
-                  checked={sortOrder === 'low'}
-                  onClick={() => handleSortChange('low')}
-                />
-                <Label htmlFor="sort-low">Lowest to Highest Rating</Label>
-              </div>
-            </RadioGroup>
-          </div>
           <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
         </aside>
 
@@ -190,7 +188,7 @@ const ViewProducts = () => {
                 <div
                   className="product-card"
                   key={product._id}
-                  onClick={() => handleProductClick(product._id)}
+                  onClick={() => navigate(`/tourist/product/${product._id}`)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="product-image-container">
@@ -221,7 +219,7 @@ const ViewProducts = () => {
                     <div className="product-footer">
                       <p className="product-price">
                         <DollarSign className="icon" />
-                        {product.Price.toFixed(2)}
+                        {selectedCurrency} {convertPrice(product.Price)}
                       </p>
                     </div>
                   </div>

@@ -28,9 +28,9 @@ const ViewActivitiesTourist = () => {
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [currency, setCurrency] = useState('USD'); // Currency state
 
   const navigate = useNavigate();
-
 
   useEffect(() => {
     fetchAllActivities();
@@ -81,7 +81,6 @@ const ViewActivitiesTourist = () => {
       }
 
       const response = await axiosInstance.get(apiLink);
-
       setActivities(response.data);
     } catch (error) {
       console.error('Error fetching filtered activities:', error);
@@ -162,13 +161,27 @@ const ViewActivitiesTourist = () => {
     }
   };
 
-
   return (
     <div className="view-activities">
       <Header />
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
+
+          {/* Currency Dropdown */}
+          <div className="currency-dropdown mb-4">
+            <Label>Currency</Label>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="w-full"
+            >
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
 
           <div className="mb-4">
             <Label>Date</Label>
@@ -266,8 +279,8 @@ const ViewActivitiesTourist = () => {
           <Button onClick={handleFilterClick} id="filter">Apply Filters</Button>
           <Button onClick={handleFilterReset} id="filter">Reset Filters</Button>
           <Button onClick={handleSortClick} id="filter">Apply Sort</Button>
-          <br></br>
         </aside>
+
         <main className="activities">
           <div className="search-bar mb-4">
             <Input
@@ -313,7 +326,7 @@ const ViewActivitiesTourist = () => {
                     </p>
                   </div>
                   <div className="activity-footer">
-                    <p className="activity-price">${activity.price.toFixed(2)} USD</p>
+                    <p className="activity-price">{currency} {activity.price.toFixed(2)}</p>
                     <Button
                       className="book-button"
                       onClick={() => handleBookActivity(activity._id)} x>
@@ -330,13 +343,13 @@ const ViewActivitiesTourist = () => {
           )}
         </main>
       </div>
+
       {showSuccessMessage && (
         <div className="success-message">
           <p>Activity booked successfully! Go to your account to complete your payment.</p>
           <Button onClick={() => setShowSuccessMessage(false)}>Close</Button>
         </div>
       )}
-
     </div>
   );
 };
