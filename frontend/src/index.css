@@ -76,3 +76,9 @@
     color: var(--foreground);
   }
 }
+
+* {
+  max-width: 100%;
+  height: auto;
+}
+
