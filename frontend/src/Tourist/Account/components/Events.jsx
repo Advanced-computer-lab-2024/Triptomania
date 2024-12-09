@@ -76,13 +76,11 @@ const Events = () => {
 
   const handleGiveReview = (event, type) => {
     if (type === "activity") {
-      navigate("/give-review", { state: { type: "activity", eventId: event.eventId } });
+      navigate(`/give-review?type=activity&eventId=${event.eventId}`);
     } else if (type === "itinerary") {
-      navigate("/give-review", { state: { type: "itinerary", eventId: event.eventId } });
+      navigate(`/give-review?type=itinerary&eventId=${event.eventId}`);
     } else if (type === "tourGuide") {
-      navigate("/give-review", {
-        state: { type: "tourGuide", eventId: event.eventId},
-      });
+      navigate(`/give-review?type=tourGuide&eventId=${event.eventId}`);
     }
   };
 

@@ -179,7 +179,7 @@ const getActivity = async (req, res) => {
             return res.status(400).json({ message: "Invalid activity ID format." });
         }
 
-        const activity = await activityModel.findById(id);
+        const activity = await activityModel.findById(id).populate('creatorId', 'name');
 
         if (!activity) {
             return res.status(404).json({ message: "Activity not found." });

@@ -55,7 +55,8 @@ const activitySchema = new Schema({
   },
   creatorId: {
     type: mongoose.Types.ObjectId,
-    required: true,
+    ref: 'TourGuide',
+    required: true
   },
   ratings: [{
         touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },

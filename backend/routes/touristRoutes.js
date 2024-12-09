@@ -393,13 +393,13 @@ router.put('/cancelBooking', (req, res, next) => authMiddleware.verifyToken(req,
 
 router.get('/activities/getActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.viewActivities);
 
-router.get('/activities/getActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.getActivity);
+router.get('/activities/getActivity/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.getActivity);
 
 router.get('/itineraries/getItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItineraries);
 
 router.get('/itineraries/viewItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.viewItineraries);
 
-router.get('/itineraries/getItinerary', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItinerary);
+router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), itineraryController.getItinerary);
 
 router.get('/getHistoricalPlaces', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlaces);
 
