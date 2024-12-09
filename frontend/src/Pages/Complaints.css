@@ -1,170 +1,122 @@
-.view-products {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
-  .content {
-    display: flex;
-    flex: 1;
-  }
-  
-  .filters {
-    width: 250px;
-    padding: 20px;
-    border-right: 1px solid #e0e0e0;
-  }
-  
-  .products {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  .product-card {
-    display: flex;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .product-image-container {
-    width: 300px;
-    flex-shrink: 0;
-  }
-  
-  .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .product-details {
-    flex: 1;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .product-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
-  }
-  
-  .product-title {
-    font-size: 1.5rem;
-    margin: 0;
-  }
-  
-  .product-rating {
-    display: flex;
-    align-items: center;
-  }
-  
-  .product-description {
-    margin-bottom: 15px;
-  }
-  
-  .product-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .product-info p {
-    display: flex;
-    align-items: center;
-    margin: 0;
-  }
-  
-  .icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-  }
-  
-  .product-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-  }
-  
-  .product-price {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #36827f;
-    display: flex;
-    align-items: center;
-  }
-  
-  .archive-button {
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+.view-complaints {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-  #filter {
-    padding: 10px 20px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  #search {
-    padding: 10px 20px;
-    text-align: center;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-left: 10px;
-    margin-bottom: 5px;
-  }
-  
-  .archive-button:hover {
-    background-color: #54a7a4;
-  }
-  #filter:hover{
-    background-color: #54a7a4 !important;
-  }
-  #search:hover{
-    background-color: #54a7a4 !important;
-  }
-  .search-bar {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    border-radius: 10px;
-    margin: 10px 0;
-  }
-  
-  .search-input {
-    flex: 1;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-  }
-  
-  .search-input:focus {
-    border-color: #36827f;
-    box-shadow: 0 0 5px rgba(54, 130, 127, 0.4);
-  }
-  
-/* //hover on the search button */
+.content {
+  display: flex;
+  flex: 1;
+}
 
+.filters {
+  width: 250px;
+  padding: 20px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.filters h3 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.filters label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.filters .flex {
+  margin-bottom: 10px;
+}
+
+.filters #filter {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.filters #filter:hover {
+  background-color: #54a7a4 !important;
+}
+
+.complaints {
+  flex: 1;
+  padding: 20px;
+}
+
+.complaint-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.complaint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.complaint-title {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+.complaint-status {
+  font-size: 1rem;
+  color: #36827f;
+  font-weight: 600;
+}
+
+.complaint-description {
+  margin: 15px 0;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.complaint-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.complaint-info p {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.complaint-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: auto;
+}
+
+.view-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-button:hover {
+  background-color: #54a7a4;
+}

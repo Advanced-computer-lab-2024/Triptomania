@@ -11,17 +11,18 @@ import '@/index.css';
 
 const ViewComplaints = () => {
   const [complaints, setComplaints] = useState([]);
-  const [sortOrder, setSortOrder] = useState('');
+  const [sortOrder, setSortOrder] = useState('latest'); // Default to "latest first"
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchAllComplaints();
-  }, []);
+    fetchAllComplaints(sortOrder); // Fetch complaints with the current sort order
+  }, [sortOrder]);
 
-  const fetchAllComplaints = async () => {
+  const fetchAllComplaints = async (order) => {
     try {
-      const response = await axiosInstance.get('/api/admin/complaints/viewComplaints');
+      setLoading(true);
+      const response = await axiosInstance.get(`/api/admin/complaints/viewComplaints?sort=${order}`);
       setComplaints(response.data);
       setLoading(false);
     } catch (error) {
@@ -34,7 +35,6 @@ const ViewComplaints = () => {
     try {
       const response = await axiosInstance.get(`/api/admin/complaints/viewComplaint?id=${complaintId}`);
       if (response.status === 200) {
-        // Redirect to the complaint details page and pass the complaint data
         navigate('/admin/complaint', { state: { complaint: response.data.complaint } });
       }
     } catch (error) {
@@ -54,25 +54,17 @@ const ViewComplaints = () => {
             <Label>Sort by</Label>
             <RadioGroup value={sortOrder} onValueChange={(newOrder) => setSortOrder(newOrder)}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="latest"
-                  id="sort-latest"
-                  onClick={() => fetchAllComplaints('latest')}
-                />
+                <RadioGroupItem value="latest" id="sort-latest" />
                 <Label htmlFor="sort-latest">Latest First</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem
-                  value="oldest"
-                  id="sort-oldest"
-                  onClick={() => fetchAllComplaints('oldest')}
-                />
+                <RadioGroupItem value="oldest" id="sort-oldest" />
                 <Label htmlFor="sort-oldest">Oldest First</Label>
               </div>
             </RadioGroup>
           </div>
 
-          <Button onClick={() => fetchAllComplaints()} id="filter">
+          <Button onClick={() => fetchAllComplaints(sortOrder)} id="filter">
             Apply Filters
           </Button>
         </aside>
@@ -92,14 +84,10 @@ const ViewComplaints = () => {
                       </h2>
                       <div className="complaint-status">
                         <strong>Status: </strong>
-                        <span>
-                          {complaint.status}
-                        </span>
+                        <span>{complaint.status}</span>
                       </div>
                     </div>
-                    <p className="complaint-description">
-                      {complaint.body}
-                    </p>
+                    <p className="complaint-description">{complaint.body}</p>
                     <div className="complaint-info">
                       <p>
                         <strong>Submitted by:</strong> {complaint.touristId?.username || 'Unknown'}

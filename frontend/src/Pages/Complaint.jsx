@@ -13,6 +13,7 @@ const ComplaintDetails = () => {
   const [isReplying, setIsReplying] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [status, setStatus] = useState(complaint?.status || 'pending'); // Initialize status
 
   if (!complaint) {
     return (
@@ -24,6 +25,7 @@ const ComplaintDetails = () => {
       </div>
     );
   }
+
   const handleSendReply = async () => {
     setIsReplying(true);
     setSuccessMessage('');
@@ -50,6 +52,29 @@ const ComplaintDetails = () => {
     }
   };
 
+  const handleStatusChange = async (event) => {
+    const newStatus = event.target.value;
+    setStatus(newStatus);
+    setSuccessMessage('');
+    setErrorMessage('');
+
+    try {
+      const response = await axiosInstance.put('/api/admin/complaints/updateStatus', {
+        complaintId: complaint._id,
+        status: newStatus,
+      });
+
+      if (response.status === 200) {
+        setSuccessMessage(`Complaint status updated to "${newStatus}".`);
+      } else {
+        setErrorMessage('Failed to update status. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      setErrorMessage('An error occurred while updating the status.');
+    }
+  };
+
   return (
     <div className="complaint-details-page">
       <Header />
@@ -61,12 +86,26 @@ const ComplaintDetails = () => {
             <strong>Submitted by:</strong> {complaint.touristId?.username || 'Unknown'}
           </p>
           <p>
-            <strong>Status:</strong> {complaint.status}
+            <strong>Status:</strong> {status}
           </p>
           <p>
             <strong>Date:</strong> {new Date(complaint.date).toLocaleDateString() || 'Unknown'}
           </p>
           <p className="mt-4">{complaint.body}</p>
+
+          {/* Status Dropdown */}
+          <div className="status-dropdown-container mt-2">
+            <select
+              value={status}
+              onChange={handleStatusChange}
+              className="status-dropdown"
+            >
+              <option value="pending">Mark as Pending</option>
+              <option value="resolved">Mark as Resolved</option>
+              <option value="resolved">Choose status</option>
+              
+            </select>
+          </div>
         </div>
 
         {/* Reply Box */}
