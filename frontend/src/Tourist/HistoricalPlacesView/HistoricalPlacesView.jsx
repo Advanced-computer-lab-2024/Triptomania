@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { MapPinIcon, ClockIcon, TicketIcon } from 'lucide-react';
+import { MapPinIcon, ClockIcon, TicketIcon, Share2Icon } from 'lucide-react'; // Add Share2Icon
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading";
 import { Header } from '../../components/HeaderTourist';
@@ -12,11 +12,9 @@ const HistoricalPlacesView = () => {
   const [error, setError] = useState(null);
   const [availableTags, setAvailableTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  
-  // Add a state for the selected currency
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [copied, setCopied] = useState(null); // Track copied place URL
 
-  // Exchange rate (for example)
   const exchangeRates = {
     USD: 1,
     EUR: 0.85,
@@ -24,7 +22,6 @@ const HistoricalPlacesView = () => {
     EPG: 30,
   };
 
-  // Fetch initial data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,10 +30,7 @@ const HistoricalPlacesView = () => {
           axiosInstance.get('/api/guest/historicalPlaces/getHistoricalPlaces'),
           axiosInstance.get('/api/guest/getTags')
         ]);
-
-        console.log('Places Data:', placesResponse.data);
-        console.log('Tags Data:', tagsResponse.data);
-
+        
         if (placesResponse.data.historicalPlaces) {
           setPlaces(placesResponse.data.historicalPlaces);
           setFilteredPlaces(placesResponse.data.historicalPlaces);
@@ -56,9 +50,7 @@ const HistoricalPlacesView = () => {
     fetchData();
   }, []);
 
-  // Apply tag filtering
   useEffect(() => {
-    console.log('Selected Tags:', selectedTags);
     if (selectedTags.length === 0) {
       setFilteredPlaces(places);
     } else {
@@ -71,7 +63,6 @@ const HistoricalPlacesView = () => {
     }
   }, [places, selectedTags]);
 
-  // Handle tag selection
   const handleTagClick = (tag) => {
     setSelectedTags(prev => {
       const isSelected = prev.some(t => t._id === tag._id);
@@ -85,14 +76,23 @@ const HistoricalPlacesView = () => {
     setSelectedTags([]);
   };
 
-  // Currency change handler
   const handleCurrencyChange = (currency) => {
     setSelectedCurrency(currency);
   };
 
-  // Convert ticket price based on selected currency
   const convertPrice = (price) => {
     return (price * exchangeRates[selectedCurrency]).toFixed(2);
+  };
+
+  // Function to handle copying the dynamic URL for each historical place
+  const handleShareClick = (placeId) => {
+    const url = `http://localhost:5173/historicalplaces/${placeId}`; // Dynamic URL based on place ID
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(placeId); // Track the copied place ID
+      setTimeout(() => {
+        setCopied(null); // Reset copied state after 2 seconds
+      }, 2000);
+    });
   };
 
   if (loading) return <Loading />;
@@ -182,7 +182,6 @@ const HistoricalPlacesView = () => {
                   e.target.src = 'https://via.placeholder.com/400x300';
                 }}
               />
-              
               <div className="p-4">
                 <h2 className="text-xl font-semibold mb-2">{place.Name}</h2>
                 <p className="text-gray-600 mb-4 line-clamp-2">{place.Description}</p>
@@ -227,6 +226,17 @@ const HistoricalPlacesView = () => {
                     ))}
                   </div>
                 )}
+
+                {/* Share button for each historical place */}
+                <Button
+                  variant="outline"
+                  onClick={() => handleShareClick(place._id)} // Share specific place URL
+                  className="mt-4"
+                >
+                  <Share2Icon className="w-5 h-5" />
+                  Share
+                </Button>
+                {copied === place._id && <span className="ml-2 text-green-500 text-sm">Link copied!</span>} {/* Feedback */}
               </div>
             </div>
           ))}

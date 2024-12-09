@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewItinerariesTourist.css';
 import { Header } from '../../components/HeaderTourist';
-import { 
-  CalendarIcon, 
-  MapPinIcon, 
-  Languages, 
-  StarIcon, 
-  Bookmark, 
-  BookmarkCheck 
+import {
+  CalendarIcon,
+  MapPinIcon,
+  Languages,
+  StarIcon,
+  Bookmark,
+  BookmarkCheck,
+  Share2Icon
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,7 @@ const ViewItinerariesTourist = () => {
   const [loading, setLoading] = useState(false); // State for loading indicator
   const [bookmarkedItineraries, setBookmarkedItineraries] = useState(new Set());
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [copied, setCopied] = useState(null); // Track copied place URL
 
   const navigate = useNavigate();
 
@@ -59,10 +61,10 @@ const ViewItinerariesTourist = () => {
   };
   const handleBookmarkToggle = async (itineraryId, e) => {
     e.stopPropagation(); // Prevent event bubbling
-  
+
     if (loading) return; // Prevent multiple rapid clicks
     setLoading(true); // Indicate the operation is in progress
-  
+
     try {
       if (bookmarkedItineraries.has(itineraryId)) {
         // Unbookmark
@@ -71,7 +73,7 @@ const ViewItinerariesTourist = () => {
           newSet.delete(itineraryId);
           return newSet;
         });
-  
+
         await axiosInstance.put('/api/tourist/events/unbookmarkEvent', {
           eventId: itineraryId,
           eventType: 'itinerary',
@@ -79,13 +81,13 @@ const ViewItinerariesTourist = () => {
       } else {
         // Bookmark
         setBookmarkedItineraries((prev) => new Set([...prev, itineraryId]));
-  
+
         await axiosInstance.post('/api/tourist/events/bookmarkEvent', {
           eventId: itineraryId,
           eventType: 'itinerary',
         });
       }
-  
+
       // Optionally, re-fetch to ensure the state is synced with the backend
       // fetchBookmarkedEvents();
     } catch (error) {
@@ -95,7 +97,7 @@ const ViewItinerariesTourist = () => {
       setLoading(false); // Reset loading state
     }
   };
-  
+
   const fetchAllItineraries = async () => {
     setLoading(true); // Show loading indicator while fetching itineraries
     try {
@@ -141,6 +143,17 @@ const ViewItinerariesTourist = () => {
     fetchSortedActivities();
   };
 
+  // Function to handle copying the dynamic URL for each historical place
+  const handleShareClick = (placeId) => {
+    const url = `http://localhost:5173/itinerary/${placeId}`; // Dynamic URL based on place ID
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(placeId); // Track the copied place ID
+      setTimeout(() => {
+        setCopied(null); // Reset copied state after 2 seconds
+      }, 2000);
+    });
+  };
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     const filtered = allItineraries.filter((itinerary) =>
@@ -170,7 +183,7 @@ const ViewItinerariesTourist = () => {
   return (
     <div className="view-itineraries">
       <Header />
-      
+
       {/* Currency Selector at the top right */}
       <div className="currency-selector">
         <Button variant={selectedCurrency === 'USD' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('USD')}>USD</Button>
@@ -277,24 +290,24 @@ const ViewItinerariesTourist = () => {
           ) : itineraries.length > 0 ? (
             itineraries.map((itinerary) => (
               <div className="itinerary-card" key={itinerary._id}>
-              <div className="itinerary-image-container relative">
-  <img
-    src={itinerary.Picture || 'https://via.placeholder.com/300x200'}
-    alt={itinerary.Name}
-    className="itinerary-image"
-  />
-  <Button
-    variant="ghost"
-    className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white"
-    onClick={(e) => handleBookmarkToggle(itinerary._id, e)}
-  >
-    {bookmarkedItineraries.has(itinerary._id) ? (
-      <BookmarkCheck className="h-6 w-6 text-primary" />
-    ) : (
-      <Bookmark className="h-6 w-6" />
-    )}
-  </Button>
-</div>
+                <div className="itinerary-image-container relative">
+                  <img
+                    src={itinerary.Picture || 'https://via.placeholder.com/300x200'}
+                    alt={itinerary.Name}
+                    className="itinerary-image"
+                  />
+                  <Button
+                    variant="ghost"
+                    className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white"
+                    onClick={(e) => handleBookmarkToggle(itinerary._id, e)}
+                  >
+                    {bookmarkedItineraries.has(itinerary._id) ? (
+                      <BookmarkCheck className="h-6 w-6 text-primary" />
+                    ) : (
+                      <Bookmark className="h-6 w-6" />
+                    )}
+                  </Button>
+                </div>
                 <div className="itinerary-details">
                   <div className="itinerary-header">
                     <h2 className="itinerary-title">{itinerary.Name}</h2>
@@ -324,6 +337,16 @@ const ViewItinerariesTourist = () => {
                     <p className="itinerary-price">
                       {selectedCurrency} {convertPrice(itinerary.price)}
                     </p>
+                    {/* Share button for each historical place */}
+                    <Button
+                      variant="outline"
+                      onClick={() => handleShareClick(itinerary._id)} // Share specific place URL
+                      className="mt-4"
+                    >
+                      <Share2Icon className="w-5 h-5" />
+                      Share
+                    </Button>
+                    {copied === itinerary._id && <span className="ml-2 text-green-500 text-sm">Link copied!</span>} {/* Feedback */}
                     <Button
                       className="book-button"
                       onClick={() => handleBookActivity(itinerary._id)} x>

@@ -15,14 +15,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
-import { 
-  CalendarIcon, 
-  MapPinIcon, 
-  Languages, 
-  StarIcon, 
-  Bookmark, 
+import {
+  CalendarIcon,
+  MapPinIcon,
+  Languages,
+  StarIcon,
+  Bookmark,
   TagIcon,
-  BookmarkCheck 
+  BookmarkCheck,
+  Share2Icon
 } from 'lucide-react';
 
 
@@ -43,6 +44,7 @@ const ViewActivitiesTourist = () => {
   const [currency, setCurrency] = useState('USD'); // Currency state
   const [bookmarkedActivities, setBookmarkedActivities] = useState(new Set());
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(null); // Track copied place URL
 
 
   const navigate = useNavigate();
@@ -50,52 +52,57 @@ const ViewActivitiesTourist = () => {
   useEffect(() => {
     fetchAllActivities();
     fetchCategories(); // Fetch categories dynamically
+    fetchBookmarkedActivities(); // Fetch bookmarked activities
   }, []);
   const fetchBookmarkedActivities = async () => {
     try {
       const response = await axiosInstance.get('/api/tourist/events/getBookmarkedEvents');
-      const bookmarkedIds = new Set(
-        response.data.bookmarkedEvents.activities.map(activity => activity._id)
-      );
-      console.log('Fetched bookmarked activities:', bookmarkedIds);
-      setBookmarkedActivities(bookmarkedIds);
+      setBookmarkedActivities(response.data.bookmarkedEvents.activities);
+      console.log(bookmarkedActivities);
     } catch (error) {
       console.error('Error fetching bookmarked events:', error);
     }
   };
-  
+
+  // Function to handle copying the dynamic URL for each historical place
+  const handleShareClick = (placeId) => {
+    const url = `http://localhost:5173/activity/${placeId}`; // Dynamic URL based on place ID
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(placeId); // Track the copied place ID
+      setTimeout(() => {
+        setCopied(null); // Reset copied state after 2 seconds
+      }, 2000);
+    });
+  };
+
   const handleBookmarkToggle = async (activityId, e) => {
     e.stopPropagation(); // Prevent event bubbling
     if (loading) return; // Prevent multiple rapid clicks
-    
+
     setLoading(true); // Start loading
-  
+
     try {
       const requestData = {
         eventId: activityId,
         eventType: 'activity'
       };
-  
-      console.log('Request Data:', requestData); // Log the request data
-  
-      if (bookmarkedActivities.has(activityId)) {
+
+      if (bookmarkedActivities.value?.includes(String(activityId))) {
         // Optimistically update the state
         const updatedBookmarks = new Set(bookmarkedActivities);
         updatedBookmarks.delete(activityId);
         setBookmarkedActivities(updatedBookmarks); // Update local state
-  
+
         // Unbookmark server request
         const response = await axiosInstance.put('/api/tourist/events/unbookmarkEvent', requestData);
-        console.log('Unbookmark response:', response);
       } else {
         // Optimistically update the state
         const updatedBookmarks = new Set(bookmarkedActivities);
         updatedBookmarks.add(activityId);
         setBookmarkedActivities(updatedBookmarks); // Update local state
-  
+
         // Bookmark server request
         const response = await axiosInstance.post('/api/tourist/events/bookmarkEvent', requestData);
-        console.log('Bookmark response:', response);
       }
     } catch (error) {
       console.error('Error toggling bookmark:', error);
@@ -105,7 +112,7 @@ const ViewActivitiesTourist = () => {
       setLoading(false); // Reset loading state
     }
   };
-  
+
   const fetchAllActivities = async () => {
     try {
       const response = await axiosInstance.get('/api/tourist/activity/viewActivities');
@@ -215,7 +222,6 @@ const ViewActivitiesTourist = () => {
     try {
       const { data } = await axiosInstance.put('/api/tourist/bookActivity', { activityId });
       setShowSuccessMessage(true);
-      console.log(data.message); // Log the success message
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message;
 
@@ -363,25 +369,26 @@ const ViewActivitiesTourist = () => {
 
           {activities.length > 0 ? (
             activities.map((activity) => (
+              (bookmarkedActivities, activity._id),
               <div className="activity-card" key={activity._id}>
-              <div className="activity-image-container relative">
-  <img
-    src={activity.Picture || 'https://via.placeholder.com/300x200'}
-    alt={activity.Name}
-    className="activity-image"
-  />
-  <Button
-    variant="ghost"
-    className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white"
-    onClick={(e) => handleBookmarkToggle(activity._id, e)}
-  >
-    {bookmarkedActivities.has(activity._id) ? (
-      <BookmarkCheck className="h-6 w-6 text-primary" />
-    ) : (
-      <Bookmark className="h-6 w-6" />
-    )}
-  </Button>
-</div>
+                <div className="activity-image-container relative">
+                  <img
+                    src={activity.Picture || 'https://via.placeholder.com/300x200'}
+                    alt={activity.Name}
+                    className="activity-image"
+                  />
+                  <Button
+                    variant="ghost"
+                    className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white"
+                    onClick={(e) => handleBookmarkToggle(activity._id, e)}
+                  >
+                    {bookmarkedActivities.value?.includes(String(activity._id)) ? (
+                      <BookmarkCheck className="h-6 w-6 text-primary" />
+                    ) : (
+                      <Bookmark className="h-6 w-6" />
+                    )}
+                  </Button>
+                </div>
                 <div className="activity-details">
                   <div className="activity-header">
                     <h2 className="activity-title">{activity.name}</h2>
@@ -407,6 +414,16 @@ const ViewActivitiesTourist = () => {
                   </div>
                   <div className="activity-footer">
                     <p className="activity-price">{currency} {activity.price.toFixed(2)}</p>
+                    {/* Share button for each historical place */}
+                    <Button
+                      variant="outline"
+                      onClick={() => handleShareClick(activity._id)} // Share specific place URL
+                      className="mt-4"
+                    >
+                      <Share2Icon className="w-5 h-5" />
+                      Share
+                    </Button>
+                    {copied === activity._id && <span className="ml-2 text-green-500 text-sm">Link copied!</span>} {/* Feedback */}
                     <Button
                       className="book-button"
                       onClick={() => handleBookActivity(activity._id)} x>
