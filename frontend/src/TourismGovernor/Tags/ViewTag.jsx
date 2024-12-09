@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance'; // Update import to axiosInstance
 import './ViewTag.css';
-
+import { Header } from '@/components/GovernerHeader'; // Update import to HeaderTourismGovernor
 const ViewTag = () => {
     const [tags, setTags] = useState([]);
     const [newTagName, setNewTagName] = useState('');
@@ -67,6 +67,8 @@ const ViewTag = () => {
     };
 
     return (
+        <div>
+<Header/>
         <div className="container-tag">
             <h1>Manage Tags</h1>
 
@@ -113,6 +115,8 @@ const ViewTag = () => {
             </div>
             <button onClick={() => history.push('/tourismGovernor/home')}>Back to Home</button>
         </div>
+        </div>
+
     );
 };
 
