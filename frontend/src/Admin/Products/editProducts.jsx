@@ -14,7 +14,7 @@ const EditMyProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axiosInstance.get(`/api/seller/product/${productId}`);
+        const response = await axiosInstance.get(`/api/admin/product/${productId}`);
         setProduct(response.data.product);
         setLoading(false);
       } catch (error) {
@@ -36,12 +36,12 @@ const EditMyProduct = () => {
 
   const handleSaveChanges = async () => {
     try {
-      const response = await axiosInstance.put('/api/seller/product/editProduct', {
+      const response = await axiosInstance.put('/api/admin/product/editProduct', {
         id: productId,
         ...product,
       });
       setSuccessMessage(response.data.message || 'Changes saved successfully!');
-      setTimeout(() => navigate('/Seller/ViewMyProducts'), 2000);
+      setTimeout(() => navigate('/admin/products/viewproducts'), 2000);
     } catch (error) {
       setErrorMessage('Failed to save changes. Please try again.');
     }
@@ -97,7 +97,7 @@ const EditMyProduct = () => {
         </div>
         <div className="form-actions">
           <button className="save-button" onClick={handleSaveChanges}>Save Changes</button>
-          <button className="cancel-button" onClick={() => navigate('/Seller/ViewMyProducts')}>Cancel</button>
+          <button className="cancel-button" onClick={() => navigate('/admin/products/viewproducts')}>Cancel</button>
         </div>
       </div>
       {successMessage && <div className="message success-message">{successMessage}</div>}

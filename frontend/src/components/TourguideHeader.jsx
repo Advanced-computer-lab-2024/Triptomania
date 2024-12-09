@@ -33,7 +33,7 @@ export function Header() {
             <Link to="/cart" className="icon-link ml-6">
               <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
             </Link>
-            <Link to="/profile" className="icon-link ml-6">
+            <Link to="/tourGuide/tourGuide-account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
             </Link>
           </div>

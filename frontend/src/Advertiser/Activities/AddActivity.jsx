@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import axiosInstance from '@/axiosInstance';
 import './addActivity.css';
-import { FileText } from 'lucide-react';
-
+import { FileText } from 'lucide-react'; // Import FileText icon
+import {Header} from '@/components/AdvertiserHeader'; // Import Header component
 const AddActivity = () => {
     const [activity, setActivity] = useState({
         name: '',
@@ -156,6 +156,8 @@ const AddActivity = () => {
     };
 
     return (
+        <div>
+            <Header />
         <div className="add-activity-container">
             <h2>Add New Activity</h2>
             <form onSubmit={handleSubmit}>
@@ -281,7 +283,6 @@ const AddActivity = () => {
                         min="0" 
                     />
                 </div>
-                
                 <div className="checkbox-group">
                     <Switch 
                         id="isBookingOpen"
@@ -294,7 +295,9 @@ const AddActivity = () => {
             </form>
             <div id="responseMessage"></div>
         </div>
+        </div>
     );
+    
 };
 
 export default AddActivity;

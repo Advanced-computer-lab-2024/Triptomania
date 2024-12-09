@@ -386,6 +386,8 @@ router.get("/itineraries/getItineraries", (req, res, next) => authMiddleware.ver
  */
 router.post("/product/uploadPicture", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), upload.single('file'), productController.uploadPicture);
 
+router.get('/product/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), productController.getProductById);
+
 router.post("/addPromoCode", (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), upload.single('file'), adminController.createPromoCode);
 
 router.get('/getUsers', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.getUsers);

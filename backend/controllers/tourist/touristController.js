@@ -767,59 +767,47 @@ const updateBadge = async (tourist) => {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 const rateProduct = async (req, res) => {
-  const { productId, rating } = req.body; // Extract productId and rating from request body
+  const { productId, rating } = req.body;
   const touristId = req.user._id;
 
-  // Check if all required fields are provided
-  if (!productId || rating === undefined || !touristId) {
-    return res.status(400).json({ message: 'Product ID, rating, and tourist ID are required' });
-  }
-
   try {
-    // Validate input
-    if (rating < 0 || rating > 5) {
-      return res.status(400).json({ message: 'Rating must be between 0 and 5.' });
-    }
-
     // Find the product
     const product = await productModel.findById(productId);
     if (!product) {
-      return res.status(404).json({ message: 'Product not found.' });
-    }
-    // Initialize ratings if undefined
-    if (!product.Rating) {
-      product.Rating = [];
-    }
-    // Check if the tourist is in the list of purchasers
-    const isPurchaser = product.Purchasers.some(id => id.equals(touristId));
-    if (!isPurchaser) {
-      return res.status(403).json({ message: 'Only purchasers of this product can rate it.' });
+      return res.status(404).json({ error: 'Product not found' });
     }
 
-    // Check if the tourist has already rated this product
-    const hasRated = product.Rating.some(r => r.touristId && r.touristId.equals(touristId));
-    if (hasRated) {
-      return res.status(400).json({ message: 'You have already rated this product.' });
+    // Check if tourist has purchased the product
+    if (!product.Purchasers.includes(touristId)) {
+      return res.status(403).json({ error: 'You must purchase the product to rate it' });
     }
 
-    // Add a new rating
-    product.Rating.push({ touristId: new mongoose.Types.ObjectId(touristId), rating });
+    // Check if tourist has already rated
+    const existingRating = product.Rating.find(r => r.touristId.equals(touristId));
+    if (existingRating) {
+      return res.status(400).json({ error: 'You have already rated this product' });
+    }
+
+    // Add new rating
+    product.Rating.push({ touristId, rating });
 
     // Calculate new average rating
     const totalRatings = product.Rating.length;
-    const sumRatings = product.Rating.reduce((sum, rate) => sum + rate.rating, 0);
-
-    // Update averageRating
+    const sumRatings = product.Rating.reduce((sum, r) => sum + r.rating, 0);
     product.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
 
-    // Save the updated product
     await product.save();
 
-    res.status(200).json({ message: 'Product rated successfully!', averageRating: product.averageRating });
+    res.status(200).json({ 
+      message: 'Rating submitted successfully',
+      averageRating: product.averageRating 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error rating product', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
+
+
 
 const fileComplaint = async (req, res) => {
   const { title, body } = req.body;

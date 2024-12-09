@@ -68,6 +68,10 @@ import HistoricalPlacesViewww from './TourismGovernor/HistoricalPlaces/Historica
 import UploadDocGuide from './TourGuide/SignUp/UploadDocuments';
 import ViewComplaints from './Tourist/Complaints/viewMyComplaints';
 import FlightBooking from './Tourist/FlightBooking/FlightBooking';
+import EditProduct from './Admin/Products/EditProducts';
+import SellerAccount from './Seller/Account/pages/AccountManagement';
+import TourGuideAccount from './TourGuide/Account/pages/AccountManagement';
+import AdvertiserAccount from './Advertiser/Account/pages/AccountManagement';
 const App = () => {
   return (    
     <Routes>
@@ -143,6 +147,11 @@ const App = () => {
       <Route path="/tourGuide/uploadDocument" element={<UploadDocGuide/>} />
       <Route path="/tourist/view-mycomplaints" element={<ViewComplaints/>}/>
       <Route path="/tourist/flightBooking/:flight_id" element={<FlightBooking />} />
+      <Route path="/admin/editProducts/:productId" element={<EditProduct />} />
+      <Route path="/seller/seller-account" element={<SellerAccount/>} />
+      <Route path="/tourGuide/tourGuide-account" element={<TourGuideAccount/>} /> 
+      <Route path="/advertiser/advertiser-account" element={<AdvertiserAccount/>} /> 
+
     </Routes>
   );
 };

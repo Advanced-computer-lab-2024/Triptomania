@@ -16,12 +16,12 @@ export function Header() {
       <div className="container">
         <div className="flex justify-between items-center py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link to="/" className="brand">
+            <Link to="/advertiser/home" className="brand">
               TripTomania
             </Link>
           </div>
           <nav className="hidden md:flex space-x-10">
-            <Link to="/AdvertiserHomePage" className="header-link">Home</Link>
+            <Link to="/advertiser/home" className="header-link">Home</Link>
             <Link to="/advertiser/Activities" className="header-link">My Activities</Link>
             <Link to="/advertiser/addActivity" className="header-link">Add Activity</Link>
           </nav>
@@ -29,10 +29,7 @@ export function Header() {
             <Link to="/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
             </Link>
-            <Link to="/cart" className="icon-link ml-6">
-              <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
-            </Link>
-            <Link to="/profile" className="icon-link ml-6">
+            <Link to="/advertiser/advertiser-account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
             </Link>
           </div>

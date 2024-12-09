@@ -60,7 +60,7 @@ const ProductDetails = () => {
         const response = await axiosInstance.get(`/api/tourist/product/${id}`);
         const product = response.data.product;
         console.log(product);
-        console.log(product.Purchasers);  
+        console.log(product.Purchasers);
         const touristId = response.data.touristId;
         console.log(touristId);
         setIsPurchaser(product.Purchasers.includes(touristId));

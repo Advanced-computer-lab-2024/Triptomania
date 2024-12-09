@@ -1,0 +1,14 @@
+:root {
+    --primary-color: #36827f;
+    --secondary-color: #54a7a4;
+}
+
+.wallet {
+    display: inline-block;
+    color: var(--primary-color);
+}
+
+#tab-button:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}

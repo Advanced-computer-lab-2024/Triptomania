@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from 'react-router-dom';
 
 const ViewActivities = () => {
-  const [activities, setActivities] = useState([]);
-  const [allActivities, setAllActivities] = useState([]);
-  const [categories, setCategories] = useState([]); // Dynamic categories
+  const [activities, setActivities] = useState([]); // Filtered activities
+  const [allActivities, setAllActivities] = useState([]); // All activities
+  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -20,14 +20,14 @@ const ViewActivities = () => {
 
   useEffect(() => {
     fetchAllActivities();
-    fetchCategories(); // Fetch categories dynamically
+    fetchCategories();
   }, []);
 
   const fetchAllActivities = async () => {
     try {
       const response = await axiosInstance.get('/api/advertiser/activity/viewActivities');
-      setAllActivities(response.data);
-      setActivities(response.data);
+      setAllActivities(response.data); // Save all activities
+      setActivities(response.data); // Initially display all activities
     } catch (error) {
       console.error('Error fetching all activities:', error);
     }
@@ -36,14 +36,24 @@ const ViewActivities = () => {
   const fetchCategories = async () => {
     try {
       const response = await axiosInstance.get('/api/advertiser/activities/getCategories');
-      setCategories(response.data); // Dynamically populate categories
+      setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    const query = e.target.value.toLowerCase();
+    setSearchTerm(query);
+
+    // Filter activities based on search term
+    const filteredActivities = allActivities.filter((activity) =>
+      activity.name.toLowerCase().includes(query) ||
+      activity.description.toLowerCase().includes(query) ||
+      (categories.find(c => c._id === activity.category)?.CategoryName.toLowerCase() || '').includes(query)
+    );
+
+    setActivities(filteredActivities); // Update displayed activities
   };
 
   return (

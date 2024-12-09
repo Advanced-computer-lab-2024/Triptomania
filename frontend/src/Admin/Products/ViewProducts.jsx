@@ -260,6 +260,11 @@ const handleArchiveToggle = async (productId, currentStatus) => {
                         {product.Price.toFixed(2)} 
                       </p>
                       <Button
+                        className="edit-button"
+                        onClick={() => navigate(`/admin/editProducts/${product._id}`)}>
+                      Edit
+                      </Button>
+                      <Button
                         className="archive-button"
                         onClick={() => handleArchiveToggle(product._id, product.status)}
                       >
