@@ -21,6 +21,12 @@ const LoginPage = () => {
         password,
         type,
       });
+
+      const user = response.data.user; // Assuming backend sends a user object
+      if (user && type === 'tourist') {
+        localStorage.setItem('touristId', user._id); // Save only if the user is a tourist
+      }
+
       alert('Login successful!');
       setUser(response.data.user);
       switch (type) {

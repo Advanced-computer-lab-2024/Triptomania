@@ -57,17 +57,24 @@ const ProductDetails = () => {
 
     const checkPurchaserStatus = async () => {
       try {
+        const touristId = localStorage.getItem('touristId'); // Retrieve the tourist ID
+        if (!touristId) {
+          console.error('touristId is not found in local storage.');
+          return;
+        }
+    
         const response = await axiosInstance.get(`/api/tourist/product/${id}`);
         const product = response.data.product;
-        console.log(product);
-        console.log(product.Purchasers);
-        const touristId = response.data.touristId;
-        console.log(touristId);
-        setIsPurchaser(product.Purchasers.includes(touristId));
+    
+        console.log('Tourist ID ', touristId);
+        console.log('Purchasers:', product.Purchasers);
+    
+        setIsPurchaser(product.Purchasers.map(String).includes(String(touristId)));
       } catch (error) {
         console.error('Error checking purchaser status:', error);
       }
     };
+    
 
     const showNotification = (message, type = 'success') => {
       setNotification({ show: true, message, type });
