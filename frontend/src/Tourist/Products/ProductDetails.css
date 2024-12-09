@@ -336,8 +336,6 @@
   .star-button.selected .star-icon {
     fill: #FFD700;
   }
-<<<<<<< HEAD
-=======
 
   .rating-review-section {
     margin-top: 2rem;
@@ -381,7 +379,6 @@
     border-radius: 4px;
     resize: vertical;
   }
->>>>>>> ed14b72 (oo)
   /* Reviews Section */
 .reviews-section {
   padding: 20px;

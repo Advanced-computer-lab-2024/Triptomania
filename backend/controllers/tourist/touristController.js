@@ -142,6 +142,49 @@ const UpdateTourist = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+const badge = async (req, res) => {
+  const _id = req.user._id;
+
+  try {
+
+    const tourist = await userModel.findById(_id);
+
+    if (!tourist) {
+      return res.status(404).json({ message: 'Tourist not found.' });
+    }
+
+
+    if (tourist.points <= 100000) {
+      tourist.level = 1;
+    } else if (tourist.points <= 500000) {
+      tourist.level = 2;
+    } else {
+      tourist.level = 3;
+    }
+
+
+    switch (tourist.level) {
+      case 1:
+        tourist.badge = 'BRONZE';
+        break;
+      case 2:
+        tourist.badge = 'SILVER';
+        break;
+      case 3:
+        tourist.badge = 'GOLD';
+        break;
+      default:
+        tourist.badge = 'BRONZE';
+    }
+
+
+    await tourist.save();
+
+    res.status(200).json({ message: 'Level and badge updated successfully!', tourist });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating level and badge', error: error.message });
+  }
+};
 
 const redeemPoints = async (req, res) => {
   try {
@@ -168,8 +211,9 @@ const redeemPoints = async (req, res) => {
     tourist.wallet += pointsToRedeem;
     tourist.points -= redeemablePoints;
 
-    // Update badge logic directly
-    if (tourist.points <= 100000) {
+    // Update badge logic directly after redeeming points
+    // This checks if the current points qualify for a higher badge
+   if (tourist.points <= 100000) {
       tourist.level = 1;
       tourist.badge = 'BRONZE';
     } else if (tourist.points <= 500000) {
@@ -187,12 +231,14 @@ const redeemPoints = async (req, res) => {
       message: "Wallet and badge updated successfully",
       wallet: tourist.wallet,
       remainingPoints: tourist.points,
-      badge: tourist.badge
+      badge: tourist.badge,
+      level: tourist.level
     });
   } catch (error) {
     res.status(500).json({ message: "Error updating wallet and badge", error: error.message });
   }
 };
+
 
 
 
@@ -500,49 +546,7 @@ const bookItinerary = async (req, res) => {
   }
 };
 
-const badge = async (req, res) => {
-  const _id = req.user._id;
 
-  try {
-
-    const tourist = await userModel.findById(_id);
-
-    if (!tourist) {
-      return res.status(404).json({ message: 'Tourist not found.' });
-    }
-
-
-    if (tourist.points <= 100000) {
-      tourist.level = 1;
-    } else if (tourist.points <= 500000) {
-      tourist.level = 2;
-    } else {
-      tourist.level = 3;
-    }
-
-
-    switch (tourist.level) {
-      case 1:
-        tourist.badge = 'BRONZE';
-        break;
-      case 2:
-        tourist.badge = 'SILVER';
-        break;
-      case 3:
-        tourist.badge = 'GOLD';
-        break;
-      default:
-        tourist.badge = 'BRONZE';
-    }
-
-
-    await tourist.save();
-
-    res.status(200).json({ message: 'Level and badge updated successfully!', tourist });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating level and badge', error: error.message });
-  }
-};
 //////////////////////////////////////////////////////////////////////
 export const rateItinerary = async (req, res) => {
   const { itineraryId, rating } = req.body;

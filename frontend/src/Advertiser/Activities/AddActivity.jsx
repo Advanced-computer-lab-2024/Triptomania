@@ -6,12 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import axiosInstance from '@/axiosInstance';
 import './addActivity.css';
-<<<<<<< HEAD
 import { FileText } from 'lucide-react'; // Import FileText icon
 import {Header} from '@/components/AdvertiserHeader'; // Import Header component
-=======
-
->>>>>>> ed14b72 (oo)
 const AddActivity = () => {
     const [activity, setActivity] = useState({
         name: '',
@@ -187,14 +183,6 @@ const AddActivity = () => {
                         onChange={handleChange} 
                         required 
                     />
-<<<<<<< HEAD
-=======
-                    <Input type="text" name="name" className="name" placeholder="Activity Name" value={activity.name} onChange={handleChange} required />
-                </div>
-                <div className="input-group">
-                    <FileText id="input-icon" />
-                    <Textarea name="description" placeholder="Description" className="description" value={activity.description} onChange={handleChange} required />
->>>>>>> ed14b72 (oo)
                 </div>
                 <div className="input-group">
                     <Calendar id="input-icon" />

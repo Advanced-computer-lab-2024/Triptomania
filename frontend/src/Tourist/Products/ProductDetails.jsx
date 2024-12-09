@@ -65,7 +65,6 @@ const ProductDetails = () => {
       }
     };
 
-<<<<<<< HEAD
     const checkPurchaserStatus = async () => {
       try {
         const touristId = localStorage.getItem('touristId'); // Retrieve the tourist ID
@@ -76,7 +75,7 @@ const ProductDetails = () => {
     
         const response = await axiosInstance.get(`/api/tourist/product/${id}`);
         const product = response.data.product;
-    
+
         console.log('Tourist ID ', touristId);
         console.log('Purchasers:', product.Purchasers);
     
@@ -86,9 +85,6 @@ const ProductDetails = () => {
       }
     };
     
-=======
-   
->>>>>>> ed14b72 (oo)
 
     const showNotification = (message, type = 'success') => {
       setNotification({ show: true, message, type });
