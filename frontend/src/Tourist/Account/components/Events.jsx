@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import axiosInstance from "@/axiosInstance";
 import { useNavigate } from "react-router-dom"; // Add this import
@@ -73,7 +74,19 @@ const Events = () => {
     return <Loading />;
   }
 
-  const renderEvent = (event) => (
+  const handleGiveReview = (event, type) => {
+    if (type === "activity") {
+      navigate("/give-review", { state: { type: "activity", eventId: event.eventId } });
+    } else if (type === "itinerary") {
+      navigate("/give-review", { state: { type: "itinerary", eventId: event.eventId } });
+    } else if (type === "tourGuide") {
+      navigate("/give-review", {
+        state: { type: "tourGuide", eventId: event.eventId},
+      });
+    }
+  };
+
+  const renderEvent = (event, isPast = false) => (
     <div key={event.eventId} className="bg-gray-100 p-4 rounded-md mb-2">
       <p className="font-semibold">{event.name}</p>
       <p>Event Type: {event.eventType}</p>
@@ -83,15 +96,39 @@ const Events = () => {
       {event.finalPrice && <p>Final Price: {event.finalPrice}</p>}
       {event.promoCode && <p>Promo Code: {event.promoCode}</p>}
       <p>Status: {event.status}</p>
-      {event.status === "Pending" ? (
-        <button 
-          id="tab-button" 
-          className="bg-primary text-white px-4 py-2 rounded-md mt-2 hover:bg-primary/80 transition-colors"
-          onClick={() => handleCompletePayment(event)}
+      {isPast ? (
+        // Past Events: Display review options
+        event.eventType === "itinerary" ? (
+          <select
+            defaultValue=""
+            className="bg-white border rounded-md px-4 py-2 mt-2"
+            onChange={(e) => handleGiveReview(event, e.target.value)}
+          >
+            <option value="" disabled>
+              Give Review
+            </option>
+            <option value="itinerary">Itinerary</option>
+            <option value="tourGuide">Tour Guide</option>
+          </select>
+        ) : (
+          <button
+            className="bg-primary text-white px-4 py-2 rounded-md mt-2"
+            onClick={() => handleGiveReview(event, "activity")}
+          >
+            Give Review
+          </button>
+        )
+      ) : event.status === "Pending" ? (
+        // Upcoming Unpaid Events: Display Complete Payment button
+        <button
+          id="tab-button"
+          className="bg-primary text-white px-4 py-2 rounded-md mt-2"
+          onClick={handleCompletePayment}
         >
           Complete Payment
         </button>
       ) : (
+        // Upcoming Paid Events
         <p className="text-green-500 mt-2">Event Paid</p>
       )}
     </div>
@@ -105,13 +142,13 @@ const Events = () => {
         {events.itineraries.upcoming.length === 0 ? (
           <p>No upcoming itineraries</p>
         ) : (
-          events.itineraries.upcoming.map(renderEvent)
+          events.itineraries.upcoming.map((event) => renderEvent(event))
         )}
         <h4 className="text-xl font-semibold mt-6 mb-2">Past Itineraries</h4>
         {events.itineraries.past.length === 0 ? (
           <p>No past itineraries</p>
         ) : (
-          events.itineraries.past.map(renderEvent)
+          events.itineraries.past.map((event) => renderEvent(event, true))
         )}
       </div>
       <div>
@@ -120,13 +157,13 @@ const Events = () => {
         {events.activities.upcoming.length === 0 ? (
           <p>No upcoming activities</p>
         ) : (
-          events.activities.upcoming.map(renderEvent)
+          events.activities.upcoming.map((event) => renderEvent(event))
         )}
         <h4 className="text-xl font-semibold mt-6 mb-2">Past Activities</h4>
         {events.activities.past.length === 0 ? (
           <p>No past activities</p>
         ) : (
-          events.activities.past.map(renderEvent)
+          events.activities.past.map((event) => renderEvent(event, true))
         )}
       </div>
     </div>
