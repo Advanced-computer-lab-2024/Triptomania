@@ -104,6 +104,7 @@ console.log(id);
 
         const tourGuide = await tourGuideModel.findById(itinerary.creatorId);
         tourGuide.notifications.push(notificationEntry);
+        await tourGuide.save();
 
         await sendEmail(itinerary); // Send an email to the tour guide
 
@@ -142,6 +143,7 @@ const flagActivity = async (req, res) => {
 
         const advertiser = await advertiserModel.findById(itinerary.creatorId);
         advertiser.notifications.push(notificationEntry);
+        await advertiser.save();
 
         await sendEmail(activity); // Send an email to the tour guide
 

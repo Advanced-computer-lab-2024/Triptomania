@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '../../components/AdminHeader';  // Changed to go up two levels
-
-import { 
-  Typography, 
+import Loading from '@/components/Loading';
+import {
+  Typography,
   Box,
   Button,
   Dialog,
@@ -19,7 +19,7 @@ import axiosInstance from '@/axiosInstance';
 import './DeleteUsers.css';
 
 const DeleteUsers = () => {
-  const [allUsers, setAllUsers] = useState({ 
+  const [allUsers, setAllUsers] = useState({
     statistics: {
       totalUsers: 0,
       usersByType: {},
@@ -64,7 +64,7 @@ const DeleteUsers = () => {
   const handleDeleteConfirm = async (userId, userType) => {
     try {
       setLoading(true);
-      
+
       // Map the user type to match backend switch cases exactly
       let mappedType;
       switch (userType.toLowerCase()) {
@@ -89,29 +89,29 @@ const DeleteUsers = () => {
         default:
           throw new Error('Invalid user type');
       }
-  
+
       console.log('Sending delete request with:', { // Debug log
         id: userId,
         type: mappedType
       });
-  
+
       await axiosInstance.delete('/api/admin/deleteAccount', {
         data: {
           id: userId,
           type: mappedType
         }
       });
-      
+
       // Refresh both lists
       const [usersResponse, deleteRequestsResponse] = await Promise.all([
         axiosInstance.get('/api/admin/getAllUsers'),
         axiosInstance.get('/api/admin/getusersrequestdelete')
       ]);
-      
+
       setAllUsers(usersResponse.data);
       setDeletionRequests(deleteRequestsResponse.data);
       setOpenDialog(false);
-      
+
       // Show success message
       setSuccessMessage(`User ${selectedUser?.username} has been successfully deleted`);
       setOpenSnackbar(true);
@@ -145,9 +145,10 @@ const DeleteUsers = () => {
         <div className="document-card-content">
           <h3 className="user-name">{`${user.firstName || ''} ${user.lastName || ''}`}</h3>
           <p className="user-type">{user.userType}</p>
-          <span className={`status-chip status-${user.status?.toLowerCase() || 'pending'}`}>
-            {user.status || 'Pending'}
-          </span>
+          {user.userType === 'Seller' || user.userType === 'Advertiser' || user.userType === 'Tour Guide' ?
+            <span className={`status-chip status-${user.status?.toLowerCase() || 'pending'}`}>
+              {user.status || 'Pending'}
+            </span> : null}
           <div className="user-details">
             <p><strong>Username:</strong> {user.username}</p>
             <p><strong>Email:</strong> {user.email}</p>
@@ -232,8 +233,8 @@ const DeleteUsers = () => {
           User Management
         </Typography>
 
-        <Tabs 
-          value={activeTab} 
+        <Tabs
+          value={activeTab}
           onChange={(e, newValue) => setActiveTab(newValue)}
           sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}
         >
@@ -242,9 +243,7 @@ const DeleteUsers = () => {
         </Tabs>
 
         {loading ? (
-          <div className="loading-spinner">
-            <Typography>Loading...</Typography>
-          </div>
+          <Loading />
         ) : (
           <>
             {activeTab === 0 && (
@@ -283,9 +282,9 @@ const DeleteUsers = () => {
                         <div className="document-card statistics-card" key={month}>
                           <div className="document-card-content">
                             <h3 className="month-title">
-                              {new Date(month).toLocaleDateString('default', { 
-                                month: 'long', 
-                                year: 'numeric' 
+                              {new Date(month).toLocaleDateString('default', {
+                                month: 'long',
+                                year: 'numeric'
                               })}
                             </h3>
                             <Typography variant="h3" className="statistics-number">
@@ -296,7 +295,7 @@ const DeleteUsers = () => {
                             </Typography>
                           </div>
                         </div>
-                    ))}
+                      ))}
                   </div>
                 </Paper>
 
@@ -335,19 +334,19 @@ const DeleteUsers = () => {
           </>
         )}
 
-        <Dialog 
-          open={openDialog} 
+        <Dialog
+          open={openDialog}
           onClose={() => setOpenDialog(false)}
         >
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to delete user <strong>{selectedUser?.username}</strong>? 
+              Are you sure you want to delete user <strong>{selectedUser?.username}</strong>?
               This action cannot be undone.
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button 
+            <Button
               onClick={() => setOpenDialog(false)}
               sx={{ color: '#666' }}
             >
@@ -377,10 +376,10 @@ const DeleteUsers = () => {
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert 
-            onClose={handleCloseSnackbar} 
-            severity="success" 
-            sx={{ 
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            sx={{
               width: '100%',
               bgcolor: '#4caf50',
               color: 'white',
@@ -400,10 +399,10 @@ const DeleteUsers = () => {
           onClose={() => setError(null)}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert 
-            onClose={() => setError(null)} 
+          <Alert
+            onClose={() => setError(null)}
             severity="error"
-            sx={{ 
+            sx={{
               width: '100%',
               bgcolor: '#f44336',
               color: 'white',

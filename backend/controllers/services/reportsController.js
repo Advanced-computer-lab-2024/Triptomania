@@ -182,8 +182,12 @@ const generateRevenuePDF = async (req, res) => {
 
         // Revenue Summary
         if (!productId && !sellerId) {
-            doc.text(`Activity Revenue: $${activityRevenue.toFixed(2)}`, { align: 'center' });
-            doc.text(`Itinerary Revenue: $${itineraryRevenue.toFixed(2)}`, { align: 'center' });
+            if (advertiserFound) {
+                doc.text(`Activity Revenue: $${activityRevenue.toFixed(2)}`, { align: 'center' });
+            }
+            if (tourGuideFound) {
+                doc.text(`Itinerary Revenue: $${itineraryRevenue.toFixed(2)}`, { align: 'center' });
+            }
         }
         if (!creatorId) {
             doc.text(`Product Revenue: $${productRevenue.toFixed(2)}`, { align: 'center' });
@@ -336,7 +340,7 @@ const generateTouristCountPDF = async (req, res) => {
         if (events.length) {
             doc.fontSize(12).text('Event Details:', { underline: true });
             events.forEach((event, index) => {
-                const eventName = event.name || 'Unnamed Event';
+                const eventName = reportType === 'Itineraries' ? event.Name : event.name;
                 const eventTouristCount = event.bookingMade.length;
                 const eventDate =
                     creatorType === 'advertiser' ? event.date : event.Start_date;

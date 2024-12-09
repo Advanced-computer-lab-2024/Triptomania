@@ -24,7 +24,7 @@ function FeaturedItineraries() {
     const fetchItineraries = async () => {
       try {
         const response = await axiosInstance.get("http://localhost:5000/api/tourGuide/itinerary/viewItineraries");
-      
+
         if (response.data.status && Array.isArray(response.data.itineraries)) {
           setItineraries(response.data.itineraries);
         } else {
@@ -51,7 +51,7 @@ function FeaturedItineraries() {
     }
   }
 
-  
+
 
   return (
     <section className="py-12 px-4">
@@ -90,10 +90,10 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative h-[500px]">
-        <img 
-          src="/placeholder.svg?height=500&width=1920" 
-          alt="Hero Background" 
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
+        <img
+          src="src\assets\Images\back.jpg"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold mb-4">Discover Your Next Adventure</h1>

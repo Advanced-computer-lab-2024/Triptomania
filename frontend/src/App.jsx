@@ -22,6 +22,7 @@ import NewPasswordPage from './Pages/auth/NewPassword';
 import GetHotels from './Tourist/HotelBooking/GetHotels'
 import AddProduct from './Seller/Product/AddProduct';
 import AddHistoricalPlace from './TourismGovernor/HistoricalPlaces/AddHistoricalPlaces';
+import EditHistoricalPlace from './TourismGovernor/HistoricalPlaces/EditHistoricalPlace';
 import AddItinerary from './TourGuide/Itineraries/AddItineraries';
 import AdvertiserSignUp from './Pages/AdvertiserSignUp';
 import SellerSignUp from './Pages/SellerSignUp';
@@ -84,6 +85,8 @@ import ViewTag from './TourismGovernor/Tags/ViewTag';
 import ViewActivitiesAdmin from './Admin/ViewActivities/ViewActivities';
 import WishList from './Tourist/WishList/WishList';
 import ViewItinerariesAdmin from './Admin/ViewItineraries/ViewItineraries';
+import GovernorAccount from './TourismGovernor/Account/pages/AccountManagement';
+import AdminAccount from './Admin/Account/pages/AccountManagement';
 import UploadSellerDocument from './Pages/UploadSellerDocument';
 import UploadSellerPicture from './Pages/UploadSellerPicture';
 import UploadPictureGuide from './TourGuide/SignUp/UploadPictureGuide';
@@ -101,6 +104,13 @@ import TourGuideNotifications from './TourGuide/ViewNotifications'
 import SellerNotifications from './Seller/ViewNotifications'
 import AdvertiserNotifications from './Advertiser/ViewNotifications'
 import AdminNotifications from './Admin/ViewNotifications'
+import TourGuideRevenueReport from './TourGuide/GenerateReport/ReportTourGuide';
+import TourGuideTouristReport from './TourGuide/TouristCountReport/TouristCountTourGuide';
+import AdvertiserRevenueReport from './Advertiser/ReportAdvertiser/ReportAdvertiser';
+import AdvertiserTouristReport from './Advertiser/TouristCountReport/TouristCountAdvertiser';
+import SellerRevenueReport from './Seller/GenerateReport/GenerateReport';
+import TouristPreferences from './Pages/TouristPreferences';
+
 const App = () => {
   return (    
     <Routes>
@@ -112,7 +122,7 @@ const App = () => {
       <Route path="/guest/Activities" element={<ViewActivities />} />
       <Route path="/tourist/viewactivities-tourist" element={<ViewActivitiesTourist />} />
       <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist />} />
-
+      <Route path="/tourist/preferences" element={<TouristPreferences />} />
       <Route path="/guest/Itineraries" element={<ViewItineraries />} />
       <Route path="/itinerary/:id" element={<ViewItineraryDetails />} />
       <Route path="/activity/:id" element={<ActivityDetails />} />
@@ -120,6 +130,7 @@ const App = () => {
       <Route path="/advertiser/addActivity" element={<AddActivity />} />
       <Route path="/seller/addProduct" element={<AddProduct />} />
       <Route path="/tourismGovernor/addHistoricalPlaces" element={<AddHistoricalPlace />} />
+      <Route path="/tourismGovernor/editHistoricalPlace/:id" element={<EditHistoricalPlace />} />
       <Route path="/tourGuide/addItinerary" element={<AddItinerary />} />
       <Route path="/admin/products/viewproducts" element = {<ViewProducts/>} />
       <Route path="/Seller/editMyProducts/:productId" element={<EditMyProduct />} />
@@ -182,10 +193,13 @@ const App = () => {
       <Route path="/tourist/flightBooking/:flight_id" element={<FlightBooking />} />
       <Route path="/admin/editProducts/:productId" element={<EditProduct />} />
       <Route path="/seller/seller-account" element={<SellerAccount/>} />
+      <Route path="/tourismGovernor/governor-account" element={<GovernorAccount/>} />
+      <Route path="/admin/admin-account" element={<AdminAccount/>} />
       <Route path="/tourGuide/tourGuide-account" element={<TourGuideAccount/>} /> 
       <Route path="/advertiser/advertiser-account" element={<AdvertiserAccount/>} /> 
       <Route path="/seller/uploadDocument" element={<UploadSellerDocument />} />
       <Route path="/seller/uploadPicture" element={<UploadSellerPicture />} />
+      <Route path="/seller/generateReport" element={<SellerRevenueReport />} />
       <Route path="/tourGuide/uploadPicture" element={<UploadPictureGuide />} />
 
       <Route path="/tourismGovernor/tags/viewTag" element={<ViewTag />} />
@@ -195,17 +209,20 @@ const App = () => {
       <Route path="/advertiser/uploadDocument" element={<AdvertiserUploadDocument />} />
       <Route path="/advertiser/uploadPicture" element={<AdvertiserUploadPicture />} />
       <Route path="/tourist/viewactivities-tourist" element={<ViewActivitiesTourist />} />
-      <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist />} />
+      <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist/>}/>
       <Route path="/tourist/eventCheckout" element={<EventCheckout />} />
       <Route path="/acceptTerms" element={<AcceptTerms />} />
-      <Route path="/tourist/choose-prefrence" element={<ChoosePreferenceTag/>} />
+      <Route path="/tourist/choose-prefrence" element={<ChoosePreferenceTag/>}/>
       <Route path="/give-review" element={<Review />} />
       <Route path="/tourist/notifications" element={<TouristNotifications />} />
       <Route path="/tourGuide/notifications" element={<TourGuideNotifications />} />
       <Route path="/advertiser/notifications" element={<AdvertiserNotifications />} />
       <Route path="/seller/notifications" element={<SellerNotifications />} />
       <Route path="/admin/notifications" element={<AdminNotifications />} />
-
+      <Route path="/tourGuide/generateSalesReport" element={<TourGuideRevenueReport />} />
+      <Route path="/tourGuide/generateTouristReport" element={<TourGuideTouristReport />} />
+      <Route path="/advertiser/generateSalesReport" element={<AdvertiserRevenueReport />} />
+      <Route path="/advertiser/generateTouristReport" element={<AdvertiserTouristReport />} />
 
     </Routes>
   );

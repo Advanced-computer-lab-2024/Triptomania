@@ -26,6 +26,7 @@ const ViewActivities = () => {
   const fetchAllActivities = async () => {
     try {
       const response = await axiosInstance.get('/api/advertiser/activity/viewActivities');
+      console.log(response.data);
       setAllActivities(response.data); // Save all activities
       setActivities(response.data); // Initially display all activities
     } catch (error) {
@@ -114,7 +115,7 @@ const ViewActivities = () => {
               </div>
             ))
           ) : (
-            <p>No activities found.</p>
+            <p>You don't have activities. Consider adding some :)</p>
           )}
         </main>
       </div>

@@ -13,9 +13,9 @@ const ViewNotifications = () => {
     // Fetch notifications from the backend
     const fetchNotifications = async () => {
       try {
-        const response = await axiosInstance.get('/api/tourist/getNotifications');
+        const response = await axiosInstance.get('/api/tourGuide/getNotifications');
         if (response.data.notifications && response.data.notifications.length === 0) {
-          setError('No notifications found.');
+          setError('You have no notifications.');
         } else {
           setNotifications(response.data.notifications || []);
         }
@@ -32,7 +32,7 @@ const ViewNotifications = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await axiosInstance.post('/api/tourist/readNotification', { notificationId });
+      await axiosInstance.post('/api/tourGuide/readNotification', { notificationId });
       setNotifications((prev) =>
         prev.map((notification) =>
           notification._id === notificationId ? { ...notification, read: true } : notification
@@ -44,23 +44,22 @@ const ViewNotifications = () => {
   };
 
   if (loading) return <Loading />;
-  if (error) return <div>{error}</div>;
 
   return (
     <div>
       <Header />
       <div className="view-notifications-container">
         <div className="view-notifications-form">
-          <h2>Your Notifications</h2>
+          <h1>Your Notifications</h1>
           {notifications.length === 0 ? (
-            <p>No notifications found</p>
+            <p>You have no notifications</p>
           ) : (
             <ul className="notifications-list">
               {notifications.map((notification) => (
-                <li key={notification._id} className={`notification-item ${notification.read ? 'read' : ''}`}>
+                <li key={notification._id} className={`notification-item ${notification.id?.read ? 'read' : ''}`}>
                   <div className="notification-info">
-                    <h3>{notification.title}</h3>
-                    <p>{notification.body}</p>
+                    <h3>{notification.id?.title}</h3>
+                    <p>{notification.id?.body}</p>
                   </div>
                   {!notification.read && (
                     <button

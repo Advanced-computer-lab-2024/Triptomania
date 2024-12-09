@@ -3,7 +3,9 @@ import HistoricalPlace from '../../models/historicalPlace.js';
 
 const filterByTag = async (req, res) => {
     try {
-        const { tags } = req.query; // Retrieve the tags from the request query
+        let { tags } = req.query; // Retrieve the tags from the request query
+        
+        tags = tags ? tags.split(',') : null; // Convert tags to an array if provided
 
         if (!tags) {
             // If no tags are provided, return all historical places
@@ -11,14 +13,9 @@ const filterByTag = async (req, res) => {
             return res.status(200).json({ message: "Fetched all historical places", historicalPlaces });
         }
 
-        // Convert tags to an array of MongoDB ObjectIds
-        const tagIds = Array.isArray(tags)
-            ? tags.map(tag => mongoose.Types.ObjectId(tag)) // Convert each tag to ObjectId
-            : [mongoose.Types.ObjectId(tags)]; // Single tag case
-
         // Find historical places where the Tags field contains any of the specified tag IDs
         const historicalPlaces = await HistoricalPlace.find({
-            Tags: { $in: tagIds }
+            Tags: { $in: tags }
         }).populate('Tags'); // Populate to retrieve full tag info if needed
 
         // Check if any places were found
@@ -30,6 +27,7 @@ const filterByTag = async (req, res) => {
         return res.status(200).json({ message: "Fetched historical places by tags", historicalPlaces });
 
     } catch (error) {
+        console.log('Error filtering historical places by tags:', error);
         return res.status(500).json({ error: 'Error occurred while filtering historical places by tags.' });
     }
 };

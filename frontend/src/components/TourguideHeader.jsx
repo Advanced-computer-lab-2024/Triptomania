@@ -25,13 +25,12 @@ export function Header() {
             <Link to="/tourGuide/home" className="header-link">Home</Link>
             <Link to="/tourGuide/MyItineraries" className="header-link">My Itineraries</Link>
             <Link to="/tourGuide/addItinerary" className="header-link">Add itinerary</Link>
+            <Link to="/tourGuide/generateSalesReport" className="header-link">Sales Report</Link>
+            <Link to="/tourGuide/generateTouristReport" className="header-link">Tourist Report</Link>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Link to="/tourGuide/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
-            </Link>
-            <Link to="/cart" className="icon-link ml-6">
-              <ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
             </Link>
             <Link to="/tourGuide/tourGuide-account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />

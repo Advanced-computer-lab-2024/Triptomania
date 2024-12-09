@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { MapPinIcon, ClockIcon, TicketIcon, SearchIcon, Trash2Icon, PencilIcon } from 'lucide-react';
-import { Input } from "@/components/ui/input";
+import { MapPinIcon, ClockIcon, TicketIcon, SearchIcon, Trash2Icon, PencilIcon, TagIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading";
 import { Header } from '../../components/GovernerHeader';
+import { useNavigate } from 'react-router-dom';
 
 const HistoricalPlacesViewww = () => {
   const [places, setPlaces] = useState([]);
@@ -12,22 +12,16 @@ const HistoricalPlacesViewww = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const navigate = useNavigate();
+
   const userId = JSON.parse(localStorage.getItem('user'))?._id;
 
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get('/api/tourismGovernor/getHistoricalPlaces');
-
-        if (response.data.status && response.data.historicalPlaces) {
-          const myPlaces = response.data.historicalPlaces.filter(
-            place => place.creatorId === userId
-          );
-          setPlaces(myPlaces);
-          setFilteredPlaces(myPlaces);
-        }
+        const response = await axiosInstance.get('/api/tourismGovernor/getMyHistoricalPlaces');
+          setPlaces(response.data.historicalPlaces);
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Failed to load your historical places.');
@@ -48,6 +42,35 @@ const HistoricalPlacesViewww = () => {
     setFilteredPlaces(searchResults);
   }, [searchTerm, places]);
 
+  const getImageUrl = (picture) => {
+    if (!picture) {
+      console.log('No picture provided, using placeholder');
+      return 'https://via.placeholder.com/300x200';
+    }
+
+    try {
+      if (picture.startsWith('data:image')) {
+        return picture;
+      }
+
+      if (picture.match(/^[A-Za-z0-9+/=]+$/)) {
+        return `data:image/jpeg;base64,${picture}`;
+      }
+
+      if (picture.startsWith('http')) {
+        if (picture.includes('example.com')) {
+          return 'https://via.placeholder.com/300x200';
+        }
+        return picture;
+      }
+
+      return picture;
+    } catch (error) {
+      console.error('Error processing image URL:', error);
+      return 'https://via.placeholder.com/300x200';
+    }
+  };
+
   const handleDelete = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       try {
@@ -56,12 +79,10 @@ const HistoricalPlacesViewww = () => {
         });
 
         if (response.data.status) {
-          setPlaces(places.filter(place => place._id !== id));
-          setFilteredPlaces(filteredPlaces.filter(place => place._id !== id));
           alert('Historical place deleted successfully');
+          window.location.reload();
         }
       } catch (err) {
-        console.error('Error deleting place:', err);
         alert(err.response?.data?.error || 'Failed to delete historical place');
       }
     }
@@ -72,122 +93,81 @@ const HistoricalPlacesViewww = () => {
     console.log('Edit place:', id);
   };
 
-  if (!userId) return <div>Please log in to view your places</div>;
   if (loading) return <Loading />;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="view-itineraries">
       <Header />
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">My Historical Places</h1>
-          </div>
-
-          <div className="relative max-w-md mb-6">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              type="text"
-              placeholder="Search my places..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredPlaces.length} of {places.length} places
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPlaces.map((place) => (
-            <div key={place._id} className="border rounded-lg shadow-lg overflow-hidden relative">
-              <div className="relative">
-                <img
-                  src={place.Picture}
-                  alt={place.Name}
-                  className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/400x300';
-                  }}
-                />
-                {/* Action buttons container */}
-                <div className="absolute top-2 right-2 flex gap-2">
-                  {/* Edit button */}
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="transition-colors hover:bg-gray-200"
-                    onClick={() => handleEdit(place._id)}
-                  >
-                    <PencilIcon className="h-4 w-4" />
-                  </Button>
-                  {/* Delete button */}
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="transition-colors hover:bg-red-600"
-                    onClick={() => handleDelete(place._id, place.Name)}
-                  >
-                    <Trash2Icon className="h-4 w-4" />
-                  </Button>
+      <div className="content">
+        <main className="itineraries">
+          {loading ? (
+            <Loading />
+          ) : (
+            places.length > 0 ? (
+              places.map((place) => (
+                <div className="activity-card" key={place._id}>
+                  <div className="activity-image-container">
+                    <img
+                      src={getImageUrl(place.Picture)}
+                      alt={place.Name}
+                      className="activity-image"
+                      onError={(e) => {
+                        console.log(`Image load error for ${place.Name}`);
+                        e.target.src = 'https://via.placeholder.com/300x200';
+                      }}
+                    />
+                  </div>
+                  <div className="activity-details">
+                    <div className="activity-header">
+                      <h2 className="activity-title">{place.Name}</h2>
+                    </div>
+                    <p className="activity-description">{place.Description}</p>
+                    <div className="activity-info">
+                      <p>
+                        <MapPinIcon className="icon" />
+                        {place.Location}
+                      </p>
+                      <p>
+                        <ClockIcon className="icon" />
+                        Opening Hours: {place.Opening_hours} - {place.Closing_hours}
+                      </p>
+                      <p>
+                        <TagIcon className="icon" />
+                        {place.Tags
+                          ?.map((tag) => {
+                            return tag ? tag.name : null;
+                          })
+                          .filter((tagName) => tagName)
+                          .join(', ') || 'N/A'}
+                      </p>
+                    </div>
+                    <div className="activity-footer">
+                    <p className="activity-price">${place.Ticket_prices.toFixed(2)} USD</p>
+                    <Button 
+                      className="edit-button"
+                      onClick={() => navigate(`/tourismGovernor/editHistoricalPlace/${place._id}`)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      className="delete-button"
+                      onClick={() => handleDelete(place._id, place.Name)} // Call delete handler
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No historical places found matching your criteria</p>
+                <Button onClick={handleResetFilters}>Reset Filters</Button>
               </div>
-              
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{place.Name}</h2>
-                <p className="text-gray-600 mb-4 line-clamp-2">{place.Description}</p>
-                
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <MapPinIcon className="w-4 h-4" />
-                    <span>{place.Location}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <ClockIcon className="w-4 h-4" />
-                    <span>{place.Opening_hours} - {place.Closing_hours}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <TicketIcon className="w-4 h-4" />
-                    <span>${place.Ticket_prices}</span>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                    {place.Category}
-                  </span>
-                </div>
-
-                {place.Tags && place.Tags.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {place.Tags.map(tag => (
-                      <span
-                        key={tag._id}
-                        className="px-2 py-1 bg-gray-100 rounded-full text-sm"
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredPlaces.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              {searchTerm ? 'No places match your search' : 'You haven\'t created any historical places yet'}
-            </p>
-          </div>
-        )}
-      </main>
+            )
+          )}
+        </main>
+      </div>
     </div>
   );
 };

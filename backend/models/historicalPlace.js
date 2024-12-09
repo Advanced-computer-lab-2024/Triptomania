@@ -30,10 +30,6 @@ const historicalPlaceSchema = new Schema({
         type: Number,
         required: true,
     },
-    Category: {
-        type: String,
-        required: true,
-    },
     Tags: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tag',

@@ -486,11 +486,6 @@ const bookActivity = async (req, res) => {
       date: activity.date,
       status: 'Pending'
     }
-<<<<<<< HEAD
-    tourist.activities.push(eventMap);
-    await tourist.save();
-=======
->>>>>>> 967943b (changes)
     // Proceed with booking
     tourist.activities.push(eventMap);
     await tourist.save();
@@ -671,11 +666,7 @@ async function rateActivity(req, res) {
 
 const processPayment = async (req, res) => {
   const _id = req.user._id;
-<<<<<<< HEAD
-  const { itemId } = req.body;
-=======
   const { price } = req.body; // Item ID
->>>>>>> 967943b (changes)
 
   try {
     // Fetch the tourist by ID
@@ -684,62 +675,6 @@ const processPayment = async (req, res) => {
       return res.status(404).json({ message: 'Tourist not found.' });
     }
 
-<<<<<<< HEAD
-    // Search for the item in Itinerary, Activity, and Product collections
-    let item = await itineraryModel.findById(itemId);
-    let itemType = 'itinerary';
-
-    if (!item) {
-      item = await activityModel.findById(itemId);
-      itemType = item ? 'activity' : itemType;
-    }
-
-    if (!item) {
-      item = await productModel.findById(itemId);
-      itemType = item ? 'product' : itemType;
-    }
-
-    // If item not found in any collection
-    if (!item) {
-      return res.status(404).json({ message: 'Item not found in Itinerary, Activity, or Product collections.' });
-    }
-
-    const itemPrice = item.price || item.Price;
-
-    // Update the status in the appropriate array
-    if (itemType === 'itinerary') {
-      const itineraryIndex = tourist.itineraries.findIndex(
-        itinerary => itinerary.eventId === itemId // Changed from itineraryId to eventId
-      );
-      if (itineraryIndex !== -1) {
-        tourist.itineraries[itineraryIndex] = {
-          ...tourist.itineraries[itineraryIndex],
-          status: 'Paid'
-        };
-      }
-    } else if (itemType === 'activity') {
-      const activityIndex = tourist.activities.findIndex(
-        activity => activity.eventId === itemId // Changed from activityId to eventId
-      );
-      if (activityIndex !== -1) {
-        tourist.activities[activityIndex] = {
-          ...tourist.activities[activityIndex],
-          status: 'Paid'
-        };
-      }
-    }
-
-    // Calculate loyalty points
-    let pointsEarned = 0;
-    if (itemType === 'itinerary' || itemType === 'activity') {
-      if (tourist.level === 1) {
-        pointsEarned = itemPrice * 0.5;
-      } else if (tourist.level === 2) {
-        pointsEarned = itemPrice * 1;
-      } else if (tourist.level === 3) {
-        pointsEarned = itemPrice * 1.5;
-      }
-=======
     // Calculate loyalty points only for itineraries and activities
     let pointsEarned = 0;
 
@@ -749,7 +684,6 @@ const processPayment = async (req, res) => {
       pointsEarned = price * 1;
     } else if (tourist.level === 3) {
       pointsEarned = price * 1.5;
->>>>>>> 967943b (changes)
     }
 
     tourist.points += pointsEarned;
@@ -876,12 +810,11 @@ const viewMyComplaints = async (req, res) => {
 };
 
 const choosePreferences = async (req, res) => {
-  const { preferences } = req.body;
-  const { touristId } = req.query;
+  const { preferences, touristId } = req.query;
 
   try {
-    // Verify the tourist exists
-    const tourist = await userModel.findByIdAndUpdate(touristId, { $set: { preferences: preferences } }, { new: true });
+    const pref = preferences.split(',');
+    const tourist = await userModel.findByIdAndUpdate(touristId, { $set: { preferences: pref } }, { new: true });
     if (!tourist) {
       return res.status(404).json({ error: 'Tourist not found' });
     }
@@ -969,6 +902,21 @@ export const cancelBooking = async (req, res) => {
 
     // Update only the bookingMade field using updateOne to bypass validation
     await item.updateOne({ $set: { bookingMade: item.bookingMade } });
+
+    const tourist = await userModel.findById(touristId);
+    if (itemType == 'itinerary') {
+      const itineraryIndex = tourist.itineraries.findIndex(itinerary => itinerary.eventId === itemId);
+      if (itineraryIndex !== -1) {
+        tourist.itineraries.splice(itineraryIndex, 1);
+      }
+    } else {
+      const activityIndex = tourist.activities.findIndex(activity => activity.eventId === itemId);
+      if (activityIndex !== -1) {
+        tourist.activities.splice(activityIndex, 1);
+      }
+    }
+    await item.save();
+    await tourist.save();
 
     // Return success message
     return res.status(200).json({ message: "Booking canceled successfully" });

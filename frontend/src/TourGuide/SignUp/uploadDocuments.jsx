@@ -179,7 +179,7 @@ const UploadDocuments = () => {
                         <button 
                             type="button" 
                             className="cancel-button"
-                            onClick={() => navigate('/tourGuide-dashboard')}
+                            onClick={() => navigate('/login')}
                         >
                             Skip for Now
                         </button>

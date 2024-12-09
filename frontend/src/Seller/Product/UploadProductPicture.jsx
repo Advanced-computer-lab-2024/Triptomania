@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import axiosInstance from '@/axiosInstance';
 import './UploadPicture.css';
 import { Header } from '../../components/SellerHeader';
+import { useNavigate } from 'react-router-dom';
 
 const UploadPicture = () => {
     const [productData, setProductData] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('sellerData')) || {};
@@ -50,6 +52,7 @@ const UploadPicture = () => {
                 alert('Picture uploaded successfully!');
                 setSelectedFile(null);
                 setPreviewUrl(null);
+                navigate('/Seller/ViewMyProducts');
             }
         } catch (error) {
             console.error('Full error:', error);

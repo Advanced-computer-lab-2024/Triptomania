@@ -97,7 +97,7 @@ const UploadPictureGuide = () => {
                 localStorage.setItem('tourGuideData', JSON.stringify(currentData));
     
                 setTimeout(() => {
-                    navigate('/tourGuide-dashboard', { 
+                    navigate('/login', { 
                         state: { 
                             tourGuideId: currentTourGuideId,
                             profilePicture: response.data.profilePicture 

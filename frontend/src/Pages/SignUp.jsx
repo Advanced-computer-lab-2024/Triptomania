@@ -66,7 +66,7 @@ const SignUp = () => {
   return (
     <div className="signup-container">
       <div className="signup-box">
-        <h1>Triptomania</h1>
+        <h1>TripTomania</h1>
         <form onSubmit={handleNext}>
           <div className="form-group">
             <input
@@ -133,6 +133,12 @@ const SignUp = () => {
           onClick={() => navigate('/login')}
         >
           Already have an account? Log in
+        </p>
+        <p
+          className="already-account"
+          onClick={() => navigate('/')}
+        >
+          Or browse as a guest
         </p>
       </div>
     </div>

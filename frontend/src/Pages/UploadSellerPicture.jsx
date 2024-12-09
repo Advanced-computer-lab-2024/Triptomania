@@ -53,7 +53,7 @@ const UploadSellerPicture = () => {
                 setSuccess(true);
                 // Redirect to dashboard after successful upload
                 setTimeout(() => {
-                    navigate('/seller-dashboard');
+                    navigate('/login');
                 }, 2000);
             }
         } catch (error) {

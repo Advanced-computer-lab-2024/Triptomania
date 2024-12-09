@@ -115,25 +115,32 @@ const ViewActivitiesTourist = () => {
 
   const fetchAllActivities = async () => {
     try {
+      setLoading(true);
       const response = await axiosInstance.get('/api/tourist/activity/viewActivities');
       setAllActivities(response.data);
       setActivities(response.data);
     } catch (error) {
       console.error('Error fetching all activities:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchCategories = async () => {
     try {
+      setLoading(true);
       const response = await axiosInstance.get('/api/tourist/activities/getCategories');
       setCategories(response.data); // Dynamically populate categories
     } catch (error) {
       console.error('Error fetching categories:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchFilteredActivities = async () => {
     try {
+      setLoading(true);
       let apiLink = '/api/tourist/activity/filterActivities';
       let queryParams = [];
 
@@ -160,11 +167,14 @@ const ViewActivitiesTourist = () => {
       setActivities(response.data);
     } catch (error) {
       console.error('Error fetching filtered activities:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchSortedActivities = async () => {
     try {
+      setLoading(true);
       let apiLink = '/api/tourist/activity/sortActivities';
       if (sortBy && sortOrder) {
         apiLink += `?sortBy=${sortBy}`;
@@ -174,7 +184,20 @@ const ViewActivitiesTourist = () => {
       setActivities(response.data);
     } catch (error) {
       console.error('Error fetching sorted activities:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const exchangeRates = {
+    USD: 1,
+    EUR: 0.85,
+    GBP: 0.75,
+    INR: 30,
+  };
+
+  const convertPrice = (price) => {
+    return (price * exchangeRates[currency]).toFixed(2);
   };
 
   const handleSearch = (e) => {
@@ -413,7 +436,7 @@ const ViewActivitiesTourist = () => {
                     </p>
                   </div>
                   <div className="activity-footer">
-                    <p className="activity-price">{currency} {activity.price.toFixed(2)}</p>
+                    <p className="activity-price">{currency} {convertPrice(activity.price)}</p>
                     {/* Share button for each historical place */}
                     <Button
                       variant="outline"
@@ -435,8 +458,10 @@ const ViewActivitiesTourist = () => {
                 </div>
               </div>
             ))
+          ) : loading ? (
+            <Loading />
           ) : (
-            <p>No activities found.</p>
+            <p>No activities found</p>
           )}
         </main>
       </div>

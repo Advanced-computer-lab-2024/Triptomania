@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/Loading";
 import axiosInstance from '@/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 const SecuritySettings = () => {
   const [passwords, setPasswords] = useState({
@@ -9,48 +10,14 @@ const SecuritySettings = () => {
     newPassword: '',
     confirmPassword: '',
   });
-  const [notifications, setNotifications] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchNotificationSettings = async () => {
-      try {
-        const response = await fetch('/api/notification-settings');
-        const data = await response.json();
-        setNotifications(data.enabled);
-      } catch (error) {
-        console.error('Error fetching notification settings:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchNotificationSettings();
-  }, []);
+  useEffect(() => { }, []);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswords(prevPasswords => ({ ...prevPasswords, [name]: value }));
-  };
-
-  const handleNotificationToggle = async () => {
-    try {
-      const response = await fetch('/api/update-notification-settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ enabled: !notifications }),
-      });
-      if (response.ok) {
-        setNotifications(!notifications);
-      } else {
-        throw new Error('Failed to update notification settings');
-      }
-    } catch (error) {
-      console.error('Error updating notification settings:', error);
-      alert('Failed to update notification settings. Please try again.');
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -95,6 +62,20 @@ const SecuritySettings = () => {
       setIsLoading(false);
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.post('/api/auth/logout');
+      if (response.status === 200) {
+        navigate('/login');
+      }
+    } catch (error) {
+      alert('Failed to logout');
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   if (isLoading) {
     return <Loading />;
@@ -141,25 +122,14 @@ const SecuritySettings = () => {
         </Button>
       </form>
       <br></br>
-      <div>
-        <h3 className="text-xl font-semibold mb-2">Notification Settings</h3>
-        <div className="flex items-center">
-        <label htmlFor="notifications" className="ml-2 block text-sm text-gray-900">
-            Receive notifications
-          </label>
-          <input
-            type="checkbox"
-            id="notifications"
-            checked={notifications}
-            onChange={handleNotificationToggle}
-            className="rounded border-gray-300 text-primary focus:ring-primary"
-          />
-        </div>
+      <div id='security-buttons'>
+        <Button className="ml-4 bg-red-600 text-white hover:bg-red-700" onClick={handleRequestDelete}>
+          Request Account Deletion
+        </Button>
+        <Button id='tab-button' onClick={handleLogout}>
+          Logout
+        </Button>
       </div>
-      <br></br>
-      <Button className="ml-4 bg-red-600 text-white hover:bg-red-700" onClick={handleRequestDelete}>
-        Request Account Deletion
-      </Button>
     </div>
   );
 };

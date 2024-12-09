@@ -13,10 +13,12 @@ const ViewItineraries = () => {
   const [allItineraries, setAllItineraries] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
+  const [preferenceTags, setPreferenceTags] = useState([]); // State for preference tags
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllItineraries();
+    fetchPreferenceTags();
   }, []);
 
   const fetchAllItineraries = async () => {
@@ -32,15 +34,24 @@ const ViewItineraries = () => {
     }
   };
 
+  const fetchPreferenceTags = async () => {
+    try {
+      const response = await axiosInstance.get('/api/guest/itineraries/getTags');
+      setPreferenceTags(response.data || []);
+    } catch (error) {
+      console.error('Error fetching preference tags:', error.response?.data || error.message);
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this itinerary?")) return;
-  
+
     try {
       setLoading(true); // Show loading spinner while processing the delete request
-  
+
       // Send DELETE request to backend
       const response = await axiosInstance.delete(`/api/tourGuide/itinerary/deleteItinerary?id=${id}`);
-  
+
       // Handle success
       if (response.status === 200) {
         alert(response.data.message); // Success message from the backend
@@ -60,8 +71,8 @@ const ViewItineraries = () => {
       setLoading(false); // Hide loading spinner after the operation completes
     }
   };
-  
- 
+
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     const filtered = allItineraries.filter((itinerary) =>
@@ -69,7 +80,7 @@ const ViewItineraries = () => {
     );
     setItineraries(filtered);
   };
-  
+
   const handletoggle = async (id, currentStatus) => {
     try {
       setLoading(true); // Show loading spinner while processing the request
@@ -110,7 +121,7 @@ const ViewItineraries = () => {
             />
           </div>
 
-          {loading ? (
+          {loading || !preferenceTags.length ? (
             <Loading /> // Display loading component while fetching itineraries
           ) : itineraries.length > 0 ? (
             itineraries.map((itinerary) => (
@@ -148,7 +159,13 @@ const ViewItineraries = () => {
                     </p>
                     <p>
                       <TagIcon className="icon" />
-                      {itinerary.preferenceTags?.map((tagId) => tagId).join(', ') || 'N/A'}
+                      {itinerary.preferenceTags
+                        ?.map((tagId) => {
+                          const tag = preferenceTags.find(c => c._id === tagId);
+                          return tag ? tag.PreferenceTagName : null;
+                        })
+                        .filter((tagName) => tagName)
+                        .join(', ') || 'N/A'}
                     </p>
                   </div>
                   <div className="itinerary-footer">
@@ -172,17 +189,18 @@ const ViewItineraries = () => {
                       Delete
                     </Button>
                     <Button
-                      className={`toggle-button ${itinerary.isActivated ? 'active' : 'inactive'}`}
+                      className={`${itinerary.isActivated ? 'ml-4 bg-red-600 text-white hover:bg-red-700' : ''}`}
+                      id={`${!itinerary.isActivated ? 'tab-button' : ''}`}
                       onClick={() => handletoggle(itinerary._id, itinerary.isActivated)}
                     >
-                      {itinerary.isActivated ? 'Active' : 'Deactivate'}
+                      {itinerary.isActivated ? 'Deactivate' : 'Activate'}
                     </Button>
 
-                    
-                    
+
+
                   </div>
 
-                  
+
                 </div>
               </div>
             ))

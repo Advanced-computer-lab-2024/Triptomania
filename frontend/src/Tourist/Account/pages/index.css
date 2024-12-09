@@ -24,3 +24,10 @@
     flex-direction: row;
     align-items: center;
 }
+
+#upcoming-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 40%;
+}

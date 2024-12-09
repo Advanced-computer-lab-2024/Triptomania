@@ -1,256 +1,239 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { MapPinIcon, ClockIcon, TicketIcon, Share2Icon } from 'lucide-react'; // Add Share2Icon
+import { MapPinIcon, ClockIcon, TicketIcon, TagIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import Loading from "@/components/Loading";
+import { Label } from "@/components/ui/label";
 import { Header } from '../../components/HeaderTourist';
+import Loading from "@/components/Loading";
 
-const HistoricalPlacesView = () => {
-  const [places, setPlaces] = useState([]);
-  const [filteredPlaces, setFilteredPlaces] = useState([]);
+const getImageUrl = (picture) => {
+  if (!picture) {
+    console.log('No picture provided, using placeholder');
+    return 'https://via.placeholder.com/300x200';
+  }
+
+  try {
+    if (picture.startsWith('data:image')) {
+      return picture;
+    }
+
+    if (picture.match(/^[A-Za-z0-9+/=]+$/)) {
+      return `data:image/jpeg;base64,${picture}`;
+    }
+
+    if (picture.startsWith('http')) {
+      if (picture.includes('example.com')) {
+        return 'https://via.placeholder.com/300x200';
+      }
+      return picture;
+    }
+
+    return picture;
+  } catch (error) {
+    console.error('Error processing image URL:', error);
+    return 'https://via.placeholder.com/300x200';
+  }
+};
+
+const ViewHistoricalPlaces = () => {
+  const [historicalPlaces, setHistoricalPlaces] = useState([]);
+  const [allHistoricalPlaces, setAllHistoricalPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [availableTags, setAvailableTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
-  const [copied, setCopied] = useState(null); // Track copied place URL
+  const [tags, setTags] = useState([]);
+  const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState('USD'); // Currency state
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [placesResponse, tagsResponse] = await Promise.all([
+        axiosInstance.get('/api/tourist/getHistoricalPlaces'),
+        axiosInstance.get('/api/tourist/getTags')
+      ]);
+
+      if (placesResponse.data.historicalPlaces) {
+        setAllHistoricalPlaces(placesResponse.data.historicalPlaces);
+        setHistoricalPlaces(placesResponse.data.historicalPlaces);
+      }
+
+      if (tagsResponse.data && tagsResponse.data.tags) {
+        setAvailableTags(tagsResponse.data.tags);
+      }
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
+      setError('Failed to load data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const exchangeRates = {
     USD: 1,
     EUR: 0.85,
     GBP: 0.75,
-    EPG: 30,
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [placesResponse, tagsResponse] = await Promise.all([
-          axiosInstance.get('/api/guest/historicalPlaces/getHistoricalPlaces'),
-          axiosInstance.get('/api/guest/getTags')
-        ]);
-        
-        if (placesResponse.data.historicalPlaces) {
-          setPlaces(placesResponse.data.historicalPlaces);
-          setFilteredPlaces(placesResponse.data.historicalPlaces);
-        }
-
-        if (tagsResponse.data && tagsResponse.data.tags) {
-          setAvailableTags(tagsResponse.data.tags);
-        }
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to load data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (selectedTags.length === 0) {
-      setFilteredPlaces(places);
-    } else {
-      const filtered = places.filter(place =>
-        selectedTags.every(selectedTag =>
-          place.Tags?.some(placeTag => placeTag._id === selectedTag._id)
-        )
-      );
-      setFilteredPlaces(filtered);
-    }
-  }, [places, selectedTags]);
-
-  const handleTagClick = (tag) => {
-    setSelectedTags(prev => {
-      const isSelected = prev.some(t => t._id === tag._id);
-      return isSelected
-        ? prev.filter(t => t._id !== tag._id)
-        : [...prev, tag];
-    });
-  };
-
-  const clearTags = () => {
-    setSelectedTags([]);
-  };
-
-  const handleCurrencyChange = (currency) => {
-    setSelectedCurrency(currency);
+    INR: 30,
   };
 
   const convertPrice = (price) => {
-    return (price * exchangeRates[selectedCurrency]).toFixed(2);
+    return (price * exchangeRates[currency]).toFixed(2);
   };
 
-  // Function to handle copying the dynamic URL for each historical place
-  const handleShareClick = (placeId) => {
-    const url = `http://localhost:5173/historicalplaces/${placeId}`; // Dynamic URL based on place ID
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(placeId); // Track the copied place ID
-      setTimeout(() => {
-        setCopied(null); // Reset copied state after 2 seconds
-      }, 2000);
+  const filterHistoricalPlaces = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(`/api/tourist/historicalPlaces/filterHistoricalPlaces?tags=${tags.join(',')}`);
+      if (response.status === 200) {
+        setHistoricalPlaces(response.data.historicalPlaces);
+      }
+    } catch (error) {
+      alert('Failed to filter historical places. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleFilterClick = () => {
+    filterHistoricalPlaces();
+  };
+
+  const handleFilterReset = () => {
+    setTags([]);
+    fetchData();
+  };
+
+  const handleTagsChange = (tag) => {
+    setTags((prev) => {
+      if (prev.includes(tag)) {
+        return prev.filter((p) => p !== tag);
+      } else {
+        return [...prev, tag];
+      }
     });
   };
 
-  if (loading) return <Loading />;
-  if (error) return <div className="text-red-500">{error}</div>;
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="view-activities">
       <Header />
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Historical Places</h1>
-            {selectedTags.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={clearTags}
-              >
-                Clear Tags
-              </Button>
-            )}
+      <div className="content">
+        <aside className="filters">
+          <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
+
+          {/* Currency Dropdown */}
+          <div className="currency-dropdown mb-4">
+            <Label>Currency</Label>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="w-full"
+            >
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="INR">INR</option>
+            </select>
           </div>
 
-          {/* Currency Selector */}
-          <div className="mb-6">
-            <h2 className="text-sm font-medium mb-2">Select Currency</h2>
-            <div className="flex gap-2">
-              <Button 
-                variant={selectedCurrency === 'USD' ? 'outline' : 'secondary'} 
-                onClick={() => handleCurrencyChange('USD')}
-              >
-                USD
-              </Button>
-              <Button 
-                variant={selectedCurrency === 'EUR' ? 'outline' : 'secondary'} 
-                onClick={() => handleCurrencyChange('EUR')}
-              >
-                EUR
-              </Button>
-              <Button 
-                variant={selectedCurrency === 'GBP' ? 'outline' : 'secondary'} 
-                onClick={() => handleCurrencyChange('GBP')}
-              >
-                GBP
-              </Button>
-              <Button 
-                variant={selectedCurrency === 'EPG' ? 'outline' : 'secondary'} 
-                onClick={() => handleCurrencyChange('EPG')}
-              >
-                EPG
-              </Button>
-            </div>
-          </div>
-
-          {/* Tags Filter */}
-          <div className="mb-6">
-            <h2 className="text-sm font-medium mb-2">Filter by Tags</h2>
+          <div className="mb-4">
+            <Label>Tags</Label>
             <div className="flex flex-wrap gap-2">
-              {availableTags.map(tag => (
-                <button
+              {availableTags.map((tag) => (
+                <Button
                   key={tag._id}
-                  onClick={() => handleTagClick(tag)}
-                  className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                    selectedTags.some(t => t._id === tag._id)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                  }`}
+                  variant={tags.includes(tag._id) ? 'primary' : 'outline'}
+                  onClick={() => handleTagsChange(tag._id)}
                 >
                   {tag.name}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
 
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredPlaces.length} of {places.length} places
-          </div>
-        </div>
+          <Button onClick={handleFilterClick} className="mt-4">Apply Filters</Button>
+          <Button onClick={handleFilterReset} className="mt-4">Reset Filters</Button>
+        </aside>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPlaces.map((place) => (
-            <div key={place._id} className="border rounded-lg shadow-lg overflow-hidden">
-              <img
-                src={place.Picture}
-                alt={place.Name}
-                className="w-full h-48 object-cover"
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/400x300';
-                }}
-              />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{place.Name}</h2>
-                <p className="text-gray-600 mb-4 line-clamp-2">{place.Description}</p>
-                
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <MapPinIcon className="w-4 h-4" />
-                    <span>{place.Location}</span>
+        <main className="activities">
+          {loading ? (
+            <Loading />
+          ) : (
+            historicalPlaces.length > 0 ? (
+              historicalPlaces.map((place) => (
+                <div className="activity-card" key={place._id}>
+                  <div className="activity-image-container">
+                    <img
+                      src={getImageUrl(place.Picture)}
+                      alt={place.Name}
+                      className="activity-image"
+                      onError={(e) => {
+                        console.log(`Image load error for ${place.Name}`);
+                        e.target.src = 'https://via.placeholder.com/300x200';
+                      }}
+                    />
                   </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <ClockIcon className="w-4 h-4" />
-                    <span>{place.Opening_hours} - {place.Closing_hours}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <TicketIcon className="w-4 h-4" />
-                    <span>
-                      {selectedCurrency === 'USD' && `$${convertPrice(place.Ticket_prices)} USD`}
-                      {selectedCurrency === 'EUR' && `€${convertPrice(place.Ticket_prices)} EUR`}
-                      {selectedCurrency === 'GBP' && `£${convertPrice(place.Ticket_prices)} GBP`}
-                      {selectedCurrency === 'EPG' && `${convertPrice(place.Ticket_prices)} EPG`}
-                    </span>
+                  <div className="activity-details">
+                    <div className="activity-header">
+                      <h2 className="activity-title">{place.Name}</h2>
+                      <span className="category-badge">{place.Category}</span>
+                    </div>
+                    <p className="activity-description">{place.Description}</p>
+                    <div className="activity-info">
+                      <p>
+                        <MapPinIcon className="icon" />
+                        {place.Location}
+                      </p>
+                      <p>
+                        <ClockIcon className="icon" />
+                        Opening Hours: {place.Opening_hours} - {place.Closing_hours}
+                      </p>
+                      <p>
+                        <TagIcon className="icon" />
+                        {place.Tags
+                          ?.map((tag) => {
+                            return tag ? tag.name : null;
+                          })
+                          .filter((tagName) => tagName)
+                          .join(', ') || 'N/A'}
+                      </p>
+                    </div>
+                    <div className="activity-footer">
+                      <p className="ticket-price">
+                        <TicketIcon className="icon" />
+                        Price: {currency} &nbsp;{convertPrice(place.Ticket_prices)}
+                      </p>
+                      <Button className="btn-primary">Book Now</Button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="mt-4">
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                    {place.Category}
-                  </span>
-                </div>
-
-                {place.Tags && place.Tags.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {place.Tags.map(tag => (
-                      <span
-                        key={tag._id}
-                        className="px-2 py-1 bg-gray-100 rounded-full text-sm"
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Share button for each historical place */}
-                <Button
-                  variant="outline"
-                  onClick={() => handleShareClick(place._id)} // Share specific place URL
-                  className="mt-4"
-                >
-                  <Share2Icon className="w-5 h-5" />
-                  Share
-                </Button>
-                {copied === place._id && <span className="ml-2 text-green-500 text-sm">Link copied!</span>} {/* Feedback */}
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No historical places found matching your criteria</p>
+                <Button onClick={handleResetFilters}>Reset Filters</Button>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredPlaces.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No places match the selected tags</p>
-            <Button onClick={clearTags}>Clear Tags</Button>
-          </div>
-        )}
-      </main>
+            )
+          )}
+        </main>
+      </div>
     </div>
   );
 };
 
-export default HistoricalPlacesView;
+export default ViewHistoricalPlaces;

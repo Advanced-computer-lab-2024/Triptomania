@@ -16,23 +16,23 @@ function MyItinerary() {
 
   useEffect(() => {
     const fetchItinerary = async () => {
-        try {
-            const response = await axiosInstance.get(
-                "http://localhost:5000/api/tourGuide/itinerary/getMyItineraries"
-            );
-            if (Array.isArray(response.data.itineraries)) {
-                setMyItinerary(response.data.itineraries);
-            } else {
-                console.error("Invalid data format: itineraries is not an array", response.data);
-            }
-        } catch (error) {
-            console.error("Error fetching itinerary:", error);
+      try {
+        const response = await axiosInstance.get(
+          "http://localhost:5000/api/tourGuide/itinerary/getMyItineraries"
+        );
+        if (Array.isArray(response.data.itineraries)) {
+          setMyItinerary(response.data.itineraries);
+        } else {
+          console.error("Invalid data format: itineraries is not an array", response.data);
         }
-    
+      } catch (error) {
+        console.error("Error fetching itinerary:", error);
+      }
+
     };
 
     fetchItinerary();
-}, []);
+  }, []);
 
   function getImageForItinerary(index) {
     switch (index) {
@@ -61,15 +61,15 @@ function MyItinerary() {
                 <CardDescription>{activity.Description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <img 
-                  src={getImageForItinerary(index)} 
-                  alt="Itinerary Image" 
-                  className="w-full h-[200px] object-cover rounded-md" 
+                <img
+                  src={getImageForItinerary(index)}
+                  alt="Itinerary Image"
+                  className="w-full h-[200px] object-cover rounded-md"
                 />
               </CardContent>
               <CardFooter className="flex justify-between">
                 <div className="flex items-center">
-                  
+
                   <span>${activity.price}</span>
                 </div>
               </CardFooter>
@@ -88,10 +88,10 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative h-[500px]">
-        <img 
-          src="/placeholder.svg?height=500&width=1920" 
-          alt="Hero Background" 
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
+        <img
+          src="src\assets\Images\back.jpg"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold mb-4">Discover Your Next Adventure</h1>

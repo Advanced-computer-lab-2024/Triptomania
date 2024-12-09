@@ -10,6 +10,8 @@ import historicalPlaceController from '../controllers/tourismGovernor/historical
 import sharedController from '../controllers/shared/sharedController.js';
 import paymentController from '../controllers/services/paymentController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
+import tourismGovernorController from '../controllers/tourismGovernor/tourismGovernorController.js';
+import filterController from '../controllers/shared/filterController.js';
 
 const router = express.Router();
 
@@ -108,7 +110,7 @@ router.put('/redeem', (req, res, next) => authMiddleware.verifyToken(req, res, n
 
 router.get('/chooseCategory', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.chooseCategory);
 
-router.get('/activities/getCategories', activityController.getCategories);
+router.get('/activities/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), activityController.getCategories);
 
 
 router.put('/bookActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.bookActivity);
@@ -403,7 +405,9 @@ router.get('/itineraries/getItinerary/:id', (req, res, next) => authMiddleware.v
 
 router.get('/getHistoricalPlaces', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlaces);
 
-router.get('/getHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlace);
+router.get('/filterHistoricalPlaces', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), filterController.filterByTag);
+
+router.get('/getHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), historicalPlaceController.getHistoricalPlace);
 
 router.get('/getHotels', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), touristController.getHotels);
 
@@ -472,6 +476,8 @@ router.put('/events/unbookmarkEvent', (req, res, next) => authMiddleware.verifyT
 router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.getNotifications);
 
 router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), sharedController.readNotification);
+
+router.get('/getTags', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourist']), tourismGovernorController.getTags);
 
 router.get('/product/:id', (req, res, next) => 
     authMiddleware.verifyToken(req, res, next, ['tourist']), 

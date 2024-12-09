@@ -454,7 +454,7 @@ const payForEvent = async (req, res) => {
         const userId = req.user._id;
 
         const { paymentMethod, eventType, eventId, promoCode } = req.body;
-     
+
         if (!paymentMethod || !eventType || !eventId) {
             return res.status(400).json({ error: 'Missing required fields: userId, paymentMethod, eventType, eventId' });
         }
@@ -463,14 +463,14 @@ const payForEvent = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        
+
         const models = {
             activity: activityModel,
             itinerary: itineraryModel
         }
-        
+
         const eventModel = models[eventType];
-        
+
         const event = await eventModel.findById(eventId);
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
@@ -538,7 +538,7 @@ const payForEvent = async (req, res) => {
 
         let eventMap;
         if (eventType === 'activity') {
-            user.activities = user.activities.filter(activity => 
+            user.activities = user.activities.filter(activity =>
                 activity.eventId.toString() !== eventId.toString()
             );
             eventMap = {
@@ -551,12 +551,12 @@ const payForEvent = async (req, res) => {
                 promoCode: promo ? promo.code : null,
                 date: event.date,
                 paymentDate: date,
-                status:'Paid'
+                status: 'Paid'
             }
             user.activities.push(eventMap);
             await user.save();
         } else if (eventType === 'itinerary') {
-            user.itineraries = user.itineraries.filter(itinerary => 
+            user.itineraries = user.itineraries.filter(itinerary =>
                 itinerary.eventId.toString() !== eventId.toString()
             );
             eventMap = {
@@ -569,14 +569,14 @@ const payForEvent = async (req, res) => {
                 promoCode: promo ? promo.code : null,
                 date: event.Start_date,
                 paymentDate: date,
-                status:'Paid'
+                status: 'Paid'
             }
 
             user.itineraries.push(eventMap);
             await user.save();
         }
 
-       
+
 
         res.status(200).json({
             success: true,
@@ -646,6 +646,14 @@ const sendEventInvoice = async (event, userId, type) => {
     }
 }
 
+const isCancellationAllowed = (eventDate) => {
+    const now = new Date();
+    const eventStartDate = new Date(eventDate);
+    const diffInMs = eventStartDate - now;
+    const diffInHours = diffInMs / (1000 * 60 * 60);  // Convert milliseconds to hours
+    return diffInHours > 48; // Return true if more than 48 hours before the event
+};
+
 const cancelEvent = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -671,6 +679,16 @@ const cancelEvent = async (req, res) => {
         // Check if the user has already booked this event
         if (!event.bookingMade.includes(userId)) {
             return res.status(400).json({ error: 'You didn\'t book this event to cancel it' });
+        }
+
+        if (eventType === 'activity') {
+            if (!isCancellationAllowed(event.date)) {
+                return res.status(400).json({ error: 'Cancellation is not allowed less than 48 hours before the event' });
+            }
+        } else {
+            if (!isCancellationAllowed(event.Start_date)) {
+                return res.status(400).json({ error: 'Cancellation is not allowed less than 48 hours before the event' });
+            }
         }
 
         let refundAmount = 0;

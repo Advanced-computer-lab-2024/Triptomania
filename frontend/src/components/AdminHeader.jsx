@@ -13,7 +13,7 @@ const menuItems = [
     href: '#',
     subitems: [
       { name: 'Account Deletion', href: '/admin/deleteUsers' },
-      { name: 'Document Reviews', href: '#' },
+      { name: 'Document Reviews', href: '/admin/view/documents' },
       { name: 'Accounts Creation', href: '/admin/accountCreation' }, 
     ],
   },
@@ -27,7 +27,7 @@ const menuItems = [
     subitems: [
       { name: 'Activity Categories', href: '/admin/activityCategories' },
       { name: 'Preference Tags', href: '/admin/preferenceTags' },
-      { name: 'Reports', href: '#' },
+      { name: 'Reports', href: '/sales-report' },
       { name: 'Promo Codes', href: '/admin/promoCode' },
     ],
   },
@@ -106,7 +106,7 @@ export function Header() {
             <Link to="/admin/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
             </Link>
-            <Link to="/profile" className="icon-link ml-6">
+            <Link to="/admin/admin-account" className="icon-link ml-6">
               <User className="h-6 w-6 text-black hover:text-primary" />
             </Link>
           </div>

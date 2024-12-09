@@ -96,7 +96,7 @@ const AdvertiserUploadPicture = () => {
                 localStorage.setItem('advertiserData', JSON.stringify(currentData));
     
                 setTimeout(() => {
-                    navigate('/advertiser-dashboard', { 
+                    navigate('/login', { 
                         state: { 
                             advertiserId: currentAdvertiserId,
                             profilePicture: response.data.profilePicture 
@@ -178,7 +178,7 @@ const AdvertiserUploadPicture = () => {
                         <button 
                             type="button" 
                             className="cancel-button"
-                            onClick={() => navigate('/advertiser-dashboard')}
+                            onClick={() => navigate('/login')}
                         >
                             Skip for Now
                         </button>

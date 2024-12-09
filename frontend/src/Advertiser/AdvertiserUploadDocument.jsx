@@ -180,7 +180,7 @@ const AdvertiserUploadDocument = () => {
                         <button 
                             type="button" 
                             className="cancel-button"
-                            onClick={() => navigate('/advertiser-dashboard')}
+                            onClick={() => navigate('/login')}
                         >
                             Skip for Now
                         </button>

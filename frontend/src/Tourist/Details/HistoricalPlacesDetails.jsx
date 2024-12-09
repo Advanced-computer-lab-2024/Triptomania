@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from '@/axiosInstance';
 import { useParams } from "react-router-dom";
-import { Header } from "../../components/Header"; 
+import { Header } from "../../components/Header";
 import './HistoricalPlacesDetails.css';
 
 const HistoricalPlaceDetailPage = () => {
@@ -33,9 +33,9 @@ const HistoricalPlaceDetailPage = () => {
       {/* Hero Section */}
       <section className="hero-section">
         <img
-          src={place.Picture || "/placeholder.svg?height=500&width=1920"}
-          alt={place.Name}
-          className="hero-image"
+          src="src\assets\Images\back.jpg"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="hero-content">
           <h1>{place.Name}</h1>

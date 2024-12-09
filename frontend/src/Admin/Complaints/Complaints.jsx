@@ -57,14 +57,7 @@ const ViewComplaints = () => {
   };
 
   const handleViewComplaint = async (complaintId) => {
-    try {
-      const response = await axiosInstance.get(`/api/admin/complaints/viewComplaint?id=${complaintId}`);
-      if (response.status === 200) {
-        navigate('/admin/complaint', { state: { complaint: response.data.complaint } });
-      }
-    } catch (error) {
-      console.error('Error fetching complaint:', error);
-    }
+    navigate('/admin/complaint', { state: { id: complaintId } });
   };
 
   const handleSortComplaints = (order) => {

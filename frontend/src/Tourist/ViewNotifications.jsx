@@ -15,7 +15,7 @@ const ViewNotifications = () => {
       try {
         const response = await axiosInstance.get('/api/tourist/getNotifications');
         if (response.data.notifications && response.data.notifications.length === 0) {
-          setError('No notifications found.');
+          setError('You have no notifications.');
         } else {
           setNotifications(response.data.notifications || []);
         }
@@ -50,16 +50,16 @@ const ViewNotifications = () => {
       <Header />
       <div className="view-notifications-container">
         <div className="view-notifications-form">
-          <h2>Your Notifications</h2>
+          <h1>Your Notifications</h1>
           {notifications.length === 0 ? (
-            <p>No notifications found</p>
+            <p>You have no notifications</p>
           ) : (
             <ul className="notifications-list">
               {notifications.map((notification) => (
-                <li key={notification._id} className={`notification-item ${notification.read ? 'read' : ''}`}>
+                <li key={notification._id} className={`notification-item ${notification.id?.read ? 'read' : ''}`}>
                   <div className="notification-info">
-                    <h3>{notification.title}</h3>
-                    <p>{notification.body}</p>
+                    <h3>{notification.id?.title}</h3>
+                    <p>{notification.id?.body}</p>
                   </div>
                   {!notification.read && (
                     <button

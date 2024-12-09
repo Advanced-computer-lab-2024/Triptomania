@@ -124,7 +124,7 @@ const UploadSellerDocument = () => {
                         <button 
                             type="button" 
                             className="cancel-button"
-                            onClick={() => navigate('/seller-dashboard')}
+                            onClick={() => navigate('/login')}
                         >
                             Cancel
                         </button>

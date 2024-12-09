@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import axiosInstance from "@/axiosInstance";
+import { Button } from '@/components/ui/button';
 
 const Events = () => {
   const navigate = useNavigate(); // Add this
@@ -30,46 +31,70 @@ const Events = () => {
   // Add this function to handle navigation to checkout
   const handleCompletePayment = async (event) => {
     try {
-        console.log("Event object:", event); // Log the event object to see what ID we have
-        
-        // Fetch the itinerary details to get the price
-        const response = await axiosInstance.get(`/api/tourist/itineraries/getItineraries`);
-        console.log("API Response:", response.data); // Log the full response
-        
-        // Find the specific itinerary from the response
-        const itinerary = response.data.itineraries.find(
-            (item) => {
-                console.log("Comparing:", {
-                    itemId: item._id,
-                    eventId: event.eventId,
-                    match: item._id === event.eventId
-                });
-                return item._id === event.eventId;
-            }
-        );
-        
-        console.log("Found itinerary:", itinerary);
+      console.log("Event object:", event); // Log the event object to see what ID we have
 
-        if (!itinerary) {
-            console.error("Itinerary not found");
-            return;
+      // Fetch the itinerary details to get the price
+      const response = await axiosInstance.get(`/api/tourist/itineraries/getItineraries`);
+      console.log("API Response:", response.data); // Log the full response
+
+      // Find the specific itinerary from the response
+      const itinerary = response.data.itineraries.find(
+        (item) => {
+          console.log("Comparing:", {
+            itemId: item._id,
+            eventId: event.eventId,
+            match: item._id === event.eventId
+          });
+          return item._id === event.eventId;
         }
+      );
 
-        navigate('/tourist/eventCheckout', { 
-            state: { 
-                eventId: event.eventId, // Using eventId instead of itineraryId
-                eventType: event.eventType.toLowerCase(),
-                price: itinerary.price,
-                promoCode: event.promoCode,
-                eventName: event.name || itinerary.Name,
-                eventDate: event.date,
-                status: event.status
-            }
-        });
+      console.log("Found itinerary:", itinerary);
+
+      if (!itinerary) {
+        console.error("Itinerary not found");
+        return;
+      }
+
+      navigate('/tourist/eventCheckout', {
+        state: {
+          eventId: event.eventId, // Using eventId instead of itineraryId
+          eventType: event.eventType.toLowerCase(),
+          price: itinerary.price,
+          promoCode: event.promoCode,
+          eventName: event.name || itinerary.Name,
+          eventDate: event.date,
+          status: event.status
+        }
+      });
     } catch (error) {
-        console.error("Error fetching itinerary details:", error);
+      console.error("Error fetching itinerary details:", error);
     }
-};
+  };
+
+  const handleCancelEvent = (eventId, eventType, status) => async () => {
+    try {
+      setIsLoading(true);
+      if (status === "Pending") {
+        const response = await axiosInstance.put(`/api/tourist/cancelBooking`, { itemId: eventId });
+        if (response.status === 200) {
+          alert("Event cancelled successfully");
+          window.location.reload();
+        }
+      } else {
+        const response = await axiosInstance.post(`/api/tourist/events/cancelEvent`, { eventId: eventId, eventType: eventType });
+        if (response.status === 200) {
+          alert("Event cancelled successfully");
+          window.location.reload();
+        }
+      }
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -118,13 +143,21 @@ const Events = () => {
         )
       ) : event.status === "Pending" ? (
         // Upcoming Unpaid Events: Display Complete Payment button
-        <button
-          id="tab-button"
-          className="bg-primary text-white px-4 py-2 rounded-md mt-2"
-          onClick={handleCompletePayment}
-        >
-          Complete Payment
-        </button>
+        <div id="upcoming-btns">
+          <button
+            id="tab-button"
+            className="bg-primary text-white px-4 py-2 rounded-md mt-2"
+            onClick={handleCompletePayment}
+          >
+            Complete Payment
+          </button>
+          <Button
+            className="ml-4 bg-red-600 text-white hover:bg-red-700"
+            onClick={handleCancelEvent(event.eventId, event.eventType, event.status)}
+          >
+            Cancel
+          </Button>
+        </div>
       ) : (
         // Upcoming Paid Events
         <p className="text-green-500 mt-2">Event Paid</p>

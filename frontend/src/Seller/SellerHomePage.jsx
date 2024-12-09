@@ -20,7 +20,7 @@ function FeaturedProducts() {
         const response = await axiosInstance.get(
           "http://localhost:5000/api/seller/product/viewProducts"
         );
-  
+
         if (Array.isArray(response.data.data)) {
           setProducts(response.data.data); // Update state with the array of products
         } else {
@@ -30,7 +30,7 @@ function FeaturedProducts() {
         console.error("Error fetching products:", error);
       }
     };
-  
+
     fetchProducts();
   }, []);
 
@@ -77,7 +77,7 @@ function FeaturedProducts() {
 
 function MyProducts() {
   const [myProducts, setMyProducts] = useState([]);
-  {/*const { id } = useParams();*/}
+  {/*const { id } = useParams();*/ }
 
   useEffect(() => {
     const fetchMyProducts = async () => {
@@ -85,7 +85,7 @@ function MyProducts() {
         const response = await axiosInstance.get(
           `http://localhost:5000/api/seller/product/viewMyProducts`
         );
-  
+
         if (Array.isArray(response.data.data)) {
           setMyProducts(response.data.data); // Update state with the user's products
         } else {
@@ -95,7 +95,7 @@ function MyProducts() {
         console.error("Error fetching user's products:", error);
       }
     };
-  
+
     fetchMyProducts();
   }, []);
 
@@ -122,28 +122,28 @@ function MyProducts() {
           You don't have any products.
         </div>
       ) : (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {myProductsList.map((product, index) => (
-          <Card key={product._id}>
-            <CardHeader>
-              <CardTitle>{product.Name}</CardTitle>
-              <CardDescription>{product.Description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <img src={getImageForProduct(index)} alt="Product Image" className="w-full h-[200px] object-cover rounded-md" />
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <div className="flex items-center">
-                <Calendar className="mr-2 h-4 w-4" />
-                <span>{product.Ratings}</span>
-              </div>
-              <Link to={`/product/${product._id}`}>
-                <Button>View Details</Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {myProductsList.map((product, index) => (
+            <Card key={product._id}>
+              <CardHeader>
+                <CardTitle>{product.Name}</CardTitle>
+                <CardDescription>{product.Description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <img src={getImageForProduct(index)} alt="Product Image" className="w-full h-[200px] object-cover rounded-md" />
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <div className="flex items-center">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  <span>{product.Ratings}</span>
+                </div>
+                <Link to={`/product/${product._id}`}>
+                  <Button>View Details</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
       )}
     </section>
   );
@@ -156,10 +156,10 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative h-[500px]">
-        <img 
-          src="/placeholder.svg?height=500&width=1920" 
-          alt="Hero Background" 
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
+        <img
+          src="..\src\assets\Images\back.jpg"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold mb-4">Discover Your Next Adventure</h1>

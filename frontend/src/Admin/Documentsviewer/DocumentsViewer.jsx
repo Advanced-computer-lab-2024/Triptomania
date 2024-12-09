@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Typography } from '@mui/material';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import './DocumentsViewer.css';
 import axiosInstance from '@/axiosInstance';
+import Loading from '@/components/Loading';
+import { Header } from '@/components/AdminHeader'
 
 const DocumentsViewer = () => {
     const [documents, setDocuments] = useState({
@@ -14,32 +15,32 @@ const DocumentsViewer = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-   const fetchDocuments = async () => {
-    try {
-        const response = await axiosInstance.get('/api/admin/getAllDocuments');
-        
-        if (response.data && response.data.documents) {
-            // Filter out users with no documents or 'none' documents
-            const filteredDocuments = {
-                sellers: response.data.documents.sellers.filter(seller => 
-                    seller.status === 'pending'),
-                advertisers: response.data.documents.advertisers.filter(advertiser => 
-                    advertiser.status === 'pending'),
-                tourGuides: response.data.documents.tourGuides.filter(guide => 
-                    guide.status === 'pending')
-            };
-            
-            setDocuments(filteredDocuments);
-        } else {
-            throw new Error('Invalid response structure');
+    const fetchDocuments = async () => {
+        try {
+            const response = await axiosInstance.get('/api/admin/getAllDocuments');
+
+            if (response.data && response.data.documents) {
+                // Filter out users with no documents or 'none' documents
+                const filteredDocuments = {
+                    sellers: response.data.documents.sellers.filter(seller =>
+                        seller.status === 'pending'),
+                    advertisers: response.data.documents.advertisers.filter(advertiser =>
+                        advertiser.status === 'pending'),
+                    tourGuides: response.data.documents.tourGuides.filter(guide =>
+                        guide.status === 'pending')
+                };
+
+                setDocuments(filteredDocuments);
+            } else {
+                throw new Error('Invalid response structure');
+            }
+            setLoading(false);
+        } catch (err) {
+            console.error('Error details:', err);
+            setError(`Failed to fetch documents: ${err.message}`);
+            setLoading(false);
         }
-        setLoading(false);
-    } catch (err) {
-        console.error('Error details:', err);
-        setError(`Failed to fetch documents: ${err.message}`);
-        setLoading(false);
-    }
-};
+    };
     useEffect(() => {
         fetchDocuments();
     }, []);
@@ -52,10 +53,10 @@ const DocumentsViewer = () => {
             }
             window.open(user.documentUrl, '_blank', 'noopener,noreferrer');
         };
-        
+
         const handleAccept = async () => {
             try {
-                await axiosInstance.put('/api/admin/acceptUser', {type: user.userType, id: user.userId});  // Add user ID to URL
+                await axiosInstance.put('/api/admin/acceptUser', { type: user.userType, id: user.userId });  // Add user ID to URL
                 fetchDocuments();
             } catch (err) {
                 console.error('Accept error:', err);
@@ -65,7 +66,7 @@ const DocumentsViewer = () => {
 
         const handleReject = async () => {
             try {
-                await axiosInstance.put('/api/admin/rejectUser', {type: user.userType, id: user.userId});  // Add user ID to URL
+                await axiosInstance.put('/api/admin/rejectUser', { type: user.userType, id: user.userId });  // Add user ID to URL
                 fetchDocuments();
             } catch (err) {
                 console.error('Reject error:', err);
@@ -81,24 +82,24 @@ const DocumentsViewer = () => {
                         {user.status || 'Pending'}
                     </span>
                     <div className="button-group">
-                        <button 
+                        <button
                             className={`view-button ${(!user.documentUrl || user.documentUrl === 'none' || user.documentUrl === '') ? 'disabled' : ''}`}
                             onClick={handleViewDocument}
                             disabled={!user.documentUrl || user.documentUrl === 'none' || user.documentUrl === ''}
                         >
                             <PictureAsPdfIcon />
-                            {(!user.documentUrl || user.documentUrl === 'none' || user.documentUrl === '') 
-                                ? 'No Document' 
+                            {(!user.documentUrl || user.documentUrl === 'none' || user.documentUrl === '')
+                                ? 'No Document'
                                 : 'View Document'}
                         </button>
                         <div className="action-buttons">
-                            <button 
+                            <button
                                 className="accept-button"
                                 onClick={handleAccept}
                             >
                                 Accept
                             </button>
-                            <button 
+                            <button
                                 className="reject-button"
                                 onClick={handleReject}
                             >
@@ -113,11 +114,7 @@ const DocumentsViewer = () => {
 
     if (loading) {
         return (
-            <div className="documents-container">
-                <div className="loading-spinner">
-                    <Typography>Loading documents...</Typography>
-                </div>
-            </div>
+            <Loading />
         );
     }
 
@@ -132,61 +129,64 @@ const DocumentsViewer = () => {
     }
 
     return (
-        <div className="documents-container">
-            <h1 className="section-title">Pending Documents</h1>
+        <div>
+            <Header />
+            <div className="documents-container">
+                <h1 className="section-title">Pending Documents</h1>
 
-            {/* Sellers Section */}
-            <h2 className="section-title">Pending Seller Documents</h2>
-            <div className="documents-grid">
-                {documents.sellers && documents.sellers.length > 0 ? (
-                    documents.sellers.map((seller) => (
-                        <UserDocumentCard 
-                            key={seller.userId} 
-                            user={seller} 
-                            userType="Seller" 
-                        />
-                    ))
-                ) : (
-                    <div className="empty-state">
-                        <Typography>No pending seller documents</Typography>
-                    </div>
-                )}
-            </div>
+                {/* Sellers Section */}
+                <h2 className="section-title">Pending Seller Documents</h2>
+                <div className="documents-grid">
+                    {documents.sellers && documents.sellers.length > 0 ? (
+                        documents.sellers.map((seller) => (
+                            <UserDocumentCard
+                                key={seller.userId}
+                                user={seller}
+                                userType="Seller"
+                            />
+                        ))
+                    ) : (
+                        <div className="empty-state">
+                            <Typography>No pending seller documents</Typography>
+                        </div>
+                    )}
+                </div>
 
-            {/* Advertisers Section */}
-            <h2 className="section-title">Pending Advertiser Documents</h2>
-            <div className="documents-grid">
-                {documents.advertisers && documents.advertisers.length > 0 ? (
-                    documents.advertisers.map((advertiser) => (
-                        <UserDocumentCard 
-                            key={advertiser.userId} 
-                            user={advertiser} 
-                            userType="Advertiser" 
-                        />
-                    ))
-                ) : (
-                    <div className="empty-state">
-                        <Typography>No pending advertiser documents</Typography>
-                    </div>
-                )}
-            </div>
+                {/* Advertisers Section */}
+                <h2 className="section-title">Pending Advertiser Documents</h2>
+                <div className="documents-grid">
+                    {documents.advertisers && documents.advertisers.length > 0 ? (
+                        documents.advertisers.map((advertiser) => (
+                            <UserDocumentCard
+                                key={advertiser.userId}
+                                user={advertiser}
+                                userType="Advertiser"
+                            />
+                        ))
+                    ) : (
+                        <div className="empty-state">
+                            <Typography>No pending advertiser documents</Typography>
+                        </div>
+                    )}
+                </div>
 
-            {/* Tour Guides Section */}
-            <h2 className="section-title">Pending Tour Guide Documents</h2>
-            <div className="documents-grid">
-                {documents.tourGuides && documents.tourGuides.length > 0 ? (
-                    documents.tourGuides.map((guide) => (
-                        <UserDocumentCard 
-                            key={guide.userId} 
-                            user={guide} 
-                            userType="Tour Guide" 
-                        />
-                    ))
-                ) : (
-                    <div className="empty-state">
-                        <Typography>No pending tour guide documents</Typography>
-                    </div>
-                )}
+                {/* Tour Guides Section */}
+                <h2 className="section-title">Pending Tour Guide Documents</h2>
+                <div className="documents-grid">
+                    {documents.tourGuides && documents.tourGuides.length > 0 ? (
+                        documents.tourGuides.map((guide) => (
+                            <UserDocumentCard
+                                key={guide.userId}
+                                user={guide}
+                                userType="Tour Guide"
+                            />
+                        ))
+                    ) : (
+                        <div className="empty-state">
+                            <Typography>No pending tour guide documents</Typography>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

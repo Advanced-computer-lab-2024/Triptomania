@@ -232,7 +232,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative h-[500px]">
         <img 
-          src="src\assets\Images\beach.jpg"
+          src="src\assets\Images\back.jpg"
           alt="Hero Background" 
           className="absolute inset-0 w-full h-full object-cover"
         />

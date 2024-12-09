@@ -350,8 +350,13 @@ const requestAccountDeletion = async (req, res) => {
                     account = await sellerModel.findById(id);
                     if (account) {
                         accountModel = sellerModel;
+                    } else {
+                        account = await tourismGovernorModel.findById(id);
+                        if (account) {
+                            accountModel = tourismGovernorModel;
+                        }
                     }
-                }
+                } 
             }
         }
 
@@ -419,13 +424,14 @@ const getNotifications = async (req, res) => {
 
         const userModel = userCollections[type];
 
-        const user = await userModel.findById(userId).populate('notifications');
+        const user = await userModel.findById(userId).populate({ path: 'notifications.id', select: 'title body' });
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
         return res.status(200).json({ notifications: user.notifications });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Something went wrong' });
     }
 }

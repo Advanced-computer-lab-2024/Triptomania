@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './viewMyComplaints.css';
 import { Header } from '@/components/HeaderTourist';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 
 const ViewMyComplaints = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const ViewMyComplaints = () => {
       <Header />
       <div className="view-complaints-container">
         <div className="view-complaints-form">
-          <h2>Your Complaints</h2>
+          <h1>Your Complaints</h1>
           {complaints.length === 0 ? (
             <p>No complaints found</p>
           ) : (
@@ -48,15 +51,21 @@ const ViewMyComplaints = () => {
                 <li key={complaint._id} className="complaint-item">
                   <div className="complaint-info">
                     <h3>{complaint.title}</h3>
-                    <p>{complaint.description}</p>
+                    <p>{complaint.body}</p>
                     <p className={`status ${complaint.status}`}>
                       Status: {complaint.status.charAt(0).toUpperCase() + complaint.status.slice(1)}
+                    </p>
+                    <p>
+                      Reply: {complaint.reply || 'No reply yet'}
                     </p>
                   </div>
                 </li>
               ))}
             </ul>
           )}
+          <Button id='tab-button' onClick={() => navigate('/tourist/fileComplaint')}>
+            File New Complaint
+          </Button>
         </div>
       </div>
     </div>

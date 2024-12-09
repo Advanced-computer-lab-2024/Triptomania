@@ -24,6 +24,8 @@ export function Header() {
             <Link to="/advertiser/home" className="header-link">Home</Link>
             <Link to="/advertiser/Activities" className="header-link">My Activities</Link>
             <Link to="/advertiser/addActivity" className="header-link">Add Activity</Link>
+            <Link to="/advertiser/generateSalesReport" className="header-link">Sales Report</Link>
+            <Link to="/advertiser/generateTouristReport" className="header-link">Tourist Report</Link>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Link to="/advertiser/notifications" className="icon-link">

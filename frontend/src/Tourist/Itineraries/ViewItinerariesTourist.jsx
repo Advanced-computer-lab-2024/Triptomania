@@ -34,15 +34,15 @@ const ViewItinerariesTourist = () => {
   const [bookmarkedItineraries, setBookmarkedItineraries] = useState(new Set());
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [copied, setCopied] = useState(null); // Track copied place URL
+  const [currency, setCurrency] = useState('USD'); // Currency state
 
   const navigate = useNavigate();
 
-  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // State for selected currency
   const exchangeRates = {
     USD: 1,
     EUR: 0.85,
     GBP: 0.75,
-    EPG: 30,
+    INR: 30,
   };
 
   useEffect(() => {
@@ -111,12 +111,44 @@ const ViewItinerariesTourist = () => {
     }
   };
 
-  const handleCurrencyChange = (currency) => {
-    setSelectedCurrency(currency);
+  const convertPrice = (price) => {
+    return (price * exchangeRates[currency]).toFixed(2);
   };
 
-  const convertPrice = (price) => {
-    return (price * exchangeRates[selectedCurrency]).toFixed(2);
+  const fetchFilteredItineraries = async () => {
+    setLoading(true); // Show loading indicator while fetching filtered itineraries
+    try {
+      const filters = {
+        minPrice: budgetRange[0],
+        maxPrice: budgetRange[1],
+        date: selectedDate ? selectedDate.toISOString().split('T')[0] : null,
+        preferences: preferences.join(','),
+        language: selectedLanguage,
+      };
+
+      const query = Object.keys(filters)
+        .filter((key) => filters[key]) // Include only non-empty filters
+        .map((key) => `${key}=${encodeURIComponent(filters[key])}`)
+        .join('&');
+
+      const response = await axiosInstance.get(`/api/tourist/filterItineraries?${query}`);
+
+      if (response.status === 200 && Array.isArray(response.data) && response.data.length === 0) {
+        setItineraries([]); // No itineraries found for the filter
+      } else if (response.status === 200) {
+        setItineraries(response.data || []);
+      } else {
+        setItineraries([]); // Handle unexpected response
+      }
+    } catch (error) {
+      if (error.response?.status === 404) {
+        setItineraries([]); // Handle 404 explicitly
+      } else {
+        console.error('Error fetching filtered itineraries:', error.response?.data || error.message);
+      }
+    } finally {
+      setLoading(false); // Hide loading indicator once data is fetched
+    }
   };
 
   const handleFilterClick = () => {
@@ -184,17 +216,24 @@ const ViewItinerariesTourist = () => {
     <div className="view-itineraries">
       <Header />
 
-      {/* Currency Selector at the top right */}
-      <div className="currency-selector">
-        <Button variant={selectedCurrency === 'USD' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('USD')}>USD</Button>
-        <Button variant={selectedCurrency === 'EUR' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('EUR')}>EUR</Button>
-        <Button variant={selectedCurrency === 'GBP' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('GBP')}>GBP</Button>
-        <Button variant={selectedCurrency === 'EPG' ? 'outline' : 'secondary'} onClick={() => handleCurrencyChange('EPG')}>EPG</Button>
-      </div>
-
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
+
+          {/* Currency Dropdown */}
+          <div className="currency-dropdown mb-4">
+            <Label>Currency</Label>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="w-full"
+            >
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
 
           <div className="mb-4">
             <Label>Budget Range</Label>
@@ -335,7 +374,7 @@ const ViewItinerariesTourist = () => {
                   </div>
                   <div className="itinerary-footer">
                     <p className="itinerary-price">
-                      {selectedCurrency} {convertPrice(itinerary.price)}
+                      {currency} {convertPrice(itinerary.price)}
                     </p>
                     {/* Share button for each historical place */}
                     <Button

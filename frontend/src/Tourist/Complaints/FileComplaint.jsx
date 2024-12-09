@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button"; 
-import { Input } from "@/components/ui/input";    
-import { Textarea } from "@/components/ui/textarea";  
-import { Label } from "@/components/ui/label";    
-import { Badge } from "@/components/ui/badge"; 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import './fileComplaint.css';
 import axiosInstance from '@/axiosInstance'; // Import the Axios instance
+import { Header } from '@/components/HeaderTourist'; // Import the Header component
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 
 const SubmitComplaint = () => {
     const [complaint, setComplaint] = useState({
@@ -13,6 +15,7 @@ const SubmitComplaint = () => {
         body: '',
     });
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,35 +49,41 @@ const SubmitComplaint = () => {
     };
 
     return (
-        <div className="submit-complaint-container">
-            <form onSubmit={handleSubmit} className="submit-complaint-form">
-                <h2>Submit a Complaint</h2>
+        <div>
+            <Header />
+            <div className="submit-complaint-container">
+                <form onSubmit={handleSubmit} className="submit-complaint-form">
+                    <h2>Submit a Complaint</h2>
 
-                <div className="input-group">
-                    <Label htmlFor="title">Complaint Title</Label>
-                    <Input
-                        id="title"
-                        name="title"
-                        value={complaint.title}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                    <div className="input-group">
+                        <Label htmlFor="title">Complaint Title</Label>
+                        <Input
+                            id="title"
+                            name="title"
+                            value={complaint.title}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                <div className="input-group">
-                    <Label htmlFor="body">Complaint Description</Label>
-                    <Textarea
-                        id="body"
-                        name="body"
-                        value={complaint.body}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                {error && <p className="error-message">{error}</p>}
+                    <div className="input-group">
+                        <Label htmlFor="body">Complaint Description</Label>
+                        <Textarea
+                            id="body"
+                            name="body"
+                            value={complaint.body}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    {error && <p className="error-message">{error}</p>}
 
-                <Button type="submit" className="submit-btn">Submit Complaint</Button>
-            </form>
+                    <Button type="submit" className="submit-btn">Submit Complaint</Button>
+                    <br></br>
+                    <br></br>
+                    <Button className='submit-btn' onClick={() => navigate('/tourist/view-mycomplaints')}>Cancel</Button>
+                </form>
+            </div>
         </div>
     );
 };

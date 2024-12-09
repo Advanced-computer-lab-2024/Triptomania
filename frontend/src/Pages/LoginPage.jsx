@@ -58,7 +58,7 @@ const LoginPage = () => {
             return;
           } else if (response.data.user.status === 'accepted') {
             if (response.data.user.acceptedTerms) {
-              navigate('/advertiser/home');
+              navigate('/seller/home');
             } else {
               navigate('/acceptTerms')
             }
@@ -73,7 +73,7 @@ const LoginPage = () => {
             return;
           } else if (response.data.user.status === 'accepted') {
             if (response.data.user.acceptedTerms) {
-              navigate('/advertiser/home');
+              navigate('/tourGuide/home');
             } else {
               navigate('/acceptTerms')
             }
@@ -99,7 +99,7 @@ const LoginPage = () => {
     <div className='login-page-wrapper'>
       <div className={styles['login-container']}>
         <div className={styles['login-box']}>
-          <h1>Triptomania</h1>
+          <h1>TripTomania</h1>
           <form onSubmit={handleLogin}>
             <div className={styles['form-group']}>
               <input
@@ -149,6 +149,13 @@ const LoginPage = () => {
               onClick={() => navigate('/signUp')}
             >
               Don't have an account? Sign up
+            </p>
+            <p
+              className={styles['signup-button']}
+              // Uncomment below if you want to enable navigation
+              onClick={() => navigate('/')}
+            >
+              Or browse as a guest
             </p>
           </form>
         </div>

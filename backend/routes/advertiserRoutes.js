@@ -158,4 +158,6 @@ router.get('/getNotifications', (req, res, next) => authMiddleware.verifyToken(r
 
 router.post('/readNotification', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), sharedController.readNotification);
 
+router.get('/activities/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), activityController.getCategories);
+
 export default router;

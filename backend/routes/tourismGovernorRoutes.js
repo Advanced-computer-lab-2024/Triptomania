@@ -42,7 +42,7 @@ router.get('/getHistoricalPlaces', (req, res, next) => authMiddleware.verifyToke
  *       200:
  *         description: Details of the historical place
  */
-router.get('/getHistoricalPlace', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.getHistoricalPlace);
+router.get('/getHistoricalPlace/:id', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['tourismGovernor']), historicalPlaceController.getHistoricalPlace);
 
 /**
  * @swagger

@@ -5,6 +5,7 @@ import axiosInstance from '@/axiosInstance';
 
 const TouristSignUp = () => {
     const navigate = useNavigate();
+    const [touristId, setTouristId] = useState(null); // Added state for tourist ID
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -43,6 +44,7 @@ const TouristSignUp = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
+            setTouristId(response.data._id); // Store tourist ID in state
             setSuccess(true); // Display success message
         } catch (err) {
             console.error('Signup error:', err);
@@ -123,8 +125,10 @@ const TouristSignUp = () => {
                     <div className="success-message">
                         <p>
                             Sign-up successful!{' '}
-                            <span onClick={() => navigate('/login')} className="login-link">
-                                Please Log in
+                            <span onClick={() => navigate('/tourist/preferences', {
+                                state: { touristId: touristId }
+                            })} className="login-link">
+                                Continue Signup
                             </span>
                         </p>
                     </div>

@@ -8,6 +8,8 @@ import axiosInstance from '@/axiosInstance';
 import './addActivity.css';
 import { FileText } from 'lucide-react'; // Import FileText icon
 import {Header} from '@/components/AdvertiserHeader'; // Import Header component
+import { useNavigate } from 'react-router-dom';
+
 const AddActivity = () => {
     const [activity, setActivity] = useState({
         name: '',
@@ -26,6 +28,7 @@ const AddActivity = () => {
     const [mapKey, setMapKey] = useState('');
     const [creatorId, setCreatorId] = useState('');
     const mapRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -145,6 +148,7 @@ const AddActivity = () => {
                     specialDiscounts: '', 
                     isBookingOpen: true
                 });
+                navigate('/advertiser/Activities');
             } else {
                 alert(response.data.error || "Error adding activity");
             }

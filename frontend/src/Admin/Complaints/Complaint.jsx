@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Header } from '@/components/AdminHeader';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import axiosInstance from '@/axiosInstance';
 import './Complaint.css';
+import Loading from '@/components/Loading';
 
 const ComplaintDetails = () => {
   const location = useLocation();
-  const { complaint } = location.state || {};
+  const { id } = location.state || {};
+  const [complaint, setComplaint] = useState({});
   const [reply, setReply] = useState('');
   const [isReplying, setIsReplying] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [status, setStatus] = useState(complaint?.status || 'pending'); // Initialize status
+  const [status, setStatus] = useState(''); // Initialize status
+  const [loading, setLoading] = useState(true);
 
-  if (!complaint) {
-    return (
-      <div className="complaint-details-page">
-        <Header />
-        <div className="content">
-          <p className="error-message">No complaint data found. Please go back and try again.</p>
-        </div>
-      </div>
-    );
+  useEffect(() => {
+    fetchComplaintDetails(); // Fetch all complaints initially
+  }, []);
+
+  const fetchComplaintDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get(`/api/admin/complaints/viewComplaint?id=${id}`);
+      if (response.status === 200) {
+        setComplaint(response.data.complaint)
+      }
+    } catch (error) {
+      console.error('Error fetching complaint:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleSendReply = async () => {
@@ -41,6 +51,7 @@ const ComplaintDetails = () => {
       if (response.status === 200) {
         setSuccessMessage('Reply sent successfully!');
         setReply('');
+        fetchComplaintDetails();
       } else {
         setErrorMessage('Failed to send reply. Please try again.');
       }
@@ -54,11 +65,15 @@ const ComplaintDetails = () => {
 
   const handleStatusChange = async (event) => {
     const newStatus = event.target.value;
+    if (newStatus === '') {
+      return;
+    }
     setStatus(newStatus);
     setSuccessMessage('');
     setErrorMessage('');
 
     try {
+      setLoading(true);
       const response = await axiosInstance.put('/api/admin/complaints/updateStatus', {
         id: complaint._id,
         status: newStatus,
@@ -66,14 +81,19 @@ const ComplaintDetails = () => {
 
       if (response.status === 200) {
         setSuccessMessage(`Complaint status updated to "${newStatus}".`);
+        fetchComplaintDetails();
       } else {
         setErrorMessage('Failed to update status. Please try again.');
       }
     } catch (error) {
       console.error('Error updating status:', error);
       setErrorMessage('An error occurred while updating the status.');
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) return <Loading />
 
   return (
     <div className="complaint-details-page">
@@ -86,10 +106,13 @@ const ComplaintDetails = () => {
             <strong>Submitted by:</strong> {complaint.touristId?.username || 'Unknown'}
           </p>
           <p>
-            <strong>Status:</strong> {status}
+            <strong>Status:</strong> {complaint.status}
           </p>
           <p>
             <strong>Date:</strong> {new Date(complaint.date).toLocaleDateString() || 'Unknown'}
+          </p>
+          <p>
+            <strong>Previous reply:</strong> {complaint.reply || 'No Reply'}
           </p>
           <p className="mt-4">{complaint.body}</p>
 
@@ -100,9 +123,9 @@ const ComplaintDetails = () => {
               onChange={handleStatusChange}
               className="status-dropdown"
             >
+              <option value="">Choose status</option>
               <option value="pending">Mark as Pending</option>
               <option value="resolved">Mark as Resolved</option>
-              <option value="resolved">Choose status</option>
               
             </select>
           </div>

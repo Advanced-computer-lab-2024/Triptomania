@@ -50,10 +50,10 @@ const getHistoricalPlace = async (req, res) => {
 const addHistoricalPlace = async (req, res) => {
     
     try {
-        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, Category } = req.body;
+        const { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, Tags } = req.body;
         const creatorId = req.user._id;
         // Check that all required fields are provided
-        if (!Name || !Description || !Picture || !Location || !Opening_hours || !Closing_hours || !Ticket_prices || !Category || !creatorId) {
+        if (!Name || !Description || !Picture || !Location || !Opening_hours || !Closing_hours || !Ticket_prices || !Tags || !creatorId) {
             return res.status(400).json({ message: "All required fields must be provided." });
         }
 
@@ -96,7 +96,7 @@ const addHistoricalPlace = async (req, res) => {
             Opening_hours, 
             Closing_hours, 
             Ticket_prices, 
-            Category,
+            Tags,
             creatorId
         });
 
@@ -116,14 +116,14 @@ const addHistoricalPlace = async (req, res) => {
 
 const editHistoricalPlace = async (req, res) => {
     try {;
-        const { id, Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices } = req.body;
+        const { id, Name, Description, Location, Opening_hours, Closing_hours, Ticket_prices } = req.body;
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(404).json({
                 status: false,
                 error: 'Historical place not found'
             });
         }
-        const updatedHistoricalPlace = { Name, Description, Picture, Location, Opening_hours, Closing_hours, Ticket_prices, _id: id };
+        const updatedHistoricalPlace = { Name, Description, Location, Opening_hours, Closing_hours, Ticket_prices, _id: id };
         await historicalPlaceModel.findByIdAndUpdate(id, updatedHistoricalPlace, { new: true });
         res.status(200).json({
             status: true,
@@ -163,7 +163,7 @@ const getMyHistoricalPlaces = async (req, res) => {
     const creatorId = req.user._id;
 
     try {
-        const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId });
+        const historicalPlaces = await historicalPlaceModel.find({ creatorId: creatorId }).populate('Tags');
 
         // Check if any historical places were found
         if (!historicalPlaces || historicalPlaces.length === 0) {

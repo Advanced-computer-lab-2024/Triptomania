@@ -81,3 +81,10 @@
   max-width: 100%;
   height: auto;
 }
+
+#security-buttons {
+  width: 30%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}

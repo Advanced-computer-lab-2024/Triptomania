@@ -20,7 +20,7 @@ function FeaturedProducts() {
         const response = await axiosInstance.get(
           "http://localhost:5000/api/seller/product/viewMyProducts"
         );
-  
+
         if (Array.isArray(response.data.data)) {
           setProducts(response.data.data); // Update state with the array of products
         } else {
@@ -30,7 +30,7 @@ function FeaturedProducts() {
         console.error("Error fetching products:", error);
       }
     };
-  
+
     fetchProducts();
   }, []);
 
@@ -61,10 +61,10 @@ function FeaturedProducts() {
                 <CardDescription>{product.Description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <img 
-                  src={getImageForItinerary(index)} 
-                  alt="Product Image" 
-                  className="w-full h-[200px] object-cover rounded-md" 
+                <img
+                  src={getImageForItinerary(index)}
+                  alt="Product Image"
+                  className="w-full h-[200px] object-cover rounded-md"
                 />
               </CardContent>
               <CardFooter className="flex justify-between">
@@ -79,7 +79,7 @@ function FeaturedProducts() {
       )}
     </section>
   );
-}  
+}
 
 
 export default function LandingPage() {
@@ -89,10 +89,10 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative h-[500px]">
-        <img 
-          src="/placeholder.svg?height=500&width=1920" 
-          alt="Hero Background" 
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
+        <img
+          src="src\assets\Images\back.jpg"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold mb-4">Discover Your Next Adventure</h1>

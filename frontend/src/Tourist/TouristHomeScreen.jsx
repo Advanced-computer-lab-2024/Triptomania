@@ -24,7 +24,7 @@ function FeaturedItineraries() {
     const fetchItineraries = async () => {
       try {
         const response = await axiosInstance.get("http://localhost:5000/api/guest/itineraries/viewItineraries");
-      
+
         if (response.data.status && Array.isArray(response.data.itineraries)) {
           setItineraries(response.data.itineraries);
         } else {
@@ -89,7 +89,7 @@ function FeaturedActivities() {
     const fetchActivities = async () => {
       try {
         const response = await axiosInstance.get("http://localhost:5000/api/guest/activities/viewActivities");
-    
+
         // Directly set the activities as an array from the response
         if (Array.isArray(response.data)) {
           setActivities(response.data); // No need to access 'activities' if it's already an array
@@ -100,7 +100,7 @@ function FeaturedActivities() {
         console.error("Error fetching activities:", error);
       }
     };
-    
+
 
     fetchActivities();
   }, []);
@@ -125,11 +125,11 @@ function FeaturedActivities() {
                 <MapPin className="mr-2 h-4 w-4" />
                 <span>{activity.location}</span>
               </div>
-              
+
               <Link to={`/activity/${activity._id}`}>
                 <Button>View Details</Button>
               </Link>
-              
+
             </CardFooter>
           </Card>
         ))}
@@ -159,10 +159,10 @@ function FeaturedHistoricalPlaces() {
     const fetchHistoricalPlaces = async () => {
       try {
         const response = await axiosInstance.get("http://localhost:5000/api/guest/historicalPlaces/getHistoricalPlaces");
-    
+
         // Directly set the activities as an array from the response
         if (Array.isArray(response.data.historicalPlaces)) {
-          setHistoricalPlaces(response.data.historicalPlaces); 
+          setHistoricalPlaces(response.data.historicalPlaces);
         } else {
           console.error("Invalid data format: places is not an array", response.data);
         }
@@ -170,7 +170,7 @@ function FeaturedHistoricalPlaces() {
         console.error("Error fetching places:", error);
       }
     };
-    
+
 
     fetchHistoricalPlaces();
   }, []);
@@ -195,11 +195,11 @@ function FeaturedHistoricalPlaces() {
                 <MapPin className="mr-2 h-4 w-4" />
                 <span>{historicalPlaces.Location}</span>
               </div>
-              
+
               <Link to={`/historicalPlaces/${historicalPlaces._id}`}>
                 <Button>View Details</Button>
               </Link>
-              
+
             </CardFooter>
           </Card>
         ))}
@@ -232,7 +232,7 @@ function FeaturedProducts() {
         const response = await axiosInstance.get(
           "http://localhost:5000/api/tourist/product/viewProducts"
         );
-  
+
         if (Array.isArray(response.data)) {
           setProducts(response.data); // Update state with the array of products
         } else {
@@ -242,7 +242,7 @@ function FeaturedProducts() {
         console.error("Error fetching products:", error);
       }
     };
-  
+
     fetchProducts();
   }, []);
 
@@ -296,10 +296,10 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative h-[500px]">
-        <img 
-          src="/placeholder.svg?height=500&width=1920" 
-          alt="Hero Background" 
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
+        <img
+          src="..\src\assets\Images\back.jpg"
+          alt="Hero Background"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <h1 className="text-4xl font-bold mb-4">Discover Your Next Adventure</h1>
@@ -318,10 +318,10 @@ export default function LandingPage() {
       <FeaturedActivities />
 
       {/* Historical Places Section */}
-        <FeaturedHistoricalPlaces />
+      <FeaturedHistoricalPlaces />
 
       {/* Products */}
-        <FeaturedProducts />
+      <FeaturedProducts />
     </div>
   );
 }

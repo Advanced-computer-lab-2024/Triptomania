@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance'; // Adjust this to your actual axios instance
 import './EditActivity.css'; // Style for the activity edit form
+import Loading from '@/components/Loading';
 
 const EditActivity = () => {
   const { id } = useParams(); // Get activity ID from URL
@@ -58,8 +59,8 @@ const EditActivity = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (!activity) return <div>{errorMessage || 'Activity not found.'}</div>;
+  // Loading and error state
+  if (loading) return <Loading />;
 
   return (
     <div className="edit-activity-container">
@@ -193,7 +194,7 @@ const EditActivity = () => {
           <button className="save-button" onClick={handleSaveChanges}>
             Save Changes
           </button>
-          <button className="cancel-button" onClick={() => navigate('/advertiser/MyActivities')}>
+          <button className="cancel-button" onClick={() => navigate('/advertiser/Activities')}>
             Cancel
           </button>
         </div>
