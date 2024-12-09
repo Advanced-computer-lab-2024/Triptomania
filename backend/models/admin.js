@@ -29,9 +29,16 @@ const adminSchema = new Schema({
     resetTokenExpiration: {
         type: Date,
     },
-    fcmToken: {
-        type: String
-    }
+    notifications: [{
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Notification'
+      },
+      read: {
+        type: Boolean,
+        default: false
+      }
+    }]
 });
 
 adminSchema.pre('save', async function (next) {

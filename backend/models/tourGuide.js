@@ -16,19 +16,19 @@ const UserSchema = new Schema({
     type: { type: String, default: 'tourGuide' },
     tourists: [{ type: mongoose.Types.ObjectId, ref: 'Tourist' }],
     ratings: [
-      {
-        touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
-        rating: { type: Number, min: 0, max: 5, required: true }
-      }
+        {
+            touristId: { type: mongoose.Types.ObjectId, ref: 'Tourist', required: true },
+            rating: { type: Number, min: 0, max: 5, required: true }
+        }
     ],
     averageRating: { type: Number, default: 0 },
-    documents: {type: String, required: false, default: 'none'},
-    status :{type: String, enum: ['accepted' , 'rejected', 'pending'] , required:false , default: 'pending' }, 
+    documents: { type: String, required: false, default: 'none' },
+    status: { type: String, enum: ['accepted', 'rejected', 'pending'], required: false, default: 'pending' },
     acceptedTerms: { type: Boolean, default: false },
-    profilePicture: {type: String, required: false, default: 'none'},
-    deleteAccount:{
-      type: Boolean,
-      default: false
+    profilePicture: { type: String, required: false, default: 'none' },
+    deleteAccount: {
+        type: Boolean,
+        default: false
     },
     resetToken: {
         type: String,
@@ -36,10 +36,17 @@ const UserSchema = new Schema({
     resetTokenExpiration: {
         type: Date,
     },
-    fcmToken: {
-        type: String
-    }
-},{timestamps:true});
+    notifications: [{
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Notification'
+      },
+      read: {
+        type: Boolean,
+        default: false
+      }
+    }]
+}, { timestamps: true });
 
 UserSchema.pre('save', async function (next) {
     const tourguide = this;

@@ -8,6 +8,7 @@ import sellerModel from '../../models/seller.js';
 import adminModel from '../../models/admin.js';
 import activityModel from '../../models/activity.js';
 import itineraryModel from '../../models/itinerary.js';
+import notificationModel from '../../models/notification.js';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
 
 dotenv.config();
@@ -108,6 +109,28 @@ const checkoutCart = async (req, res) => {
             // Notify if out of stock
             if (product.Quantity === 0) {
                 await notifyOutOfStock(product);
+                const notification = await notificationModel.create({
+                    title: 'Product out of stock',
+                    body: `Product ${product.Name} is out of stock`
+                });
+                const notificationEntry = { id: notification.id, read: false };
+
+                // Add the notification to the seller
+                const seller = product.Seller;
+                await sellerModel.findByIdAndUpdate(
+                    seller,
+                    { $push: { notifications: notificationEntry } }
+                );
+
+                // Add the notification to all admins
+                const admins = await adminModel.find({});
+                const adminUpdates = admins.map(admin =>
+                    adminModel.findByIdAndUpdate(
+                        admin.id,
+                        { $push: { notifications: notificationEntry } }
+                    )
+                );
+                await Promise.all(adminUpdates);
             }
         }
 

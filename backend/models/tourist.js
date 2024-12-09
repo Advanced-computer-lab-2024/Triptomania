@@ -109,9 +109,6 @@ const touristSchema = new Schema({
       ref: 'Order'
     }
   ],
-  fcmToken: {
-      type: String
-  },
   itineraries: [
     Object
   ],
@@ -127,7 +124,17 @@ const touristSchema = new Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
     }
-  ]
+  ],
+  notifications: [{
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Notification'
+    },
+    read: {
+      type: Boolean,
+      default: false
+    }
+  }]
 }, { timestamps: true });
 
 touristSchema.pre('save', async function (next) {

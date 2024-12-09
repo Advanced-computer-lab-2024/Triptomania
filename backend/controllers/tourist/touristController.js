@@ -10,6 +10,8 @@ import activityCategoryModel from '../../models/activityCategory.js';
 import orderModel from '../../models/order.js';
 import { amadeus, getAccessToken } from '../../config/amadeus.js';
 import axios from 'axios';
+import promoCodeModel from '../../models/promoCode.js';
+import schedule from 'node-schedule';
 
 // Create a new tourist
 const CreateTourist = async (req, res) => {
@@ -1901,6 +1903,90 @@ const getBookings = async (req, res) => {
     return res.status(500).json({ error: 'Failed to fetch hotel bookings', details: error.message });
   }
 }
+
+const generatePromoCode = async (tourist) => {
+  try {
+    const date = new Date(tourist.DOB);
+    const expiry = new Date(date);
+    expiry.setDate(date.getDate() + 1);
+    const promo = await promoCodeModel.create({
+      code: `${tourist.username}Birthday15`,
+      discount: 15,
+      expiryDate: expiry
+    });
+  } catch (error) {
+    throw new Error(`Error generating promo code: ${error.message}`);
+  }
+}
+
+const sendBirthdayPromo = async (tourist) => {
+  try {
+    if (!tourist) {
+      throw new Error('Tourist not found');
+    }
+
+    // Add the tourist's email to recipients
+    const recipients = [
+      { email: tourist.email },
+    ];
+
+    // Prepare the email content
+    const sender = {
+      name: 'Triptomania',
+      email: 'triptomania.app@gmail.com',
+    };
+
+    const promoCode = generatePromoCode(tourist);
+
+    const emailContent = {
+      sender,
+      to: recipients,
+      templateId: 8, // Replace with your Brevo template ID
+      params: {
+        username: tourist.username,
+        promoCode: promoCode
+      }
+    };
+
+    // Send the email using Brevo transactional API
+    const response = await transactionalEmailApi.sendTransacEmail(emailContent);
+  } catch (error) {
+    throw new Error(`Error sending email: ${error.message}`);
+  }
+}
+// Define the task
+const checkAndSendBirthdayPromos = async () => {
+    try {
+        const today = new Date();
+        const month = today.getMonth() + 1; // Months are 0-indexed
+        const day = today.getDate();
+
+        // Query users with today's DOB
+        const usersWithBirthday = await userModel.find({
+            $expr: {
+                $and: [
+                    { $eq: [{ $month: "$DOB" }, month] },
+                    { $eq: [{ $dayOfMonth: "$DOB" }, day] }
+                ]
+            }
+        });
+
+        // Call sendBirthdayPromo for each user
+        usersWithBirthday.forEach((user) => {
+            sendBirthdayPromo(user); // Pass the full user object
+            console.log(`Birthday promo sent for user: ${user.name}`);
+        });
+
+        if (usersWithBirthday.length === 0) {
+            console.log('No users have birthdays today.');
+        }
+    } catch (error) {
+        console.error('Error checking and sending birthday promos:', error);
+    }
+};
+
+// Schedule the task for midnight
+schedule.scheduleJob('0 0 * * *', checkAndSendBirthdayPromos);
 
 // Export all functions using ES module syntax
 export default {
