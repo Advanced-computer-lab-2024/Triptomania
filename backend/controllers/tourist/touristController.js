@@ -470,29 +470,33 @@ const bookActivity = async (req, res) => {
     }
 
     // Check if the tourist's wallet has enough funds
-  
+
     if (activity.bookingMade.includes(_id)) {
       return res.status(400).json({ message: 'You have already booked this activity.' });
     }
 
 
 
-      // Proceed with booking
-      activity.bookingMade.push(_id);
-      const eventMap = {
-        name: activity.Name,
-        eventType: activity,
-        eventId: activityId,
-        date: activity.Start_date,
-        status:'Pending'
-    }
     // Proceed with booking
+    activity.bookingMade.push(_id);
+    const eventMap = {
+      name: activity.name,
+      eventType: 'activity',
+      eventId: activityId,
+      date: activity.date,
+      status: 'Pending'
+    }
+    tourist.activities.push(eventMap);
+    await tourist.save();
+    // Proceed with booking
+    tourist.activities.push(eventMap);
+    await tourist.save();
     activity.bookingMade.push(_id); // Add the touristId to the activity's bookingMade array
-   
+
 
     // Save the updated activity and tourist objects
     await activity.save(); // Save the updated activity with the new booking
-   
+
 
     res.status(200).json({ message: 'Activity booked successfully!', activity });
   } catch (error) {
@@ -520,7 +524,7 @@ const bookItinerary = async (req, res) => {
     }
 
     // Check if the tourist's wallet has enough funds
-   
+
 
     if (itinerary.bookingMade.includes(_id)) {
       return res.status(400).json({ message: 'You have already booked this Itinerary.' });
@@ -530,13 +534,13 @@ const bookItinerary = async (req, res) => {
     itinerary.bookingMade.push(_id);
     const eventMap = {
       name: itinerary.Name,
-      eventType: itinerary,
+      eventType: 'itinerary',
       eventId: itineraryId,
       date: itinerary.Start_date,
-      status:'Pending'
-  }
-  tourist.itineraries.push(eventMap);
-  await tourist.save();
+      status: 'Pending'
+    }
+    tourist.itineraries.push(eventMap);
+    await tourist.save();
     // Save the updated activity and tourist objects
     await itinerary.save(); // Save the updated activity with the new booking
 
@@ -802,9 +806,9 @@ const rateProduct = async (req, res) => {
 
     await product.save();
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: 'Rating submitted successfully',
-      averageRating: product.averageRating 
+      averageRating: product.averageRating
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -2023,33 +2027,33 @@ const sendBirthdayPromo = async (tourist) => {
 }
 // Define the task
 const checkAndSendBirthdayPromos = async () => {
-    try {
-        const today = new Date();
-        const month = today.getMonth() + 1; // Months are 0-indexed
-        const day = today.getDate();
+  try {
+    const today = new Date();
+    const month = today.getMonth() + 1; // Months are 0-indexed
+    const day = today.getDate();
 
-        // Query users with today's DOB
-        const usersWithBirthday = await userModel.find({
-            $expr: {
-                $and: [
-                    { $eq: [{ $month: "$DOB" }, month] },
-                    { $eq: [{ $dayOfMonth: "$DOB" }, day] }
-                ]
-            }
-        });
+    // Query users with today's DOB
+    const usersWithBirthday = await userModel.find({
+      $expr: {
+        $and: [
+          { $eq: [{ $month: "$DOB" }, month] },
+          { $eq: [{ $dayOfMonth: "$DOB" }, day] }
+        ]
+      }
+    });
 
-        // Call sendBirthdayPromo for each user
-        usersWithBirthday.forEach((user) => {
-            sendBirthdayPromo(user); // Pass the full user object
-            console.log(`Birthday promo sent for user: ${user.username}`);
-        });
+    // Call sendBirthdayPromo for each user
+    usersWithBirthday.forEach((user) => {
+      sendBirthdayPromo(user); // Pass the full user object
+      console.log(`Birthday promo sent for user: ${user.username}`);
+    });
 
-        if (usersWithBirthday.length === 0) {
-            console.log('No users have birthdays today.');
-        }
-    } catch (error) {
-        console.error('Error checking and sending birthday promos:', error);
+    if (usersWithBirthday.length === 0) {
+      console.log('No users have birthdays today.');
     }
+  } catch (error) {
+    console.error('Error checking and sending birthday promos:', error);
+  }
 };
 
 const now = new Date();

@@ -61,7 +61,6 @@ import Promocode from './Admin/Promocode/Promocode';
 import AccountCreation from './Admin/AccountCreation/AccountCreation';
 import Checkout from './Tourist/Checkout/Checkout';
 import Thankyoupage from './Tourist/Checkout/Thankyoupage/Thankyoupage';
-import Activities from './Tourist/Activities/Activities';
 import HistoricalPlacesView from './Tourist/HistoricalPlacesView/HistoricalPlacesView';
 import HistoricalPlacesVieww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesVieww';
 import HistoricalPlacesViewww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesViewww';
@@ -85,6 +84,8 @@ import UploadSellerPicture from './Pages/UploadSellerPicture';
 import UploadPictureGuide from './TourGuide/SignUp/UploadPictureGuide';
 import AdvertiserUploadDocument from './Advertiser/AdvertiserUploadDocument';
 import AdvertiserUploadPicture from './Advertiser/AdvertiserUploadPicture';
+import ViewActivitiesTourist from './Tourist/Activities/ViewActivitiesTourist';
+import ViewItinerariesTourist from './Tourist/Itineraries/ViewItinerariesTourist';
 const App = () => {
   return (    
     <Routes>
@@ -152,7 +153,6 @@ const App = () => {
       <Route path="/admin/accountCreation" element={<AccountCreation />} />
       <Route path="/checkout" element={<Checkout/>} />
       <Route path="/thankyou" element={<Thankyoupage />} />
-      <Route path="/tourist/Activities" element={<Activities />} />
       <Route path="/tourist/HistoricalPlaces" element={<HistoricalPlacesView />} />
    
       <Route path="/tourismgoverner/HistoricalPlaces" element={<HistoricalPlacesVieww />} />
@@ -174,6 +174,8 @@ const App = () => {
       <Route path="Admin/ViewItinerariesAdmin" element={<ViewItinerariesAdmin />} />
       <Route path="/advertiser/uploadDocument" element={<AdvertiserUploadDocument />} />
       <Route path="/advertiser/uploadPicture" element={<AdvertiserUploadPicture />} />
+      <Route path="/tourist/viewactivities-tourist" element={<ViewActivitiesTourist />} />
+      <Route path="/tourist/viewitineraries-tourist" element={<ViewItinerariesTourist />} />
     </Routes>
   );
 };

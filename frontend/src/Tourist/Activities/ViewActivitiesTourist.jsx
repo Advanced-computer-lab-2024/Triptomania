@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import './Activities.css';
-import { Header } from '../../components/Header';
+import './ViewActivitiesTourist.css';
+import { Header } from '../../components/HeaderTourist';
 import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
 
-const Activities = () => {
+const ViewActivitiesTourist = () => {
   const [activities, setActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]);
   const [categories, setCategories] = useState([]); // Dynamic categories
@@ -27,11 +27,10 @@ const Activities = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleSignInClick = () => {
-    navigate("/login");
-  };
 
   useEffect(() => {
     fetchAllActivities();
@@ -40,7 +39,7 @@ const Activities = () => {
 
   const fetchAllActivities = async () => {
     try {
-      const response = await axiosInstance.get('/api/tourist/activities/viewActivities');
+      const response = await axiosInstance.get('/api/tourist/activity/viewActivities');
       setAllActivities(response.data);
       setActivities(response.data);
     } catch (error) {
@@ -50,7 +49,7 @@ const Activities = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosInstance.get('/api/tourist/activities/getCategories');
+      const response = await axiosInstance.get('/api/tourist/activity/getCategories');
       setCategories(response.data); // Dynamically populate categories
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -59,7 +58,7 @@ const Activities = () => {
 
   const fetchFilteredActivities = async () => {
     try {
-      let apiLink = '/api/tour/activities/filterActivities';
+      let apiLink = '/api/tourist/activity/filterActivities';
       let queryParams = [];
 
       if (priceRange[0] > 0 || priceRange[1] < 1000) {
@@ -91,7 +90,7 @@ const Activities = () => {
 
   const fetchSortedActivities = async () => {
     try {
-      let apiLink = '/api/tourist/activities/sortActivities';
+      let apiLink = '/api/tourist/activity/sortActivities';
       if (sortBy && sortOrder) {
         apiLink += `?sortBy=${sortBy}`;
         apiLink += `&order=${sortOrder}`;
@@ -144,6 +143,26 @@ const Activities = () => {
     fetchSortedActivities();
   };
 
+  const handleBookActivity = async (activityId) => {
+    try {
+      const { data } = await axiosInstance.put('/api/tourist/bookActivity', { activityId });
+      setShowSuccessMessage(true);
+      console.log(data.message); // Log the success message
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message;
+  
+      if (errorMessage === "You have already booked this activity") {
+        console.error("Activity already booked");
+        // Optionally, show a message to the user
+        alert("You have already booked this activity.");
+      } else {
+        console.error('Error booking activity:', errorMessage);
+        alert("You have already booked this activity");
+      }
+    }
+  };
+  
+  
   return (
     <div className="view-activities">
       <Header />
@@ -295,9 +314,13 @@ const Activities = () => {
                   </div>
                   <div className="activity-footer">
                     <p className="activity-price">${activity.price.toFixed(2)} USD</p>
-                    <Button className="book-button" onClick={handleSignInClick}>
-                      Book Activity
-                    </Button>
+                    <Button
+  className="book-button"
+  onClick={() => handleBookActivity(activity._id)}x>
+  Book Activity
+</Button>
+
+
                   </div>
                 </div>
               </div>
@@ -307,8 +330,15 @@ const Activities = () => {
           )}
         </main>
       </div>
+      {showSuccessMessage && (
+  <div className="success-message">
+    <p>Activity booked successfully! Go to your account to complete your payment.</p>
+    <Button onClick={() => setShowSuccessMessage(false)}>Close</Button>
+  </div>
+)}
+
     </div>
   );
 };
 
-export default Activities;
+export default ViewActivitiesTourist;

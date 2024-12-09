@@ -199,6 +199,10 @@ const updateAdvertiser = async (req, res) => {
        if (!deletedActivity) {
           return res.status(404).json({ message: "Booking not found" });
        }
+
+       if (deletedActivity.bookingMade.length > 0) {
+          return res.status(400).json({ message: "Cannot delete activity with bookings" });
+       }
  
        res.status(200).json({ message: "Actvivty deleted successfully", activity: deletedActivity });
     } catch (error) {
