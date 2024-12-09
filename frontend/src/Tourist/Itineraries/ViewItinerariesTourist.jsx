@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewItinerariesTourist.css';
 import { Header } from '../../components/HeaderTourist';
-import { CalendarIcon, MapPinIcon, Languages, StarIcon } from 'lucide-react';
+import { 
+  CalendarIcon, 
+  MapPinIcon, 
+  Languages, 
+  StarIcon, 
+  Bookmark, 
+  BookmarkCheck 
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -11,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
-import Loading from '@/components/Loading'; // Import the loading component
+import Loading from '@/components/Loading';
 
 const ViewItinerariesTourist = () => {
   const [itineraries, setItineraries] = useState([]);
@@ -23,7 +30,7 @@ const ViewItinerariesTourist = () => {
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [loading, setLoading] = useState(false); // State for loading indicator
-
+  const [bookmarkedItineraries, setBookmarkedItineraries] = useState(new Set());
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const navigate = useNavigate();
@@ -39,7 +46,56 @@ const ViewItinerariesTourist = () => {
   useEffect(() => {
     fetchAllItineraries();
   }, []);
-
+  const fetchBookmarkedEvents = async () => {
+    try {
+      const response = await axiosInstance.get('/api/tourist/events/getBookmarkedEvents');
+      const bookmarkedIds = new Set(
+        response.data.bookmarkedEvents.itineraries.map(itinerary => itinerary._id)
+      );
+      setBookmarkedItineraries(bookmarkedIds);
+    } catch (error) {
+      console.error('Error fetching bookmarked events:', error);
+    }
+  };
+  const handleBookmarkToggle = async (itineraryId, e) => {
+    e.stopPropagation(); // Prevent event bubbling
+  
+    if (loading) return; // Prevent multiple rapid clicks
+    setLoading(true); // Indicate the operation is in progress
+  
+    try {
+      if (bookmarkedItineraries.has(itineraryId)) {
+        // Unbookmark
+        setBookmarkedItineraries((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(itineraryId);
+          return newSet;
+        });
+  
+        await axiosInstance.put('/api/tourist/events/unbookmarkEvent', {
+          eventId: itineraryId,
+          eventType: 'itinerary',
+        });
+      } else {
+        // Bookmark
+        setBookmarkedItineraries((prev) => new Set([...prev, itineraryId]));
+  
+        await axiosInstance.post('/api/tourist/events/bookmarkEvent', {
+          eventId: itineraryId,
+          eventType: 'itinerary',
+        });
+      }
+  
+      // Optionally, re-fetch to ensure the state is synced with the backend
+      // fetchBookmarkedEvents();
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+      alert('An error occurred while updating your bookmarks. Please try again.');
+    } finally {
+      setLoading(false); // Reset loading state
+    }
+  };
+  
   const fetchAllItineraries = async () => {
     setLoading(true); // Show loading indicator while fetching itineraries
     try {
@@ -221,13 +277,24 @@ const ViewItinerariesTourist = () => {
           ) : itineraries.length > 0 ? (
             itineraries.map((itinerary) => (
               <div className="itinerary-card" key={itinerary._id}>
-                <div className="itinerary-image-container">
-                  <img
-                    src={itinerary.Picture || 'https://via.placeholder.com/300x200'}
-                    alt={itinerary.Name}
-                    className="itinerary-image"
-                  />
-                </div>
+              <div className="itinerary-image-container relative">
+  <img
+    src={itinerary.Picture || 'https://via.placeholder.com/300x200'}
+    alt={itinerary.Name}
+    className="itinerary-image"
+  />
+  <Button
+    variant="ghost"
+    className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white"
+    onClick={(e) => handleBookmarkToggle(itinerary._id, e)}
+  >
+    {bookmarkedItineraries.has(itinerary._id) ? (
+      <BookmarkCheck className="h-6 w-6 text-primary" />
+    ) : (
+      <Bookmark className="h-6 w-6" />
+    )}
+  </Button>
+</div>
                 <div className="itinerary-details">
                   <div className="itinerary-header">
                     <h2 className="itinerary-title">{itinerary.Name}</h2>

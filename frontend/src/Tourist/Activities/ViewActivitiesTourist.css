@@ -169,3 +169,13 @@
 .success-message button:hover {
   background-color: #54a7a4;
 }
+.bookmark-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.bookmark-button .icon {
+  color: red;
+  font-size: 1.5rem;
+}
+

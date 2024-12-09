@@ -2,19 +2,31 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewActivitiesTourist.css';
 import { Header } from '../../components/HeaderTourist';
-import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
+import Loading from '@/components/Loading';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
+import { 
+  CalendarIcon, 
+  MapPinIcon, 
+  Languages, 
+  StarIcon, 
+  Bookmark, 
+  TagIcon,
+  BookmarkCheck 
+} from 'lucide-react';
+
+
+
 
 const ViewActivitiesTourist = () => {
   const [activities, setActivities] = useState([]);
@@ -29,6 +41,9 @@ const ViewActivitiesTourist = () => {
   const [sortBy, setSortBy] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [currency, setCurrency] = useState('USD'); // Currency state
+  const [bookmarkedActivities, setBookmarkedActivities] = useState(new Set());
+  const [loading, setLoading] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -36,7 +51,61 @@ const ViewActivitiesTourist = () => {
     fetchAllActivities();
     fetchCategories(); // Fetch categories dynamically
   }, []);
-
+  const fetchBookmarkedActivities = async () => {
+    try {
+      const response = await axiosInstance.get('/api/tourist/events/getBookmarkedEvents');
+      const bookmarkedIds = new Set(
+        response.data.bookmarkedEvents.activities.map(activity => activity._id)
+      );
+      console.log('Fetched bookmarked activities:', bookmarkedIds);
+      setBookmarkedActivities(bookmarkedIds);
+    } catch (error) {
+      console.error('Error fetching bookmarked events:', error);
+    }
+  };
+  
+  const handleBookmarkToggle = async (activityId, e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    if (loading) return; // Prevent multiple rapid clicks
+    
+    setLoading(true); // Start loading
+  
+    try {
+      const requestData = {
+        eventId: activityId,
+        eventType: 'activity'
+      };
+  
+      console.log('Request Data:', requestData); // Log the request data
+  
+      if (bookmarkedActivities.has(activityId)) {
+        // Optimistically update the state
+        const updatedBookmarks = new Set(bookmarkedActivities);
+        updatedBookmarks.delete(activityId);
+        setBookmarkedActivities(updatedBookmarks); // Update local state
+  
+        // Unbookmark server request
+        const response = await axiosInstance.put('/api/tourist/events/unbookmarkEvent', requestData);
+        console.log('Unbookmark response:', response);
+      } else {
+        // Optimistically update the state
+        const updatedBookmarks = new Set(bookmarkedActivities);
+        updatedBookmarks.add(activityId);
+        setBookmarkedActivities(updatedBookmarks); // Update local state
+  
+        // Bookmark server request
+        const response = await axiosInstance.post('/api/tourist/events/bookmarkEvent', requestData);
+        console.log('Bookmark response:', response);
+      }
+    } catch (error) {
+      console.error('Error toggling bookmark:', error);
+      alert('An error occurred while updating your bookmarks. Please try again.');
+      fetchBookmarkedActivities(); // Revert the optimistic update
+    } finally {
+      setLoading(false); // Reset loading state
+    }
+  };
+  
   const fetchAllActivities = async () => {
     try {
       const response = await axiosInstance.get('/api/tourist/activity/viewActivities');
@@ -49,7 +118,7 @@ const ViewActivitiesTourist = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosInstance.get('/api/tourist/activity/getCategories');
+      const response = await axiosInstance.get('/api/tourist/activities/getCategories');
       setCategories(response.data); // Dynamically populate categories
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -295,13 +364,24 @@ const ViewActivitiesTourist = () => {
           {activities.length > 0 ? (
             activities.map((activity) => (
               <div className="activity-card" key={activity._id}>
-                <div className="activity-image-container">
-                  <img
-                    src={activity.image || 'https://via.placeholder.com/300x200'}
-                    alt={activity.name}
-                    className="activity-image"
-                  />
-                </div>
+              <div className="activity-image-container relative">
+  <img
+    src={activity.Picture || 'https://via.placeholder.com/300x200'}
+    alt={activity.Name}
+    className="activity-image"
+  />
+  <Button
+    variant="ghost"
+    className="absolute top-2 right-2 p-2 bg-white/80 rounded-full hover:bg-white"
+    onClick={(e) => handleBookmarkToggle(activity._id, e)}
+  >
+    {bookmarkedActivities.has(activity._id) ? (
+      <BookmarkCheck className="h-6 w-6 text-primary" />
+    ) : (
+      <Bookmark className="h-6 w-6" />
+    )}
+  </Button>
+</div>
                 <div className="activity-details">
                   <div className="activity-header">
                     <h2 className="activity-title">{activity.name}</h2>
@@ -355,3 +435,4 @@ const ViewActivitiesTourist = () => {
 };
 
 export default ViewActivitiesTourist;
+

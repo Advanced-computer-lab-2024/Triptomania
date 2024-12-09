@@ -1758,38 +1758,45 @@ const bookmarkEvent = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    let event;
     if (eventType === 'activity') {
-      const activity = await activityModel.findById(eventId);
-      if (!activity) {
+      // Only initialize the `activity` variable if eventType is 'activity'
+      event = await activityModel.findById(eventId);
+      if (!event) {
         return res.status(404).json({ error: 'Activity not found' });
       }
 
-      if (user.bookmarkedActivities.includes(activity)) {
+      // Check if the activity is already bookmarked
+      if (user.bookmarkedActivities.some(bookmarked => bookmarked.toString() === event._id.toString())) {
         return res.status(400).json({ error: 'Activity already bookmarked' });
       }
 
-      user.bookmarkedActivities.push(activity);
+      user.bookmarkedActivities.push(event._id); // Store only the ID
     } else if (eventType === 'itinerary') {
-      const itinerary = await itineraryModel.findById(eventId);
-      if (!itinerary) {
-        return res.status(404).json({ error: 'Activity not found' });
+      // Only initialize the `itinerary` variable if eventType is 'itinerary'
+      event = await itineraryModel.findById(eventId);
+      if (!event) {
+        return res.status(404).json({ error: 'Itinerary not found' });
       }
 
-      if (user.bookmarkedItineraries.includes(itinerary)) {
+      // Check if the itinerary is already bookmarked
+      if (user.bookmarkedItineraries.some(bookmarked => bookmarked.toString() === event._id.toString())) {
         return res.status(400).json({ error: 'Itinerary already bookmarked' });
       }
 
-      user.bookmarkedItineraries.push(itinerary);
+      user.bookmarkedItineraries.push(event._id); // Store only the ID
+    } else {
+      return res.status(400).json({ error: 'Invalid event type' });
     }
 
     await user.save();
 
-    res.status(200).json({ message: 'Event bookmarked successfully' });
+    res.status(200).json({ success: true, message: 'Event bookmarked successfully' });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 const unbookmarkEvent = async (req, res) => {
   try {
@@ -1805,38 +1812,45 @@ const unbookmarkEvent = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    let event;
     if (eventType === 'activity') {
-      const activity = await activityModel.findById(eventId);
-      if (!activity) {
+      // Only initialize the `activity` variable if eventType is 'activity'
+      event = await activityModel.findById(eventId);
+      if (!event) {
         return res.status(404).json({ error: 'Activity not found' });
       }
 
-      if (!user.bookmarkedActivities.includes(activity)) {
+      // Check if the activity is bookmarked
+      if (!user.bookmarkedActivities.some(bookmarked => bookmarked.toString() === event._id.toString())) {
         return res.status(400).json({ error: 'Activity is not bookmarked' });
       }
 
-      user.bookmarkedActivities.pull(activity);
+      user.bookmarkedActivities.pull(event._id); // Pull by ID
     } else if (eventType === 'itinerary') {
-      const itinerary = await itineraryModel.findById(eventId);
-      if (!itinerary) {
-        return res.status(404).json({ error: 'Activity not found' });
+      // Only initialize the `itinerary` variable if eventType is 'itinerary'
+      event = await itineraryModel.findById(eventId);
+      if (!event) {
+        return res.status(404).json({ error: 'Itinerary not found' });
       }
 
-      if (user.bookmarkedItineraries.includes(itinerary)) {
-        return res.status(400).json({ error: 'Itinerary already bookmarked' });
+      // Check if the itinerary is bookmarked
+      if (!user.bookmarkedItineraries.some(bookmarked => bookmarked.toString() === event._id.toString())) {
+        return res.status(400).json({ error: 'Itinerary is not bookmarked' });
       }
 
-      user.bookmarkedItineraries.pull(itinerary);
+      user.bookmarkedItineraries.pull(event._id); // Pull by ID
+    } else {
+      return res.status(400).json({ error: 'Invalid event type' });
     }
 
     await user.save();
 
-    res.status(200).json({ message: 'Event unbookmarked successfully' });
+    res.status(200).json({ success: true, message: 'Event unbookmarked successfully' });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 const getBookmarkedEvents = async (req, res) => {
   try {

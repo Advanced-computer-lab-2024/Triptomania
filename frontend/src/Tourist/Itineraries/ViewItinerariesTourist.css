@@ -187,3 +187,63 @@
 .success-message button:hover {
   background-color: #54a7a4;
 }
+.itinerary-image-container {
+  position: relative;
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.bookmark-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.bookmark-button:hover {
+  transform: scale(1.1);
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.bookmark-button svg {
+  width: 20px;
+  height: 20px;
+  color: #36827f; /* Using your theme color */
+}
+
+.bookmark-button.active svg {
+  fill: #36827f;
+  color: #36827f;
+}
+
+.bookmark-button:focus {
+  outline: none;
+  ring: 2px solid #36827f;
+  ring-offset: 2px;
+}
+
+/* Animation for bookmark toggle */
+.bookmark-button svg {
+  transition: transform 0.2s ease;
+}
+
+.bookmark-button:active svg {
+  transform: scale(0.9);
+}
+
+/* Hover effect for the entire card */
+.itinerary-card:hover .bookmark-button {
+  opacity: 1;
+}
