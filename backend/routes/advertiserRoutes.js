@@ -4,6 +4,8 @@ import sharedController from '../controllers/shared/sharedController.js';
 import multer from 'multer';
 import authMiddleware from '../middleware/authMiddleware.js';
 import reportsController from '../controllers/services/reportsController.js';
+import activityController from '../controllers/shared/activityController.js';
+activityController
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -146,5 +148,6 @@ router.post('/saveFcmToken', (req, res, next) => authMiddleware.verifyToken(req,
 router.get('/getTouristCount', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), reportsController.generateTouristCountPDF);
 
 router.get('/generateSalesReport', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), reportsController.generateRevenuePDF);
+router.get('/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['advertiser']), activityController.getCategories);
 
 export default router;

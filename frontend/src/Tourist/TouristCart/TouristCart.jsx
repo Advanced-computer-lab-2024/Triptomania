@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import Loading from "@/components/Loading";
 import './TouristCart.css';
+import { useNavigate } from 'react-router-dom';
 
 const TouristCart = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
@@ -97,6 +99,10 @@ const TouristCart = () => {
     return cartItems.reduce((total, item) => {
       return total + (item.product?.Price * item.quantity || 0);
     }, 0);
+  };
+
+  const handleCheckout = () => {
+    navigate('/checkout');
   };
 
   if (loading) return <Loading />;
@@ -194,7 +200,8 @@ const TouristCart = () => {
               </div>
               <Button 
                 className="checkout-button"
-                onClick={() => {/* Implement checkout logic */}}
+                onClick={handleCheckout}
+                disabled={cartItems.length === 0}
               >
                 Proceed to Checkout
               </Button>

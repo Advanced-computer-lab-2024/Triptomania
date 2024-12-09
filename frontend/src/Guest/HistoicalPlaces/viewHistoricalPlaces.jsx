@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
-import { MapPinIcon, ClockIcon, BuildingIcon, StarIcon, TicketIcon, Search } from 'lucide-react';
+import { MapPinIcon, ClockIcon, TicketIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Header } from '../../components/Header';
 import Loading from "@/components/Loading";
@@ -11,23 +9,20 @@ import './viewHistoricalPlaces.css';
 
 const getImageUrl = (picture) => {
   if (!picture) {
+    console.log('No picture provided, using placeholder');
     return 'https://via.placeholder.com/300x200';
   }
   
   try {
-    // If it's already a complete data URL
     if (picture.startsWith('data:image')) {
       return picture;
     }
     
-    // If it's a base64 string
     if (picture.match(/^[A-Za-z0-9+/=]+$/)) {
       return `data:image/jpeg;base64,${picture}`;
     }
     
-    // If it's a URL (for your existing data)
     if (picture.startsWith('http')) {
-      // For now, return a placeholder for example.com URLs
       if (picture.includes('example.com')) {
         return 'https://via.placeholder.com/300x200';
       }
@@ -36,150 +31,190 @@ const getImageUrl = (picture) => {
     
     return picture;
   } catch (error) {
-    console.error('Error processing image:', error);
+    console.error('Error processing image URL:', error);
     return 'https://via.placeholder.com/300x200';
   }
 };
+
 const ViewHistoricalPlaces = () => {
   const [historicalPlaces, setHistoricalPlaces] = useState([]);
   const [allHistoricalPlaces, setAllHistoricalPlaces] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc');
   const [loading, setLoading] = useState(true);
-  const [imageErrors, setImageErrors] = useState({});
-  const [loadedImages, setLoadedImages] = useState({});
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
+  const [availableTags, setAvailableTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [error, setError] = useState(null);
 
+  // Initial data fetch
   useEffect(() => {
-    fetchHistoricalPlaces();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const [placesResponse, tagsResponse] = await Promise.all([
+          axiosInstance.get('/api/guest/historicalPlaces/getHistoricalPlaces'),
+          axiosInstance.get('/api/guest/getTags')
+        ]);
+
+        console.log('Initial Places Data:', placesResponse.data);
+        console.log('Available Tags:', tagsResponse.data);
+
+        if (placesResponse.data.historicalPlaces) {
+          setAllHistoricalPlaces(placesResponse.data.historicalPlaces);
+          setHistoricalPlaces(placesResponse.data.historicalPlaces);
+        }
+
+        if (tagsResponse.data && tagsResponse.data.tags) {
+          setAvailableTags(tagsResponse.data.tags);
+        }
+      } catch (error) {
+        console.error('Error fetching initial data:', error);
+        setError('Failed to load data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const fetchHistoricalPlaces = async () => {
+  // Apply tag filtering
+  useEffect(() => {
     try {
-      const response = await axiosInstance.get('/api/guest/historicalPlaces/getHistoricalPlaces');
-
-      if (response.data.historicalPlaces) {
-        setAllHistoricalPlaces(response.data.historicalPlaces);
-        setHistoricalPlaces(response.data.historicalPlaces);
+      setIsFilterLoading(true);
+      if (selectedTags.length === 0) {
+        setHistoricalPlaces(allHistoricalPlaces);
       } else {
-        console.error('No historical places in response');
+        const filtered = allHistoricalPlaces.filter(place => 
+          place.Tags?.some(tag => 
+            selectedTags.some(st => 
+              st._id === (typeof tag === 'string' ? tag : tag?._id)
+            )
+          )
+        );
+        setHistoricalPlaces(filtered);
       }
-      setLoading(false);
     } catch (error) {
-      console.error('Error fetching historical places:', error);
-      setLoading(false);
+      console.error('Error applying tag filters:', error);
+      setError('Failed to apply filters');
+    } finally {
+      setIsFilterLoading(false);
     }
-};
-  const handleSearch = async (name) => {
-    if (!name) {
-      fetchHistoricalPlaces();
+  }, [selectedTags, allHistoricalPlaces]);
+
+  const handleTagChange = (tag) => {
+    if (!tag?._id) {
+      console.error('Invalid tag:', tag);
       return;
     }
-    
-    try {
-      const response = await axiosInstance.get(`/api/guest/historicalPlaces/searchHistoricalPlaces`, {
-        params: { Name: name },
-      });
-      setHistoricalPlaces(response.data);
-    } catch (error) {
-      console.error('Error searching historical places:', error);
-    }
-  };
 
-  const handleSortChange = (value) => {
-    setSortOrder(value);
-    const sortedPlaces = [...historicalPlaces].sort((a, b) => {
-      if (value === 'asc') {
-        return a.Name.localeCompare(b.Name);
-      } else {
-        return b.Name.localeCompare(a.Name);
-      }
+    setSelectedTags(prev => {
+      const newTags = prev.some(t => t._id === tag._id)
+        ? prev.filter(t => t._id !== tag._id)
+        : [...prev, tag];
+      return newTags;
     });
-    setHistoricalPlaces(sortedPlaces);
   };
 
-  const handleImageError = (placeId) => {
-    setImageErrors(prev => ({
-      ...prev,
-      [placeId]: true
-    }));
+  const handleResetFilters = () => {
+    setSelectedTags([]);
+    setHistoricalPlaces(allHistoricalPlaces);
   };
 
-  const handleImageLoad = (placeId) => {
-    setLoadedImages(prev => ({
-      ...prev,
-      [placeId]: true
-    }));
+  const renderTags = (place) => {
+    if (!place.Tags || !Array.isArray(place.Tags) || place.Tags.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="place-tags">
+        {place.Tags.map(tagId => {
+          const tagIdentifier = typeof tagId === 'string' ? tagId : tagId?._id;
+          if (!tagIdentifier) return null;
+
+          const tag = availableTags.find(t => t._id === tagIdentifier);
+          return tag ? (
+            <span key={tagIdentifier} className="tag-badge">
+              {tag.name}
+            </span>
+          ) : null;
+        })}
+      </div>
+    );
   };
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="view-activities">
       <Header />
       <div className="content">
         <aside className="filters">
-          <h3 className="text-lg font-semibold mb-4">Filter by:</h3>
+          <h3 className="text-lg font-semibold mb-4">Filter by Tags</h3>
 
+          {/* Tags Filter */}
           <div className="mb-4">
-            <Label>Category</Label>
-            <RadioGroup value={selectedCategory} onValueChange={setSelectedCategory}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="museum" id="category-museum" />
-                <Label htmlFor="category-museum">Museum</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="monument" id="category-monument" />
-                <Label htmlFor="category-monument">Monument</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="archaeological" id="category-archaeological" />
-                <Label htmlFor="category-archaeological">Archaeological Site</Label>
-              </div>
-            </RadioGroup>
+            <Label>Tags ({selectedTags.length} selected)</Label>
+            <div className="tags-filter">
+              {availableTags.length > 0 ? (
+                availableTags.map((tag) => (
+                  <div key={tag._id} className="tag-option">
+                    <input
+                      type="checkbox"
+                      id={`tag-${tag._id}`}
+                      checked={selectedTags.some(t => t._id === tag._id)}
+                      onChange={() => handleTagChange(tag)}
+                      disabled={isFilterLoading}
+                    />
+                    <Label htmlFor={`tag-${tag._id}`} className="ml-2">
+                      {tag.name}
+                    </Label>
+                  </div>
+                ))
+              ) : (
+                <p>No tags available</p>
+              )}
+            </div>
           </div>
 
-          <div className="mb-4">
-            <Label>Sort by</Label>
-            <RadioGroup value={sortOrder} onValueChange={handleSortChange}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="asc" id="sort-asc" />
-                <Label htmlFor="sort-asc">A to Z</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="desc" id="sort-desc" />
-                <Label htmlFor="sort-desc">Z to A</Label>
-              </div>
-            </RadioGroup>
-          </div>
+          {/* Reset Filters Button */}
+          {selectedTags.length > 0 && (
+            <Button 
+              onClick={handleResetFilters} 
+              className="w-full"
+              disabled={isFilterLoading}
+            >
+              Reset Filters
+            </Button>
+          )}
         </aside>
 
         <main className="activities">
-          <div className="search-bar">
-            <Input
-              type="text"
-              placeholder="Search historical places..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-            
-          </div>
-
-          {loading ? (
+          {loading || isFilterLoading ? (
             <Loading />
           ) : (
             historicalPlaces.length > 0 ? (
               historicalPlaces.map((place) => (
                 <div className="activity-card" key={place._id}>
-                <div className="activity-image-container">
-  <img
-    src={getImageUrl(place.Picture)}
-    alt={place.Name}
-    className="activity-image"
-    onError={(e) => {
-      e.target.src = 'https://via.placeholder.com/300x200';
-    }}
-  />
-</div>
+                  <div className="activity-image-container">
+                    <img
+                      src={getImageUrl(place.Picture)}
+                      alt={place.Name}
+                      className="activity-image"
+                      onError={(e) => {
+                        console.log(`Image load error for ${place.Name}`);
+                        e.target.src = 'https://via.placeholder.com/300x200';
+                      }}
+                    />
+                  </div>
                   <div className="activity-details">
                     <div className="activity-header">
                       <h2 className="activity-title">{place.Name}</h2>
@@ -195,22 +230,23 @@ const ViewHistoricalPlaces = () => {
                         <ClockIcon className="icon" />
                         Opening Hours: {place.Opening_hours} - {place.Closing_hours}
                       </p>
-               
+                      {renderTags(place)}
                     </div>
                     <div className="activity-footer">
                       <p className="ticket-price">
-                      <TicketIcon className="icon" />
-                        Entry Fee: ${place.Ticket_prices}
+                        <TicketIcon className="icon" />
+                        Price: ${place.Ticket_prices}
                       </p>
-                      <Button className="book-button">
-                        View Details
-                      </Button>
+                      <Button className="btn-primary">Book Now</Button>
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <p>No historical places found.</p>
+              <div className="no-results">
+                <p>No historical places found matching your criteria</p>
+                <Button onClick={handleResetFilters}>Reset Filters</Button>
+              </div>
             )
           )}
         </main>

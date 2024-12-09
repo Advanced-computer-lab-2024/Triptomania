@@ -36,8 +36,8 @@ const activitySchema = new Schema({
     default: []
   },
   tags: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'preferenceTags',
+    type: mongoose.Schema.Types.String,
+   
     required: true,
   }],
   specialDiscounts: {

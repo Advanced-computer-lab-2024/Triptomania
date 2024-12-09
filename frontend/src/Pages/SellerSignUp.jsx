@@ -24,7 +24,7 @@ const SellerSignUp = () => {
         e.preventDefault();
         setError('');
         setSuccess(false); // Reset success state
-
+    
         try {
             const storedData = JSON.parse(localStorage.getItem('sellerData')) || {};
             const sellerData = {
@@ -33,7 +33,7 @@ const SellerSignUp = () => {
                 email: storedData.email || '',
                 password: storedData.password || '',
             };
-
+    
             const response = await axiosInstance.post(
                 '/api/seller/addSeller',
                 sellerData,
@@ -41,12 +41,15 @@ const SellerSignUp = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
+    
             setSuccess(true); // Display success message
+            navigate('/seller/uploadPicture'); // Navigate to the desired page
         } catch (err) {
             console.error('Signup error:', err);
             setError(err.response?.data?.message || 'An error occurred during sign-up.');
         }
     };
+    
 
     return (
         <div className="signup-container">

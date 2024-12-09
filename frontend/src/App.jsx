@@ -59,6 +59,12 @@ import ActivityCategories from './Admin/ActivityCategories/ActivityCategories';
 import PreferenceTags from './Admin/PreferenceTags/PreferenceTags';
 import Promocode from './Admin/Promocode/Promocode';
 import AccountCreation from './Admin/AccountCreation/AccountCreation';
+import Checkout from './Tourist/Checkout/Checkout';
+import Thankyoupage from './Tourist/Checkout/Thankyoupage/Thankyoupage';
+import Activities from './Tourist/Activities/Activities';
+import HistoricalPlacesView from './Tourist/HistoricalPlacesView/HistoricalPlacesView';
+import HistoricalPlacesVieww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesVieww';
+import HistoricalPlacesViewww from './TourismGovernor/HistoricalPlaces/HistoricalPlacesViewww';
 const App = () => {
   return (
     <Routes>
@@ -124,6 +130,13 @@ const App = () => {
       <Route path="/admin/preferenceTags" element={<PreferenceTags />} />
       <Route path="/admin/promoCode" element={<Promocode />} />
       <Route path="/admin/accountCreation" element={<AccountCreation />} />
+      <Route path="/checkout" element={<Checkout/>} />
+      <Route path="/thankyou" element={<Thankyoupage />} />
+      <Route path="/tourist/Activities" element={<Activities />} />
+      <Route path="/tourist/HistoricalPlaces" element={<HistoricalPlacesView />} />
+   
+      <Route path="/tourismgoverner/HistoricalPlaces" element={<HistoricalPlacesVieww />} />
+      <Route path="/myHistoricalPlaces" element={<HistoricalPlacesViewww/>} />
     </Routes>
   );
 };

@@ -1,9 +1,12 @@
 import mongoose from 'mongoose';
 import historicalPlaceModel from '../../models/historicalPlace.js';
-
+import Tag from '../../models/tag.js';
 const getHistoricalPlaces = async (req, res) => {
     try {
-        const historicalPlaces = await historicalPlaceModel.find();  // Use 'await'
+        const historicalPlaces = await historicalPlaceModel
+            .find()
+            .populate('Tags'); // Add this line to populate Tags
+
         res.status(200).json({
             status: true,
             historicalPlaces: historicalPlaces
@@ -15,7 +18,6 @@ const getHistoricalPlaces = async (req, res) => {
         });
     }
 }
-
 const getHistoricalPlace = async (req, res) => {
     const { id } = req.params;
     try {

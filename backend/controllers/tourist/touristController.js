@@ -413,21 +413,29 @@ const bookActivity = async (req, res) => {
     }
 
     // Check if the tourist's wallet has enough funds
-    if (tourist.wallet < activity.price) {
-      return res.status(400).json({ message: 'Insufficient funds in wallet.' });
-    }
-
+  
     if (activity.bookingMade.includes(_id)) {
       return res.status(400).json({ message: 'You have already booked this activity.' });
     }
 
+
+
+      // Proceed with booking
+      activity.bookingMade.push(_id);
+      const eventMap = {
+        name: activity.Name,
+        eventType: activity,
+        eventId: activityId,
+        date: activity.Start_date,
+        status:'Pending'
+    }
     // Proceed with booking
     activity.bookingMade.push(_id); // Add the touristId to the activity's bookingMade array
-    tourist.wallet -= activity.price; // Deduct the price from the tourist's wallet
+   
 
     // Save the updated activity and tourist objects
     await activity.save(); // Save the updated activity with the new booking
-    await tourist.save(); // Save the updated tourist's wallet
+   
 
     res.status(200).json({ message: 'Activity booked successfully!', activity });
   } catch (error) {
@@ -455,9 +463,7 @@ const bookItinerary = async (req, res) => {
     }
 
     // Check if the tourist's wallet has enough funds
-    if (tourist.wallet < itinerary.price) {
-      return res.status(400).json({ message: 'Insufficient funds in wallet.' });
-    }
+   
 
     if (itinerary.bookingMade.includes(_id)) {
       return res.status(400).json({ message: 'You have already booked this Itinerary.' });
@@ -465,11 +471,17 @@ const bookItinerary = async (req, res) => {
 
     // Proceed with booking
     itinerary.bookingMade.push(_id);
-    tourist.wallet -= itinerary.price; // Deduct the price from the tourist's wallet
-
+    const eventMap = {
+      name: itinerary.Name,
+      eventType: itinerary,
+      eventId: itineraryId,
+      date: itinerary.Start_date,
+      status:'Pending'
+  }
+  tourist.itineraries.push(eventMap);
+  await tourist.save();
     // Save the updated activity and tourist objects
     await itinerary.save(); // Save the updated activity with the new booking
-    await tourist.save(); // Save the updated tourist's wallet
 
     res.status(200).json({ message: 'Itinerary booked successfully!', itinerary });
   } catch (error) {

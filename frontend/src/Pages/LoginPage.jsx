@@ -31,7 +31,7 @@ const LoginPage = () => {
         navigate('/advertiser/home');
           break;
         case 'seller':
-          navigate('/generateReport');
+          navigate('/seller/home');
           break;
         case 'tourGuide':
         navigate('/tourGuide/home');

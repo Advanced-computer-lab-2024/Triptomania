@@ -431,7 +431,7 @@ const payForEvent = async (req, res) => {
         const userId = req.user._id;
 
         const { paymentMethod, eventType, eventId, promoCode } = req.body;
-
+     
         if (!paymentMethod || !eventType || !eventId) {
             return res.status(400).json({ error: 'Missing required fields: userId, paymentMethod, eventType, eventId' });
         }
@@ -440,22 +440,22 @@ const payForEvent = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-
+        
         const models = {
             activity: activityModel,
             itinerary: itineraryModel
         }
-
+        
         const eventModel = models[eventType];
-
+        
         const event = await eventModel.findById(eventId);
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
         }
 
         // Check if the user has already booked this event
-        if (event.bookingMade.includes(userId)) {
-            return res.status(400).json({ error: 'You have already booked this event' });
+        if (!event.bookingMade.includes(userId)) {
+            return res.status(400).json({ error: 'You have not booked this event ' });
         }
 
         let discount = 0;
@@ -515,6 +515,9 @@ const payForEvent = async (req, res) => {
 
         let eventMap;
         if (eventType === 'activity') {
+            user.activities = user.activities.filter(activity => 
+                activity.eventId.toString() !== eventId.toString()
+            );
             eventMap = {
                 name: event.name,
                 eventType: eventType,
@@ -524,11 +527,15 @@ const payForEvent = async (req, res) => {
                 finalPrice: totalAmount,
                 promoCode: promo ? promo.code : null,
                 date: event.date,
-                paymentDate: date
+                paymentDate: date,
+                status:'Paid'
             }
             user.activities.push(eventMap);
             await user.save();
         } else if (eventType === 'itinerary') {
+            user.itineraries = user.itineraries.filter(itinerary => 
+                itinerary.eventId.toString() !== eventId.toString()
+            );
             eventMap = {
                 name: event.Name,
                 eventType: eventType,
@@ -538,14 +545,15 @@ const payForEvent = async (req, res) => {
                 finalPrice: totalAmount,
                 promoCode: promo ? promo.code : null,
                 date: event.Start_date,
-                paymentDate: date
+                paymentDate: date,
+                status:'Paid'
             }
+
             user.itineraries.push(eventMap);
             await user.save();
         }
 
-        event.bookingMade.push(userId);
-        await event.save();
+       
 
         res.status(200).json({
             success: true,

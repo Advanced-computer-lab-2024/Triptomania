@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import axiosInstance from '@/axiosInstance'; // Import the axiosInstance
+import axiosInstance from '@/axiosInstance';
 import './addActivity.css';
-import { FileText } from 'lucide-react'; // Import FileText icon
+import { FileText } from 'lucide-react';
+
 const AddActivity = () => {
     const [activity, setActivity] = useState({
         name: '',
@@ -16,13 +17,35 @@ const AddActivity = () => {
         location: '',
         price: '',
         category: '',
-        tags: [],
+        tags: [''], // Initialize with one empty string
         specialDiscounts: '',
         isBookingOpen: true,
     });
 
+    const [categories, setCategories] = useState([]);
     const [mapKey, setMapKey] = useState('');
+    const [creatorId, setCreatorId] = useState('');
     const mapRef = useRef(null);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user._id) {
+            setCreatorId(user._id);
+        }
+    }, []);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axiosInstance.get('/api/advertiser/getCategories');
+                console.log('Categories fetched:', response.data);
+                setCategories(response.data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         const fetchMapKey = async () => {
@@ -97,20 +120,38 @@ const AddActivity = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post('/api/advertiser/activity/addActivity', activity);
+            const activityData = {
+                ...activity,
+                creatorId: creatorId,
+                tags: activity.tags.filter(tag => tag.trim() !== ''),
+                price: Number(activity.price),
+                specialDiscounts: Number(activity.specialDiscounts) || 0
+            };
+
+            console.log('Sending activity data:', activityData);
+
+            const response = await axiosInstance.post('/api/advertiser/activity/addActivity', activityData);
             if (response.status === 201) {
                 alert("Activity added successfully!");
                 setActivity({ 
-                    ...activity, 
-                    name: '', description: '', date: '', time: '', 
-                    location: '', price: '', category: '', tags: [], 
-                    specialDiscounts: 0, isBookingOpen: true
+                    name: '', 
+                    description: '', 
+                    date: '', 
+                    time: '', 
+                    location: '', 
+                    price: '', 
+                    category: '', 
+                    tags: [''], 
+                    specialDiscounts: '', 
+                    isBookingOpen: true
                 });
             } else {
                 alert(response.data.error || "Error adding activity");
             }
         } catch (error) {
-            console.error('Error adding activity:', error);
+            console.error('Full error:', error);
+            console.error('Error data:', error.response?.data);
+            alert(error.response?.data?.message || "Error adding activity");
         }
     };
 
@@ -119,43 +160,126 @@ const AddActivity = () => {
             <h2>Add New Activity</h2>
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
-                <FileText id="input-icon" />
-
-                    <Input type="text" name="name" className="name" placeholder="Activity Name" value={activity.name} onChange={handleChange} required />
+                    <FileText id="input-icon" />
+                    <Input 
+                        type="text" 
+                        name="name" 
+                        className="name" 
+                        placeholder="Activity Name" 
+                        value={activity.name} 
+                        onChange={handleChange} 
+                        required 
+                    />
                 </div>
                 <div className="input-group">
-                <FileText id="input-icon" />
-
-                    <Textarea name="description" placeholder="Description" className="description" value={activity.description} onChange={handleChange} required />
+                    <FileText id="input-icon" />
+                    <Textarea 
+                        name="description" 
+                        placeholder="Description" 
+                        className="description" 
+                        value={activity.description} 
+                        onChange={handleChange} 
+                        required 
+                    />
                 </div>
                 <div className="input-group">
                     <Calendar id="input-icon" />
-                    <Input type="date" name="date" value={activity.date} onChange={handleChange} required />
+                    <Input 
+                        type="date" 
+                        name="date" 
+                        value={activity.date} 
+                        onChange={handleChange} 
+                        required 
+                    />
                 </div>
                 <div className="input-group">
                     <Clock id="input-icon" />
-                    <Input type="time" name="time" value={activity.time} onChange={handleChange} required />
+                    <Input 
+                        type="time" 
+                        name="time" 
+                        value={activity.time} 
+                        onChange={handleChange} 
+                        required 
+                    />
                 </div>
                 <div className="input-group">
                     <MapPin id="input-icon" />
-                    <Input type="text" id="location" name="location" placeholder="Enter location" value={activity.location} onChange={handleChange} required />
+                    <Input 
+                        type="text" 
+                        id="location" 
+                        name="location" 
+                        placeholder="Enter location" 
+                        value={activity.location} 
+                        onChange={handleChange} 
+                        required 
+                    />
                 </div>
                 <div ref={mapRef} className="map-container"></div>
                 <div className="input-group">
                     <DollarSign id="input-icon" />
-                    <Input type="number" name="price" placeholder="Price" value={activity.price} onChange={handleChange} required min="0" />
+                    <Input 
+                        type="number" 
+                        name="price" 
+                        placeholder="Price" 
+                        value={activity.price} 
+                        onChange={handleChange} 
+                        required 
+                        min="0" 
+                    />
                 </div>
                 <div className="input-group">
                     <Tag id="input-icon" />
-                    <Input type="text" name="category" placeholder="Category" value={activity.category} onChange={handleChange} required />
+                    <select
+                        className="form-select"
+                        value={activity.category}
+                        onChange={handleChange}
+                        name="category"
+                        required
+                        style={{ color: 'black' }}
+                    >
+                        <option value="">Select Category</option>
+                        {categories.map((category) => (
+                            <option 
+                                key={category._id} 
+                                value={category._id}
+                                style={{ color: 'black', backgroundColor: 'white' }}
+                            >
+                                {category.CategoryName}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div className="input-group">
                     <Tag id="input-icon" />
-                    <Input type="text" name="tags" placeholder="Tags (comma separated)" value={activity.tags.join(',')} onChange={(e) => setActivity({ ...activity, tags: e.target.value.split(',').map(tag => tag.trim()) })} />
+                    <Input 
+                        type="text" 
+                        name="tags" 
+                        placeholder="Tags (comma separated)" 
+                        value={activity.tags.join(',')} 
+                        onChange={(e) => {
+                            const newTags = e.target.value
+                                .split(',')
+                                .map(tag => tag.trim())
+                                .filter(tag => tag !== '');
+                            
+                            setActivity({ 
+                                ...activity, 
+                                tags: newTags.length > 0 ? newTags : ['']
+                            });
+                        }}
+                        required
+                    />
                 </div>
                 <div className="input-group">
                     <Percent id="input-icon" />
-                    <Input type="number" name="specialDiscounts" placeholder="Special Discounts" value={activity.specialDiscounts} onChange={handleChange} min="0" />
+                    <Input 
+                        type="number" 
+                        name="specialDiscounts" 
+                        placeholder="Special Discounts" 
+                        value={activity.specialDiscounts} 
+                        onChange={handleChange} 
+                        min="0" 
+                    />
                 </div>
                 
                 <div className="checkbox-group">

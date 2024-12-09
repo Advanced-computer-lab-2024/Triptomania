@@ -52,7 +52,8 @@ body {
 }
 
 .input-group input,
-.input-group textarea {
+.input-group textarea,
+.input-group .form-select {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 3rem;
   border: 1px solid var(--input-border);
@@ -62,7 +63,8 @@ body {
 }
 
 .input-group input:focus,
-.input-group textarea:focus {
+.input-group textarea:focus,
+.input-group .form-select:focus {
   outline: none;
   border-color: var(--input-focus);
   box-shadow: 0 0 0 3px rgba(165, 216, 214, 0.3);
@@ -71,6 +73,65 @@ body {
 .input-group textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+/* Updated select styles */
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+/* Multi-select specific styles */
+.form-select[multiple] {
+  height: auto;
+  min-height: 100px;
+  padding: 0.5rem;
+  background-image: none;
+}
+
+.form-select[multiple] option {
+  padding: 0.5rem;
+  margin: 2px 0;
+  border-radius: 4px;
+  background-color: white;
+  color: var(--text-color);
+}
+
+.form-select[multiple] option:checked {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(165, 216, 214, 0.3);
+}
+
+.form-select option {
+  padding: 0.75rem;
+  background-color: white;
+  color: var(--text-color);
+}
+
+.form-select::-ms-expand {
+  display: none;
+}
+
+.form-select option[value=""] {
+  color: #757575;
 }
 
 .checkbox-group {
@@ -119,11 +180,44 @@ button[type="submit"]:hover {
   }
 
   .input-group input,
-  .input-group textarea {
+  .input-group textarea,
+  .input-group .form-select {
     font-size: 0.875rem;
   }
 }
 
 #isBookingOpen {
   color: var(--primary-color) !important;
+}
+
+/* Additional styles for select in dark mode if needed */
+@media (prefers-color-scheme: dark) {
+  .form-select option {
+    background-color: white !important;
+    color: var(--text-color) !important;
+  }
+  
+  .form-select[multiple] option:checked {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+  }
+}
+
+/* Fix for icon alignment in multi-select */
+.input-group:has(.form-select[multiple]) .input-icon {
+  top: 1.5rem;
+  transform: none;
+}
+
+/* Hover effect for options */
+.form-select option:hover {
+  background-color: var(--input-focus);
+  cursor: pointer;
+}
+
+/* Better visibility for selected options */
+.form-select option:checked {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
 }

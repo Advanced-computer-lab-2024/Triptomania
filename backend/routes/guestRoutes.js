@@ -4,6 +4,7 @@ import activityController from '../controllers/shared/activityController.js';
 import historicalPlaceController from '../controllers/tourismGovernor/historicalPlaceController.js';
 import filterController from '../controllers/shared/filterController.js';
 import preferenceTagController from '../controllers/admin/preferenceTagController.js';
+import tourismGovernorController from '../controllers/tourismGovernor/tourismGovernorController.js';
 
 
 const router = express.Router();
@@ -33,5 +34,9 @@ router.get('/activities/getActivity/:id', activityController.getActivity);
 router.get('/itineraries/getItinerary/:id', itineraryController.getItinerary);
 
 router.get('/historicalPlaces/getHistoricalPlace/:id', historicalPlaceController.getHistoricalPlace);
+router.get('/gettags', tourismGovernorController.getTags,
+);
+
+
 
 export default router;

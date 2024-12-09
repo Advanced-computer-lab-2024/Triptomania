@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     BookText,
     Activity,
@@ -9,7 +9,8 @@ import {
     DollarSign,
     Calendar,
     Car,
-    TagIcon
+    TagIcon,
+    Check
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,7 +38,21 @@ const AddItinerary = () => {
         End_date: '',
     });
 
+    const [preferenceTags, setPreferenceTags] = useState([]);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchPreferenceTags = async () => {
+            try {
+                const response = await axiosInstance.get('/api/tourGuide/tags/getPreferenceTags');
+                setPreferenceTags(response.data);
+            } catch (error) {
+                console.error('Error fetching preference tags:', error);
+            }
+        };
+        fetchPreferenceTags();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,15 +67,42 @@ const AddItinerary = () => {
         });
     };
 
+    const handleTagsChange = (tagId) => {
+        setItinerary(prev => ({
+            ...prev,
+            preferenceTags: prev.preferenceTags.includes(tagId)
+                ? prev.preferenceTags.filter(id => id !== tagId)
+                : [...prev.preferenceTags, tagId]
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axiosInstance.post('/api/tourGuide/itinerary/addItinerary', itinerary);
+            const formattedItinerary = {
+                Name: itinerary.Name,
+                activities: Array.isArray(itinerary.activities) ? itinerary.activities : [itinerary.activities],
+                locationsToVisit: Array.isArray(itinerary.locationsToVisit) ? itinerary.locationsToVisit : [itinerary.locationsToVisit],
+                timeLine: itinerary.timeLine,
+                duration: itinerary.duration,
+                language: itinerary.language,
+                price: Number(itinerary.price),
+                availableDates: Array.isArray(itinerary.availableDates) ? itinerary.availableDates : [itinerary.availableDates],
+                availableTimes: Array.isArray(itinerary.availableTimes) ? itinerary.availableTimes : [itinerary.availableTimes],
+                accesibility: itinerary.accessibility,
+                pickUp: itinerary.pickUp,
+                dropOff: itinerary.dropOff,
+                Start_date: new Date(itinerary.Start_date).toISOString(),
+                End_date: new Date(itinerary.End_date).toISOString(),
+                preferenceTags: itinerary.preferenceTags,
+                creatorId: JSON.parse(localStorage.getItem('user'))._id
+            };
+
+            const response = await axiosInstance.post('/api/tourGuide/itinerary/addItinerary', formattedItinerary);
 
             if (response.status === 201) {
                 alert('Itinerary added successfully!');
-                // Reset form
                 setItinerary({
                     Name: '',
                     activities: [],
@@ -81,14 +123,13 @@ const AddItinerary = () => {
                 setPreviewUrl(null);
             }
         } catch (error) {
-            console.error('Error adding itinerary:', error);
-            alert('Error adding itinerary. Please try again.');
+            alert(`Error adding itinerary: ${error.response?.data?.error || error.message}`);
         }
     };
 
     return (
         <div className="add-itinerary-page">
-            <Header /> {/* Render the Header */}
+            <Header />
             <div className="add-product-container">
                 <h2>Add New Itinerary</h2>
                 <form className="add-product-form" onSubmit={handleSubmit}>
@@ -226,13 +267,39 @@ const AddItinerary = () => {
 
                     <div className="input-group">
                         <TagIcon id="input-icon" />
-                        <Input
-                            type="text"
-                            name="preferenceTags"
-                            placeholder="Tags (comma separated)"
-                            value={itinerary.preferenceTags.join(',')}
-                            onChange={handleArrayInput}
-                        />
+                        <div className="custom-dropdown">
+                            <div 
+                                className="dropdown-header"
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            >
+                                <span>
+                                    {itinerary.preferenceTags.length 
+                                        ? `${itinerary.preferenceTags.length} tags selected` 
+                                        : "Select Preference Tags"}
+                                </span>
+                                <span className="dropdown-arrow">▼</span>
+                            </div>
+                            {isDropdownOpen && (
+                                <div className="dropdown-options">
+                                    {preferenceTags.map((tag) => (
+                                        <div 
+                                            key={tag._id}
+                                            className={`dropdown-option ${
+                                                itinerary.preferenceTags.includes(tag._id) ? 'selected' : ''
+                                            }`}
+                                            onClick={() => handleTagsChange(tag._id)}
+                                        >
+                                            <div className="checkbox">
+                                                {itinerary.preferenceTags.includes(tag._id) && (
+                                                    <Check size={16} />
+                                                )}
+                                            </div>
+                                            <span>{tag.PreferenceTagName}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="input-group">
@@ -249,12 +316,24 @@ const AddItinerary = () => {
 
                     <div className="input-group">
                         <Calendar id="input-icon" />
-                        <Input type="date" name="Start_date" value={itinerary.Start_date} onChange={handleChange} required />
+                        <Input 
+                            type="date" 
+                            name="Start_date" 
+                            value={itinerary.Start_date} 
+                            onChange={handleChange} 
+                            required 
+                        />
                     </div>
 
                     <div className="input-group">
                         <Calendar id="input-icon" />
-                        <Input type="date" name="End_date" value={itinerary.End_date} onChange={handleChange} required />
+                        <Input 
+                            type="date" 
+                            name="End_date" 
+                            value={itinerary.End_date} 
+                            onChange={handleChange} 
+                            required 
+                        />
                     </div>
 
                     <Button type="submit">Add Itinerary</Button>
