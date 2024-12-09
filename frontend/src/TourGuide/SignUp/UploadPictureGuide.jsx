@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance';
+import './UploadPictureGuide.css';
 
-const UploadDocuments = () => {
+const UploadPictureGuide = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [error, setError] = useState('');
@@ -34,48 +35,47 @@ const UploadDocuments = () => {
                 setError('File size should be less than 5MB');
                 return;
             }
-            setSelectedFile(file);
-            // Create preview URL for images
-            if (file.type.startsWith('image/')) {
-                setPreviewUrl(URL.createObjectURL(file));
-            } else {
-                setPreviewUrl(null);
+            // Check if file is an image
+            if (!file.type.startsWith('image/')) {
+                setError('Please select an image file');
+                return;
             }
+            setSelectedFile(file);
+            setPreviewUrl(URL.createObjectURL(file));
             setError('');
         }
     };
 
     const handleUpload = async (e) => {
         e.preventDefault();
-
+    
         if (!selectedFile) {
-            setError('Please select a file');
+            setError('Please select an image');
             return;
         }
-
-        // Get the ID directly from localStorage
+    
         const currentTourGuideId = localStorage.getItem('tourGuideId');
         console.log('Current Tour Guide ID:', currentTourGuideId);
-
+    
         if (!currentTourGuideId) {
             console.error('No tour guide ID available');
             setError('Tour Guide ID not found. Please complete signup first.');
             return;
         }
-
+    
         const formData = new FormData();
         formData.append('file', selectedFile);
-
+    
         try {
-            // Log request details
             console.log('Making upload request:', {
                 id: currentTourGuideId,
                 fileName: selectedFile.name,
                 fileType: selectedFile.type
             });
-
+    
+            // Updated endpoint to match backend route exactly
             const response = await axiosInstance.put(
-                `/api/tourGuide/uploadDocument`,
+                `/api/tourGuide/uploadProfilePicture`, // Changed to match backend route
                 formData,
                 {
                     headers: {
@@ -87,21 +87,20 @@ const UploadDocuments = () => {
                     }
                 }
             );
-
+    
             console.log('Upload response:', response);
-
+    
             if (response.status === 200) {
                 setSuccess(true);
-                // Update localStorage with new document path
                 const currentData = JSON.parse(localStorage.getItem('tourGuideData') || '{}');
-                currentData.documents = response.data.documents;
+                currentData.profilePicture = response.data.profilePicture;
                 localStorage.setItem('tourGuideData', JSON.stringify(currentData));
-
+    
                 setTimeout(() => {
-                    navigate('/tourGuide/uploadPicture', { 
+                    navigate('/tourGuide-dashboard', { 
                         state: { 
                             tourGuideId: currentTourGuideId,
-                            documents: response.data.documents 
+                            profilePicture: response.data.profilePicture 
                         } 
                     });
                 }, 2000);
@@ -110,12 +109,12 @@ const UploadDocuments = () => {
             console.error('Upload error details:', {
                 error: error,
                 response: error.response?.data,
-                status: error.response?.status
+                status: error.response?.status,
+                endpoint: '/api/tourGuide/uploadProfilePicture' // Updated for debugging
             });
-            setError(error.response?.data?.message || 'Failed to upload document. Please try again.');
+            setError(error.response?.data?.message || 'Failed to upload picture. Please try again.');
         }
     };
-
     // Cleanup function for preview URL
     useEffect(() => {
         return () => {
@@ -126,11 +125,11 @@ const UploadDocuments = () => {
     }, [previewUrl]);
 
     return (
-        <div className="upload-document-container">
+        <div className="upload-picture-container">
             <div className="upload-content">
-                <h2>Upload Tour Guide Documents</h2>
+                <h2>Upload Profile Picture</h2>
                 <p className="upload-description">
-                    Please upload your tour guide license or relevant certifications
+                    Please upload a clear profile picture
                 </p>
 
                 <form onSubmit={handleUpload} className="upload-form">
@@ -138,11 +137,11 @@ const UploadDocuments = () => {
                         <label className="file-input-label">
                             <input
                                 type="file"
-                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                accept="image/*"
                                 onChange={handleFileChange}
                                 className="actual-file-input"
                             />
-                            Select Document
+                            Select Picture
                         </label>
                         {selectedFile && (
                             <span className="selected-file-name">
@@ -151,7 +150,7 @@ const UploadDocuments = () => {
                         )}
                     </div>
 
-                    {previewUrl && selectedFile?.type.startsWith('image/') && (
+                    {previewUrl && (
                         <div className="preview-container">
                             <img 
                                 src={previewUrl} 
@@ -164,7 +163,7 @@ const UploadDocuments = () => {
                     {error && <p className="error-message">{error}</p>}
                     {success && (
                         <p className="success-message">
-                            Document uploaded successfully! Redirecting to profile picture upload...
+                            Profile picture uploaded successfully! Redirecting to dashboard...
                         </p>
                     )}
 
@@ -174,7 +173,7 @@ const UploadDocuments = () => {
                             className="submit-button"
                             disabled={!selectedFile}
                         >
-                            Upload Document
+                            Upload Picture
                         </button>
                         <button 
                             type="button" 
@@ -190,4 +189,4 @@ const UploadDocuments = () => {
     );
 };
 
-export default UploadDocuments;
+export default UploadPictureGuide;

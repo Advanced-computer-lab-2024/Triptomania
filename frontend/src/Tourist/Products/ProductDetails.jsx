@@ -65,6 +65,7 @@ const ProductDetails = () => {
       }
     };
 
+<<<<<<< HEAD
     const checkPurchaserStatus = async () => {
       try {
         const touristId = localStorage.getItem('touristId'); // Retrieve the tourist ID
@@ -85,6 +86,9 @@ const ProductDetails = () => {
       }
     };
     
+=======
+   
+>>>>>>> ed14b72 (oo)
 
     const showNotification = (message, type = 'success') => {
       setNotification({ show: true, message, type });

@@ -23,6 +23,14 @@ export function Header() {
           </div>
           <nav className="hidden md:flex space-x-10">
             <Link to="/tourismGovernor/home" className="header-link">Home</Link>
+<<<<<<< HEAD
+=======
+            <Link to="/tourismgoverner/HistoricalPlaces" className="header-link">All Historical Places</Link>
+            <Link to="/myHistoricalPlaces" className="header-link">My Historical Places</Link>
+            <Link to="/tourismGovernor/historicalPlace/addHistoricalPlaces" className="header-link">Add historical place</Link>
+            <Link to="/tourismGovernor/historicalPlace/addTags" className="header-link">Add Tags</Link>
+            <Link to="/Governor/AllItirenaries" className="header-link">All Historical Places</Link>
+>>>>>>> ed14b72 (oo)
             <Link to="/tourismGovernor/historicalPlace/viewHistoricalPlaces" className="header-link">My Historical Places</Link>
             <Link to="/tourismGovernor/historicalPlace/addHistoricalPlaces" className="header-link">Add historical place</Link>
             <Link to="/tourismGovernor/tags/viewTag" className="header-link">Add Tags</Link>

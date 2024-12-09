@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './TourGuideSignUp.css'; // Use consistent styling
+import './TourGuideSignUp.css';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance';
 
@@ -15,7 +15,7 @@ const TourGuideSignUp = () => {
     });
 
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false); // Added state for success message
+    const [success, setSuccess] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,8 +24,8 @@ const TourGuideSignUp = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccess(false); // Reset success state
-
+        setSuccess(false);
+    
         try {
             const storedData = JSON.parse(localStorage.getItem('tourGuideData')) || {};
             const tourGuideData = {
@@ -34,7 +34,9 @@ const TourGuideSignUp = () => {
                 email: storedData.email || '',
                 password: storedData.password || '',
             };
-
+    
+            console.log('Sending signup data:', tourGuideData);
+    
             const response = await axiosInstance.post(
                 '/api/tourguide/addTourGuide',
                 tourGuideData,
@@ -42,7 +44,29 @@ const TourGuideSignUp = () => {
                     headers: { 'Content-Type': 'application/json' },
                 }
             );
-            setSuccess(true); // Display success message
+    
+            console.log('Signup response:', response.data);
+    
+            if (response.data && response.data._id) {
+                const tourGuideId = response.data._id;
+                console.log('Tour Guide ID received:', tourGuideId);
+                
+                // Store data in localStorage
+                localStorage.setItem('tourGuideId', tourGuideId);
+                localStorage.setItem('tourGuideData', JSON.stringify(response.data));
+                
+                // Verify storage
+                console.log('Stored tourGuideId:', localStorage.getItem('tourGuideId'));
+                
+                setSuccess(true);
+                
+                // Navigate with state
+                navigate('/tourGuide/uploadDocument', { 
+                    state: { tourGuideId } 
+                });
+            } else {
+                setError('Failed to get tour guide ID from response');
+            }
         } catch (err) {
             console.error('Signup error:', err);
             setError(err.response?.data?.message || 'An error occurred during sign-up.');
@@ -58,7 +82,7 @@ const TourGuideSignUp = () => {
                         <input
                             type="text"
                             name="firstName"
-                            value={formData.firstName || ''}
+                            value={formData.firstName}
                             onChange={handleChange}
                             required
                             placeholder="Enter your first name"
@@ -68,7 +92,7 @@ const TourGuideSignUp = () => {
                         <input
                             type="text"
                             name="lastName"
-                            value={formData.lastName || ''}
+                            value={formData.lastName}
                             onChange={handleChange}
                             required
                             placeholder="Enter your last name"
@@ -78,7 +102,7 @@ const TourGuideSignUp = () => {
                         <input
                             type="text"
                             name="mobile"
-                            value={formData.mobile || ''}
+                            value={formData.mobile}
                             onChange={handleChange}
                             required
                             placeholder="Enter your mobile number"
@@ -86,35 +110,30 @@ const TourGuideSignUp = () => {
                     </div>
                     <div className="form-group">
                         <input
-                            type="text"
+                            type="number"
                             name="yearsOfExperience"
-                            value={formData.yearsOfExperience || ''}
+                            value={formData.yearsOfExperience}
                             onChange={handleChange}
                             required
-                            placeholder="Enter your years of experience"
+                            placeholder="Enter years of experience"
                         />
                     </div>
                     <div className="form-group">
-                        <input
-                            type="text"
+                        <textarea
                             name="previousWork"
-                            value={formData.previousWork || ''}
+                            value={formData.previousWork}
                             onChange={handleChange}
                             required
-                            placeholder="Enter your previous work"
-                        />
+                            placeholder="Enter your previous work experience"
+                            className="textarea"
+                        ></textarea>
                     </div>
                     {error && <p className="error-message">{error}</p>}
-                    <button type="submit" className="signup-button" onClick={() => navigate('/tourGuide/uploadDocument')}>Sign Up</button>
+                    <button type="submit" className="signup-button">Sign Up</button>
                 </form>
                 {success && (
                     <div className="success-message">
-                        <p>
-                            Sign-up successful!{' '}
-                            <span onClick={() => navigate('/login')} className="login-link">
-                                Please Log in
-                            </span>
-                        </p>
+                        <p>Sign-up successful! Redirecting to document upload...</p>
                     </div>
                 )}
             </div>

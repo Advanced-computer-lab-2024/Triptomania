@@ -346,6 +346,8 @@ router.get('/getusersrequestdelete', (req, res, next) => authMiddleware.verifyTo
 
 router.put('/flagitinerary', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.flagItinerary);
 
+router.put('/flagActivity', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), adminController.flagActivity);
+
 /**
  * @swagger
  * /api/admin/itineraries/getItineraries:

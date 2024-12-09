@@ -44,6 +44,11 @@ const activitySchema = new Schema({
     type: [String],
     default: [],
   },
+  isFlagged:
+  {
+      type: Boolean,
+      default: false,
+  },
   isBookingOpen: {
     type: Boolean,
     default: true,

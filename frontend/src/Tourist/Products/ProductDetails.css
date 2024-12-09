@@ -336,6 +336,52 @@
   .star-button.selected .star-icon {
     fill: #FFD700;
   }
+<<<<<<< HEAD
+=======
+
+  .rating-review-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .rating-section,
+  .review-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .star-rating {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  
+  .star-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: all 0.2s;
+  }
+  
+  .star-icon.filled {
+    color: #FFD700;
+  }
+  
+  .review-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+  }
+>>>>>>> ed14b72 (oo)
   /* Reviews Section */
 .reviews-section {
   padding: 20px;

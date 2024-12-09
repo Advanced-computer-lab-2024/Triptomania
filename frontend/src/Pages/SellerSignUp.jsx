@@ -23,7 +23,7 @@ const SellerSignUp = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccess(false); // Reset success state
+        setSuccess(false);
     
         try {
             const storedData = JSON.parse(localStorage.getItem('sellerData')) || {};
@@ -42,8 +42,16 @@ const SellerSignUp = () => {
                 }
             );
     
-            setSuccess(true); // Display success message
-            navigate('/seller/uploadPicture'); // Navigate to the desired page
+            // Check if response contains the seller data with ID
+            if (response.data && response.data._id) {
+                setSuccess(true);
+                // Navigate to upload document page with seller ID
+                navigate('/seller/uploadDocument', { 
+                    state: { sellerId: response.data._id }
+                });
+            } else {
+                setError('Failed to get seller ID from response');
+            }
         } catch (err) {
             console.error('Signup error:', err);
             setError(err.response?.data?.message || 'An error occurred during sign-up.');

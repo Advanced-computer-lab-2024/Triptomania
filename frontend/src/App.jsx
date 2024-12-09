@@ -76,6 +76,11 @@ import ViewTag from './TourismGovernor/Tags/ViewTag';
 import ViewActivitiesAdmin from './Admin/ViewActivities/ViewActivities';
 import WishList from './Tourist/WishList/WishList';
 import ViewItinerariesAdmin from './Admin/ViewItineraries/ViewItineraries';
+import UploadSellerDocument from './Pages/UploadSellerDocument';
+import UploadSellerPicture from './Pages/UploadSellerPicture';
+import UploadPictureGuide from './TourGuide/SignUp/UploadPictureGuide';
+import AdvertiserUploadDocument from './Advertiser/AdvertiserUploadDocument';
+import AdvertiserUploadPicture from './Advertiser/AdvertiserUploadPicture';
 const App = () => {
   return (    
     <Routes>
@@ -155,11 +160,16 @@ const App = () => {
       <Route path="/seller/seller-account" element={<SellerAccount/>} />
       <Route path="/tourGuide/tourGuide-account" element={<TourGuideAccount/>} /> 
       <Route path="/advertiser/advertiser-account" element={<AdvertiserAccount/>} /> 
+      <Route path="/seller/uploadDocument" element={<UploadSellerDocument />} />
+      <Route path="/seller/uploadPicture" element={<UploadSellerPicture />} />
+      <Route path="/tourGuide/uploadPicture" element={<UploadPictureGuide />} />
 
       <Route path="/tourismGovernor/tags/viewTag" element={<ViewTag />} />
       <Route path="/admin/ViewActivitiesAdmin" element={<ViewActivitiesAdmin />} />
       <Route path="/tourist/wishlist" element={<WishList />} />
       <Route path="Admin/ViewItinerariesAdmin" element={<ViewItinerariesAdmin />} />
+      <Route path="/advertiser/uploadDocument" element={<AdvertiserUploadDocument />} />
+      <Route path="/advertiser/uploadPicture" element={<AdvertiserUploadPicture />} />
     </Routes>
   );
 };

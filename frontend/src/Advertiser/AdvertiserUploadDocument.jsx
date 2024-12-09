@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance';
+import './AdvertiserUploadDocument.css';
 
-const UploadDocuments = () => {
+const AdvertiserUploadDocument = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [error, setError] = useState('');
@@ -12,16 +13,16 @@ const UploadDocuments = () => {
 
     useEffect(() => {
         // Get ID from location state or localStorage
-        const id = location.state?.tourGuideId || localStorage.getItem('tourGuideId');
+        const id = location.state?.advertiserId || localStorage.getItem('advertiserId');
         console.log('Location state:', location.state);
-        console.log('ID from localStorage:', localStorage.getItem('tourGuideId'));
+        console.log('ID from localStorage:', localStorage.getItem('advertiserId'));
         console.log('Retrieved ID:', id);
 
         if (!id) {
-            console.error('No tour guide ID found');
-            setError('Tour Guide ID not found. Please complete signup first.');
+            console.error('No advertiser ID found');
+            setError('Advertiser ID not found. Please complete signup first.');
             setTimeout(() => {
-                navigate('/tourGuide-signup');
+                navigate('/advertiser-signup');
             }, 2000);
         }
     }, [navigate, location]);
@@ -54,12 +55,12 @@ const UploadDocuments = () => {
         }
 
         // Get the ID directly from localStorage
-        const currentTourGuideId = localStorage.getItem('tourGuideId');
-        console.log('Current Tour Guide ID:', currentTourGuideId);
+        const currentAdvertiserId = localStorage.getItem('advertiserId');
+        console.log('Current Advertiser ID:', currentAdvertiserId);
 
-        if (!currentTourGuideId) {
-            console.error('No tour guide ID available');
-            setError('Tour Guide ID not found. Please complete signup first.');
+        if (!currentAdvertiserId) {
+            console.error('No advertiser ID available');
+            setError('Advertiser ID not found. Please complete signup first.');
             return;
         }
 
@@ -69,21 +70,21 @@ const UploadDocuments = () => {
         try {
             // Log request details
             console.log('Making upload request:', {
-                id: currentTourGuideId,
+                id: currentAdvertiserId,
                 fileName: selectedFile.name,
                 fileType: selectedFile.type
             });
 
             const response = await axiosInstance.put(
-                `/api/tourGuide/uploadDocument`,
+                `/api/advertiser/uploadDocument`,
                 formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                     params: {
-                        type: 'tourGuide',
-                        id: currentTourGuideId
+                        type: 'advertiser',
+                        id: currentAdvertiserId
                     }
                 }
             );
@@ -93,14 +94,14 @@ const UploadDocuments = () => {
             if (response.status === 200) {
                 setSuccess(true);
                 // Update localStorage with new document path
-                const currentData = JSON.parse(localStorage.getItem('tourGuideData') || '{}');
+                const currentData = JSON.parse(localStorage.getItem('advertiserData') || '{}');
                 currentData.documents = response.data.documents;
-                localStorage.setItem('tourGuideData', JSON.stringify(currentData));
+                localStorage.setItem('advertiserData', JSON.stringify(currentData));
 
                 setTimeout(() => {
-                    navigate('/tourGuide/uploadPicture', { 
+                    navigate('/advertiser/uploadPicture', { 
                         state: { 
-                            tourGuideId: currentTourGuideId,
+                            advertiserId: currentAdvertiserId,
                             documents: response.data.documents 
                         } 
                     });
@@ -128,9 +129,9 @@ const UploadDocuments = () => {
     return (
         <div className="upload-document-container">
             <div className="upload-content">
-                <h2>Upload Tour Guide Documents</h2>
+                <h2>Upload Business Documents</h2>
                 <p className="upload-description">
-                    Please upload your tour guide license or relevant certifications
+                    Please upload your business registration or relevant documents
                 </p>
 
                 <form onSubmit={handleUpload} className="upload-form">
@@ -179,7 +180,7 @@ const UploadDocuments = () => {
                         <button 
                             type="button" 
                             className="cancel-button"
-                            onClick={() => navigate('/tourGuide-dashboard')}
+                            onClick={() => navigate('/advertiser-dashboard')}
                         >
                             Skip for Now
                         </button>
@@ -190,4 +191,4 @@ const UploadDocuments = () => {
     );
 };
 
-export default UploadDocuments;
+export default AdvertiserUploadDocument;

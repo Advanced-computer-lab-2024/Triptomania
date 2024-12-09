@@ -1851,6 +1851,31 @@ const categorizeHotelBookings = (hotelBookings) => {
   );
 };
 
+const categorizeFlightBookings = (flightBookings) => {
+  const today = new Date(); // Get the current date
+
+  return flightBookings.reduce(
+    (result, bookingGroup) => {
+      bookingGroup.flightOffers.forEach((offer) => {
+        offer.itineraries.forEach((itinerary) => {
+          // Find the departure date of the first segment
+          const lastSegment = itinerary.segments[itinerary.segments.length - 1];
+          const departureDate = new Date(lastSegment.departure.at);
+
+          if (departureDate >= today) {
+            result.upcoming.push(offer);
+          } else {
+            result.past.push(offer);
+          }
+        });
+      });
+
+      return result;
+    },
+    { upcoming: [], past: [] } // Initialize the result object
+  );
+};
+
 const categorizeTransportationBookings = (transportationBookings) => {
   const now = new Date(); // Get the current date and time
 
@@ -1861,6 +1886,33 @@ const categorizeTransportationBookings = (transportationBookings) => {
       ); // Combine travelDate and travelTime into a Date object
 
       if (travelDateTime >= now) {
+        result.upcoming.push(booking);
+      } else {
+        result.past.push(booking);
+      }
+
+      return result;
+    },
+    { upcoming: [], past: [] } // Initialize the result object
+  );
+};
+
+const categorizeBookings = (bookings, type) => {
+  const now = new Date(); // Get the current date and time
+
+  return bookings.reduce(
+    (result, booking) => {
+      let eventDate;
+
+      // Determine the date field based on the type
+      if (type === "itinerary") {
+        eventDate = new Date(booking.date); // Use the 'date' field for itineraries
+      } else if (type === "activity") {
+        eventDate = new Date(booking.date); // Use the 'date' field for activities
+      }
+
+      // Categorize as upcoming or past
+      if (eventDate >= now) {
         result.upcoming.push(booking);
       } else {
         result.past.push(booking);
@@ -1887,11 +1939,22 @@ const getBookings = async (req, res) => {
       return res.status(200).json(categorizedBookings);
     } else if (type === 'flight') {
       const flightBookings = tourist.flightBookings;
-      return res.status(200).json({ flightBookings });
+      const categorizedBookings = categorizeFlightBookings(flightBookings);
+      return res.status(200).json(categorizedBookings);
     } else if (type === 'transportation') {
       const transportationBookings = tourist.transportationBookings;
       const categorizedBookings = categorizeTransportationBookings(transportationBookings);
       return res.status(200).json(categorizedBookings);
+    } else if (type === 'event') {
+      const itineraryBookings = tourist.itineraries;
+      const activityBookings = tourist.activities;
+      const categorizedItineraries = categorizeBookings(itineraryBookings, 'itinerary');
+      const categorizedActivities = categorizeBookings(activityBookings, 'activity');
+      const result = {
+        itineraries: categorizedItineraries,
+        activities: categorizedActivities
+      };
+      return res.status(200).json(result);
     } else {
       return res.status(400).json({ message: 'Invalid booking type' });
     }

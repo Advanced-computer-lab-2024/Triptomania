@@ -103,7 +103,34 @@ const flagItinerary = async (req, res) => {
     }
 }
 
+const flagActivity = async (req, res) => {
+    const { id } = req.body; // Extracting itineraryId from query parameters
 
+    try {
+        // Validate if the ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid itinerary ID format." });
+        }
+
+        // Find the itinerary by ID
+        const activity = await activityModel.findById(id);
+
+        if (!activity) {
+            return res.status(404).json({ message: "Activity not found." });
+        }
+
+        let isFlagged = activity.isFlagged;
+
+        // Preserve the creatorId and save the itinerary
+        await activityModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
+
+        await sendEmail(itinerary); // Send an email to the tour guide
+
+        return res.status(200).json({ message: `Activity ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong", error: error.message });
+    }
+}
 
 const viewProductsAdmin = async (req, res) => {
     try {
@@ -555,6 +582,7 @@ export default {
     deleteAccount,
     addTourismGovernor,
     flagItinerary,
+    flagActivity,
     viewProductsAdmin,
     getDeleteUsers,
     createPromoCode,

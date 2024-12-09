@@ -25,7 +25,11 @@ export function Header() {
             <Link to="/tourist/Activities" className="header-link">Activities</Link>
             <Link to="/itineraries" className="header-link">Itineraries</Link>
             <Link to="/tourist/HistoricalPlaces" className="header-link">Historical Places</Link>
+<<<<<<< HEAD
             <Link to="/tourist/view-mycomplaints" className="header-link">My Complaints</Link>
+=======
+            <Link to="/tourist/view-mycomplaints" className="header-link">Historical Places</Link>
+>>>>>>> ed14b72 (oo)
             <Link to="/tourist/products/viewproducts" className="header-link">Products</Link>
             <Link to="/tourist/searchFlights" className="header-link">Flights</Link>
             <Link to="/tourist/hotelBooking/getHotels" className="header-link">Hotels</Link>
