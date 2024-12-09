@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading'; // Import the loading component
+import { Header } from '@/components/AdminHeader'; // Import the Header component
 
 const ViewItinerariesAdmin = () => {
   const [itineraries, setItineraries] = useState([]);
@@ -27,7 +28,6 @@ const ViewItinerariesAdmin = () => {
   const [preferenceTags, setPreferenceTags] = useState([]); // State for preference tags
   const [sortOrder, setSortOrder] = useState('');
   const [sortBy, setSortBy] = useState('');
-  const [ setFlaggedItineraries] = useState([]);
   const [loading, setLoading] = useState(false); // State for loading indicator
   const navigate = useNavigate();
 
@@ -112,7 +112,6 @@ const ViewItinerariesAdmin = () => {
     try {
       const response = await axiosInstance.put('/api/admin/flagitinerary', { id });
       if (response.status === 200) {
-        setFlaggedItineraries((prev) => [...prev, id]); // Mark itinerary as flagged
         fetchAllItineraries(); // Refresh itineraries
         const message = response.data.message;
         alert(message);
@@ -170,6 +169,7 @@ const ViewItinerariesAdmin = () => {
 
   return (
     <div className="view-itineraries">
+      <Header />
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>

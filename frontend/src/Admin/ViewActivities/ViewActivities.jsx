@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewActivities.css';
-import { Header } from '../../components/Header';
-import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
+import { Header } from '../../components/AdminHeader';
+import { CalendarIcon, MapPinIcon, TagIcon, StarIcon, FlagIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -81,6 +81,20 @@ const fetchSortedActivities = async (sortOrder) => {
     setActivities(response.data); // Update activities with the sorted results
   } catch (error) {
     console.error('Error fetching sorted activities:', error);
+  }
+};
+
+const handleFlagActivity = async (id) => {
+  try {
+    const response = await axiosInstance.put('/api/admin/flagActivity', { id });
+    if (response.status === 200) {
+      fetchAllActivities();
+      const message = response.data.message;
+      alert(message);
+    }
+  } catch (error) {
+    console.error('Error flagging activity:', error.response?.data || error.message);
+    alert(`Error flagging activity: ${error.response?.data?.message || error.message}`);
   }
 };
   
@@ -210,6 +224,14 @@ const fetchSortedActivities = async (sortOrder) => {
                     <div className="activity-rating">
                       <StarIcon className="icon" />
                       <span>{activity.averageRating || 'N/A'}</span>
+                    </div>
+                    <div className="itinerary-flag">
+                      <FlagIcon
+                        className="flag-icon"
+                        color={activity.isFlagged ? 'red' : 'gray'}
+                        onClick={() => handleFlagActivity(activity._id)}
+                        style={{ cursor: 'pointer' }}
+                      />
                     </div>
                   </div>
                   <p className="activity-description">{activity.description}</p>

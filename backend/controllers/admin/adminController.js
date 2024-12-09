@@ -124,7 +124,7 @@ const flagActivity = async (req, res) => {
         // Preserve the creatorId and save the itinerary
         await activityModel.findByIdAndUpdate(id, { isFlagged: !isFlagged }, { new: true });
 
-        await sendEmail(itinerary); // Send an email to the tour guide
+        await sendEmail(activity); // Send an email to the tour guide
 
         return res.status(200).json({ message: `Activity ${isFlagged ? 'unflagged' : 'flagged'} successfully.` });
     } catch (error) {
@@ -459,17 +459,18 @@ const getAllUsers = async (req, res) => {
         });
     }
 };
-const sendEmail = async (itinerary) => {
+const sendEmail = async (event) => {
     try {
         // Fetch the seller and check if user exists
-        const tourGuide = await tourGuideModel.findById(itinerary.creatorId);
+        const tourGuide = await tourGuideModel.findById(event.creatorId);
+        let advertiser;
         if (!tourGuide) {
-            throw new Error('Tour guide not found');
+            advertiser = await advertiserModel.findById(event.creatorId);
         }
 
         // Add the seller's email to recipients
         const recipients = [
-            { email: tourGuide.email },
+            { email: tourGuide ? tourGuide.email : advertiser.email },
         ];
 
         // Prepare the email content
@@ -478,7 +479,7 @@ const sendEmail = async (itinerary) => {
             email: 'triptomania.app@gmail.com',
         };
 
-        const now = new Date(Date.now());
+        const now = new Date(tourGuide ? event.Start_date : event.date); // Get the creation date
 
         // Extract the day, month, and year
         const day = now.getDate(); // Day of the month (1-31)
@@ -490,9 +491,9 @@ const sendEmail = async (itinerary) => {
             to: recipients,
             templateId: 5, // Replace with your Brevo template ID
             params: {
-                itineraryTitle: itinerary.Name,
-                itineraryDate: `${day}-${month}-${year}`,
-                itineraryId: itinerary.id,
+                eventTitle: tourGuide ? event.Name : event.name,
+                eventDate: `${day}-${month}-${year}`,
+                eventId: event.id,
                 currentYear: new Date().getFullYear()
             }
         };
