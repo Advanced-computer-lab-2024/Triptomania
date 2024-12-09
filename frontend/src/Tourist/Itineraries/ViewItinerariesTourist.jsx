@@ -75,6 +75,16 @@ const ViewItinerariesTourist = () => {
     fetchAllItineraries();
   };
 
+  const handleSortByChange = (value) => {
+    setSortBy(value);
+    fetchSortedActivities();
+  };
+
+  const handleSortOrderChange = (value) => {
+    setSortOrder(value);
+    fetchSortedActivities();
+  };
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     const filtered = allItineraries.filter((itinerary) =>

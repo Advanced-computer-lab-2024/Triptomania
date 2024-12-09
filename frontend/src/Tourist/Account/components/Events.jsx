@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "@/components/Loading";
 import axiosInstance from "@/axiosInstance";
-import { useNavigate } from "react-router-dom"; // Add this import
+
 const Events = () => {
   const navigate = useNavigate(); // Add this
   const [events, setEvents] = useState({
