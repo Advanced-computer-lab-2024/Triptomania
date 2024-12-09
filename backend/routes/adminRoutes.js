@@ -50,6 +50,7 @@ router.post('/activities/addCategory', (req, res, next) => authMiddleware.verify
 router.get('/activities/getCategories', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.getCategories);
 
 router.get('/activities/getActivities', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), activityController.viewActivities);
+router.get('/itineraries/viewItineraries', (req, res, next) => authMiddleware.verifyToken(req, res, next, ['admin']), itineraryController.viewItineraries);
 
 /**
  * @swagger

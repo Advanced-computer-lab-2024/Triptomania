@@ -1,0 +1,115 @@
+/* General container styles */
+.wishlist-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.wishlist-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Centering the wishlist items */
+.wishlist-items {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the items horizontally */
+    width: 100%; /* Ensure full width */
+    max-width: 800px; /* Optional: Limit the width of the list */
+}
+
+/* Individual wishlist item */
+.wishlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensure spacing between elements */
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    width: 100%; /* Ensure items span the container */
+    max-width: 600px; /* Optional: Limit the item width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Image styling */
+.item-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Details styling */
+.item-details {
+    flex: 1;
+    margin-left: 15px;
+}
+
+.item-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-price {
+    font-size: 1rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.item-price .icon {
+    margin-right: 5px;
+}
+
+/* Quantity controls */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-display {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.quantity-controls button {
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Buttons */
+.remove-button,
+.move-to-cart-button {
+    margin-left: 10px;
+    padding: 10px 20px; /* Increase padding to make the button larger */
+    font-size: 1rem; /* Adjust font size if needed */
+}
+
+/* Add to Cart button styling */
+.move-to-cart-button {
+    background-color: black; /* Default black color */
+    color: white; /* Text color */
+    border: none;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.move-to-cart-button:hover {
+    background-color: green; /* Change to green on hover */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Checkout button */
+.checkout-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+}

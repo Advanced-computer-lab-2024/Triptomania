@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosinstance from '@/axiosinstance'; // Update import to axiosinstance
+import axiosInstance from '@/axiosInstance'; // Update import to axiosInstance
 import './ViewTag.css';
 
 const ViewTag = () => {
@@ -15,7 +15,7 @@ const ViewTag = () => {
     const fetchTags = async () => {
         console.log('Fetching tags...');
         try {
-            const response = await axiosinstance.get('/api/tourismGovernor/getTags');
+            const response = await axiosInstance.get('/api/tourismGovernor/getTags');
             setTags(response.data.tags || []);  // Ensure tags is an array
         } catch (error) {
             console.error('Error fetching tags:', error);
@@ -30,7 +30,7 @@ const ViewTag = () => {
         }
 
         try {
-            await axiosinstance.post('/api/tourismGovernor/addTag', { name: newTagName });
+            await axiosInstance.post('/api/tourismGovernor/addTag', { name: newTagName });
             setNewTagName('');
             fetchTags();
             window.location.reload(); // Refresh the page
@@ -46,7 +46,7 @@ const ViewTag = () => {
         }
 
         try {
-            await axiosinstance.put('/api/tourismGovernor/updateTag', { id: editTagId, name: editTagName });
+            await axiosInstance.put('/api/tourismGovernor/updateTag', { id: editTagId, name: editTagName });
             setEditTagId(null);
             setEditTagName('');
             fetchTags();
@@ -58,7 +58,7 @@ const ViewTag = () => {
 
     const handleDeleteTag = async (id) => {
         try {
-            await axiosinstance.delete('/api/tourismGovernor/deleteTag', { data: { id } });
+            await axiosInstance.delete('/api/tourismGovernor/deleteTag', { data: { id } });
             fetchTags();
             window.location.reload(); // Refresh the page
         } catch (error) {

@@ -336,46 +336,75 @@
   .star-button.selected .star-icon {
     fill: #FFD700;
   }
+  /* Reviews Section */
+.reviews-section {
+  padding: 20px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  margin-top: 30px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .rating-review-section {
-    margin-top: 2rem;
-    padding: 1rem;
-    border-top: 1px solid #eee;
+.reviews-section h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.reviews-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.review-item {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-item p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.review-item:last-child {
+  margin-bottom: 0;
+}
+
+.reviews-section p {
+  color: #777;
+  font-size: 1rem;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* Responsive Styling for Reviews */
+@media (max-width: 768px) {
+  .reviews-section {
+      padding: 15px;
   }
-  
-  .rating-section,
-  .review-section {
-    margin-bottom: 1.5rem;
+
+  .reviews-section h2 {
+      font-size: 1.6rem;
   }
-  
-  .star-rating {
-    display: flex;
-    gap: 0.5rem;
+
+  .review-item {
+      padding: 12px;
   }
-  
-  .star-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.25rem;
+
+  .review-item p {
+      font-size: 0.95rem;
   }
-  
-  .star-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    transition: all 0.2s;
-  }
-  
-  .star-icon.filled {
-    color: #FFD700;
-  }
-  
-  .review-textarea {
-    width: 100%;
-    min-height: 100px;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-  }
+}

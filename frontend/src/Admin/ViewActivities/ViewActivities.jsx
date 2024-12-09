@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/axiosInstance';
 import './ViewActivities.css';
-// import { Header } from '../../components/Header';
+import { Header } from '../../components/Header';
 import { CalendarIcon, MapPinIcon, TagIcon, StarIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,7 +103,7 @@ const fetchSortedActivities = async (sortOrder) => {
 
   return (
     <div className="view-activities">
-      {/* <Header /> */}
+      <Header />
       <div className="content">
         <aside className="filters">
           <h3 className="text-lg font-semibold mb-4">Filter by:</h3>

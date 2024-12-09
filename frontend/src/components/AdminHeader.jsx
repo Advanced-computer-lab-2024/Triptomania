@@ -7,7 +7,7 @@ const menuItems = [
   { name: 'Home', href: '/admin/home' },
   { name: 'Activities', href: '/admin/viewActivitiesAdmin' },
   { name: 'Complaints', href: '/admin/complaints' },
-  { name: 'Itineraries', href: '#' },
+  { name: 'Itineraries', href: '/Admin/ViewItinerariesAdmin' },
   {
    name: 'User Accounts',
     href: '#',

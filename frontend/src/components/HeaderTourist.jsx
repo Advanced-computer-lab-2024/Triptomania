@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css'; // Importing the CSS file
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
-import { Bell, ShoppingCart, User } from 'lucide-react'; // Import icons for notifications, cart, and profile
+import { Bell, Heart, ShoppingCart, User } from 'lucide-react'; // Import icons for notifications, cart, and profile
 import { Link } from 'react-router-dom';
 
 export function Header() {
@@ -33,6 +33,8 @@ export function Header() {
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <Link to="/notifications" className="icon-link">
               <Bell className="h-6 w-6 text-black hover:text-primary" />
+            </Link> 
+            <Link to="/Tourist/WishList" className="icon-link ml-6"><Heart className="h-6 w-6 text-black hover:text-primary" />
             </Link>
             <Link to="/Tourist/Cart" className="icon-link ml-6"><ShoppingCart className="h-6 w-6 text-black hover:text-primary" />
             </Link>

@@ -74,6 +74,8 @@ import TourGuideAccount from './TourGuide/Account/pages/AccountManagement';
 import AdvertiserAccount from './Advertiser/Account/pages/AccountManagement';
 import ViewTag from './TourismGovernor/Tags/ViewTag';
 import ViewActivitiesAdmin from './Admin/ViewActivities/ViewActivities';
+import WishList from './Tourist/WishList/WishList';
+import ViewItinerariesAdmin from './Admin/ViewItineraries/ViewItineraries';
 const App = () => {
   return (    
     <Routes>
@@ -156,6 +158,8 @@ const App = () => {
 
       <Route path="/tourismGovernor/tags/viewTag" element={<ViewTag />} />
       <Route path="/admin/ViewActivitiesAdmin" element={<ViewActivitiesAdmin />} />
+      <Route path="/tourist/wishlist" element={<WishList />} />
+      <Route path="Admin/ViewItinerariesAdmin" element={<ViewItinerariesAdmin />} />
     </Routes>
   );
 };

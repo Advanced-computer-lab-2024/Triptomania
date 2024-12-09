@@ -1397,11 +1397,10 @@ const addProductToCart = async (req, res) => {
     let quan = 0;
     if (existingCartItem) {
       tempProd = user.cart.pull({ productId: productId });
-      quan = tempProd[0].quantity;
+      quan = Number(tempProd[0].quantity);
       user.cart.pop({ productId: productId });
     }
-
-    user.cart.push({ productId: productId, quantity: quantity + quan });
+    user.cart.push({ productId: productId, quantity: Number(quantity + quan) });
 
     // Save the updated user
     await user.save();

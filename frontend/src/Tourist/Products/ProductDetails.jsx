@@ -35,8 +35,18 @@ const ProductDetails = () => {
     const fetchProductDetails = async () => {
       try {
         const response = await axiosInstance.get(`/api/tourist/product/${id}`);
-        setProduct(response.data.product);
+        const fetchedProduct = response.data.product;
+        setProduct(fetchedProduct);
         setLoading(false);
+  
+        // Check if the logged-in tourist has rated this product
+        const touristId = localStorage.getItem('touristId');
+        if (touristId) {
+          const touristRating = fetchedProduct.Rating.find((rating) => rating.touristId === touristId);
+          if (touristRating) {
+            setRating(touristRating.rating); 
+          }
+        }
       } catch (error) {
         console.error('Error fetching product details:', error);
         setLoading(false);
@@ -148,13 +158,22 @@ const ProductDetails = () => {
       }
     };
 
+
     const handleRatingSubmit = async (ratingValue) => {
       try {
+        const touristId = localStorage.getItem('touristId');
+        if (!touristId) {
+          showNotification('You must be logged in to rate this product', 'error');
+          return;
+        }
+  
         const response = await axiosInstance.put('/api/tourist/rateProduct', {
           productId: id,
-          rating: ratingValue
+          rating: ratingValue,
+          touristId: touristId, 
         });
-        setRating(ratingValue); // Update the rating state
+  
+        setRating(ratingValue); 
         showNotification(response.data.message, 'success');
       } catch (error) {
         console.error('Error rating product:', error);
@@ -166,15 +185,23 @@ const ProductDetails = () => {
       try {
         await axiosInstance.post('/api/tourist/product/reviews', {
           id,
-          review
+          review,
         });
+        
+        // Update the reviews in state immediately
+        setProduct((prevProduct) => ({
+          ...prevProduct,
+          Reviews: [...prevProduct.Reviews, review],
+        }));
+    
         showNotification('Review added successfully', 'success');
-        setReview('');
+        setReview(''); // Clear the textarea after submission
       } catch (error) {
         console.error('Error adding review:', error);
         showNotification('Failed to add review', 'error');
       }
     };
+    
 
     if (loading) return <Loading />;
     if (!product) return <div>Product not found</div>;
@@ -299,6 +326,21 @@ const ProductDetails = () => {
                   </div>
                 </div>
               )}
+              <div className="reviews-section">
+  <h2>Reviews</h2>
+  {product.Reviews && product.Reviews.length > 0 ? (
+    <ul className="reviews-list">
+      {product.Reviews.map((review, index) => (
+        <li key={index} className="review-item">
+          {review}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No reviews yet. Be the first to review this product!</p>
+  )}
+</div>
+
             </div>
           </div>
         </div>
