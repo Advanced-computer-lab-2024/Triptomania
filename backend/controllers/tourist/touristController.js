@@ -2044,9 +2044,9 @@ const now = new Date();
 // Calculate 1 minute from now
 const oneMinuteFromNow = new Date(now.getTime() + 1 * 60 * 1000);
 // Schedule the task for midnight
-schedule.scheduleJob('0 0 * * *', checkAndSendBirthdayPromos);
+// schedule.scheduleJob(oneMinuteFromNow, checkAndSendBirthdayPromos);
 
-schedule.scheduleJob('0 0 * * *', async () => {
+schedule.scheduleJob('* * * 0 0', async () => {
   try {
     // Get tomorrow's date
     const tomorrow = new Date();
@@ -2082,7 +2082,7 @@ schedule.scheduleJob('0 0 * * *', async () => {
       for (const touristId of tourists) {
         const notification = await notificationModel.create({
           title: 'Upcoming Itinerary',
-          body: `Your itinerary "${activity.name}" is tomorrow. Don't forget to attend!`,
+          body: `Your itinerary "${itinerary.Name}" is tomorrow. Don't forget to attend!`,
         });
         const notificationEntry = { id: notification.id, read: false };
         await userModel.findByIdAndUpdate(touristId, { $push: { notifications: notificationEntry } });
