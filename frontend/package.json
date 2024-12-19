@@ -17,6 +17,7 @@
     "@mui/material": "^6.1.9",
     "@mui/system": "^6.1.9",
     "@mui/utils": "^6.1.9",
+    "@mui/x-date-pickers": "^7.23.1",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.2",

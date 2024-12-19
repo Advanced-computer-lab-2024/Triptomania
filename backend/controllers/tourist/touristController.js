@@ -686,8 +686,8 @@ const processPayment = async (req, res) => {
       pointsEarned = price * 1.5;
     }
 
-    tourist.points += pointsEarned;
-    await updateBadge(tourist);
+    // tourist.points += pointsEarned;
+    // await updateBadge(tourist);
 
     // Save all changes
     await tourist.save();
@@ -2046,7 +2046,7 @@ const oneMinuteFromNow = new Date(now.getTime() + 1 * 60 * 1000);
 // Schedule the task for midnight
 // schedule.scheduleJob(oneMinuteFromNow, checkAndSendBirthdayPromos);
 
-schedule.scheduleJob('* * * 0 0', async () => {
+schedule.scheduleJob(oneMinuteFromNow, async () => {
   try {
     // Get tomorrow's date
     const tomorrow = new Date();

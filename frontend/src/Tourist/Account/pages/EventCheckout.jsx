@@ -82,7 +82,8 @@ const EventCheckout = () => {
             });
     
             const paymentPayload = {
-                itemId: eventData.eventId,
+                eventId: eventData.eventId,
+                eventType: eventData.eventType,
                 paymentMethod: checkoutData.paymentMethod,
                 numberOfTickets: checkoutData.numberOfTickets,
                 totalAmount: totalAmount,
@@ -95,7 +96,7 @@ const EventCheckout = () => {
                 })
             };
     
-            const response = await axiosInstance.put('/api/tourist/processPayment', paymentPayload);
+            const response = await axiosInstance.post('/api/tourist/events/payForEvent', paymentPayload);
             
             if (response.data) {
                 setUser(prev => ({

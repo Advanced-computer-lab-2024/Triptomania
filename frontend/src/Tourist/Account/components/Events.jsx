@@ -59,7 +59,7 @@ const Events = () => {
       navigate('/tourist/eventCheckout', {
         state: {
           eventId: event.eventId, // Using eventId instead of itineraryId
-          eventType: event.eventType.toLowerCase(),
+          eventType: event.eventType,
           price: itinerary.price,
           promoCode: event.promoCode,
           eventName: event.name || itinerary.Name,
@@ -147,7 +147,7 @@ const Events = () => {
           <button
             id="tab-button"
             className="bg-primary text-white px-4 py-2 rounded-md mt-2"
-            onClick={handleCompletePayment}
+            onClick={handleCompletePayment(event)}
           >
             Complete Payment
           </button>

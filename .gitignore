@@ -130,3 +130,4 @@ dist
 .pnp.*
 
 backend/config/serviceAccount.json
+k8s/secrets.yaml

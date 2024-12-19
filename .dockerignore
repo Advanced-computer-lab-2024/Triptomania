@@ -1,0 +1,8 @@
+node_modules
+.env
+
+frontend/
+
+backend/config/serviceAccount.json
+
+k8s/

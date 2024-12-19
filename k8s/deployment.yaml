@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: triptomania-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: triptomania
+  template:
+    metadata:
+      labels:
+        app: triptomania
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: triptomania
+          image: oelsawy11/triptomania-backend:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5000
+          env:
+            - name: GOOGLE_MAPS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_MAPS_API_KEY
+                  name: triptomania-secrets
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  key: MONGO_URI
+                  name: triptomania-secrets
+            - name: FIREBASE_STORAGE_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  key: FIREBASE_STORAGE_BUCKET
+                  name: triptomania-secrets
+            - name: FIREBASE_SERVICE_ACCOUNT_PATH
+              valueFrom:
+                secretKeyRef:
+                  key: FIREBASE_SERVICE_ACCOUNT_PATH
+                  name: triptomania-secrets
+            - name: AMADEUS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AMADEUS_API_KEY
+                  name: triptomania-secrets
+            - name: AMADEUS_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: AMADEUS_API_SECRET
+                  name: triptomania-secrets
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_SECRET
+                  name: triptomania-secrets
+            - name: JWT_REFRESH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_REFRESH_SECRET
+                  name: triptomania-secrets
+            - name: BREVO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: BREVO_API_KEY
+                  name: triptomania-secrets
+            - name: BREVO_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: BREVO_EMAIL
+                  name: triptomania-secrets
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: STRIPE_SECRET_KEY
+                  name: triptomania-secrets
+            - name: STRIPE_PUBLISHABLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: STRIPE_PUBLISHABLE_KEY
+                  name: triptomania-secrets
