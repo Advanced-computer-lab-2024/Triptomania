@@ -16,7 +16,8 @@ spec:
         - name: regcred
       containers:
         - name: triptomania
-          image: oelsawy11/triptomania-backend:latest
+          image: triptomania-backend:latest
+          imagePullPolicy: Never
           resources:
             requests:
               memory: "64Mi"

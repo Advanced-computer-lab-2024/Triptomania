@@ -3,6 +3,4 @@ node_modules
 
 frontend/
 
-backend/config/serviceAccount.json
-
 k8s/
