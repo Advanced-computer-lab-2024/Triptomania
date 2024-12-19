@@ -55,10 +55,21 @@ The project follows a modern and clean React.js code style, emphasizing maintain
 
 
 ## Screenshots
-![Home Page Screenshot](frontend/src/assets/Images/shot1.png)
-![Account Page Screenshot](frontend/src/assets/Images/shot2.png)
-![Flight Finder Page Screenshot](frontend/src/assets/Images/shot3.png)
-![Itineraries Page Screenshot](frontend/src/assets/Images/shot4.png)
+![Screenshot1](frontend/src/assets/Images/shot1.png)  
+![Screenshot2](frontend/src/assets/Images/shot2.png)  
+![Screenshot3](frontend/src/assets/Images/shot3.png)  
+![Screenshot4](frontend/src/assets/Images/shot4.png)  
+![Screenshot5](frontend/src/assets/Images/shot5.png)  
+![Screenshot6](frontend/src/assets/Images/shot6.png)  
+![Screenshot7](frontend/src/assets/Images/shot7.png)  
+![Screenshot8](frontend/src/assets/Images/shot8.png)  
+![Screenshot9](frontend/src/assets/Images/shot9.png)  
+![Screenshot10](frontend/src/assets/Images/shot10.png)  
+![Screenshot11](frontend/src/assets/Images/shot11.png)  
+![Screenshot12](frontend/src/assets/Images/shot12.png)  
+![Screenshot13](frontend/src/assets/Images/shot13.png)  
+![Screenshot14](frontend/src/assets/Images/shot14.png)  
+![Screenshot15](frontend/src/assets/Images/shot15.png)
 
 ---
 ## Frameworks Used
